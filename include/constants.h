@@ -1,7 +1,6 @@
-#ifndef CONSTANTS_HPP
-#define CONSTANTS_HPP
+#pragma once
 
-namespace duckx {
+namespace cdocx {
 typedef unsigned const int formatting_flag;
 
 // text-formatting flags
@@ -14,6 +13,4 @@ formatting_flag superscript = 1 << 4;
 formatting_flag subscript = 1 << 5;
 formatting_flag smallcaps = 1 << 6;
 formatting_flag shadow = 1 << 7;
-} // namespace duckx
-
-#endif
+} // namespace cdocx

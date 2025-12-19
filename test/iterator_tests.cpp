@@ -1,20 +1,20 @@
 #include <sstream>
-#include <duckx.hpp>
-#include <duckxiterator.hpp>
+#include <cdocx.h>
+#include <cdocxIterator.h>
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
 TEST_CASE("checks contents of my_test.docx with iterator")
 {
-    duckx::Document doc("my_test.docx");
+    cdocx::Document doc("my_test.docx");
     doc.open();
 
     std::ostringstream ss;
 
-    for (duckx::Paragraph p : doc.paragraphs())
+    for (cdocx::Paragraph p : doc.paragraphs())
     {
-        for (duckx::Run r : p.runs())
+        for (cdocx::Run r : p.runs())
         {
             ss << r.get_text() << std::endl;
             //std::puts(r.get_text().c_str());
@@ -24,7 +24,7 @@ TEST_CASE("checks contents of my_test.docx with iterator")
     CHECK_EQ("This is a test\nokay?\n", ss.str());
 }
 
-namespace duckx {
+namespace cdocx {
 struct MyTestObject final {
     int current = 42;
     int parent = 1;
@@ -43,15 +43,15 @@ auto begin(MyTestObject const& obj) -> Iterator<MyTestObject, int> {
 auto end(MyTestObject const& obj) -> Iterator<MyTestObject, int> {
   return Iterator<MyTestObject, int, int>(obj.parent, static_cast<decltype(obj.current)>(0));
 }
-}  // namespace duckx
+}  // namespace cdocx
 
 TEST_CASE("Check equality in")
 {
-    auto const testObject = duckx::MyTestObject{};
+    auto const testObject = cdocx::MyTestObject{};
 	auto p1 = begin(testObject);
     auto p2 = begin(testObject);
     CHECK_EQ(p1, p2);
-    duckx::Document doc("my_test.docx");
+    cdocx::Document doc("my_test.docx");
     doc.open();
 
     CHECK_EQ(begin(doc.paragraphs()), begin(doc.paragraphs()));

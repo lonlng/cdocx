@@ -1,24 +1,31 @@
 /*
  * Under MIT license
  * Author: Amir Mohamadi (@amiremohamadi)
- * DuckX is a free library to work with docx files.
+ * CDocx is a free library to work with docx files.
  */
 
-#ifndef DUCKX_H
-#define DUCKX_H
+#pragma once
 
 #include <cstdio>
 #include <stdlib.h>
 #include <string>
+#include <map>
 
-#include <constants.hpp>
-#include <duckxiterator.hpp>
+#include "constants.h"
+#include "cdocxIterator.h"
+
+// Include third-party headers
 #include <pugixml.hpp>
 #include <zip.h>
 
-// TODO: Use container-iterator design pattern!
+// Forward declarations
+struct zip_t;
 
-namespace duckx {
+namespace cdocx {
+
+// Forward declarations
+class Document;
+
 // Run contains runs in a paragraph
 class Run {
   private:
@@ -33,7 +40,8 @@ class Run {
     Run(pugi::xml_node, pugi::xml_node);
     void set_parent(pugi::xml_node);
     void set_current(pugi::xml_node);
-
+    pugi::xml_node get_current() const;
+    pugi::xml_node get_parent() const;
     std::string get_text() const;
     bool set_text(const std::string &) const;
     bool set_text(const char *) const;
@@ -64,10 +72,11 @@ class Paragraph {
     bool has_next() const;
 
     Run &runs();
-    Run &add_run(const std::string &, duckx::formatting_flag = duckx::none);
-    Run &add_run(const char *, duckx::formatting_flag = duckx::none);
+    Run &add_run(const std::string &, cdocx::formatting_flag = cdocx::none);
+    Run &add_run(const char *, cdocx::formatting_flag = cdocx::none);
+    void remove_run(const Run &);
     Paragraph &insert_paragraph_after(const std::string &,
-                                      duckx::formatting_flag = duckx::none);
+                                      cdocx::formatting_flag = cdocx::none);
 };
 
 // TableCell contains one or more paragraphs
@@ -143,18 +152,54 @@ class Document {
     Table table;
     pugi::xml_document document;
     bool flag_is_open;
+    zip_t *zipfile;
 
   public:
     Document();
     Document(std::string);
+    ~Document();
+    
     void file(std::string);
     void open();
-    void save() const;
+    void save();
+    void save(const std::string&);
     bool is_open() const;
 
     Paragraph &paragraphs();
     Table &tables();
 };
-} // namespace duckx
 
-#endif
+// Template class for replacing placeholder strings in docx documents
+class Template {
+  private:
+    Document *doc;
+    std::map<std::string, std::string> placeholders;
+    std::string pattern_prefix = "{{";
+    std::string pattern_suffix = "}}";
+
+    bool replace_in_string(std::string &text) const;
+    void replace_in_paragraphs();
+    void replace_in_tables();
+
+  public:
+    Template(Document *document);
+    Template(Document *document, const std::string &prefix, const std::string &suffix);
+
+    // Set placeholder value
+    void set(const std::string &key, const std::string &value);
+    void set(const std::string &key, const char *value);
+
+    // Set custom pattern (default is "{{" and "}}")
+    void set_pattern(const std::string &prefix, const std::string &suffix);
+
+    // Replace all placeholders in the document
+    void replace_all();
+
+    // Clear all placeholder values
+    void clear();
+
+    // Get number of placeholders
+    size_t size() const;
+};
+
+} // namespace cdocx

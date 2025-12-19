@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'DuckX'
+project = 'CDocx'
 copyright = '2020, Amir Mohamadi'
 author = 'Amir Mohamadi'
 version = '1.2.2'

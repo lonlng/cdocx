@@ -6,13 +6,13 @@
 [![Twitter follow](https://img.shields.io/twitter/follow/amiremohamadi?style=social)](https://twitter.com/amiremohamadi)
 
 
-# DuckX
+# CDocx
 
 Create, read and write Microsoft Office Word docx files.
 More informations are available in [this](https://duckx.readthedocs.io/en/latest/) documentation.
 
 
-> DuckX was created when I was looking for a C++ library which can properly parse MS Word .docx files, but couldn't find any
+> CDocx was created when I was looking for a C++ library which can properly parse MS Word .docx files, but couldn't find any
 
 ## Status ##
 
@@ -22,14 +22,14 @@ More informations are available in [this](https://duckx.readthedocs.io/en/latest
 
 ## Quick Start
 
-Here's an example of how to use duckx to read a docx file; It opens a docx file named **file.docx** and goes over paragraphs and runs to print them:
+Here's an example of how to use CDocx to read a docx file; It opens a docx file named **file.docx** and goes over paragraphs and runs to print them:
 ```c++
 #include <iostream>
-#include <duckx/duckx.hpp>
+#include <cdocx.hpp>
 
 int main() {
 
-    duckx::Document doc("file.docx");   
+    cdocx::Document doc("file.docx");   
 
     doc.open();
 
@@ -43,10 +43,42 @@ int main() {
 And compile your file like this:
 
 ```bash
-g++ sample1.cpp -lduckx
+g++ sample1.cpp -lcdocx
 ```
 
 * See other [Examples](https://github.com/amiremohamadi/DuckX/tree/master/samples)
+
+### Template Replacement Example
+
+CDocx includes powerful template replacement features. Here's an example that demonstrates 
+employee performance report generation:
+
+```cpp
+#include <cdocx.h>
+
+int main() {
+    // Open a template document with placeholders
+    cdocx::Document doc("template.docx");
+    doc.open();
+    
+    // Create template processor
+    cdocx::Template tmpl(&doc);
+    
+    // Set placeholder values
+    tmpl.set("employee_name", "Alice Johnson");
+    tmpl.set("department", "Engineering");
+    tmpl.set("rating", "5");
+    
+    // Replace all placeholders in the document
+    tmpl.replace_all();
+    
+    // Save the generated document
+    doc.save("output.docx");
+}
+```
+
+For a complete example with batch processing, custom patterns, and advanced features, 
+see the [Employee Report Template Sample](https://github.com/amiremohamadi/DuckX/tree/master/samples/employee_report_template.cpp).
 
 
 ## Install ##

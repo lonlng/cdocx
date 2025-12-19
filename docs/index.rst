@@ -1,16 +1,16 @@
 
-DuckX
+CDocx
 ===========
 
 Release v\ |version|
 
-*DuckX* is a C++ library for creating and editing Microsoft Word
+*CDocx* is a C++ library for creating and editing Microsoft Word
 (.docx) files.
 
 
 How to install
 --------------
-The instructions to install  DuckX
+The instructions to install  CDocx
 
 .. code-block:: sh 
 
@@ -23,16 +23,16 @@ The instructions to install  DuckX
 
 Quickstart
 --------------
-How to start with the DuckX quickly
+How to start with the CDocx quickly
 
 .. code-block:: cpp
 
     #include <iostream>
-    #include <duckx/duckx.hpp>
+    #include <cdocx/cdocx.hpp>
 
     int main() {
 
-        duckx::Document doc("file.docx");   
+        cdocx::Document doc("file.docx");   
         doc.open();
 
         for (auto p : doc.paragraphs())
@@ -45,7 +45,7 @@ How to start with the DuckX quickly
 
 Contact
 --------------
-Do you have an issue using DuckX?
+Do you have an issue using CDocx?
 Feel free to let me know on issue tracker https://github.com/amiremohamadi/duckx/issues.
 
 Licensing
