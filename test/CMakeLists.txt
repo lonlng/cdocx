@@ -92,6 +92,12 @@ add_cdocx_test(
     template_tests.cpp
 )
 
+# Cross-run template functionality tests
+add_cdocx_test(
+    crossrun_tests
+    crossrun_tests.cpp
+)
+
 # ============================================================================
 # Test Properties and Labels
 # ============================================================================
@@ -101,6 +107,7 @@ set_tests_properties(
     unit_tests
     iterator_tests
     template_tests
+    crossrun_tests
     PROPERTIES
     LABELS "cdocx;all"
     TIMEOUT 30
@@ -136,7 +143,7 @@ add_custom_target(test_template
 # Add custom target to run all tests (aliased to test)
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG> --output-on-failure
-    DEPENDS unit_tests iterator_tests template_tests
+    DEPENDS unit_tests iterator_tests template_tests crossrun_tests
     COMMENT "Running all CDocx tests"
 )
 
@@ -174,6 +181,6 @@ endif()
 message(STATUS "")
 message(STATUS "Test configuration summary:")
 message(STATUS "  - Test data directory: ${TEST_DATA_DIR}")
-message(STATUS "  - Test executables: unit_tests, iterator_tests, template_tests")
+message(STATUS "  - Test executables: unit_tests, iterator_tests, template_tests, crossrun_tests")
 message(STATUS "  - Run tests: ctest -C <config> or use 'check' target")
 message(STATUS "")

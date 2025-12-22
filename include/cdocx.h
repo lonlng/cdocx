@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string>
 #include <map>
+#include <vector>
 
 #include "constants.h"
 #include "cdocxIterator.h"
@@ -177,9 +178,25 @@ class Template {
     std::string pattern_prefix = "{{";
     std::string pattern_suffix = "}}";
 
+    // FSM-based placeholder context
+    struct PlaceholderContext {
+        Run* first_run = nullptr;
+        std::vector<Run*> runs_to_delete;
+        std::string collected_text;
+        size_t prefix_pos = 0;
+        void clear();
+    };
+
     bool replace_in_string(std::string &text) const;
     void replace_in_paragraphs();
     void replace_in_tables();
+    
+    // Helper functions for FSM-based replacement
+    bool try_replace_single_run(Run& r);
+    void transition_to_collecting_state(PlaceholderContext& ctx, Run& r, const std::string& text, size_t prefix_pos);
+    bool try_replace_placeholder(const PlaceholderContext& ctx, Paragraph& p);
+    void delete_collected_runs(const PlaceholderContext& ctx, Paragraph& p);
+    void process_paragraph(Paragraph& p);
 
   public:
     Template(Document *document);

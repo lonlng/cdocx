@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <filesystem>
+#include <vector>
 
 // Hack on pugixml
 // We need to write xml to std string (or char *)
@@ -28,14 +29,9 @@ void cdocx::Run::set_parent(pugi::xml_node node) {
 
 void cdocx::Run::set_current(pugi::xml_node node) { this->current = node; }
 
-pugi::xml_node cdocx::Run::get_current() const {
-    return this->current;
-}
+pugi::xml_node cdocx::Run::get_current() const { return this->current; }
 
-pugi::xml_node cdocx::Run::get_parent() const
-{
-    return this->parent;
-}
+pugi::xml_node cdocx::Run::get_parent() const { return this->parent; }
 
 std::string cdocx::Run::get_text() const {
     return this->current.child("w:t").text().get();
@@ -233,8 +229,7 @@ cdocx::Run &cdocx::Paragraph::add_run(const char *text,
     return this->run;
 }
 
-void cdocx::Paragraph::remove_run(const Run &r) 
-{
+void cdocx::Paragraph::remove_run(const Run &r) {
     this->current.remove_child(r.get_current());
 }
 
@@ -328,8 +323,8 @@ void cdocx::Document::save() {
     // - copy the old files
     // - delete old docx
     // - rename new file to old file
-    
-    if(!this->is_open()) {
+
+    if (!this->is_open()) {
         // if file is not existing, save() will make no sense
         return;
     }
@@ -392,17 +387,16 @@ void cdocx::Document::save() {
     rename(temp_file.c_str(), original_file.c_str());
 }
 
-void cdocx::Document::save(const std::string& file) 
-{
-        // minizip only supports appending or writing to new files
+void cdocx::Document::save(const std::string &file) {
+    // minizip only supports appending or writing to new files
     // so we must
     // - make a new file
     // - write any new files
     // - copy the old files
     // - delete old docx
     // - rename new file to old file
-    
-    if(!this->is_open()) {
+
+    if (!this->is_open()) {
         // if file is not existing, save() will make no sense
         return;
     }
@@ -439,7 +433,7 @@ void cdocx::Document::save(const std::string& file)
         auto nameStr = std::string(name);
         // Skip copying the original file
         if (nameStr != std::string("word/document.xml") &&
-            nameStr[nameStr.size() -1] != '/') {
+            nameStr[nameStr.size() - 1] != '/') {
             // Read the old content
             void *entry_buf;
             size_t entry_buf_size;
@@ -468,9 +462,7 @@ void cdocx::Document::save(const std::string& file)
     rename(temp_file.c_str(), file.c_str());
 }
 
-bool cdocx::Document::is_open() const {
-    return this->flag_is_open;
-}
+bool cdocx::Document::is_open() const { return this->flag_is_open; }
 
 cdocx::Paragraph &cdocx::Document::paragraphs() {
     if (!this->is_open()) {
@@ -478,13 +470,13 @@ cdocx::Paragraph &cdocx::Document::paragraphs() {
         static Paragraph empty_paragraph;
         return empty_paragraph;
     }
-    
+
     pugi::xml_node body_node = document.child("w:document").child("w:body");
     if (!body_node) {
         static Paragraph empty_paragraph;
         return empty_paragraph;
     }
-    
+
     this->paragraph.set_parent(body_node);
     return this->paragraph;
 }
@@ -495,13 +487,13 @@ cdocx::Table &cdocx::Document::tables() {
         static Table empty_table;
         return empty_table;
     }
-    
+
     pugi::xml_node body_node = document.child("w:document").child("w:body");
     if (!body_node) {
         static Table empty_table;
         return empty_table;
     }
-    
+
     this->table.set_parent(body_node);
     return this->table;
 }
@@ -510,7 +502,7 @@ cdocx::Table &cdocx::Document::tables() {
 cdocx::Template::Template(Document *document) : doc(document) {}
 
 cdocx::Template::Template(Document *document, const std::string &prefix,
-                         const std::string &suffix)
+                          const std::string &suffix)
     : doc(document), pattern_prefix(prefix), pattern_suffix(suffix) {}
 
 void cdocx::Template::set(const std::string &key, const std::string &value) {
@@ -547,67 +539,14 @@ bool cdocx::Template::replace_in_string(std::string &text) const {
 
     return replaced;
 }
-#include <iostream>
+
 void cdocx::Template::replace_in_paragraphs() {
     auto &paragraphs = doc->paragraphs();
-    std::vector<cdocx::Run> runss;
-    cdocx::Run prefix_run;
-    bool first = true;
-    cdocx::Run first_run;
-    cdocx::Run suffix_run;
-    std::vector<std::string> strs;
-    std::string sstr;
-    bool begin = false;
-    int pos = 0;
-    for (auto p = paragraphs; p.has_next(); p.next()) {
-        auto &runs = p.runs();
-        for (auto r = runs; r.has_next(); r.next()) {
-            std::string text = r.get_text();
-            if (text.empty()) {
-                continue;
-            }
-            // if (replace_in_string(text)) {
-            //     r.set_text(text);
-            //     continue;
-            // }
 
-            if (text == pattern_prefix) {
-                begin = true;
-                sstr = "";
-                prefix_run = r;
-                continue;
-            }
-            if (begin) {
-                if (first) {
-                    first_run = r;
-                    first = false;
-                } else {
-                    runss.push_back(r);
-                }
-                if (text == pattern_suffix) {
-                    suffix_run = r;
-                    for (const auto &ph : placeholders) {
-                        if (sstr == ph.first) {
-                            // replace
-                            first_run.set_text(ph.second);
-                            p.remove_run(prefix_run);
-                            p.remove_run(suffix_run);
-                            for (auto rr : runss) {
-                                p.remove_run(rr);
-                            }
-                            begin = false;
-                            sstr = "";
-                            runss.clear();
-                            break;
-                        }
-                    }
-                }
-                sstr += text;
-            }
-        }
+    for (auto p = paragraphs; p.has_next(); p.next()) {
+        process_paragraph(p);
     }
 }
-
 
 void cdocx::Template::replace_in_tables() {
     auto &tables = doc->tables();
@@ -616,15 +555,10 @@ void cdocx::Template::replace_in_tables() {
         for (auto row = rows; row.has_next(); row.next()) {
             auto &cells = row.cells();
             for (auto cell = cells; cell.has_next(); cell.next()) {
-                auto &paragraphs = cell.paragraphs();
-                for (auto p = paragraphs; p.has_next(); p.next()) {
-                    auto &runs = p.runs();
-                    for (auto r = runs; r.has_next(); r.next()) {
-                        std::string text = r.get_text();
-                        if (replace_in_string(text)) {
-                            r.set_text(text);
-                        }
-                    }
+                // Process each paragraph in the cell
+                auto &cell_paragraphs = cell.paragraphs();
+                for (auto p = cell_paragraphs; p.has_next(); p.next()) {
+                    process_paragraph(p);
                 }
             }
         }
@@ -644,9 +578,178 @@ void cdocx::Template::clear() { placeholders.clear(); }
 
 size_t cdocx::Template::size() const { return placeholders.size(); }
 
+void cdocx::Template::PlaceholderContext::clear() {
+    first_run = nullptr;
+    runs_to_delete.clear();
+    collected_text.clear();
+    prefix_pos = 0;
+}
+
+bool cdocx::Template::try_replace_single_run(Run &r) {
+    std::string text = r.get_text();
+    if (replace_in_string(text)) {
+        r.set_text(text);
+        return true;
+    }
+    return false;
+}
+
+void cdocx::Template::transition_to_collecting_state(PlaceholderContext &ctx,
+                                                     Run &r,
+                                                     const std::string &text,
+                                                     size_t prefix_pos) {
+    ctx.first_run = &r;
+    ctx.prefix_pos = prefix_pos;
+
+    // IMPORTANT: Don't modify text yet - if placeholder doesn't match, we need
+    // to keep original
+    ctx.runs_to_delete.push_back(&r);
+
+    // If prefix is at the start, collected_text starts empty (will be filled by
+    // subsequent runs) If prefix is in the middle, place the text after prefix
+    // into collected_text
+    if (prefix_pos == 0) {
+        ctx.collected_text.clear(); // Will collect from this run if suffix
+                                    // present, or from next runs
+    } else {
+        ctx.collected_text = text.substr(prefix_pos + pattern_prefix.length());
+    }
+}
+
+bool cdocx::Template::try_replace_placeholder(const PlaceholderContext &ctx,
+                                              Paragraph &p) {
+    if (!ctx.first_run || ctx.runs_to_delete.empty()) {
+        return false;
+    }
+
+    // Try to find a matching placeholder
+    for (const auto &ph : placeholders) {
+        if (ctx.collected_text == ph.first) {
+            // Found a match - replace in the first run
+            std::string first_run_text = ctx.first_run->get_text();
+            std::string new_text;
+
+            if (ctx.prefix_pos > 0) {
+                // There was text before the prefix - preserve it
+                new_text = first_run_text.substr(0, ctx.prefix_pos) + ph.second;
+            } else {
+                // No text before prefix - use replacement only
+                new_text = ph.second;
+            }
+
+            ctx.first_run->set_text(new_text);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void cdocx::Template::delete_collected_runs(const PlaceholderContext &ctx,
+                                            Paragraph &p) {
+    // After successful replacement, the first run contains the complete
+    // replacement text Delete all subsequent runs that were part of the
+    // placeholder (The first run is the only one we keep)
+    for (size_t i = 1; i < ctx.runs_to_delete.size(); ++i) {
+        p.remove_run(*ctx.runs_to_delete[i]);
+    }
+}
+#include <iostream>
+void cdocx::Template::process_paragraph(Paragraph &p) {
+    PlaceholderContext ctx;
+    auto &runs = p.runs();
+
+    std::string prefix_tmp = "";
+    int prefix_pos = 0;
+    std::string suffix_tmp = "";
+    int suffix_pos = 0;
+
+    std::string pattern_tmp = "";
+    bool prefix_found = false;
+    bool suffix_found = false;
+
+    cdocx::Run first_run;
+    bool first_run_found = false;
+    std::vector<cdocx::Run> other;
+
+    for (auto r = runs; r.has_next(); r.next()) {
+        std::string text = r.get_text();
+        std::string tmpstr = "reportName";
+        if(text == "reportName")
+        {
+            std::cout << text << std::endl;
+        }
+        if(tmpstr.find(text) != std::string::npos)
+        {
+            std::cout << text << std::endl;
+
+        }
+
+        if (!prefix_found) {
+            auto pos = pattern_prefix.substr(prefix_pos).find(text);
+            if (pos == std::string::npos) {
+                prefix_pos = 0;
+                continue;
+            } else {
+                prefix_tmp += text;
+                prefix_pos += text.size();
+                other.push_back(r);
+            }
+            if (prefix_tmp == pattern_prefix) {
+                prefix_found = true;
+                pattern_tmp += prefix_tmp;
+                prefix_tmp = "";
+                suffix_pos = 0;
+                continue;
+            }
+        }
+        if (prefix_found && !suffix_found) {
+            auto pos = pattern_suffix.substr(suffix_pos).find(text);
+            if (pos == std::string::npos) {
+                prefix_pos = 0;
+                pattern_tmp += text;
+                if (!first_run_found) {
+                    first_run = r;
+                    first_run_found = true;
+                } else {
+                    other.push_back(r);
+                }
+                continue;
+            } else {
+                suffix_tmp += text;
+                suffix_pos += text.size();
+                other.push_back(r);
+            }
+            if (suffix_tmp == pattern_suffix) {
+                suffix_found = true;
+                pattern_tmp += suffix_tmp;
+                suffix_tmp = "";
+                suffix_pos = 0;
+            }
+        }
+        if (suffix_found) {
+            for (const auto &ph : placeholders) {
+                auto placeholder_name =
+                    pattern_prefix + ph.first + pattern_suffix;
+                if (pattern_tmp == placeholder_name) {
+                    first_run.set_text(ph.second);
+                    for (auto e : other) {
+                        p.remove_run(e);
+                    }
+                    first_run_found = false;
+                    other.clear();
+                    pattern_tmp = "";
+                    prefix_found = false;
+                    suffix_found = false;
+                    break;
+                }
+            }
+        }
+    }
+}
+
 cdocx::Document::~Document() {
     if (flag_is_open) {
         zip_close(zipfile);
     }
 }
-

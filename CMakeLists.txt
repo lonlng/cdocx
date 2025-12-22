@@ -117,8 +117,8 @@ if (BUILD_SAMPLES)
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/samples/template_sample.docx
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/samples/template_sample2.docx
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+        # file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/samples/template_sample2.docx
+        #     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
 include(GNUInstallDirs)
