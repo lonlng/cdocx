@@ -1,0 +1,130 @@
+===========================================================================
+CDocx AI CODE GENERATION PROMPT - CONCISE VERSION
+===========================================================================
+
+ROLE: You generate code for the CDocx C++ DOCX library.
+Follow these rules EXACTLY:
+
+---------------------------------------------------------------------------
+DIRECTORY & FILE NAMING
+---------------------------------------------------------------------------
+Examples:    examples/XX_description/  (01_basic_read, 02_basic_create)
+Tests:       test/XX_description/      (01_basic, 02_iterator)
+Test files:  XX_description_tests.cpp  (01_basic_tests.cpp)
+Resources:   XX_description_sample.docx, XX_test_imageN.jpg
+
+Every directory MUST have: CMakeLists.txt, main.cpp (or XX_tests.cpp), data/
+
+---------------------------------------------------------------------------
+DOXYGEN COMMENTS (REQUIRED)
+---------------------------------------------------------------------------
+
+File header:
+  /**
+   * @file filename.cpp
+   * @brief One-line description
+   * @version 0.2.0
+   */
+
+Classes - use @defgroup:
+  /**
+   * @defgroup group_name Display Name
+   * @brief Description
+   * @{ */
+  class ClassName { };
+  /** @} */
+
+Methods:
+  /**
+   * @brief Description
+   * @param name Description
+   * @return Description
+   * @note Important note
+   */
+
+Examples header:
+  /**
+   * Example XX: Name
+   * Demonstrates:
+   * 1. Feature 1
+   * 2. Feature 2
+   * Input: XX_sample.docx
+   */
+
+---------------------------------------------------------------------------
+CODE REQUIREMENTS
+---------------------------------------------------------------------------
+
+PATHS - ALWAYS use example_utils.h:
+  #include "../example_utils.h"
+  std::string path = example_utils::get_resource_path("XX_sample.docx");
+  
+ERROR HANDLING - ALWAYS check is_open():
+  if (!doc.is_open()) {
+      std::cerr << "Failed to open: " << path << std::endl;
+      return 1;
+  }
+
+TESTS - Use doctest:
+  #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+  #include "doctest.h"
+  
+  TEST_CASE("name") {
+      cdocx::Document doc("file.docx");
+      doc.open();
+      if (!doc.is_open()) { std::cout << "[SKIPPED]" << std::endl; return; }
+      CHECK(doc.is_open());
+  }
+
+RESOURCES:
+  - NO 0-byte files
+  - Each example/test has OWN data/ directory
+  - Resource names match directory number
+
+---------------------------------------------------------------------------
+NAMING CONVENTIONS
+---------------------------------------------------------------------------
+Classes:    PascalCase   (Document, Paragraph)
+Methods:    snake_case   (get_text(), set_value())
+Constants:  snake_case   (bold, italic)
+Namespaces: lowercase    (cdocx)
+Directories:lowercase    (01_basic_read)
+CMake:      lowercase    (01_basic_tests)
+
+---------------------------------------------------------------------------
+CMAKE TEMPLATES
+---------------------------------------------------------------------------
+
+Example:
+  cmake_minimum_required(VERSION 3.10)
+  add_cdocx_executable(XX_name SOURCES main.cpp WORKING_DIR ${CMAKE_CURRENT_SOURCE_DIR} IS_SAMPLE)
+  file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/data" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+
+Test:
+  cmake_minimum_required(VERSION 3.10)
+  include_directories(${CMAKE_SOURCE_DIR}/test)
+  configure_file(data/file.docx ${CMAKE_CURRENT_BINARY_DIR}/data/file.docx COPYONLY)
+  add_cdocx_test(XX_tests XX_tests.cpp ${CMAKE_CURRENT_BINARY_DIR}/data DATA_FILES file.docx LABELS "core" TIMEOUT 30)
+
+---------------------------------------------------------------------------
+VALIDATION CHECKLIST
+---------------------------------------------------------------------------
+[ ] Directory: XX_description format
+[ ] Test file: XX_description_tests.cpp
+[ ] Uses example_utils.h for paths
+[ ] Checks is_open() with error message
+[ ] Has Doxygen file header
+[ ] Has @defgroup for classes
+[ ] CMakeLists.txt copies data/
+[ ] NO 0-byte files
+
+---------------------------------------------------------------------------
+PROHIBITED
+---------------------------------------------------------------------------
+- NO "data/file.docx" without path resolution
+- NO working directory assumptions
+- NO missing error handling
+- NO inconsistent naming
+- NO resources without matching directory number
+
+===========================================================================

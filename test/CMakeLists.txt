@@ -1,7 +1,24 @@
 # CDocx Test CMakeLists.txt
-# Modern CMake test configuration with proper test data management
+# Modern CMake test configuration with categorized test suites
 
 cmake_minimum_required(VERSION 3.10)
+
+# ============================================================================
+# UTF-8 Encoding (important for international characters)
+# ============================================================================
+
+if(MSVC)
+    add_compile_options(/utf-8)
+else()
+    add_compile_options(-finput-charset=utf-8 -fexec-charset=utf-8)
+endif()
+
+# ============================================================================
+# Include Helper Functions
+# ============================================================================
+
+include(${CMAKE_SOURCE_DIR}/cmake/modules/CDocxHelpers.cmake)
+require_cdocx()
 
 # ============================================================================
 # Test Configuration
@@ -16,171 +33,131 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 enable_testing()
 
 # ============================================================================
-# Test Data Management
+# Test Suite Categories
+# Each test category is in its own subdirectory with numbered prefix
 # ============================================================================
 
-# Define test data directory
-set(TEST_DATA_DIR ${CMAKE_CURRENT_BINARY_DIR}/test_data)
-file(MAKE_DIRECTORY ${TEST_DATA_DIR})
-
-# List of test data files needed by tests
-set(TEST_DATA_FILES
-    my_test.docx
-    template_test.docx
-    template_missing_test.docx
-    template_pattern_test.docx
-    template_table_test.docx
-    template_clear_test.docx
+set(TEST_CATEGORIES
+    01_basic
+    02_iterator
+    03_template
+    04_xml_parts
+    05_complete_structure
+    06_create_empty
+    07_text_formatting
+    utils
 )
 
-# Copy test data files to binary directory
-foreach(data_file ${TEST_DATA_FILES})
-    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${data_file})
-        configure_file(${data_file} ${TEST_DATA_DIR}/${data_file} COPYONLY)
-        message(STATUS "Test data: ${data_file} -> ${TEST_DATA_DIR}/${data_file}")
-    endif()
+message(STATUS "")
+message(STATUS "[CDocx Test Suites]")
+
+foreach(category ${TEST_CATEGORIES})
+    add_subdirectory(${category})
 endforeach()
 
 # ============================================================================
-# Helper Functions
+# Custom Test Targets - For Running Specific Test Categories
 # ============================================================================
 
-# Function to create a test executable
-function(add_cdocx_test TEST_NAME SOURCE_FILE)
-    add_executable(${TEST_NAME} ${SOURCE_FILE})
-    
-    target_link_libraries(${TEST_NAME} PRIVATE cdocx)
-    
-    # Set working directory for the test
-    add_test(
-        NAME ${TEST_NAME}
-        COMMAND ${TEST_NAME}
-        WORKING_DIRECTORY ${TEST_DATA_DIR}
-    )
-    
-    # Make test depend on test data files
-    foreach(data_file ${TEST_DATA_FILES})
-        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${data_file})
-            set_tests_properties(${TEST_NAME} PROPERTIES
-                DEPENDS ${TEST_DATA_DIR}/${data_file}
-            )
-        endif()
-    endforeach()
-    
-    message(STATUS "Added test: ${TEST_NAME}")
-endfunction()
-
-# ============================================================================
-# Test Executables
-# ============================================================================
-
-# Unit tests for basic document operations
-add_cdocx_test(
-    unit_tests
-    basic_tests.cpp
+# Run all core tests (01 + 02)
+add_custom_target(test_core
+    COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG> -L "core" --output-on-failure
+    COMMENT "Running core functionality tests (01_basic, 02_iterator)"
 )
 
-# Iterator tests (checking backward compatibility with C++11)
-add_cdocx_test(
-    iterator_tests
-    iterator_tests.cpp
-)
-
-# Template functionality tests
-add_cdocx_test(
-    template_tests
-    template_tests.cpp
-)
-
-# Cross-run template functionality tests
-add_cdocx_test(
-    crossrun_tests
-    crossrun_tests.cpp
-)
-
-# ============================================================================
-# Test Properties and Labels
-# ============================================================================
-
-# Set common properties for all tests
-set_tests_properties(
-    unit_tests
-    iterator_tests
-    template_tests
-    crossrun_tests
-    PROPERTIES
-    LABELS "cdocx;all"
-    TIMEOUT 30
-    SKIP_RETURN_CODE 254
-)
-
-# ============================================================================
-# Test Dependencies and Ordering (optional - for parallel test execution)
-# ============================================================================
-
-# If tests have dependencies, they can be defined here
-# For example:
-# set_tests_properties(template_tests PROPERTIES DEPENDS unit_tests)
-
-# ============================================================================
-# Custom Test Targets
-# ============================================================================
-
-# Add custom target to run only unit tests
-add_custom_target(test_unit
-    COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG> -R unit_tests
-    DEPENDS unit_tests
-    COMMENT "Running unit tests"
-)
-
-# Add custom target to run only template tests
+# Run all template tests
 add_custom_target(test_template
-    COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG> -R template_tests
-    DEPENDS template_tests
-    COMMENT "Running template tests"
+    COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG> -L "template" --output-on-failure
+    COMMENT "Running template system tests (03_template)"
 )
 
-# Add custom target to run all tests (aliased to test)
-add_custom_target(check
-    COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG> --output-on-failure
-    DEPENDS unit_tests iterator_tests template_tests crossrun_tests
-    COMMENT "Running all CDocx tests"
+# Run all advanced feature tests
+add_custom_target(test_advanced
+    COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG> -L "advanced" --output-on-failure
+    COMMENT "Running advanced features tests (03_template, 04_xml_parts, 05_complete_structure)"
 )
 
-# ============================================================================
-# Test Data Cleanup (optional)
-# ============================================================================
-
-# Add target to clean up test data
-add_custom_target(clean_test_data
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${TEST_DATA_DIR}
-    COMMENT "Cleaning test data in ${TEST_DATA_DIR}"
+# Run quick smoke tests (fast tests only)
+add_custom_target(test_quick
+    COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG> -L "core" --output-on-failure
+    COMMENT "Running quick smoke tests (01_basic, 02_iterator)"
 )
 
+# Run all tests with parallel execution
+add_custom_target(test_all
+    COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG> --output-on-failure --parallel 4
+    COMMENT "Running all CDocx tests (parallel)"
+)
+
+# Alias: 'check' is the traditional Unix name for running tests
+add_custom_target(check)
+add_dependencies(check test_all)
+
 # ============================================================================
-# Installation Rules
+# Test Coverage and Analysis
 # ============================================================================
 
-# Install test executables if requested
-if(CDOCX_INSTALL_TESTS)
-    install(TARGETS unit_tests iterator_tests template_tests
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/tests
-    )
+if(ENABLE_COVERAGE)
+    find_program(LCOV lcov)
+    find_program(GENHTML genhtml)
     
-    # Install test data files
-    install(DIRECTORY ${TEST_DATA_DIR}/
-        DESTINATION ${CMAKE_INSTALL_BINDIR}/tests/test_data
-        FILES_MATCHING PATTERN "*.docx"
-    )
+    if(LCOV AND GENHTML)
+        # Add coverage flags
+        target_compile_options(cdocx PUBLIC
+            $<$<CONFIG:Debug>:--coverage>
+            $<$<CONFIG:Debug>:-fprofile-arcs>
+            $<$<CONFIG:Debug>:-ftest-coverage>
+        )
+        
+        target_link_options(cdocx PUBLIC
+            $<$<CONFIG:Debug>:--coverage>
+        )
+        
+        # Coverage targets
+        add_custom_target(coverage
+            COMMAND ${LCOV} --capture --directory ${CMAKE_BINARY_DIR} --output-file coverage.info
+            COMMAND ${LCOV} --remove coverage.info 
+                '/usr/*' 
+                '*/thirdparty/*' 
+                '*/test/*' 
+                --output-file coverage_filtered.info
+            COMMAND ${GENHTML} coverage_filtered.info --output-directory coverage_html
+            COMMENT "Generating test coverage report"
+        )
+        
+        add_custom_target(coverage_view
+            COMMAND ${CMAKE_COMMAND} -E echo "Opening coverage report..."
+            COMMAND ${CMAKE_COMMAND} -E start.html coverage_html/index.html
+            DEPENDS coverage
+            COMMENT "Opening coverage report in browser"
+        )
+    endif()
 endif()
 
 # ============================================================================
-# Summary
+# Test Summary
 # ============================================================================
 
 message(STATUS "")
-message(STATUS "Test configuration summary:")
-message(STATUS "  - Test data directory: ${TEST_DATA_DIR}")
-message(STATUS "  - Test executables: unit_tests, iterator_tests, template_tests, crossrun_tests")
-message(STATUS "  - Run tests: ctest -C <config> or use 'check' target")
+message(STATUS "╔════════════════════════════════════════════════════════════╗")
+message(STATUS "║               CDocx Test Suite Configuration               ║")
+message(STATUS "╚════════════════════════════════════════════════════════════╝")
+message(STATUS "")
+message(STATUS "Test Categories:")
+message(STATUS "  01_basic              - Basic document reading and operations")
+message(STATUS "  02_iterator           - C++11 iterator and range-based for")
+message(STATUS "  03_template           - Template placeholder and insertion")
+message(STATUS "  04_xml_parts          - XML Parts API")
+message(STATUS "  05_complete_structure - Full DOCX structure handling")
+message(STATUS "  06_create_empty       - Empty document creation")
+message(STATUS "  07_text_formatting    - Text and paragraph formatting")
+message(STATUS "  utils                 - Debug and diagnostic tools")
+message(STATUS "")
+message(STATUS "Run Commands:")
+message(STATUS "  cmake --build . --target test_all    - Run all tests")
+message(STATUS "  cmake --build . --target test_quick  - Run core tests only")
+message(STATUS "  cmake --build . --target test_core   - Run basic + iterator")
+message(STATUS "  cmake --build . --target test_template - Run template tests")
+message(STATUS "  cmake --build . --target test_advanced - Run advanced tests")
+message(STATUS "  ctest -C Debug --output-on-failure   - Run via CTest directly")
 message(STATUS "")
