@@ -1,0 +1,59 @@
+# Uninstall script for CDocx
+# This script is used to remove installed files
+
+if(NOT EXISTS "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt")
+    message(FATAL_ERROR "Cannot find install manifest: @CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt")
+endif()
+
+file(READ "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt" files)
+string(REGEX REPLACE "\n" ";" files "${files}")
+
+set(files_removed 0)
+set(files_failed 0)
+
+foreach(file ${files})
+    string(STRIP "${file}" file)
+    
+    # Skip empty lines
+    if(file STREQUAL "")
+        continue()
+    endif()
+    
+    # Check if file exists
+    if(EXISTS "${file}")
+        message(STATUS "Removing: ${file}")
+        
+        # Try to remove the file
+        file(REMOVE "${file}")
+        
+        # Check if removal was successful
+        if(EXISTS "${file}")
+            message(WARNING "Failed to remove: ${file}")
+            math(EXPR files_failed "${files_failed} + 1")
+        else()
+            math(EXPR files_removed "${files_removed} + 1")
+        endif()
+        
+        # Remove empty parent directories (optional)
+        get_filename_component(dir "${file}" DIRECTORY)
+        if(EXISTS "${dir}")
+            file(GLOB dir_contents "${dir}/*")
+            if("${dir_contents}" STREQUAL "")
+                message(STATUS "Removing empty directory: ${dir}")
+                file(REMOVE "${dir}")
+            endif()
+        endif()
+    else()
+        message(STATUS "File already removed: ${file}")
+    endif()
+endforeach()
+
+message(STATUS "")
+message(STATUS "Uninstall Summary:")
+message(STATUS "  Files removed: ${files_removed}")
+message(STATUS "  Files failed: ${files_failed}")
+message(STATUS "")
+
+if(files_failed GREATER 0)
+    message(WARNING "Some files could not be removed. You may need to run with elevated permissions.")
+endif()
