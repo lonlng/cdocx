@@ -385,11 +385,11 @@ int main(int argc, char* argv[]) {
     try {
         create_basic_read_doc(template_path, base_dir);
         create_template_basic_doc(template_path, base_dir);
-        create_template_advanced_doc(template_path, base_dir);
-        create_insert_main_doc(template_path, base_dir);
-        create_insert_template_doc(template_path, base_dir);
-        create_xml_parts_doc(template_path, base_dir);
-        create_media_management_doc(template_path, base_dir);
+        // create_template_advanced_doc(template_path, base_dir);
+        // create_insert_main_doc(template_path, base_dir);
+        // create_insert_template_doc(template_path, base_dir);
+        // create_xml_parts_doc(template_path, base_dir);
+        // create_media_management_doc(template_path, base_dir);
         
         std::cout << std::endl;
         std::cout << "========================================" << std::endl;

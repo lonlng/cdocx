@@ -4,9 +4,9 @@
  * @details Implementation of advanced features including Bookmark, Range,
  *          DocumentBuilder, TableOperations, and DocumentSearch.
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  */
 
@@ -14,6 +14,7 @@
 #include <cdocx/document.h>
 #include <algorithm>
 #include <cctype>
+#include <map>
 
 namespace cdocx {
 
@@ -679,3 +680,4 @@ int DocumentSearch::find_and_process(Document& doc, const std::string& pattern, 
 }
 
 } // namespace cdocx
+

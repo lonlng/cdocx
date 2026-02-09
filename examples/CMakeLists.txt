@@ -1,119 +1,102 @@
-# CDocx Examples CMakeLists.txt
-# Organized example programs demonstrating CDocx features
-# Each example has its own subdirectory with data/ folder
-
-cmake_minimum_required(VERSION 3.10)
-
 # ============================================================================
-# UTF-8 Encoding
+# CDocx Examples
 # ============================================================================
 
-if(MSVC)
-    add_compile_options(/utf-8)
-else()
-    add_compile_options(-finput-charset=utf-8 -fexec-charset=utf-8)
-endif()
+include(CDocxHelpers)
 
-# ============================================================================
-# Include Helper Functions
-# ============================================================================
-
-include(${CMAKE_SOURCE_DIR}/cmake/modules/CDocxHelpers.cmake)
-require_cdocx()
-
-# ============================================================================
+# ----------------------------------------------------------------------------
 # Sample Document Generator
-# This executable creates dedicated sample documents for each example
-# ============================================================================
+# ----------------------------------------------------------------------------
+add_cdocx_executable(create_sample_docs SOURCES create_sample_docs.cpp)
 
-add_cdocx_executable(create_sample_docs
-    SOURCES create_sample_docs.cpp
-)
-
-# Add custom target to generate sample documents
 add_custom_target(generate_samples
     COMMAND create_sample_docs
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating sample documents for examples"
 )
 
-# ============================================================================
-# Example Programs
-# Each example is in its own subdirectory with data/ folder
-# ============================================================================
+# ----------------------------------------------------------------------------
+# Example Programs (Auto-discovered)
+# ----------------------------------------------------------------------------
+# Each example should be in its own subdirectory with:
+#   - CMakeLists.txt (or auto-generated)
+#   - main.cpp
+#   - data/ directory (optional)
+# ----------------------------------------------------------------------------
 
-set(EXAMPLES
-    01_basic_read
+# Define all examples with their dependencies on samples
+set(CDOCX_EXAMPLES
+    01_basic_read:NEEDS_SAMPLES
     02_basic_create
-    03_template_basic
-    04_template_advanced
-    05_document_insert
-    06_xml_parts
-    07_media_management
+    03_template_basic:NEEDS_SAMPLES
+    04_template_advanced:NEEDS_SAMPLES
+    05_document_insert:NEEDS_SAMPLES
+    06_xml_parts:NEEDS_SAMPLES
+    07_media_management:NEEDS_SAMPLES
     08_create_empty
     09_text_formatting
 )
 
 if(ENABLE_ADVANCED_FEATURES)
-    list(APPEND EXAMPLES 10_advanced_crud)
+    list(APPEND CDOCX_EXAMPLES 10_advanced_crud:NEEDS_SAMPLES)
 endif()
 
-foreach(example ${EXAMPLES})
-    add_subdirectory(${example})
+# Process each example
+foreach(example_def ${CDOCX_EXAMPLES})
+    # Parse definition (format: "name" or "name:NEEDS_SAMPLES")
+    string(REPLACE ":" ";" parts ${example_def})
+    list(GET parts 0 example)
+    list(LENGTH parts parts_count)
+    
+    set(needs_samples FALSE)
+    if(parts_count GREATER 1)
+        list(GET parts 1 flag)
+        if(flag STREQUAL "NEEDS_SAMPLES")
+            set(needs_samples TRUE)
+        endif()
+    endif()
+    
+    # Check for custom CMakeLists.txt or auto-generate
+    set(example_dir ${CMAKE_CURRENT_SOURCE_DIR}/${example})
+    
+    if(EXISTS ${example_dir}/CMakeLists.txt)
+        # Use custom CMakeLists.txt
+        add_subdirectory(${example})
+    else()
+        # Auto-generate target for simple examples
+        if(EXISTS ${example_dir}/main.cpp)
+            add_cdocx_example(${example} main.cpp)
+        else()
+            message(WARNING "Example ${example} has no main.cpp or CMakeLists.txt")
+            continue()
+        endif()
+    endif()
+    
+    # Add sample dependency if needed
+    if(needs_samples AND TARGET ${example})
+        add_dependencies(${example} generate_samples)
+    endif()
+    
+    list(APPEND ALL_EXAMPLE_TARGETS ${example})
 endforeach()
 
-# Ensure samples are generated before examples that need them run
-# Note: 02_basic_create, 08_create_empty and 09_text_formatting don't need samples
-add_dependencies(01_basic_read generate_samples)
-add_dependencies(03_template_basic generate_samples)
-add_dependencies(04_template_advanced generate_samples)
-add_dependencies(05_document_insert generate_samples)
-add_dependencies(06_xml_parts generate_samples)
-add_dependencies(07_media_management generate_samples)
-if(ENABLE_ADVANCED_FEATURES)
-    add_dependencies(10_advanced_crud generate_samples)
-endif()
-
-# ============================================================================
+# ----------------------------------------------------------------------------
 # Convenience Targets
-# ============================================================================
+# ----------------------------------------------------------------------------
 
 add_custom_target(examples
-    DEPENDS ${EXAMPLES}
-    COMMENT "Building all examples"
+    DEPENDS ${ALL_EXAMPLE_TARGETS}
+    COMMENT "Building all CDocx examples"
 )
 
-add_custom_target(examples_list
-    COMMAND ${CMAKE_COMMAND} -E echo ""
-    COMMAND ${CMAKE_COMMAND} -E echo "CDocx Examples:"
-    COMMAND ${CMAKE_COMMAND} -E echo "==============="
-    COMMAND ${CMAKE_COMMAND} -E echo ""
-    COMMAND ${CMAKE_COMMAND} -E echo "  01_basic_read          - Basic document reading"
-    COMMAND ${CMAKE_COMMAND} -E echo "  02_basic_create        - Document creation and formatting"
-    COMMAND ${CMAKE_COMMAND} -E echo "  03_template_basic      - Basic template processing"
-    COMMAND ${CMAKE_COMMAND} -E echo "  04_template_advanced   - Advanced template features"
-    COMMAND ${CMAKE_COMMAND} -E echo "  05_document_insert     - Document insertion"
-    COMMAND ${CMAKE_COMMAND} -E echo "  06_xml_parts           - XML Parts API demonstration"
-    COMMAND ${CMAKE_COMMAND} -E echo "  07_media_management    - Media file management"
-    COMMAND ${CMAKE_COMMAND} -E echo "  08_create_empty        - Create empty document from scratch"
-    COMMAND ${CMAKE_COMMAND} -E echo "  09_text_formatting     - Text and paragraph formatting features"
-if(ENABLE_ADVANCED_FEATURES)
-    COMMAND ${CMAKE_COMMAND} -E echo "  10_advanced_crud       - Advanced CRUD operations (Create, Read, Update, Delete)"
-endif()
-    COMMAND ${CMAKE_COMMAND} -E echo ""
-    COMMAND ${CMAKE_COMMAND} -E echo "Run: cmake --build . --target examples"
-    COMMAND ${CMAKE_COMMAND} -E echo ""
-    COMMENT "Listing CDocx examples"
-)
-
-# ============================================================================
+# ----------------------------------------------------------------------------
 # Summary
-# ============================================================================
-
+# ----------------------------------------------------------------------------
 message(STATUS "")
-message(STATUS "CDocx Examples:")
-message(STATUS "==============")
-foreach(example ${EXAMPLES})
-    message(STATUS "  - ${example}")
+message(STATUS "[Examples]")
+message(STATUS "----------")
+foreach(example_def ${CDOCX_EXAMPLES})
+    string(REPLACE ":" ";" example_name ${example_def})
+    message(STATUS "  - ${example_name}")
 endforeach()
 message(STATUS "")

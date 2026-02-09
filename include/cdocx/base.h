@@ -5,9 +5,9 @@
  *          TableRow, and Table. These classes provide the core document
  *          structure and content manipulation capabilities.
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  * 
  * @par 文档结构层次：

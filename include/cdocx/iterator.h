@@ -7,7 +7,7 @@
  * 
  * @author Cihan SARI (@CihanSari), Amir Mohamadi (@amiremohamadi)
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  * 
  * @par 使用示例：
@@ -174,7 +174,7 @@ private:
      */
     template <class T>
     static auto make_begin(T const& obj) -> Iterator<T, XmlNode> {
-        return Iterator<T, XmlNode>(obj.parent, obj.current);
+        return Iterator<T, XmlNode>(obj.parent_, obj.current_);
     }
 
     /**
@@ -186,7 +186,7 @@ private:
     template <class T>
     static auto make_end(T const& obj) -> Iterator<T, XmlNode> {
         return Iterator<T, XmlNode>(
-            obj.parent, static_cast<decltype(obj.current)>(0));
+            obj.parent_, static_cast<decltype(obj.current_)>(0));
     }
 
     // Grant friend access to begin() and end() functions

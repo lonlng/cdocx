@@ -1,6 +1,5 @@
 #include <sstream>
-#include "cdocx.h"
-#include <cdocxIterator.h>
+#include <cdocx.h>
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"

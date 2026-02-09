@@ -4,9 +4,9 @@
  * @details Provides forward declarations for all public classes in the CDocx library.
  *          Use this header to reduce compile times when only forward declarations are needed.
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  * 
  * @par 使用示例：

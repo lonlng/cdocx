@@ -5,9 +5,9 @@
  *          Microsoft Office Word (.docx) files. This header includes
  *          all public API components.
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  * 
  * @section Features

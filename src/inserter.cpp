@@ -3,9 +3,9 @@
  * @brief DocumentInserter class implementation
  * @details Implementation of document content insertion and merging functionality.
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  */
 

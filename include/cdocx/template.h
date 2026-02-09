@@ -6,9 +6,9 @@
  *          Supports both text and image placeholders with FSM-based
  *          processing for handling placeholders split across multiple runs.
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  * 
  * @par 使用示例：
@@ -118,13 +118,6 @@ private:
      */
     void replace_in_tables();
 
-    /**
-     * @brief Try to replace placeholder in a single run
-     * @param[in,out] r The run to process
-     * @return true if replacement was successful
-     */
-    bool try_replace_single_run(Run& r);
-    
     /**
      * @brief Transition to collecting state in FSM
      * @param[in,out] ctx Placeholder context

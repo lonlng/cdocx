@@ -6,10 +6,13 @@
  *          PIMPL (Pointer to Implementation) idiom to hide implementation
  *          details and maintain ABI stability.
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ *          Optimized version with lazy loading, parallel processing, and
+ *          advanced memory management.
+ * 
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
- * @version 0.2.0
+ * @date 2026
+ * @version 0.3.0
  * 
  * @par 使用示例：
  * @code
@@ -44,6 +47,8 @@
 #include <cdocx/base.h>
 #include <cdocx/iterator.h>
 #include <pugixml.hpp>
+#include <cstdint>
+#include <functional>
 #include <memory>
 #include <string>
 #include <vector>
@@ -58,6 +63,13 @@ class Range;
 class DocumentBuilder;
 class DocumentSearch;
 class IteratorHelper;
+
+// Forward declaration for PIMPL idiom
+class DocumentImpl;
+
+// Forward declarations for optimized loading
+struct LoadConfig;
+struct LoadResult;
 
 /**
  * @class Document
@@ -93,12 +105,6 @@ private:
     friend class DocumentSearch;
     friend class IteratorHelper;
 
-    /**
-     * @brief Private implementation class (PIMPL idiom)
-     * @details Contains all implementation details, hidden from public API
-     */
-    class DocumentImpl;
-    
     std::unique_ptr<DocumentImpl> impl_;  ///< Pointer to implementation
 
 public:
@@ -166,6 +172,25 @@ public:
     void open(const std::string& filepath);
 
     /**
+     * @brief Open a document with progress callback
+     * @param[in] filepath Path to the DOCX file to open
+     * @param[in] callback Progress callback function (percent, current_file)
+     * @post is_open() returns true if successful
+     * @since 0.3.0
+     */
+    void open(const std::string& filepath, 
+              std::function<void(int, const std::string&)> callback);
+
+    /**
+     * @brief Open with custom load configuration
+     * @param[in] filepath Path to the DOCX file to open
+     * @param[in] config Load configuration options
+     * @return Detailed load result with statistics
+     * @since 0.3.0
+     */
+    LoadResult open_with_config(const std::string& filepath, const LoadConfig& config);
+
+    /**
      * @brief Close the document
      * @details Closes all file handles and releases resources.
      *          Any unsaved changes are lost.
@@ -194,6 +219,50 @@ public:
      * @return false if document is closed or failed to open
      */
     bool is_open() const;
+
+    /**
+     * @brief Get detailed information about the last open operation
+     * @return Load result with statistics and error information
+     * @since 0.3.0
+     */
+    LoadResult get_last_load_result() const;
+
+    // ========================================================================
+    // Memory Management (Optimized)
+    // ========================================================================
+
+    /**
+     * @brief Preload all lazy-loaded files
+     * @return true if all files loaded successfully
+     * @details Forces loading of all files that were marked for lazy loading
+     * @since 0.3.0
+     */
+    bool preload_all_files();
+
+    /**
+     * @brief Unload non-critical files to free memory
+     * @return Number of files unloaded
+     * @details Serializes XML documents and unloads media files that are not
+     *          critical document parts. They will be reloaded on demand.
+     * @since 0.3.0
+     */
+    size_t unload_to_free_memory();
+
+    /**
+     * @brief Configure lazy loading behavior
+     * @param[in] enable Enable/disable lazy loading
+     * @param[in] lazy_media Enable lazy loading for media files
+     * @since 0.3.0
+     */
+    void configure_lazy_loading(bool enable, bool lazy_media = true);
+
+    /**
+     * @brief Set size thresholds for different storage strategies
+     * @param[in] memory_threshold Files smaller than this stay in memory (bytes)
+     * @param[in] mmap_threshold Files larger than this use memory mapping (bytes)
+     * @since 0.3.0
+     */
+    void set_storage_thresholds(size_t memory_threshold, size_t mmap_threshold);
 
     /**
      * @brief Create a new empty document
@@ -478,6 +547,196 @@ public:
     
     /** @brief Check media exists (optimized version) */
     bool has_media_optimized(const std::string& image_name) const;
+};
+
+// ============================================================================
+// Load Configuration
+// ============================================================================
+
+/**
+ * @struct LoadConfig
+ * @brief Configuration for document loading behavior
+ * @details Allows fine-tuning of loading performance and memory usage.
+ * @since 0.3.0
+ */
+struct LoadConfig {
+    // 延迟加载设置
+    bool enable_lazy_loading = true;           ///< 启用延迟加载
+    bool lazy_load_media = true;               ///< 延迟加载媒体文件
+    bool lazy_load_xml = false;                ///< 延迟加载非关键XML
+    
+    // 大小阈值 (字节)
+    size_t memory_threshold = 10 * 1024 * 1024;     ///< 10MB, 小文件直接内存
+    size_t mmap_threshold = 50 * 1024 * 1024;       ///< 50MB, 大文件内存映射
+    size_t temp_file_threshold = 100 * 1024 * 1024; ///< 100MB, 超大文件临时存储
+    
+    // 并行加载设置
+    bool enable_parallel_loading = true;       ///< 启用并行加载
+    size_t parallel_threshold = 50;            ///< 超过此文件数启用并行
+    size_t max_threads = 0;                    ///< 0 = 使用硬件并发数
+    
+    // 缓存设置
+    bool enable_lru_cache = true;              ///< 启用LRU缓存
+    size_t max_cached_xml_nodes = 20;          ///< 最大缓存XML节点数
+    size_t max_cached_media_mb = 100;          ///< 最大缓存媒体大小(MB)
+    
+    // 错误处理
+    bool allow_partial_load = true;            ///< 允许部分加载
+    bool skip_corrupted_files = true;          ///< 跳过损坏文件
+    size_t max_errors = 100;                   ///< 最大错误数
+    
+    // XML解析优化
+    bool enable_xml_prealloc = true;           ///< XML预分配内存
+    size_t xml_prealloc_factor = 2;            ///< 预分配倍数
+    
+    // 进度回调
+    std::function<void(int percent, const std::string& current_file)> progress_callback;
+    
+    /**
+     * @brief Create default configuration optimized for speed
+     */
+    static LoadConfig optimized_for_speed() {
+        LoadConfig cfg;
+        cfg.enable_parallel_loading = true;
+        cfg.enable_lazy_loading = false;
+        cfg.max_threads = 0;
+        return cfg;
+    }
+    
+    /**
+     * @brief Create default configuration optimized for memory
+     */
+    static LoadConfig optimized_for_memory() {
+        LoadConfig cfg;
+        cfg.enable_lazy_loading = true;
+        cfg.lazy_load_media = true;
+        cfg.lazy_load_xml = true;
+        cfg.memory_threshold = 5 * 1024 * 1024;   // 5MB
+        cfg.max_cached_xml_nodes = 10;
+        cfg.max_cached_media_mb = 50;
+        return cfg;
+    }
+};
+
+// ============================================================================
+// Error Handling Types
+// ============================================================================
+
+/**
+ * @enum LoadErrorType
+ * @brief Types of load errors
+ * @since 0.3.0
+ */
+enum class LoadErrorType {
+    None,               ///< No error
+    ZipOpenFailed,      ///< Failed to open ZIP file
+    ZipEntryReadFailed, ///< Failed to read ZIP entry
+    XmlParseFailed,     ///< XML parsing failed
+    InvalidStructure,   ///< Invalid document structure
+    CorruptedFile,      ///< Corrupted file content
+    MemoryAllocation,   ///< Memory allocation failed
+    IoError,            ///< I/O error
+    Timeout,            ///< Operation timeout
+    Unknown             ///< Unknown error
+};
+
+/**
+ * @enum DocumentIntegrity
+ * @brief Document integrity assessment
+ * @since 0.3.0
+ */
+enum class DocumentIntegrity {
+    Complete,       ///< All parts loaded successfully
+    Partial,        ///< Some non-critical parts failed
+    Critical,       ///< Critical parts missing but usable
+    Corrupted       ///< Document severely corrupted
+};
+
+/**
+ * @struct LoadError
+ * @brief Detailed load error information
+ * @since 0.3.0
+ */
+struct LoadError {
+    LoadErrorType type = LoadErrorType::None;  ///< Error type
+    std::string file_path;                      ///< File that caused error
+    std::string message;                        ///< Error message
+    size_t line = 0;                           ///< Line number (for XML)
+    
+    LoadError() = default;
+    LoadError(LoadErrorType t, const std::string& path, const std::string& msg)
+        : type(t), file_path(path), message(msg) {}
+        
+    /**
+     * @brief Get human-readable error type name
+     */
+    std::string get_type_name() const {
+        switch (type) {
+            case LoadErrorType::ZipOpenFailed: return "ZipOpenFailed";
+            case LoadErrorType::ZipEntryReadFailed: return "ZipEntryReadFailed";
+            case LoadErrorType::XmlParseFailed: return "XmlParseFailed";
+            case LoadErrorType::InvalidStructure: return "InvalidStructure";
+            case LoadErrorType::CorruptedFile: return "CorruptedFile";
+            case LoadErrorType::MemoryAllocation: return "MemoryAllocation";
+            case LoadErrorType::IoError: return "IoError";
+            case LoadErrorType::Timeout: return "Timeout";
+            case LoadErrorType::Unknown: return "Unknown";
+            default: return "None";
+        }
+    }
+};
+
+/**
+ * @struct LoadResult
+ * @brief Comprehensive load result with statistics
+ * @since 0.3.0
+ */
+struct LoadResult {
+    bool success = false;                       ///< Overall success
+    DocumentIntegrity integrity = DocumentIntegrity::Corrupted;  ///< Integrity level
+    std::vector<LoadError> errors;              ///< All errors encountered
+    std::vector<std::string> skipped_files;     ///< Files that were skipped
+    std::vector<std::string> lazy_loaded_files; ///< Files marked for lazy loading
+    
+    size_t total_files = 0;                     ///< Total files in document
+    size_t loaded_files = 0;                    ///< Successfully loaded files
+    size_t total_bytes = 0;                     ///< Total bytes
+    size_t loaded_bytes = 0;                    ///< Loaded bytes
+    double load_time_ms = 0.0;                  ///< Load time in milliseconds
+    
+    /**
+     * @brief Check if document is usable despite any errors
+     */
+    bool is_usable() const {
+        return success && (integrity == DocumentIntegrity::Complete || 
+                          integrity == DocumentIntegrity::Partial);
+    }
+    
+    /**
+     * @brief Check if document is fully intact
+     */
+    bool is_complete() const {
+        return success && integrity == DocumentIntegrity::Complete;
+    }
+    
+    /**
+     * @brief Get summary string for logging
+     */
+    std::string get_summary() const {
+        std::string integrity_str;
+        switch (integrity) {
+            case DocumentIntegrity::Complete: integrity_str = "Complete"; break;
+            case DocumentIntegrity::Partial: integrity_str = "Partial"; break;
+            case DocumentIntegrity::Critical: integrity_str = "Critical"; break;
+            default: integrity_str = "Corrupted"; break;
+        }
+        
+        return "Load " + std::string(success ? "succeeded" : "failed") +
+               " (" + integrity_str + "): " +
+               std::to_string(loaded_files) + "/" + std::to_string(total_files) + " files, " +
+               std::to_string(static_cast<size_t>(load_time_ms)) + "ms, " +
+               std::to_string(errors.size()) + " errors";
+    }
 };
 
 } // namespace cdocx

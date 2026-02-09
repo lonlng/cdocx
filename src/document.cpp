@@ -5,9 +5,9 @@
  *          Handles file I/O, ZIP archive management, XML parsing,
  *          and document structure manipulation.
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  */
 
@@ -17,6 +17,8 @@
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
+#include <functional>
+#include <set>
 
 namespace cdocx {
 
@@ -59,30 +61,28 @@ void Document::open() {
 }
 
 void Document::open(const std::string& filepath) {
+    open(filepath, nullptr);
+}
+
+void Document::open(const std::string& filepath, 
+                    std::function<void(int, const std::string&)> callback) {
     // Close any currently open document first
     close();
     
     impl_->filepath_ = filepath;
     
-    // Open the ZIP archive
-    if (!impl_->open_zip(filepath)) {
-        return;
-    }
+    // Set up load configuration with progress callback
+    LoadConfig config;
+    config.progress_callback = callback;
+    impl_->set_load_config(config);
     
-    // Load document tree from ZIP
-    if (!impl_->load_tree_from_zip()) {
+    // Use the new load with result
+    auto result = open_with_config(filepath, config);
+    
+    if (!result.is_usable()) {
         close();
         return;
     }
-    
-    // Build quick-access caches from tree
-    impl_->build_caches_from_tree();
-    
-    // Load relationships from all _rels files
-    impl_->load_all_relationships();
-    
-    // Load content types
-    impl_->load_content_types();
     
     impl_->is_open_ = true;
     
@@ -95,6 +95,58 @@ void Document::open(const std::string& filepath) {
             impl_->table_->set_parent(body);
         }
     }
+}
+
+LoadResult Document::open_with_config(const std::string& filepath, const LoadConfig& config) {
+    // Close any currently open document first
+    close();
+    
+    impl_->filepath_ = filepath;
+    impl_->set_load_config(config);
+    
+    // Open the ZIP archive
+    if (!impl_->open_zip(filepath)) {
+        LoadResult result;
+        result.success = false;
+        result.errors.emplace_back(LoadErrorType::ZipOpenFailed, filepath, 
+                                   "Failed to open ZIP file");
+        result.integrity = DocumentIntegrity::Corrupted;
+        impl_->last_load_result_ = result;
+        return result;
+    }
+    
+    // Load document tree with full result
+    auto result = impl_->load_tree_with_result();
+    
+    if (!result.is_usable() && !config.allow_partial_load) {
+        close();
+        return result;
+    }
+    
+    // Build quick-access caches from tree
+    impl_->build_caches_from_tree();
+    
+    // Load relationships from all _rels files
+    impl_->load_all_relationships();
+    
+    // Load content types
+    impl_->load_content_types();
+    
+    impl_->is_open_ = result.is_usable();
+    
+    // Initialize paragraph iterator to first paragraph
+    if (impl_->is_open_) {
+        pugi::xml_document* doc_xml = get_document_xml();
+        if (doc_xml) {
+            pugi::xml_node body = doc_xml->child("w:document").child("w:body");
+            if (body) {
+                impl_->paragraph_->set_parent(body);
+                impl_->table_->set_parent(body);
+            }
+        }
+    }
+    
+    return result;
 }
 
 void Document::close() {
@@ -149,6 +201,34 @@ void Document::save(const std::string& filepath) {
 
 bool Document::is_open() const {
     return impl_->is_open_;
+}
+
+LoadResult Document::get_last_load_result() const {
+    return impl_->get_last_load_result();
+}
+
+bool Document::preload_all_files() {
+    if (!is_open()) {
+        return false;
+    }
+    return impl_->preload_all_lazy_files();
+}
+
+size_t Document::unload_to_free_memory() {
+    if (!is_open()) {
+        return 0;
+    }
+    return impl_->unload_to_free_memory();
+}
+
+void Document::configure_lazy_loading(bool enable, bool lazy_media) {
+    impl_->load_config_.enable_lazy_loading = enable;
+    impl_->load_config_.lazy_load_media = lazy_media;
+}
+
+void Document::set_storage_thresholds(size_t memory_threshold, size_t mmap_threshold) {
+    impl_->load_config_.memory_threshold = memory_threshold;
+    impl_->load_config_.mmap_threshold = mmap_threshold;
 }
 
 bool Document::create_empty(const std::string& filepath) {
@@ -535,7 +615,7 @@ bool Document::replace_media(const std::string& image_name, const std::string& n
         return false;
     }
     
-    node->binary_data = std::move(data);
+    node->file_storage.store_in_memory(std::move(data));
     node->is_modified = true;
     
     return true;
@@ -579,8 +659,9 @@ bool Document::export_media(const std::string& image_name, const std::string& ou
         return false;
     }
     
-    file.write(reinterpret_cast<const char*>(node->binary_data.data()), 
-               node->binary_data.size());
+    auto data = node->file_storage.get_data();
+    file.write(reinterpret_cast<const char*>(data.data()), 
+               data.size());
     
     return file.good();
 }
@@ -594,7 +675,7 @@ std::vector<uint8_t> Document::get_media_data(const std::string& image_name) con
     std::string media_path = "word/media/" + image_name;
     auto node = impl_->tree_.find_node(media_path);
     if (node && !node->is_deleted) {
-        result = node->binary_data;
+        result = node->file_storage.get_data();
     }
     return result;
 }
@@ -700,3 +781,4 @@ bool Document::has_media_optimized(const std::string& image_name) const {
 }
 
 } // namespace cdocx
+

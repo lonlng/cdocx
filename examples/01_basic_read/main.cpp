@@ -13,7 +13,8 @@
 
 int main() {
     // Get the path to the test document
-    std::string doc_path = example_utils::get_resource_path("01_basic_read_sample.docx");
+    // std::string doc_path = example_utils::get_resource_path("01_basic_read_sample.docx");
+    std::string doc_path = "data/01_basic_read_sample.docx";
     
     std::cout << "Opening: " << doc_path << std::endl;
     

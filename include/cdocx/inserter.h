@@ -5,9 +5,9 @@
  *          one document into another. Supports inserting entire documents,
  *          paragraphs only, or tables only, at various positions.
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  * 
  * @par 使用示例：

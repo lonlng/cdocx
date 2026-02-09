@@ -45,7 +45,7 @@ src/
  * @details 详细描述
  * @author Author Name (@handle)
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  */
 ```

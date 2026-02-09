@@ -4,9 +4,9 @@
  * @details This file contains the implementation of the fundamental content
  *          classes that make up the document structure.
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  */
 
@@ -27,6 +27,7 @@ Run::Run(pugi::xml_node parent_node, pugi::xml_node current_node)
 
 void Run::set_parent(pugi::xml_node node) {
     parent_ = node;
+    // Find first run child in the paragraph
     current_ = parent_.child("w:r");
 }
 
@@ -64,7 +65,8 @@ bool Run::set_text(const char* text) const {
 }
 
 Run& Run::next() {
-    current_ = current_.next_sibling();
+    // Move to next w:r sibling (skip non-run elements)
+    current_ = current_.next_sibling("w:r");
     return *this;
 }
 
@@ -223,8 +225,12 @@ Paragraph::Paragraph(pugi::xml_node parent_node, pugi::xml_node current_node)
 
 void Paragraph::set_parent(pugi::xml_node node) {
     parent_ = node;
+    // Find first paragraph child
     current_ = parent_.child("w:p");
-    run_.set_parent(current_);
+    // Initialize run iterator for this paragraph
+    if (current_) {
+        run_.set_parent(current_);
+    }
 }
 
 void Paragraph::set_current(pugi::xml_node node) {
@@ -232,8 +238,12 @@ void Paragraph::set_current(pugi::xml_node node) {
 }
 
 Paragraph& Paragraph::next() {
-    current_ = current_.next_sibling();
-    run_.set_parent(current_);
+    // Move to next w:p sibling (skip non-paragraph elements like w:sectPr)
+    current_ = current_.next_sibling("w:p");
+    // Update run iterator for new paragraph
+    if (current_) {
+        run_.set_parent(current_);
+    }
     return *this;
 }
 
@@ -537,7 +547,10 @@ bool TableCell::has_next() const {
 }
 
 TableCell& TableCell::next() {
-    current_ = current_.next_sibling();
+    current_ = current_.next_sibling("w:tc");
+    if (current_) {
+        paragraph_.set_parent(current_);
+    }
     return *this;
 }
 
@@ -568,8 +581,10 @@ void TableRow::set_current(pugi::xml_node node) {
 }
 
 TableRow& TableRow::next() {
-    current_ = current_.next_sibling();
-    cell_.set_parent(current_);
+    current_ = current_.next_sibling("w:tr");
+    if (current_) {
+        cell_.set_parent(current_);
+    }
     return *this;
 }
 
@@ -604,8 +619,10 @@ bool Table::has_next() const {
 }
 
 Table& Table::next() {
-    current_ = current_.next_sibling();
-    row_.set_parent(current_);
+    current_ = current_.next_sibling("w:tbl");
+    if (current_) {
+        row_.set_parent(current_);
+    }
     return *this;
 }
 

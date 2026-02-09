@@ -4,9 +4,9 @@
  * @details Defines text formatting flags used throughout the CDocx library
  *          for applying styles to text runs in Word documents.
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  * 
  * @example

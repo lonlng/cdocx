@@ -1,176 +1,172 @@
-# CDocxHelpers.cmake
-# Helper functions for building CDocx examples and tests
+# ============================================================================
+# CDocxHelpers.cmake - CMake Helper Functions for CDocx
+# ============================================================================
 #
-# This module provides convenient functions for:
-#   - Setting up CDocx library dependencies
-#   - Creating executables that link against CDocx
-#   - Creating and registering tests with CTest
+# This module provides convenient functions for building CDocx examples and tests.
+# Include this module after defining the cdocx target.
 #
 # Usage:
-#   include(${CMAKE_SOURCE_DIR}/cmake/modules/CDocxHelpers.cmake)
-#   require_cdocx()
-#   add_cdocx_executable(my_app SOURCES main.cpp)
-#   add_cdocx_test(my_test test.cpp ${TEST_DATA_DIR} LABELS "core")
+#   include(CDocxHelpers)
+#   add_cdocx_example(01_basic_read main.cpp)
+#   add_cdocx_test(01_basic_tests 01_basic_tests.cpp DATA my_test.docx LABELS "core")
 
-# =============================================================================
-# Require CDocx Library
-# =============================================================================
-#
-# Sets up the necessary include directories and links the cdocx library.
-# Must be called before using add_cdocx_executable().
-#
-# Usage:
-#   require_cdocx()
-#
-function(require_cdocx)
-    # Ensure cdocx target is available
+include(CMakeParseArguments)
+
+# ----------------------------------------------------------------------------
+# Internal: Check cdocx target exists
+# ----------------------------------------------------------------------------
+function(_require_cdocx)
     if(NOT TARGET cdocx)
         message(FATAL_ERROR "CDocxHelpers: 'cdocx' target not found. "
-                            "Make sure to add_subdirectory(cdocx) before including this helper.")
+            "Make sure to define the cdocx target before including this helper.")
     endif()
 endfunction()
 
-# =============================================================================
-# Add CDocx Executable
-# =============================================================================
-#
-# Creates an executable that links against the cdocx library.
-# Automatically sets C++17 standard and UTF-8 encoding.
+# ----------------------------------------------------------------------------
+# Function: add_cdocx_executable
+# ----------------------------------------------------------------------------
+# Creates an executable that links against cdocx with common settings.
 #
 # Usage:
 #   add_cdocx_executable(target_name
-#       SOURCES source1.cpp source2.cpp ...
-#       [WORKING_DIR dir]      # Working directory for the executable
-#       [IS_SAMPLE]            # Mark as sample generator
+#       SOURCES source1.cpp [source2.cpp ...]
+#       [WORKING_DIR dir]      # Working directory (default: CMAKE_CURRENT_BINARY_DIR)
 #   )
-#
+# ----------------------------------------------------------------------------
 function(add_cdocx_executable target_name)
-    # Parse arguments
-    cmake_parse_arguments(ARG
-        "IS_SAMPLE"           # Options (boolean)
-        "WORKING_DIR"         # Single value arguments
-        "SOURCES"             # Multi value arguments
-        ${ARGN}
-    )
-
-    # Validate required arguments
+    cmake_parse_arguments(ARG "" "WORKING_DIR" "SOURCES" ${ARGN})
+    
     if(NOT ARG_SOURCES)
         message(FATAL_ERROR "add_cdocx_executable: SOURCES argument is required")
     endif()
 
-    # Create the executable
     add_executable(${target_name} ${ARG_SOURCES})
-
-    # Set C++ standard
+    
     set_target_properties(${target_name} PROPERTIES
         CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON
         CXX_EXTENSIONS OFF
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_BINARY_DIR}
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_BINARY_DIR}
     )
 
-    # Link against cdocx library
     target_link_libraries(${target_name} PRIVATE cdocx)
-
-    # Set include directories
+    
     target_include_directories(${target_name} PRIVATE
-        ${CMAKE_SOURCE_DIR}/include
-        ${CMAKE_SOURCE_DIR}/thirdparty/pugixml/src
-        ${CMAKE_SOURCE_DIR}/thirdparty/zip/src
+        ${CMAKE_SOURCE_DIR}/test  # For doctest.h
     )
 
-    # UTF-8 encoding
     if(MSVC)
         target_compile_options(${target_name} PRIVATE /utf-8)
-    else()
-        target_compile_options(${target_name} PRIVATE
-            -finput-charset=utf-8
-            -fexec-charset=utf-8
-        )
     endif()
 
-    # Set working directory if specified
+    # Set VS debugger working directory
     if(ARG_WORKING_DIR)
         set_target_properties(${target_name} PROPERTIES
-            VS_DEBUGGER_WORKING_DIRECTORY "${ARG_WORKING_DIR}"
-        )
+            VS_DEBUGGER_WORKING_DIRECTORY "${ARG_WORKING_DIR}")
+    else()
+        set_target_properties(${target_name} PROPERTIES
+            VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
     endif()
-
-    # Set output directory to be alongside the main library for easier debugging
-    set_target_properties(${target_name} PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-        RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin
-        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin
-        RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_BINARY_DIR}/bin
-        RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_BINARY_DIR}/bin
-    )
 endfunction()
 
-# =============================================================================
-# Add CDocx Test
-# =============================================================================
-#
-# Creates a test executable and registers it with CTest.
+# ----------------------------------------------------------------------------
+# Function: add_cdocx_example
+# ----------------------------------------------------------------------------
+# Simplified interface for adding example programs.
+# Automatically copies data/ directory if it exists.
 #
 # Usage:
-#   add_cdocx_test(test_name
-#       source_file                   # Single source file
-#       test_data_dir                 # Directory for test data
-#       [DATA_FILES file1 file2 ...]  # Data files to copy
-#       [LABELS label1 label2 ...]    # CTest labels
+#   add_cdocx_example(target_name main.cpp)
+# ----------------------------------------------------------------------------
+function(add_cdocx_example target_name main_file)
+    _require_cdocx()
+    
+    add_cdocx_executable(${target_name} SOURCES ${main_file})
+    
+    # Auto-copy data directory if it exists
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/data")
+        file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/data" 
+            DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+    else()
+        # Create empty data directory for consistency
+        file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/data")
+    endif()
+endfunction()
+
+# ----------------------------------------------------------------------------
+# Function: add_cdocx_test
+# ----------------------------------------------------------------------------
+# Creates and registers a test executable with CTest.
+#
+# Usage:
+#   add_cdocx_test(test_name test.cpp
+#       [DATA file1 [file2 ...]]      # Data files to copy
+#       [LABELS label1 [label2 ...]]  # CTest labels
 #       [TIMEOUT seconds]             # Test timeout
 #   )
-#
-function(add_cdocx_test test_name source_file test_data_dir)
-    # Parse additional arguments
-    cmake_parse_arguments(ARG
-        ""                    # Options (boolean)
-        "TIMEOUT"             # Single value arguments
-        "DATA_FILES;LABELS"   # Multi value arguments
-        ${ARGN}
-    )
-
-    # Create the test executable using our helper
-    add_cdocx_executable(${test_name} SOURCES ${source_file})
-
+# ----------------------------------------------------------------------------
+function(add_cdocx_test test_name test_file)
+    cmake_parse_arguments(ARG "" "TIMEOUT" "DATA;LABELS" ${ARGN})
+    
+    _require_cdocx()
+    
+    # Create test executable
+    add_cdocx_executable(${test_name} SOURCES ${test_file})
+    
+    # Ensure data directory exists
+    set(TEST_DATA_DIR ${CMAKE_CURRENT_BINARY_DIR}/data)
+    file(MAKE_DIRECTORY ${TEST_DATA_DIR})
+    
+    # Copy data files
+    foreach(data_file ${ARG_DATA})
+        set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/data/${data_file}")
+        if(EXISTS ${source_path})
+            configure_file(${source_path} ${TEST_DATA_DIR}/${data_file} COPYONLY)
+        else()
+            message(WARNING "Data file not found: ${source_path}")
+        endif()
+    endforeach()
+    
     # Register with CTest
     add_test(NAME ${test_name} COMMAND ${test_name})
-
-    # Set test properties
     set_tests_properties(${test_name} PROPERTIES
-        WORKING_DIRECTORY ${test_data_dir}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
-
-    # Add labels for test categorization
+    
     if(ARG_LABELS)
-        set_tests_properties(${test_name} PROPERTIES
-            LABELS "${ARG_LABELS}"
-        )
+        set_tests_properties(${test_name} PROPERTIES LABELS "${ARG_LABELS}")
     endif()
-
-    # Set timeout if specified
+    
     if(ARG_TIMEOUT)
-        set_tests_properties(${test_name} PROPERTIES
-            TIMEOUT ${ARG_TIMEOUT}
-        )
+        set_tests_properties(${test_name} PROPERTIES TIMEOUT ${ARG_TIMEOUT})
     endif()
 endfunction()
 
-# =============================================================================
-# Copy Data Directory
-# =============================================================================
-#
-# Helper to copy data files to build directory for examples/tests.
+# ----------------------------------------------------------------------------
+# Function: cdocx_configure_samples
+# ----------------------------------------------------------------------------
+# Configures sample document generation dependencies.
 #
 # Usage:
-#   cdocx_copy_data(source_dir)
-#
-function(cdocx_copy_data source_dir)
-    if(EXISTS "${source_dir}")
-        file(COPY "${source_dir}" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+#   cdocx_configure_samples(TARGETS target1 target2 ...)
+# ----------------------------------------------------------------------------
+function(cdocx_configure_samples)
+    cmake_parse_arguments(ARG "" "" "TARGETS" ${ARGN})
+    
+    if(NOT TARGET generate_samples)
+        message(FATAL_ERROR "generate_samples target not found")
     endif()
+    
+    foreach(target ${ARG_TARGETS})
+        if(TARGET ${target})
+            add_dependencies(${target} generate_samples)
+        endif()
+    endforeach()
 endfunction()
 
-# =============================================================================
-# Module Info
-# =============================================================================
-message(STATUS "CDocxHelpers loaded - CDocx build helpers available")
+# ============================================================================
+# Module loaded
+# ============================================================================
+message(STATUS "CDocxHelpers.cmake loaded")

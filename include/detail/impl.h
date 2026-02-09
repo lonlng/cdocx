@@ -5,23 +5,34 @@
  *          be included directly by users of the library. It is used internally
  *          by cdocx source files.
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
- * @version 0.2.0
+ * @date 2026
+ * @version 0.3.0 - Optimized Version with Lazy Loading & Parallel Processing
  * @internal
  */
 
 #pragma once
 
+#include <cdocx/document.h>
+
 #include <pugixml.hpp>
 #include <zip.h>
+
+#include <algorithm>
+#include <chrono>
 #include <cstdint>
+#include <filesystem>
 #include <functional>
+#include <list>
 #include <map>
 #include <memory>
+#include <mutex>
+#include <optional>
 #include <set>
+#include <shared_mutex>
 #include <string>
+#include <variant>
 #include <vector>
 
 // Forward declarations for internal use
@@ -38,6 +49,10 @@ class Paragraph;
 class Table;
 class Template;
 class DocumentInserter;
+struct LoadConfig;
+struct LoadResult;
+enum class LoadErrorType;
+enum class DocumentIntegrity;
 
 // ============================================================================
 // Node Types
@@ -49,11 +64,94 @@ class DocumentInserter;
  * @internal
  */
 enum class DocxNodeType {
-    Root,       ///< Root node representing the package
-    Directory,  ///< Directory/folder node
-    XmlFile,    ///< XML file with parsed content
-    MediaFile,  ///< Media file (image, etc.)
-    BinaryFile  ///< Other binary file
+    Root,           ///< Root node representing the package
+    Directory,      ///< Directory/folder node
+    XmlFile,        ///< XML file with parsed content
+    MediaFile,      ///< Media file (image, etc.)
+    BinaryFile      ///< Other binary file
+};
+
+/**
+ * @enum StorageType
+ * @brief How file data is stored
+ * @internal
+ */
+enum class StorageType {
+    NotLoaded,      ///< Not loaded yet (lazy loading)
+    Memory,         ///< In memory (vector<uint8_t>)
+    MemoryMapped,   ///< Memory mapped file
+    TempFile,       ///< Stored in temporary file
+    Compressed      ///< Compressed in memory
+};
+
+// ============================================================================
+// File Data Storage
+// ============================================================================
+
+/**
+ * @class FileDataStorage
+ * @brief Manages file data with multiple storage backends
+ * @internal
+ */
+class FileDataStorage {
+public:
+    using DataVariant = std::variant<
+        std::monostate,                      // Not loaded
+        std::vector<uint8_t>,                // Memory
+        std::shared_ptr<void>,               // Memory mapped (platform specific)
+        std::filesystem::path,               // Temp file path
+        std::pair<std::vector<uint8_t>, size_t>  // Compressed (data, original_size)
+    >;
+    
+private:
+    mutable std::shared_mutex mutex_;
+    DataVariant data_;
+    StorageType storage_type_ = StorageType::NotLoaded;
+    size_t data_size_ = 0;
+    size_t original_size_ = 0;
+    
+    // For lazy loading
+    struct LazyLoadInfo {
+        zip_t* zip_handle = nullptr;
+        int entry_index = -1;
+        std::string entry_name;
+        size_t entry_size = 0;
+    };
+    std::optional<LazyLoadInfo> lazy_info_;
+    
+public:
+    FileDataStorage() = default;
+    
+    // 存储类型查询
+    StorageType get_storage_type() const { return storage_type_; }
+    bool is_loaded() const { return storage_type_ != StorageType::NotLoaded; }
+    size_t get_size() const { return data_size_; }
+    
+    // 初始化延迟加载信息
+    void set_lazy_load_info(zip_t* zip, int index, const std::string& name, size_t size);
+    
+    // 加载数据（如果是延迟加载模式）
+    bool ensure_loaded(const LoadConfig& config);
+    
+    // 存储数据
+    void store_in_memory(std::vector<uint8_t>&& data);
+    void store_memory_mapped(const std::string& path, size_t size);
+    void store_temp_file(const std::filesystem::path& path, size_t size);
+    void store_compressed(std::vector<uint8_t>&& data, size_t original_size);
+    
+    // 获取数据
+    std::vector<uint8_t> get_data() const;
+    const std::vector<uint8_t>* get_memory_data() const;
+    
+    // 转换为指定存储类型
+    bool convert_to(StorageType target_type, const LoadConfig& config);
+    
+    // 释放数据
+    void unload();
+    
+    // 压缩/解压
+    static std::vector<uint8_t> compress_data(const std::vector<uint8_t>& data);
+    static std::vector<uint8_t> decompress_data(const std::vector<uint8_t>& data, size_t original_size);
 };
 
 // ============================================================================
@@ -67,7 +165,7 @@ enum class DocxNodeType {
  *          Tree structure mirrors the ZIP file organization.
  * @internal
  */
-struct DocxTreeNode {
+struct DocxTreeNode : public std::enable_shared_from_this<DocxTreeNode> {
     std::string name;                           ///< File/directory name
     std::string full_path;                      ///< Full path in ZIP
     DocxNodeType type;                          ///< Node type
@@ -78,13 +176,14 @@ struct DocxTreeNode {
     
     // Data storage (type-specific)
     std::shared_ptr<pugi::xml_document> xml_doc;  ///< For XmlFile type
-    std::vector<uint8_t> binary_data;             ///< For Media/Binary files
+    FileDataStorage file_storage;                 ///< Unified file data storage
     std::string content_type;                     ///< MIME type
     
     // State tracking
     bool is_modified = false;   ///< Modified since load
     bool is_new = false;        ///< Newly created
     bool is_deleted = false;    ///< Marked for deletion
+    bool is_critical = false;   ///< Critical document part
     
     /**
      * @brief Construct tree node
@@ -108,6 +207,29 @@ struct DocxTreeNode {
      * @return true if file (not directory)
      */
     bool is_file() const { return !is_directory(); }
+    
+    /**
+     * @brief Get binary data (loads if necessary)
+     * @return Binary data vector
+     */
+    std::vector<uint8_t> get_binary_data(const LoadConfig& config) {
+        if (type == DocxNodeType::XmlFile && xml_doc) {
+            // Serialize XML to binary
+            return serialize_xml_to_binary();
+        }
+        file_storage.ensure_loaded(config);
+        return file_storage.get_data();
+    }
+    
+    /**
+     * @brief Set binary data
+     */
+    void set_binary_data(std::vector<uint8_t>&& data);
+    
+    /**
+     * @brief Serialize XML to binary
+     */
+    std::vector<uint8_t> serialize_xml_to_binary() const;
     
     /**
      * @brief Add child directory
@@ -141,6 +263,81 @@ struct DocxTreeNode {
 };
 
 // ============================================================================
+// LRU Cache for XML Nodes
+// ============================================================================
+
+/**
+ * @class LRUCache
+ * @brief LRU cache for managing XML node memory
+ * @internal
+ */
+class LRUCache {
+public:
+    using NodePtr = std::shared_ptr<DocxTreeNode>;
+    
+private:
+    size_t max_size_;
+    size_t current_size_ = 0;
+    size_t max_memory_mb_;
+    size_t current_memory_mb_ = 0;
+    
+    std::list<std::string> lru_list_;  ///< Most recent at front
+    std::map<std::string, std::pair<NodePtr, std::list<std::string>::iterator>> cache_;
+    mutable std::shared_mutex mutex_;
+    
+public:
+    LRUCache(size_t max_nodes, size_t max_memory_mb)
+        : max_size_(max_nodes), max_memory_mb_(max_memory_mb) {}
+    
+    // 访问节点（更新LRU）
+    NodePtr touch(const std::string& path);
+    
+    // 添加节点到缓存
+    void add(const std::string& path, NodePtr node, size_t estimated_mb);
+    
+    // 从缓存移除
+    void remove(const std::string& path);
+    
+    // 序列化并释放最久未使用的节点，直到满足内存限制
+    void evict_if_needed();
+    
+    // 清空缓存
+    void clear();
+    
+    size_t size() const { return current_size_; }
+};
+
+// ============================================================================
+// Loading Statistics
+// ============================================================================
+
+/**
+ * @struct LoadStatistics
+ * @brief Statistics for loading operations
+ * @internal
+ */
+struct LoadStatistics {
+    std::chrono::high_resolution_clock::time_point start_time;
+    std::chrono::high_resolution_clock::time_point end_time;
+    
+    size_t total_entries = 0;
+    size_t processed_entries = 0;
+    size_t xml_files = 0;
+    size_t media_files = 0;
+    size_t binary_files = 0;
+    size_t lazy_loaded = 0;
+    size_t memory_mapped = 0;
+    size_t temp_files = 0;
+    
+    size_t total_bytes_read = 0;
+    size_t peak_memory_usage = 0;
+    
+    double get_elapsed_ms() const {
+        return std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    }
+};
+
+// ============================================================================
 // DOCX Tree
 // ============================================================================
 
@@ -148,7 +345,7 @@ struct DocxTreeNode {
  * @class DocxTree
  * @brief Manages the DOCX package tree structure
  * @details Provides tree operations for navigating and modifying
- *          the document package structure.
+ *          the document package structure with lazy loading support.
  * @internal
  */
 class DocxTree {
@@ -156,15 +353,38 @@ private:
     std::shared_ptr<DocxTreeNode> root_;  ///< Root node
     std::map<std::string, std::weak_ptr<DocxTreeNode>> path_map_;  ///< Fast path lookup
     
+    // Caches
+    std::unique_ptr<LRUCache> xml_cache_;
+    
+    // Configuration
+    LoadConfig config_;
+    
+    // ZIP handle for lazy loading
+    zip_t* zip_handle_ = nullptr;
+    bool owns_zip_handle_ = false;
+    
+    // Thread safety
+    mutable std::shared_mutex path_map_mutex_;
+    
 public:
     /** @brief Construct empty tree */
     DocxTree();
+    
+    /** @brief Destructor */
+    ~DocxTree();
+    
+    /** @brief Set load configuration */
+    void set_config(const LoadConfig& config) { config_ = config; }
+    const LoadConfig& get_config() const { return config_; }
+    
+    /** @brief Set ZIP handle for lazy loading */
+    void set_zip_handle(zip_t* handle, bool owns = false);
     
     /** @return Root node */
     std::shared_ptr<DocxTreeNode> get_root() const { return root_; }
     
     /**
-     * @brief Find node by path
+     * @brief Find node by path (thread-safe)
      * @param path File path
      * @return Node if found, nullptr otherwise
      */
@@ -180,13 +400,17 @@ public:
                                                        DocxNodeType type);
     
     /**
-     * @brief Add file from ZIP entry
+     * @brief Add file from ZIP entry with lazy loading support
      * @param entry_path Entry path
-     * @param data Binary data
+     * @param data Binary data (empty if lazy loading)
+     * @param entry_index ZIP entry index for lazy loading
+     * @param entry_size Entry size
      * @return Created node
      */
     std::shared_ptr<DocxTreeNode> add_zip_entry(const std::string& entry_path, 
-                                                 const std::vector<uint8_t>& data);
+                                                 const std::vector<uint8_t>& data,
+                                                 int entry_index = -1,
+                                                 size_t entry_size = 0);
     
     /**
      * @brief Add XML file
@@ -244,6 +468,19 @@ public:
     
     /** @brief Clear all nodes */
     void clear();
+    
+    /** @brief Preload all lazy-loaded files */
+    bool preload_all();
+    
+    /** @brief Unload non-critical nodes to free memory */
+    size_t unload_non_critical();
+    
+private:
+    // 确定节点是否为关键文档部分
+    bool is_critical_part(const std::string& path) const;
+    
+    // 选择合适的存储类型
+    StorageType select_storage_type(size_t file_size) const;
 };
 
 // ============================================================================
@@ -318,6 +555,9 @@ public:
     std::string filepath_;  ///< Document file path
     bool is_open_ = false;  ///< Open status flag
     
+    // Configuration
+    LoadConfig load_config_;  ///< Loading configuration
+    
     // Tree structure
     DocxTree tree_;  ///< Package tree
     
@@ -342,11 +582,19 @@ public:
     Paragraph* paragraph_ = nullptr;
     Table* table_ = nullptr;
     
+    // Statistics
+    LoadStatistics last_load_stats_;
+    LoadResult last_load_result_;
+    
     /** @brief Constructor */
     DocumentImpl();
     
     /** @brief Destructor */
     ~DocumentImpl();
+    
+    // Configuration
+    void set_load_config(const LoadConfig& config) { load_config_ = config; }
+    const LoadConfig& get_load_config() const { return load_config_; }
     
     // ZIP operations
     bool open_zip(const std::string& path);
@@ -354,16 +602,22 @@ public:
     bool ensure_zip_handle();
     std::vector<uint8_t> read_zip_entry(const std::string& entry_name);
     
-    // Tree loading
+    // Tree loading (optimized versions)
     bool load_tree_from_zip();
+    LoadResult load_tree_with_result();
+    
+    // Parallel loading
+    bool load_tree_parallel(LoadStatistics& stats);
+    bool load_entries_batch(const std::vector<std::pair<int, std::string>>& entries,
+                           LoadStatistics& stats);
+    
+    // Legacy loading helpers
     std::shared_ptr<DocxTreeNode> load_zip_entry_to_tree(const std::string& entry_path,
                                                           const std::vector<uint8_t>& data);
     void build_caches_from_tree();
     
-    // Legacy loading
-    bool load_all_entries();
-    bool load_xml_part(const std::string& part_path, const std::vector<uint8_t>& data);
-    bool load_media_file(const std::string& entry_name, const std::vector<uint8_t>& data);
+    // Progress reporting
+    void report_progress(int percent, const std::string& current_file);
     
     // Content types and relationships
     bool load_content_types();
@@ -404,8 +658,16 @@ public:
     std::shared_ptr<DocxTreeNode> create_tree_node(const std::string& path, 
                                                    DocxNodeType type);
     
+    // Lazy loading helpers
+    bool preload_all_lazy_files();
+    size_t unload_to_free_memory();
+    
     // Create empty document
     bool create_empty_document();
+    
+    // Statistics
+    const LoadStatistics& get_last_load_stats() const { return last_load_stats_; }
+    const LoadResult& get_last_load_result() const { return last_load_result_; }
 };
 
 } // namespace cdocx

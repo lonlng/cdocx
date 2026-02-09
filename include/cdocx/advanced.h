@@ -7,9 +7,9 @@
  *          - DocumentBuilder for fluent document construction
  *          - DocumentSearch for find and replace operations
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  * 
  * @par 使用示例：
@@ -55,6 +55,7 @@
 #include <functional>
 #include <optional>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace cdocx {

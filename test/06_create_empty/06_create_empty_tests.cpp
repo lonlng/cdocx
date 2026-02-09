@@ -116,7 +116,7 @@ TEST_CASE("created empty document can have content added") {
         
         // Add a paragraph
         cdocx::Paragraph p = doc.paragraphs().insert_paragraph_after("Hello, World!");
-        CHECK(p.get_current() != pugi::xml_node());
+        CHECK(p.get_current_node() != pugi::xml_node());
         
         // Add a run with formatting
         p.add_run(" Bold text", cdocx::bold);

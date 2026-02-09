@@ -4,9 +4,9 @@
  * @details Implementation of placeholder replacement using FSM-based processing
  *          to handle placeholders split across multiple text runs.
  * 
- * @author Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
- * @date 2024
+ * @date 2026
  * @version 0.2.0
  */
 
