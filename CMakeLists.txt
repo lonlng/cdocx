@@ -2,7 +2,7 @@
 # CDocx - Modern CMake Build System
 # ============================================================================
 # C++17 library for creating, reading, and writing Microsoft Word DOCX files
-# https://github.com/amiremohamadi/CDocx
+# https://github.com/lonlng/CDocx
 #
 # Usage:
 #   mkdir build && cd build

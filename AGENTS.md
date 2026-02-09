@@ -27,7 +27,7 @@ CDocx is a C++17 library for creating, reading, and writing Microsoft Office Wor
 
 ```bash
 # Clone and initialize
-git clone https://github.com/amiremohamadi/CDocx.git
+git clone https://github.com/lonlng/CDocx.git
 cd CDocx
 git submodule update --init --recursive
 
@@ -436,7 +436,7 @@ target_link_libraries(your_target PRIVATE cdocx::cdocx)
 include(FetchContent)
 FetchContent_Declare(
     cdocx
-    GIT_REPOSITORY https://github.com/amiremohamadi/CDocx.git
+    GIT_REPOSITORY https://github.com/lonlng/CDocx.git
     GIT_TAG v0.2.0
 )
 FetchContent_MakeAvailable(cdocx)

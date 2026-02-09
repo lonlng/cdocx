@@ -14,25 +14,25 @@
  * @date 2026
  * @version 0.3.0
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
  * #include <cdocx/document.h>
  * 
- * // 打开现有文档
+ * // Open existing document
  * cdocx::Document doc("input.docx");
  * doc.open();
  * 
  * if (doc.is_open()) {
- *     // 遍历段落
+ *     // Iterate paragraphs
  *     for (auto& para : doc.paragraphs()) {
  *         std::cout << para.get_text() << std::endl;
  *     }
  *     
- *     // 保存修改
+ *     // Save changes
  *     doc.save("output.docx");
  * }
  * 
- * // 创建新文档
+ * // Create new document
  * cdocx::Document new_doc;
  * new_doc.create_empty("new.docx");
  * auto para = new_doc.paragraphs();
@@ -83,11 +83,11 @@ struct LoadResult;
  *          - Working with XML parts
  *          - Saving documents
  * 
- * @par 内存管理：
+ * @par Memory Management:
  * Document uses the PIMPL idiom for implementation hiding. Move semantics
  * are supported for efficient transfer of document ownership.
  * 
- * @par 线程安全：
+ * @par Thread Safety:
  * Document objects are NOT thread-safe. Concurrent access from multiple
  * threads requires external synchronization.
  * 
@@ -560,36 +560,36 @@ public:
  * @since 0.3.0
  */
 struct LoadConfig {
-    // 延迟加载设置
-    bool enable_lazy_loading = true;           ///< 启用延迟加载
-    bool lazy_load_media = true;               ///< 延迟加载媒体文件
-    bool lazy_load_xml = false;                ///< 延迟加载非关键XML
+    // Lazy loading settings
+    bool enable_lazy_loading = true;           ///< Enable lazy loading
+    bool lazy_load_media = true;               ///< Lazy load media files
+    bool lazy_load_xml = false;                ///< Lazy load non-critical XML
     
-    // 大小阈值 (字节)
-    size_t memory_threshold = 10 * 1024 * 1024;     ///< 10MB, 小文件直接内存
-    size_t mmap_threshold = 50 * 1024 * 1024;       ///< 50MB, 大文件内存映射
-    size_t temp_file_threshold = 100 * 1024 * 1024; ///< 100MB, 超大文件临时存储
+    // Size thresholds (bytes)
+    size_t memory_threshold = 10 * 1024 * 1024;     ///< 10MB, small files in memory
+    size_t mmap_threshold = 50 * 1024 * 1024;       ///< 50MB, large files memory mapped
+    size_t temp_file_threshold = 100 * 1024 * 1024; ///< 100MB, huge files temp storage
     
-    // 并行加载设置
-    bool enable_parallel_loading = true;       ///< 启用并行加载
-    size_t parallel_threshold = 50;            ///< 超过此文件数启用并行
-    size_t max_threads = 0;                    ///< 0 = 使用硬件并发数
+    // Parallel loading settings
+    bool enable_parallel_loading = true;       ///< Enable parallel loading
+    size_t parallel_threshold = 50;            ///< Enable parallel above this file count
+    size_t max_threads = 0;                    ///< 0 = use hardware concurrency
     
-    // 缓存设置
-    bool enable_lru_cache = true;              ///< 启用LRU缓存
-    size_t max_cached_xml_nodes = 20;          ///< 最大缓存XML节点数
-    size_t max_cached_media_mb = 100;          ///< 最大缓存媒体大小(MB)
+    // Cache settings
+    bool enable_lru_cache = true;              ///< Enable LRU cache
+    size_t max_cached_xml_nodes = 20;          ///< Max cached XML nodes
+    size_t max_cached_media_mb = 100;          ///< Max cached media size (MB)
     
-    // 错误处理
-    bool allow_partial_load = true;            ///< 允许部分加载
-    bool skip_corrupted_files = true;          ///< 跳过损坏文件
-    size_t max_errors = 100;                   ///< 最大错误数
+    // Error handling
+    bool allow_partial_load = true;            ///< Allow partial load
+    bool skip_corrupted_files = true;          ///< Skip corrupted files
+    size_t max_errors = 100;                   ///< Max error count
     
-    // XML解析优化
-    bool enable_xml_prealloc = true;           ///< XML预分配内存
-    size_t xml_prealloc_factor = 2;            ///< 预分配倍数
+    // XML parsing optimization
+    bool enable_xml_prealloc = true;           ///< XML memory preallocation
+    size_t xml_prealloc_factor = 2;            ///< Preallocation factor
     
-    // 进度回调
+    // Progress callback
     std::function<void(int percent, const std::string& current_file)> progress_callback;
     
     /**

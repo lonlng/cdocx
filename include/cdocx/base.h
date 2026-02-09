@@ -10,7 +10,7 @@
  * @date 2026
  * @version 0.2.0
  * 
- * @par 文档结构层次：
+ * @par Document Structure Hierarchy:
  * @code
  * Document
  * ├── Body
@@ -41,17 +41,17 @@ class IteratorHelper;
  *          Multiple runs can exist in a paragraph, each with different
  *          formatting attributes (bold, italic, font, color, etc.).
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
  * auto para = doc.paragraphs();
  * auto run = para.runs();
  * 
- * // 修改文本
+ * // Modify text
  * run.set_text("New text");
  * 
- * // 应用格式
+ * // Apply formatting
  * run.set_bold(true);
- * run.set_color("FF0000");  // 红色
+ * run.set_color("FF0000");  // Red color
  * run.set_font_size(24);    // 12pt
  * @endcode
  * 
@@ -189,15 +189,15 @@ public:
  *          objects. It can have paragraph-level formatting (alignment,
  *          indentation, spacing, etc.) and contains the actual text content.
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
  * auto para = doc.paragraphs();
  * 
- * // 添加格式化的文本运行
+ * // Add formatted text run
  * para.add_run("Bold text", cdocx::bold);
  * para.add_run("Italic text", cdocx::italic);
  * 
- * // 设置段落格式
+ * // Set paragraph formatting
  * para.set_alignment("center");
  * para.set_line_spacing(360);  // 1.5 line spacing
  * para.set_indent(720, -1, 0); // Left indent 0.5 inch
@@ -506,7 +506,7 @@ public:
  *          objects. It can have table-level properties (width, borders,
  *          alignment, etc.).
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
  * auto table = doc.tables();
  * 

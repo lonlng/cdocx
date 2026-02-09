@@ -320,8 +320,16 @@ std::vector<uint8_t> DocxTreeNode::serialize_xml_to_binary() const {
     xml_string_writer writer;
     xml_doc->save(writer, "  ");
     
-    std::string xml_output = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
-    xml_output += writer.result;
+    // Check if writer result already starts with XML declaration
+    std::string xml_output;
+    if (writer.result.find("<?xml") == 0) {
+        // Already has declaration, use as-is
+        xml_output = writer.result;
+    } else {
+        // Add XML declaration
+        xml_output = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        xml_output += writer.result;
+    }
     
     std::vector<uint8_t> result(xml_output.size());
     std::memcpy(result.data(), xml_output.data(), xml_output.size());

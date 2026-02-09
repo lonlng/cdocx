@@ -11,28 +11,28 @@
  * @date 2026
  * @version 0.2.0
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
  * #include <cdocx/template.h>
  * 
  * cdocx::Document doc("template.docx");
  * doc.open();
  * 
- * // 创建模板处理器
+ * // Create template processor
  * cdocx::Template tmpl(&doc);
  * 
- * // 设置文本占位符
+ * // Set text placeholder
  * tmpl.set("name", "John Doe");
  * tmpl.set("date", "2024-01-15");
  * tmpl.set("company", "Acme Inc.");
  * 
- * // 设置图片占位符
+ * // Set image placeholder
  * tmpl.set_image("logo", "path/to/logo.png");
  * 
- * // 执行替换
+ * // Execute replacement
  * tmpl.replace_all();
  * 
- * // 保存结果
+ * // Save result
  * doc.save("output.docx");
  * @endcode
  */
@@ -54,19 +54,19 @@ namespace cdocx {
  *          placeholders in Word documents. It uses a Finite State Machine (FSM)
  *          to handle placeholders that may be split across multiple text runs.
  * 
- * @par 支持的占位符格式：
- * - 默认格式: {{key}}
- * - 自定义格式: 通过 set_pattern() 设置前缀和后缀
+ * @par Supported Placeholder Formats:
+ * - Default format: {{key}}
+ * - Custom format: set prefix and suffix via set_pattern()
  * 
- * @par 处理流程：
- * 1. 设置占位符值 (set(), set_image())
- * 2. 执行替换 (replace_all())
- * 3. 保存文档
+ * @par Processing Flow:
+ * 1. Set placeholder values (set(), set_image())
+ * 2. Execute replacement (replace_all())
+ * 3. Save document
  * 
- * @par 注意事项：
- * - 占位符匹配是大小写敏感的
- * - 支持跨多个 runs 的占位符
- * - 图片占位符会替换为实际图片
+ * @par Notes:
+ * - Placeholder matching is case-sensitive
+ * - Supports placeholders across multiple runs
+ * - Image placeholders are replaced with actual images
  * 
  * @see Document, Document::paragraphs()
  * @since 0.1.0
@@ -176,7 +176,7 @@ public:
      * @param[in] key Placeholder key (without delimiters)
      * @param[in] value Replacement value
      * 
-     * @par 示例：
+     * @par Example:
      * @code
      * tmpl.set("name", "John Doe");
      * // Will replace {{name}} with "John Doe"
@@ -196,7 +196,7 @@ public:
      * @param[in] key Placeholder key
      * @param[in] image_path Path to the image file
      * 
-     * @par 示例：
+     * @par Example:
      * @code
      * tmpl.set_image("logo", "images/company_logo.png");
      * // Will replace {{logo}} with the image
@@ -209,7 +209,7 @@ public:
      * @param[in] prefix Start pattern
      * @param[in] suffix End pattern
      * 
-     * @par 示例：
+     * @par Example:
      * @code
      * tmpl.set_pattern("<%", "%>");  // Will match <%key%>
      * tmpl.set_pattern("${", "}");   // Will match ${key}

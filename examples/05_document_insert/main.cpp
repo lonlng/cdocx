@@ -9,16 +9,31 @@
 
 #include <cdocx.h>
 #include <iostream>
-#include "../example_utils.h"
+#include <filesystem>
+
+// Forward declaration
+bool create_sample_documents(const std::string& main_doc_path,
+                             const std::string& template_path);
 
 int main() {
     std::cout << "=== Document Insertion Example ===" << std::endl;
     
-    // Get paths to resource files
-    std::string template_path = example_utils::get_resource_path("05_insert_template_sample.docx");
-    std::string main_doc_path = example_utils::get_resource_path("05_insert_main_sample.docx");
-    std::string output_path = example_utils::get_output_path("output_05_document_insert.docx");
-    std::string temp_path = example_utils::get_output_path("temp_processed.docx");
+    std::string main_doc_path = "data/05_insert_main_sample.docx";
+    std::string template_path = "data/05_insert_template_sample.docx";
+    std::string output_path = "output_05_document_insert.docx";
+    std::string temp_path = "temp_processed.docx";
+    
+    // Create data directory if needed
+    std::filesystem::create_directories("data");
+    
+    // Create sample documents if they don't exist
+    if (!std::filesystem::exists(main_doc_path) || !std::filesystem::exists(template_path)) {
+        std::cout << "Creating sample documents..." << std::endl;
+        if (!create_sample_documents(main_doc_path, template_path)) {
+            std::cerr << "Failed to create sample documents" << std::endl;
+            return 1;
+        }
+    }
     
     // Step 1: Process template
     std::cout << "\nStep 1: Processing template..." << std::endl;
@@ -73,4 +88,47 @@ int main() {
     
     std::cout << "\n=== Success! ===" << std::endl;
     return 0;
+}
+
+// Create the sample documents used by this example
+bool create_sample_documents(const std::string& main_doc_path,
+                             const std::string& template_path) {
+    // Create main document
+    {
+        cdocx::Document doc(main_doc_path);
+        
+        if (!doc.create_empty()) {
+            std::cerr << "Failed to create main document" << std::endl;
+            return false;
+        }
+        
+        auto p1 = doc.paragraphs().insert_paragraph_after("Main Document");
+        auto p2 = doc.paragraphs().insert_paragraph_after("This is the main document that will receive content from another document.");
+        auto p3 = doc.paragraphs().insert_paragraph_after("");
+        auto p4 = doc.paragraphs().insert_paragraph_after("--- Inserted content will appear below ---");
+        auto p5 = doc.paragraphs().insert_paragraph_after("");
+        
+        doc.save(main_doc_path);
+        std::cout << "  Created: " << main_doc_path << std::endl;
+    }
+    
+    // Create template document
+    {
+        cdocx::Document doc(template_path);
+        
+        if (!doc.create_empty()) {
+            std::cerr << "Failed to create template document" << std::endl;
+            return false;
+        }
+        
+        auto p1 = doc.paragraphs().insert_paragraph_after("Template Section");
+        auto p2 = doc.paragraphs().insert_paragraph_after("Name: {{name}}");
+        auto p3 = doc.paragraphs().insert_paragraph_after("Title: {{title}}");
+        auto p4 = doc.paragraphs().insert_paragraph_after("Department: {{department}}");
+        
+        doc.save(template_path);
+        std::cout << "  Created: " << template_path << std::endl;
+    }
+    
+    return true;
 }

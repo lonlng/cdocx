@@ -5,12 +5,12 @@
  *          elements (paragraphs, runs, tables, etc.) using C++11 range-based
  *          for loops and traditional iterator patterns.
  * 
- * @author Cihan SARI (@CihanSari), Amir Mohamadi (@amiremohamadi)
+ * @author lonlng
  * @copyright MIT License
  * @date 2026
  * @version 0.2.0
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
  * #include <cdocx/iterator.h>
  * #include <cdocx/base.h>
@@ -18,14 +18,14 @@
  * cdocx::Document doc("file.docx");
  * doc.open();
  * 
- * // 范围-based for 循环
+ * // Range-based for loop
  * for (const auto& para : doc.paragraphs()) {
  *     for (const auto& run : para.runs()) {
  *         std::cout << run.get_text() << std::endl;
  *     }
  * }
  * 
- * // 传统迭代器方式
+ * // Traditional iterator style
  * auto para = doc.paragraphs();
  * while (para.has_next()) {
  *     auto run = para.runs();
@@ -59,12 +59,12 @@ namespace cdocx {
  *          a standard iterator interface. It wraps pugixml nodes and converts
  *          them to CDocx element types on demand.
  * 
- * @par 迭代器类别：
+ * @par Iterator Category:
  * - Forward Iterator
  * 
- * @par 要求：
- * - 类型 T 必须提供 set_parent() 和 set_current() 方法
- * - 类型 T 必须具有默认构造函数
+ * @par Requirements:
+ * - Type T must provide set_parent() and set_current() methods
+ * - Type T must have a default constructor
  * 
  * @since 0.1.0
  * @see IteratorHelper
@@ -151,11 +151,11 @@ public:
  *          for CDocx container classes. This class is used internally by
  *          the begin() and end() free functions.
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
- * // 通常不需要直接使用此类，使用 begin() 和 end() 即可
+ * // Usually no need to use this class directly, use begin() and end() instead
  * for (auto& para : doc.paragraphs()) {
- *     // 遍历段落
+ *     // Iterate paragraphs
  * }
  * @endcode
  * 

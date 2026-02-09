@@ -9,11 +9,11 @@
  * @date 2026
  * @version 0.2.0
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
- * #include <cdocx/fwd.h>  // 轻量级，只包含前向声明
+ * #include <cdocx/fwd.h>  // Lightweight, forward declarations only
  * 
- * // 声明函数参数和返回类型
+ * // Declare function parameters and return types
  * void process_document(cdocx::Document& doc);
  * cdocx::Paragraph* find_paragraph(cdocx::Document& doc, const std::string& text);
  * @endcode

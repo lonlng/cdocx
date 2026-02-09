@@ -41,8 +41,8 @@
  * @endcode
  * 
  * @section Links
- * - Repository: https://github.com/amiremohamadi/CDocx
- * - Issues: https://github.com/amiremohamadi/CDocx/issues
+ * - Repository: https://github.com/lonlng/CDocx
+ * - Issues: https://github.com/lonlng/CDocx/issues
  */
 
 #pragma once

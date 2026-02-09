@@ -13,7 +13,7 @@
 #include <iostream>
 #include <iomanip>
 #include <set>
-#include "../example_utils.h"
+#include <filesystem>
 
 void print_part_info(const std::string& path, pugi::xml_document* doc) {
     if (!doc) {
@@ -75,11 +75,26 @@ void demonstrate_content_types(pugi::xml_document* ct_doc) {
     std::cout << "    Override entries: " << overrides << std::endl;
 }
 
+// Forward declaration
+bool create_sample_document(const std::string& doc_path);
+
 int main() {
     std::cout << "=== XML Parts API Example ===" << std::endl;
     
-    // Get path to document
-    std::string doc_path = example_utils::get_resource_path("06_xml_parts_sample.docx");
+    std::string doc_path = "data/06_xml_parts_sample.docx";
+    
+    // Create data directory if needed
+    std::filesystem::create_directories("data");
+    
+    // Create sample document if it doesn't exist
+    if (!std::filesystem::exists(doc_path)) {
+        std::cout << "Creating sample document..." << std::endl;
+        if (!create_sample_document(doc_path)) {
+            std::cerr << "Failed to create sample document" << std::endl;
+            return 1;
+        }
+    }
+    
     std::cout << "Opening: " << doc_path << std::endl;
     
     // Open document
@@ -123,4 +138,27 @@ int main() {
     
     std::cout << "\n=== Example Completed ===" << std::endl;
     return 0;
+}
+
+// Create the sample document used by this example
+bool create_sample_document(const std::string& doc_path) {
+    cdocx::Document doc(doc_path);
+    
+    if (!doc.create_empty()) {
+        std::cerr << "Failed to create empty document" << std::endl;
+        return false;
+    }
+    
+    auto p1 = doc.paragraphs().insert_paragraph_after("XML Parts Analysis Document");
+    auto p2 = doc.paragraphs().insert_paragraph_after("This document is used to demonstrate the XML Parts API.");
+    auto p3 = doc.paragraphs().insert_paragraph_after("It contains multiple paragraphs and runs for analysis.");
+    auto p4 = doc.paragraphs().insert_paragraph_after("");
+    auto p5 = doc.paragraphs().insert_paragraph_after("Features demonstrated:");
+    auto p6 = doc.paragraphs().insert_paragraph_after("  - Core properties access");
+    auto p7 = doc.paragraphs().insert_paragraph_after("  - Content types analysis");
+    auto p8 = doc.paragraphs().insert_paragraph_after("  - Document part enumeration");
+    
+    doc.save(doc_path);
+    std::cout << "  Created: " << doc_path << std::endl;
+    return true;
 }

@@ -26,7 +26,7 @@ C++17 library for creating, reading, and writing Microsoft Office Word (.docx) f
 ### Build
 
 ```bash
-git clone https://github.com/amiremohamadi/CDocx.git
+git clone https://github.com/lonlng/CDocx.git
 cd CDocx
 git submodule update --init --recursive
 

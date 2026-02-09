@@ -72,7 +72,7 @@ void example_create_document() {
     
     // Add hyperlink
     builder.writeln("2. Hyperlinks");
-    builder.insert_hyperlink("Visit CDocx on GitHub", "https://github.com/amiremohamadi/CDocx");
+    builder.insert_hyperlink("Visit CDocx on GitHub", "https://github.com/lonlng/CDocx");
     builder.writeln();
     builder.writeln();
     

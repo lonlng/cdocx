@@ -11,12 +11,26 @@
 
 #include <cdocx.h>
 #include <iostream>
-#include "../example_utils.h"
+#include <filesystem>
+
+// Forward declaration
+bool create_sample_template(const std::string& template_path);
 
 int main() {
-    // Get the path to the template document
-    std::string template_path = example_utils::get_resource_path("03_template_basic_sample.docx");
-    std::string output_path = example_utils::get_output_path("output_03_template_basic.docx");
+    std::string template_path = "data/03_template_basic_sample.docx";
+    std::string output_path = "output_03_template_basic.docx";
+    
+    // Create data directory if needed
+    std::filesystem::create_directories("data");
+    
+    // Create sample template if it doesn't exist
+    if (!std::filesystem::exists(template_path)) {
+        std::cout << "Creating sample template..." << std::endl;
+        if (!create_sample_template(template_path)) {
+            std::cerr << "Failed to create sample template" << std::endl;
+            return 1;
+        }
+    }
     
     std::cout << "Opening template: " << template_path << std::endl;
     
@@ -51,4 +65,35 @@ int main() {
     std::cout << "Output saved to: " << output_path << std::endl;
     
     return 0;
+}
+
+// Create the sample template used by this example
+bool create_sample_template(const std::string& template_path) {
+    cdocx::Document doc(template_path);
+    
+    if (!doc.create_empty()) {
+        std::cerr << "Failed to create empty document" << std::endl;
+        return false;
+    }
+    
+    // Title
+    auto p1 = doc.paragraphs().insert_paragraph_after("{{report_title}}");
+    
+    // Company info
+    auto p2 = doc.paragraphs().insert_paragraph_after("Company: {{company_name}}");
+    
+    // Employee info
+    auto p3 = doc.paragraphs().insert_paragraph_after("Employee: {{employee_name}}");
+    auto p4 = doc.paragraphs().insert_paragraph_after("Department: {{department}}");
+    
+    // Date
+    auto p5 = doc.paragraphs().insert_paragraph_after("Date: {{date}}");
+    
+    // Content placeholder
+    auto p6 = doc.paragraphs().insert_paragraph_after("");
+    auto p7 = doc.paragraphs().insert_paragraph_after("{{content}}");
+    
+    doc.save(template_path);
+    std::cout << "  Created: " << template_path << std::endl;
+    return true;
 }

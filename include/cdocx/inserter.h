@@ -10,31 +10,31 @@
  * @date 2026
  * @version 0.2.0
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
  * #include <cdocx/inserter.h>
  * 
- * // 打开目标文档
+ * // Open target document
  * cdocx::Document target("main.docx");
  * target.open();
  * 
- * // 打开源文档
+ * // Open source document
  * cdocx::Document source("content.docx");
  * source.open();
  * 
- * // 创建插入器
+ * // Create inserter
  * cdocx::DocumentInserter inserter(&target);
  * 
- * // 在末尾插入整个文档
+ * // Insert entire document at end
  * inserter.insert_document(&source);
  * 
- * // 在特定位置插入（0 = 开头, -1 = 末尾）
+ * // Insert at specific position (0 = beginning, -1 = end)
  * inserter.insert_document_at(&source, 2);
  * 
- * // 只插入段落
+ * // Insert paragraphs only
  * inserter.insert_paragraphs(&source);
  * 
- * // 保存结果
+ * // Save result
  * target.save("combined.docx");
  * @endcode
  */
@@ -56,15 +56,15 @@ namespace cdocx {
  *          - Paragraphs only
  *          - Tables only
  * 
- * @par 插入位置：
- * - 默认：文档末尾
- * - 指定索引：0 = 文档开头，1 = 第一个元素后，-1 = 文档末尾
- * - 指定段落：在特定段落后插入
+ * @par Insert Positions:
+ * - Default: end of document
+ * - Specified index: 0 = document start, 1 = after first element, -1 = document end
+ * - Specified paragraph: insert after specific paragraph
  * 
- * @par 注意事项：
- * - 源文档的内容会被克隆，源文档不会被修改
- * - 样式可能需要手动同步
- * - 图片等媒体文件需要单独处理
+ * @par Notes:
+ * - Source document content is cloned, source document is not modified
+ * - Styles may need manual synchronization
+ * - Media files like images need separate handling
  * 
  * @see Document
  * @since 0.1.0

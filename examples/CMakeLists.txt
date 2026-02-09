@@ -5,76 +5,57 @@
 include(CDocxHelpers)
 
 # ----------------------------------------------------------------------------
-# Sample Document Generator
-# ----------------------------------------------------------------------------
-add_cdocx_executable(create_sample_docs SOURCES create_sample_docs.cpp)
-
-add_custom_target(generate_samples
-    COMMAND create_sample_docs
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "Generating sample documents for examples"
-)
-
-# ----------------------------------------------------------------------------
 # Example Programs (Auto-discovered)
 # ----------------------------------------------------------------------------
 # Each example should be in its own subdirectory with:
-#   - CMakeLists.txt (or auto-generated)
 #   - main.cpp
-#   - data/ directory (optional)
+#   - data/ directory (optional) - will be copied to build directory
 # ----------------------------------------------------------------------------
 
-# Define all examples with their dependencies on samples
+# Define all examples
 set(CDOCX_EXAMPLES
-    01_basic_read:NEEDS_SAMPLES
+    01_basic_read
     02_basic_create
-    03_template_basic:NEEDS_SAMPLES
-    04_template_advanced:NEEDS_SAMPLES
-    05_document_insert:NEEDS_SAMPLES
-    06_xml_parts:NEEDS_SAMPLES
-    07_media_management:NEEDS_SAMPLES
+    03_template_basic
+    04_template_advanced
+    05_document_insert
+    06_xml_parts
+    07_media_management
     08_create_empty
     09_text_formatting
 )
 
 if(ENABLE_ADVANCED_FEATURES)
-    list(APPEND CDOCX_EXAMPLES 10_advanced_crud:NEEDS_SAMPLES)
+    list(APPEND CDOCX_EXAMPLES 10_advanced_crud)
+    list(APPEND CDOCX_EXAMPLES 10_optimized_loading)
 endif()
 
 # Process each example
-foreach(example_def ${CDOCX_EXAMPLES})
-    # Parse definition (format: "name" or "name:NEEDS_SAMPLES")
-    string(REPLACE ":" ";" parts ${example_def})
-    list(GET parts 0 example)
-    list(LENGTH parts parts_count)
-    
-    set(needs_samples FALSE)
-    if(parts_count GREATER 1)
-        list(GET parts 1 flag)
-        if(flag STREQUAL "NEEDS_SAMPLES")
-            set(needs_samples TRUE)
-        endif()
-    endif()
-    
-    # Check for custom CMakeLists.txt or auto-generate
+foreach(example ${CDOCX_EXAMPLES})
     set(example_dir ${CMAKE_CURRENT_SOURCE_DIR}/${example})
+    set(example_bin_dir ${CMAKE_CURRENT_BINARY_DIR}/${example})
     
-    if(EXISTS ${example_dir}/CMakeLists.txt)
-        # Use custom CMakeLists.txt
-        add_subdirectory(${example})
-    else()
-        # Auto-generate target for simple examples
-        if(EXISTS ${example_dir}/main.cpp)
-            add_cdocx_example(${example} main.cpp)
-        else()
-            message(WARNING "Example ${example} has no main.cpp or CMakeLists.txt")
-            continue()
-        endif()
+    if(NOT EXISTS ${example_dir}/main.cpp)
+        message(WARNING "Example ${example} has no main.cpp")
+        continue()
     endif()
     
-    # Add sample dependency if needed
-    if(needs_samples AND TARGET ${example})
-        add_dependencies(${example} generate_samples)
+    # Create the binary directory
+    file(MAKE_DIRECTORY ${example_bin_dir})
+    
+    # Add the executable
+    add_cdocx_executable(${example} SOURCES ${example_dir}/main.cpp)
+    
+    # Set output directory
+    set_target_properties(${example} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${example_bin_dir}
+        RUNTIME_OUTPUT_DIRECTORY_DEBUG ${example_bin_dir}
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${example_bin_dir}
+    )
+    
+    # Copy data directory if it exists (at configure time)
+    if(EXISTS ${example_dir}/data)
+        file(COPY ${example_dir}/data DESTINATION ${example_bin_dir})
     endif()
     
     list(APPEND ALL_EXAMPLE_TARGETS ${example})
@@ -95,8 +76,7 @@ add_custom_target(examples
 message(STATUS "")
 message(STATUS "[Examples]")
 message(STATUS "----------")
-foreach(example_def ${CDOCX_EXAMPLES})
-    string(REPLACE ":" ";" example_name ${example_def})
-    message(STATUS "  - ${example_name}")
+foreach(example ${CDOCX_EXAMPLES})
+    message(STATUS "  - ${example}")
 endforeach()
 message(STATUS "")

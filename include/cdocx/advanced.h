@@ -12,7 +12,7 @@
  * @date 2026
  * @version 0.2.0
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
  * #include <cdocx/advanced.h>
  * 
@@ -75,16 +75,16 @@ class DocumentSearch;
  *          referenced by name. Bookmarks can be used for navigation,
  *          cross-references, or as placeholders for content replacement.
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
  * auto bookmarks = doc.get_bookmarks();
  * 
- * // 通过名称获取书签
+ * // Get bookmark by name
  * auto bm = bookmarks.get("Introduction");
  * if (bm) {
  *     std::string text = bm->get_text();
  *     bm->set_text("New introduction text");
- *     bm->remove();  // 删除书签但保留文本
+ *     bm->remove();  // Delete bookmark but keep text
  * }
  * @endcode
  * 
@@ -170,21 +170,21 @@ public:
  * @details Provides access to all bookmarks in the document. Bookmarks are
  *          collected on first access and cached for performance.
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
  * auto bookmarks = doc.get_bookmarks();
  * 
- * // 遍历所有书签
+ * // Iterate all bookmarks
  * for (auto& bm : bookmarks) {
  *     std::cout << bm.get_name() << std::endl;
  * }
  * 
- * // 检查是否存在
+ * // Check if exists
  * if (bookmarks.contains("Summary")) {
  *     // ...
  * }
  * 
- * // 删除书签
+ * // Delete bookmark
  * bookmarks.remove("TempBookmark");
  * @endcode
  * 
@@ -459,25 +459,25 @@ public:
  *          without manually managing XML nodes. It maintains a cursor position
  *          and formatting state, allowing for intuitive document construction.
  * 
- * @par 主要功能：
- * - 导航：移动到文档任意位置
- * - 写入：添加格式化文本
- * - 表格：创建和填充表格
- * - 书签：创建书签标记
- * - 超链接：插入超链接
- * - 图片：插入图片
+ * @par Main Features:
+ * - Navigation: Move to any position in document
+ * - Writing: Add formatted text
+ * - Tables: Create and populate tables
+ * - Bookmarks: Create bookmark markers
+ * - Hyperlinks: Insert hyperlinks
+ * - Images: Insert images
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
  * cdocx::DocumentBuilder builder(&doc);
  * 
- * // 写入格式化文本
+ * // Write formatted text
  * builder.set_bold(true);
  * builder.set_font_size(24);
  * builder.writeln("Title");
  * builder.clear_formatting();
  * 
- * // 创建表格
+ * // Create table
  * builder.start_table();
  * for (int i = 0; i < 3; i++) {
  *     builder.insert_row();
@@ -489,10 +489,10 @@ public:
  * }
  * builder.end_table();
  * 
- * // 插入超链接
+ * // Insert hyperlink
  * builder.insert_hyperlink("Click here", "https://example.com");
  * 
- * // 创建书签
+ * // Create bookmark
  * builder.start_bookmark("Section1");
  * builder.writeln("Important section");
  * builder.end_bookmark("Section1");
@@ -717,16 +717,16 @@ public:
  * @details Provides static methods for finding text and replacing content
  *          throughout the document.
  * 
- * @par 使用示例：
+ * @par Usage Example:
  * @code
- * // 简单替换
+ * // Simple replace
  * cdocx::DocumentSearch::replace(doc, "old", "new");
  * 
- * // 替换所有
+ * // Replace all
  * int count = cdocx::DocumentSearch::replace_all(doc, "TODO", "DONE");
  * std::cout << "Replaced " << count << " occurrences" << std::endl;
  * 
- * // 带格式替换
+ * // Replace with formatting
  * cdocx::DocumentSearch::replace_with_formatting(
  *     doc, "important", "IMPORTANT", cdocx::bold | cdocx::italic);
  * @endcode

@@ -122,34 +122,34 @@ private:
 public:
     FileDataStorage() = default;
     
-    // 存储类型查询
+    // Storage type query
     StorageType get_storage_type() const { return storage_type_; }
     bool is_loaded() const { return storage_type_ != StorageType::NotLoaded; }
     size_t get_size() const { return data_size_; }
     
-    // 初始化延迟加载信息
+    // Initialize lazy loading info
     void set_lazy_load_info(zip_t* zip, int index, const std::string& name, size_t size);
     
-    // 加载数据（如果是延迟加载模式）
+    // Load data (if in lazy loading mode)
     bool ensure_loaded(const LoadConfig& config);
     
-    // 存储数据
+    // Store data
     void store_in_memory(std::vector<uint8_t>&& data);
     void store_memory_mapped(const std::string& path, size_t size);
     void store_temp_file(const std::filesystem::path& path, size_t size);
     void store_compressed(std::vector<uint8_t>&& data, size_t original_size);
     
-    // 获取数据
+    // Get data
     std::vector<uint8_t> get_data() const;
     const std::vector<uint8_t>* get_memory_data() const;
     
-    // 转换为指定存储类型
+    // Convert to specified storage type
     bool convert_to(StorageType target_type, const LoadConfig& config);
     
-    // 释放数据
+    // Release data
     void unload();
     
-    // 压缩/解压
+    // Compress/Decompress
     static std::vector<uint8_t> compress_data(const std::vector<uint8_t>& data);
     static std::vector<uint8_t> decompress_data(const std::vector<uint8_t>& data, size_t original_size);
 };
@@ -289,19 +289,19 @@ public:
     LRUCache(size_t max_nodes, size_t max_memory_mb)
         : max_size_(max_nodes), max_memory_mb_(max_memory_mb) {}
     
-    // 访问节点（更新LRU）
+    // Access node (update LRU)
     NodePtr touch(const std::string& path);
     
-    // 添加节点到缓存
+    // Add node to cache
     void add(const std::string& path, NodePtr node, size_t estimated_mb);
     
-    // 从缓存移除
+    // Remove from cache
     void remove(const std::string& path);
     
-    // 序列化并释放最久未使用的节点，直到满足内存限制
+    // Serialize and release least recently used nodes until memory limit is met
     void evict_if_needed();
     
-    // 清空缓存
+    // Clear cache
     void clear();
     
     size_t size() const { return current_size_; }
@@ -476,10 +476,10 @@ public:
     size_t unload_non_critical();
     
 private:
-    // 确定节点是否为关键文档部分
+    // Determine if node is a critical document part
     bool is_critical_part(const std::string& path) const;
     
-    // 选择合适的存储类型
+    // Select appropriate storage type
     StorageType select_storage_type(size_t file_size) const;
 };
 
