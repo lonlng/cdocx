@@ -68,18 +68,30 @@ int main() {
 ```
 cdocx/
 ├── include/
-│   ├── cdocx.h              # Public API (simplified interface)
-│   ├── constants.h          # Formatting flags
-│   ├── cdocxIterator.h      # Iterator helpers
+│   ├── cdocx.h              # Main public API header
+│   ├── cdocx/               # Modular headers
+│   │   ├── fwd.h            # Forward declarations
+│   │   ├── constants.h      # Formatting flags
+│   │   ├── iterator.h       # Iterator helpers
+│   │   ├── base.h           # Run, Paragraph, Table classes
+│   │   ├── document.h       # Document class
+│   │   ├── template.h       # Template replacement
+│   │   ├── inserter.h       # Document insertion
+│   │   └── advanced.h       # Bookmark, DocumentBuilder, Search
 │   └── detail/
-│       └── cdocx_impl.h     # Private implementation
+│       └── impl.h           # Private implementation (PIMPL)
 ├── src/
-│   ├── cdocx_document.cpp   # Document class (PIMPL)
-│   ├── cdocx_tree.cpp       # Tree structure implementation
-│   ├── cdocx_content.cpp    # Content classes
-│   └── cdocx_template.cpp   # Template and inserter
+│   ├── base_content.cpp     # Content classes implementation
+│   ├── document.cpp         # Document class implementation
+│   ├── template.cpp         # Template implementation
+│   ├── inserter.cpp         # Document inserter implementation
+│   ├── tree.cpp             # Tree structure implementation
+│   ├── impl.cpp             # DocumentImpl implementation
+│   └── advanced.cpp         # Advanced features implementation
 ├── examples/                # Example programs
 ├── test/                    # Test suite
+├── docs/                    # Documentation
+│   └── archive/             # Archived design documents
 └── thirdparty/              # Dependencies (pugixml, zip)
 ```
 

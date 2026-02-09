@@ -54,6 +54,10 @@ set(EXAMPLES
     09_text_formatting
 )
 
+if(ENABLE_ADVANCED_FEATURES)
+    list(APPEND EXAMPLES 10_advanced_crud)
+endif()
+
 foreach(example ${EXAMPLES})
     add_subdirectory(${example})
 endforeach()
@@ -66,6 +70,9 @@ add_dependencies(04_template_advanced generate_samples)
 add_dependencies(05_document_insert generate_samples)
 add_dependencies(06_xml_parts generate_samples)
 add_dependencies(07_media_management generate_samples)
+if(ENABLE_ADVANCED_FEATURES)
+    add_dependencies(10_advanced_crud generate_samples)
+endif()
 
 # ============================================================================
 # Convenience Targets
@@ -90,6 +97,9 @@ add_custom_target(examples_list
     COMMAND ${CMAKE_COMMAND} -E echo "  07_media_management    - Media file management"
     COMMAND ${CMAKE_COMMAND} -E echo "  08_create_empty        - Create empty document from scratch"
     COMMAND ${CMAKE_COMMAND} -E echo "  09_text_formatting     - Text and paragraph formatting features"
+if(ENABLE_ADVANCED_FEATURES)
+    COMMAND ${CMAKE_COMMAND} -E echo "  10_advanced_crud       - Advanced CRUD operations (Create, Read, Update, Delete)"
+endif()
     COMMAND ${CMAKE_COMMAND} -E echo ""
     COMMAND ${CMAKE_COMMAND} -E echo "Run: cmake --build . --target examples"
     COMMAND ${CMAKE_COMMAND} -E echo ""

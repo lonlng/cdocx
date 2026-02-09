@@ -88,33 +88,35 @@ ctest
 ```
 cdocx/
 ├── include/
-│   ├── cdocx.h                 # Public API header (simplified interface)
-│   ├── constants.h             # Formatting flags
-│   ├── cdocxIterator.h         # Iterator helpers
+│   ├── cdocx.h                 # Main public API header (aggregates all modules)
+│   ├── cdocx/                  # Modular headers
+│   │   ├── fwd.h               # Forward declarations
+│   │   ├── constants.h         # Formatting flags
+│   │   ├── iterator.h          # Iterator helpers
+│   │   ├── base.h              # Base content classes (Run, Paragraph, Table)
+│   │   ├── document.h          # Document class
+│   │   ├── template.h          # Template replacement
+│   │   ├── inserter.h          # Document insertion
+│   │   └── advanced.h          # Advanced features (Bookmark, DocumentBuilder, Search)
 │   └── detail/
-│       └── cdocx_impl.h        # Private implementation (internal use)
+│       └── impl.h              # Private implementation (PIMPL, internal use)
 ├── src/
-│   ├── cdocx_document.cpp      # Document class main implementation (PIMPL)
-│   ├── cdocx_impl.cpp          # DocumentImpl implementation
-│   ├── cdocx_tree.cpp          # Tree structure (DocxTree, DocxTreeNode)
-│   ├── cdocx_content.cpp       # Content classes (Run, Paragraph, Table)
-│   └── cdocx_template.cpp      # Template and DocumentInserter
-├── examples/                # Example programs
-│   ├── sample1.cpp
-│   ├── sample2.cpp
-│   ├── sample3.cpp
-│   ├── advanced_template_example.cpp
-│   ├── simple_insert_example.cpp
-│   ├── image_management_demo.cpp
-│   └── 45_xml_parts_api.cpp
-├── test/                    # Test suite
-│   ├── basic_tests.cpp
-│   ├── iterator_tests.cpp
-│   ├── advanced_features_test.cpp
-│   └── xml_parts_tests.cpp
+│   ├── base_content.cpp        # Content classes implementation
+│   ├── document.cpp            # Document class implementation
+│   ├── template.cpp            # Template implementation
+│   ├── inserter.cpp            # Document inserter implementation
+│   ├── tree.cpp                # Tree structure (DocxTree, DocxTreeNode)
+│   ├── impl.cpp                # DocumentImpl implementation
+│   └── advanced.cpp            # Advanced features implementation
+├── examples/                   # Example programs
+├── test/                       # Test suite
+├── docs/                       # Documentation
+│   ├── CLEANUP_SUMMARY.md      # Cleanup summary
+│   ├── REFACTORING_SUMMARY.md  # Refactoring details
+│   └── archive/                # Archived design documents
 ├── thirdparty/
-│   ├── pugixml/             # XML parsing (Git submodule)
-│   └── zip/                 # ZIP handling
+│   ├── pugixml/                # XML parsing (Git submodule)
+│   └── zip/                    # ZIP handling
 ├── CMakeLists.txt
 └── README.md
 ```
@@ -126,7 +128,7 @@ cdocx/
 CDocx uses a tree-based internal structure to represent the DOCX package:
 
 ```cpp
-// Internal node types (in detail/cdocx_impl.h)
+// Internal node types (in detail/impl.h)
 enum class DocxNodeType {
     Root,       // Root node (represents the package)
     Directory,  // Directory/folder
@@ -150,7 +152,7 @@ struct DocxTreeNode {
 ```
 
 **Implementation Details:**
-- Tree structure is **completely hidden** from public API (in `detail/cdocx_impl.h`)
+- Tree structure is **completely hidden** from public API (in `detail/impl.h`)
 - Uses PIMPL pattern: `Document` class contains `std::unique_ptr<DocumentImpl> impl_`
 - Path mapping provides O(1) lookup performance
 - Supports iteration, search, and filter operations

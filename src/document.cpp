@@ -1,24 +1,41 @@
-// CDocx - Document Class Implementation (PIMPL)
+/**
+ * @file document.cpp
+ * @brief Document class implementation
+ * @details Implementation of the Document class using PIMPL idiom.
+ *          Handles file I/O, ZIP archive management, XML parsing,
+ *          and document structure manipulation.
+ * 
+ * @author Amir Mohamadi (@amiremohamadi)
+ * @copyright MIT License
+ * @date 2024
+ * @version 0.2.0
+ */
 
-#include "cdocx.h"
-#include "detail/cdocx_impl.h"
+#include <cdocx/document.h>
+#include <detail/impl.h>
+
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
-#include <algorithm>
-
-// Include pugixml
-#include <pugixml.hpp>
 
 namespace cdocx {
 
 // ============================================================================
-// Document Constructor/Destructor
+// Constructor / Destructor
 // ============================================================================
 
-Document::Document() : impl_(std::make_unique<DocumentImpl>()) {}
+Document::Document() : impl_(std::make_unique<DocumentImpl>()) {
+    // Initialize iterator helpers
+    impl_->paragraph_ = new Paragraph();
+    impl_->table_ = new Table();
+}
 
-Document::Document(const std::string& filepath) : impl_(std::make_unique<DocumentImpl>()) {
+Document::Document(const std::string& filepath) 
+    : impl_(std::make_unique<DocumentImpl>()) {
     impl_->filepath_ = filepath;
+    // Initialize iterator helpers
+    impl_->paragraph_ = new Paragraph();
+    impl_->table_ = new Table();
 }
 
 Document::~Document() = default;
@@ -27,7 +44,7 @@ Document::Document(Document&& other) noexcept = default;
 Document& Document::operator=(Document&& other) noexcept = default;
 
 // ============================================================================
-// Basic Operations
+// File Operations
 // ============================================================================
 
 void Document::file(const std::string& filepath) {
@@ -35,31 +52,41 @@ void Document::file(const std::string& filepath) {
 }
 
 void Document::open() {
-    if (impl_->filepath_.empty()) return;
+    if (impl_->filepath_.empty()) {
+        return;
+    }
     open(impl_->filepath_);
 }
 
 void Document::open(const std::string& filepath) {
+    // Close any currently open document first
     close();
     
     impl_->filepath_ = filepath;
     
+    // Open the ZIP archive
     if (!impl_->open_zip(filepath)) {
         return;
     }
     
+    // Load document tree from ZIP
     if (!impl_->load_tree_from_zip()) {
         close();
         return;
     }
     
+    // Build quick-access caches from tree
     impl_->build_caches_from_tree();
+    
+    // Load relationships from all _rels files
     impl_->load_all_relationships();
+    
+    // Load content types
     impl_->load_content_types();
     
     impl_->is_open_ = true;
     
-    // Initialize paragraph iterator
+    // Initialize paragraph iterator to first paragraph
     pugi::xml_document* doc_xml = get_document_xml();
     if (doc_xml) {
         pugi::xml_node body = doc_xml->child("w:document").child("w:body");
@@ -71,35 +98,46 @@ void Document::open(const std::string& filepath) {
 }
 
 void Document::close() {
+    // Close ZIP handle
     impl_->close_zip();
+    
+    // Clear all internal structures
     impl_->tree_.clear();
     impl_->xml_parts_cache_.clear();
     impl_->media_files_cache_.clear();
     impl_->relationships_.clear();
     impl_->modified_parts_.clear();
     impl_->content_types_.clear();
+    
     impl_->is_open_ = false;
 }
 
 void Document::save() {
-    if (!is_open() || impl_->filepath_.empty()) return;
+    if (!is_open() || impl_->filepath_.empty()) {
+        return;
+    }
     save(impl_->filepath_);
 }
 
 void Document::save(const std::string& filepath) {
-    if (!is_open()) return;
+    if (!is_open()) {
+        return;
+    }
     
-    // Update all modified parts
+    // Update all modified relationship files
     for (const auto& rels_pair : impl_->relationships_) {
         impl_->update_relationships_xml(rels_pair.first);
     }
+    
+    // Update content types XML
     impl_->update_content_types_xml();
     
+    // Save to ZIP file
     if (!impl_->save_to_zip(filepath)) {
         return;
     }
     
-    // Clear modified flags
+    // Clear modification flags after successful save
     impl_->tree_.iterate_all([](std::shared_ptr<DocxTreeNode> node) {
         node->is_modified = false;
         node->is_new = false;
@@ -151,11 +189,12 @@ void Document::clear() {
 }
 
 // ============================================================================
-// Document Content Access
+// Content Access
 // ============================================================================
 
 Paragraph& Document::paragraphs() {
     if (!is_open()) {
+        // Return empty iterator for closed documents
         static Paragraph empty;
         return empty;
     }
@@ -361,10 +400,17 @@ std::vector<std::string> Document::get_footer_names() const {
 // ============================================================================
 
 bool Document::add_media(const std::string& image_path, const std::string* image_name) {
-    if (!is_open()) return false;
-    if (!std::filesystem::exists(image_path)) return false;
-    if (!validate_image_format(image_path)) return false;
+    if (!is_open()) {
+        return false;
+    }
+    if (!std::filesystem::exists(image_path)) {
+        return false;
+    }
+    if (!validate_image_format(image_path)) {
+        return false;
+    }
     
+    // Determine the filename in the document
     std::string filename;
     if (image_name && !image_name->empty()) {
         filename = *image_name;
@@ -372,28 +418,38 @@ bool Document::add_media(const std::string& image_path, const std::string* image
         filename = std::filesystem::path(image_path).filename().string();
     }
     
+    // Generate unique name if already exists
     std::string media_path = "word/media/" + filename;
     if (impl_->tree_.find_node(media_path)) {
         filename = generate_unique_image_name(filename);
         media_path = "word/media/" + filename;
     }
     
+    // Read image file
     std::ifstream file(image_path, std::ios::binary);
-    if (!file) return false;
+    if (!file) {
+        return false;
+    }
     
     std::vector<uint8_t> data((std::istreambuf_iterator<char>(file)),
                                std::istreambuf_iterator<char>());
     file.close();
     
-    if (data.empty()) return false;
+    if (data.empty()) {
+        return false;
+    }
     
+    // Add to tree
     auto node = impl_->tree_.add_media_file(media_path, data, impl_->get_mime_type(filename));
-    if (!node) return false;
+    if (!node) {
+        return false;
+    }
     
     node->is_new = true;
     node->is_modified = true;
     impl_->media_files_cache_[media_path] = node;
     
+    // Register content type
     impl_->add_content_type_override("/" + media_path, impl_->get_mime_type(filename));
     
     return true;
@@ -402,14 +458,20 @@ bool Document::add_media(const std::string& image_path, const std::string* image
 bool Document::add_media_from_memory(const std::string& name,
                                      const std::vector<uint8_t>& data,
                                      const std::string& content_type) {
-    if (!is_open()) return false;
-    if (data.empty()) return false;
+    if (!is_open()) {
+        return false;
+    }
+    if (data.empty()) {
+        return false;
+    }
     
     std::string media_path = "word/media/" + name;
     
     auto node = impl_->tree_.add_media_file(media_path, data, 
         content_type.empty() ? impl_->get_mime_type(name) : content_type);
-    if (!node) return false;
+    if (!node) {
+        return false;
+    }
     
     node->is_new = true;
     node->is_modified = true;
@@ -421,15 +483,19 @@ bool Document::add_media_from_memory(const std::string& name,
 }
 
 bool Document::delete_media(const std::string& image_name) {
-    if (!is_open()) return false;
+    if (!is_open()) {
+        return false;
+    }
     
     std::string media_path = "word/media/" + image_name;
     auto node = impl_->tree_.find_node(media_path);
-    if (!node) return false;
+    if (!node) {
+        return false;
+    }
     
     node->is_deleted = true;
     
-    // Remove relationship
+    // Remove relationship if exists
     std::string target = "media/" + image_name;
     std::string rel_id = impl_->find_relationship_id("word/_rels/document.xml.rels", target);
     if (!rel_id.empty()) {
@@ -442,21 +508,32 @@ bool Document::delete_media(const std::string& image_name) {
 }
 
 bool Document::replace_media(const std::string& image_name, const std::string& new_image_path) {
-    if (!is_open()) return false;
-    if (!std::filesystem::exists(new_image_path)) return false;
+    if (!is_open()) {
+        return false;
+    }
+    if (!std::filesystem::exists(new_image_path)) {
+        return false;
+    }
     
     std::string media_path = "word/media/" + image_name;
     auto node = impl_->tree_.find_node(media_path);
-    if (!node) return false;
+    if (!node) {
+        return false;
+    }
     
+    // Read new image data
     std::ifstream file(new_image_path, std::ios::binary);
-    if (!file) return false;
+    if (!file) {
+        return false;
+    }
     
     std::vector<uint8_t> data((std::istreambuf_iterator<char>(file)),
                                std::istreambuf_iterator<char>());
     file.close();
     
-    if (data.empty()) return false;
+    if (data.empty()) {
+        return false;
+    }
     
     node->binary_data = std::move(data);
     node->is_modified = true;
@@ -465,7 +542,9 @@ bool Document::replace_media(const std::string& image_name, const std::string& n
 }
 
 bool Document::has_media(const std::string& image_name) const {
-    if (!is_open()) return false;
+    if (!is_open()) {
+        return false;
+    }
     std::string media_path = "word/media/" + image_name;
     auto node = impl_->tree_.find_node(media_path);
     return node && !node->is_deleted;
@@ -485,14 +564,20 @@ std::vector<std::string> Document::list_media() const {
 }
 
 bool Document::export_media(const std::string& image_name, const std::string& output_path) const {
-    if (!is_open()) return false;
+    if (!is_open()) {
+        return false;
+    }
     
     std::string media_path = "word/media/" + image_name;
     auto node = impl_->tree_.find_node(media_path);
-    if (!node || node->is_deleted) return false;
+    if (!node || node->is_deleted) {
+        return false;
+    }
     
     std::ofstream file(output_path, std::ios::binary);
-    if (!file) return false;
+    if (!file) {
+        return false;
+    }
     
     file.write(reinterpret_cast<const char*>(node->binary_data.data()), 
                node->binary_data.size());
@@ -502,7 +587,9 @@ bool Document::export_media(const std::string& image_name, const std::string& ou
 
 std::vector<uint8_t> Document::get_media_data(const std::string& image_name) const {
     std::vector<uint8_t> result;
-    if (!is_open()) return result;
+    if (!is_open()) {
+        return result;
+    }
     
     std::string media_path = "word/media/" + image_name;
     auto node = impl_->tree_.find_node(media_path);
@@ -514,7 +601,9 @@ std::vector<uint8_t> Document::get_media_data(const std::string& image_name) con
 
 std::string Document::add_media_with_rel(const std::string& image_path,
                                           const std::string* image_name) {
-    if (!add_media(image_path, image_name)) return "";
+    if (!add_media(image_path, image_name)) {
+        return "";
+    }
     
     std::string name = (image_name && !image_name->empty()) ? *image_name 
         : std::filesystem::path(image_path).filename().string();
@@ -536,7 +625,9 @@ bool Document::validate_image_format(const std::string& image_path) const {
 }
 
 bool Document::validate_image_size(const std::string& image_path, size_t max_size) const {
-    if (!std::filesystem::exists(image_path)) return false;
+    if (!std::filesystem::exists(image_path)) {
+        return false;
+    }
     
     std::error_code ec;
     auto size = std::filesystem::file_size(image_path, ec);
@@ -563,12 +654,20 @@ std::string Document::generate_unique_image_name(const std::string& base_name) c
 // Legacy Compatibility Methods
 // ============================================================================
 
-void Document::preload_image_cache() {}
-void Document::clear_image_cache() {}
+void Document::preload_image_cache() {
+    // No-op in current implementation
+}
+
+void Document::clear_image_cache() {
+    // No-op in current implementation
+}
+
 size_t Document::get_image_cache_size() const {
     size_t count = 0;
     impl_->tree_.iterate_files([&count](std::shared_ptr<DocxTreeNode> node) {
-        if (node->type == DocxNodeType::MediaFile && !node->is_deleted) count++;
+        if (node->type == DocxNodeType::MediaFile && !node->is_deleted) {
+            count++;
+        }
     });
     return count;
 }
@@ -576,7 +675,9 @@ size_t Document::get_image_cache_size() const {
 std::string Document::add_media_optimized(const std::string& image_path,
                                            const std::string& image_name,
                                            bool overwrite) {
-    if (!overwrite && has_media(image_name)) return "";
+    if (!overwrite && has_media(image_name)) {
+        return "";
+    }
     return add_media_with_rel(image_path, image_name.empty() ? nullptr : &image_name);
 }
 
