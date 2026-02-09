@@ -740,17 +740,8 @@ bool DocumentImpl::write_tree_node(::zip_t* zip, std::shared_ptr<DocxTreeNode> n
         // Serialize XML with declaration
         xml_string_writer writer;
         node->xml_doc->save(writer, "  ");
-        
-        // Check if writer result already starts with XML declaration
-        std::string xml_output;
-        if (writer.result.find("<?xml") == 0) {
-            // Already has declaration, use as-is
-            xml_output = writer.result;
-        } else {
-            // Add XML declaration
-            xml_output = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
-            xml_output += writer.result;
-        }
+        // Add original content as-is
+        std::string xml_output = writer.result;
         
         success = zip_entry_write(zip, xml_output.data(), xml_output.size()) == 0;
     } else {

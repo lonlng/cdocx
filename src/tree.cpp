@@ -320,14 +320,25 @@ std::vector<uint8_t> DocxTreeNode::serialize_xml_to_binary() const {
     xml_string_writer writer;
     xml_doc->save(writer, "  ");
     
-    // Check if writer result already starts with XML declaration
-    std::string xml_output;
+    // Ensure standardized XML declaration format
+    std::string xml_output = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+    
     if (writer.result.find("<?xml") == 0) {
-        // Already has declaration, use as-is
-        xml_output = writer.result;
+        // Skip existing declaration and add rest of content
+        size_t decl_end = writer.result.find("?>");
+        if (decl_end != std::string::npos) {
+            // Skip declaration and any following whitespace/newline
+            size_t content_start = decl_end + 2;
+            while (content_start < writer.result.size() && 
+                   (writer.result[content_start] == '\n' || writer.result[content_start] == '\r')) {
+                content_start++;
+            }
+            xml_output += writer.result.substr(content_start);
+        } else {
+            xml_output += writer.result;
+        }
     } else {
-        // Add XML declaration
-        xml_output = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        // Add original content as-is
         xml_output += writer.result;
     }
     
@@ -556,8 +567,12 @@ std::shared_ptr<DocxTreeNode> DocxTree::add_zip_entry(const std::string& entry_p
     if (entry_path.find("word/media/") != std::string::npos) {
         type = DocxNodeType::MediaFile;
     } else if (entry_path.size() > 4) {
-        std::string ext = entry_path.substr(entry_path.size() - 4);
-        if (ext == ".xml" || ext == ".rels") {
+        // Check for .xml extension
+        if (entry_path.size() > 4 && entry_path.substr(entry_path.size() - 4) == ".xml") {
+            type = DocxNodeType::XmlFile;
+        }
+        // Check for .rels extension (relationships files)
+        else if (entry_path.size() > 5 && entry_path.substr(entry_path.size() - 5) == ".rels") {
             type = DocxNodeType::XmlFile;
         }
     }
