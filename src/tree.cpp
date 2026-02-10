@@ -320,27 +320,8 @@ std::vector<uint8_t> DocxTreeNode::serialize_xml_to_binary() const {
     xml_string_writer writer;
     xml_doc->save(writer, "  ");
     
-    // Ensure standardized XML declaration format
-    std::string xml_output = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
-    
-    if (writer.result.find("<?xml") == 0) {
-        // Skip existing declaration and add rest of content
-        size_t decl_end = writer.result.find("?>");
-        if (decl_end != std::string::npos) {
-            // Skip declaration and any following whitespace/newline
-            size_t content_start = decl_end + 2;
-            while (content_start < writer.result.size() && 
-                   (writer.result[content_start] == '\n' || writer.result[content_start] == '\r')) {
-                content_start++;
-            }
-            xml_output += writer.result.substr(content_start);
-        } else {
-            xml_output += writer.result;
-        }
-    } else {
-        // Add original content as-is
-        xml_output += writer.result;
-    }
+    // Build output with preserved or default XML declaration
+    std::string& xml_output = writer.result;
     
     std::vector<uint8_t> result(xml_output.size());
     std::memcpy(result.data(), xml_output.data(), xml_output.size());
@@ -604,7 +585,8 @@ std::shared_ptr<DocxTreeNode> DocxTree::add_zip_entry(const std::string& entry_p
             // Parse XML
             node->xml_doc = std::make_shared<pugi::xml_document>();
             pugi::xml_parse_result result = node->xml_doc->load_buffer(
-                data.data(), data.size(), pugi::parse_default, pugi::encoding_utf8);
+                data.data(), data.size(), pugi::parse_full, pugi::encoding_utf8);
+            
             if (!result) {
                 return nullptr;
             }

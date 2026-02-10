@@ -737,13 +737,9 @@ bool DocumentImpl::write_tree_node(::zip_t* zip, std::shared_ptr<DocxTreeNode> n
     bool success = false;
     
     if (node->type == DocxNodeType::XmlFile && node->xml_doc) {
-        // Serialize XML with declaration
-        xml_string_writer writer;
-        node->xml_doc->save(writer, "  ");
-        // Add original content as-is
-        std::string xml_output = writer.result;
-        
-        success = zip_entry_write(zip, xml_output.data(), xml_output.size()) == 0;
+        // Use node's serialization method which preserves XML declaration
+        auto data = node->serialize_xml_to_binary();
+        success = zip_entry_write(zip, data.data(), data.size()) == 0;
     } else {
         // Write binary data - need to load if lazy
         node->file_storage.ensure_loaded(load_config_);
