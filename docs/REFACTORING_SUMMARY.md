@@ -1,15 +1,10 @@
-# CDocx Code Refactoring Summary
+# CDocx 代码重构说明
 
 ## 概述
 
-本次重构对 CDocx 项目进行了全面的代码结构优化和文档完善，主要改进包括：
+本文档说明 CDocx 项目的代码结构和设计决策。
 
-1. **模块化的头文件结构**
-2. **完整的 Doxygen 文档注释**
-3. **清晰的代码组织和命名规范**
-4. **向后兼容的构建系统**
-
-## 新的文件结构
+## 文件组织结构
 
 ### 头文件 (include/)
 
@@ -24,7 +19,7 @@ include/
 │   ├── document.h             # Document 类
 │   ├── template.h             # Template 类
 │   ├── inserter.h             # DocumentInserter 类
-│   └── advanced.h             # 高级功能 (Bookmark, DocumentBuilder, etc.)
+│   └── advanced.h             # 高级功能 (Bookmark, Range, DocumentBuilder)
 └── detail/
     └── impl.h                 # 内部实现 (PIMPL)
 ```
@@ -42,33 +37,23 @@ src/
 └── advanced.cpp               # 高级功能实现
 ```
 
-### 旧文件结构（保留兼容性）
-
-原始文件仍然保留在项目中：
-- `include/cdocx.h` (原始)
-- `include/cdocxIterator.h`
-- `include/cdocx_advanced.h`
-- `include/constants.h`
-- `include/detail/cdocx_impl.h`
-- `src/cdocx_*.cpp` (所有原始源文件)
-
 ## Doxygen 注释规范
 
-### 文件头注释模板
+### 文件头注释
 
 ```cpp
 /**
  * @file filename.h
  * @brief 简短描述
  * @details 详细描述
- * @author Author Name (@handle)
+ * @author Author Name
  * @copyright MIT License
  * @date 2026
  * @version 0.2.0
  */
 ```
 
-### 类注释模板
+### 类注释
 
 ```cpp
 /**
@@ -87,7 +72,7 @@ src/
  */
 ```
 
-### 函数注释模板
+### 函数注释
 
 ```cpp
 /**
@@ -98,19 +83,16 @@ src/
  * @return 返回值描述
  * @retval true 成功返回值
  * @retval false 失败返回值
- * @throw 异常描述
  * @note 重要说明
  * @warning 警告信息
- * @pre 前置条件
- * @post 后置条件
  * @sa 相关函数
  * @since 0.2.0
  */
 ```
 
-## 主要改进
+## 设计原则
 
-### 1. 模块化的头文件设计
+### 1. 模块化设计
 
 - **fwd.h**: 所有公共类的前向声明，减少编译依赖
 - **constants.h**: 格式标志常量，使用 `constexpr`
@@ -129,17 +111,15 @@ src/
 - 参数说明
 - 返回值说明
 - 异常说明
-- 前置/后置条件
-- 线程安全说明
 - 版本信息
 
-### 3. 清晰的命名规范
+### 3. 命名规范
 
-- 类名: PascalCase (`Document`, `Paragraph`)
-- 方法名: snake_case (`get_text()`, `set_bold()`)
-- 成员变量: 尾部下划线 (`parent_`, `current_`)
-- 常量: `constexpr` 全大写或 kCamelCase
-- 命名空间: 小写 (`cdocx`)
+- **类名**: PascalCase (`Document`, `Paragraph`)
+- **方法名**: snake_case (`get_text()`, `set_bold()`)
+- **成员变量**: 尾部下划线 (`parent_`, `current_`)
+- **常量**: `constexpr` 或 kCamelCase
+- **命名空间**: 小写 (`cdocx`)
 
 ### 4. 内部实现优化
 
@@ -148,7 +128,7 @@ src/
 - **缓存机制**: 快速访问常用 XML 部件
 - **状态跟踪**: 修改标记优化保存性能
 
-## 构建系统更新
+## 构建系统
 
 ### CMake 选项
 
@@ -157,22 +137,17 @@ option(BUILD_SHARED_LIBS "Build shared instead of static library" OFF)
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_TESTING "Build tests" ON)
 option(BUILD_DOCS "Build documentation with Doxygen" OFF)
-option(ENABLE_ADVANCED_FEATURES "Enable advanced features" ON)
-option(USE_LEGACY_SOURCES "Use legacy source file structure" OFF)
 ```
 
 ### 生成文档
 
 ```bash
-# 启用文档构建
-mkdir build && cd build
+# 使用 Doxygen
+doxygen Doxyfile
+
+# 或在 CMake 构建中
 cmake .. -DBUILD_DOCS=ON
-
-# 生成文档
-make docs
-
-# 或直接使用 Doxygen
-doxygen
+cmake --build . --target docs
 ```
 
 文档将生成在 `docs/doxygen/html/` 目录。
@@ -235,23 +210,13 @@ builder.end_row();
 builder.end_table();
 ```
 
-## 向后兼容性
-
-重构后的代码保持与原始 API 的向后兼容：
-
-1. 原始头文件仍然可用
-2. 原始源文件未被删除
-3. CMake 选项 `USE_LEGACY_SOURCES` 可切换使用旧代码
-4. 所有公共 API 保持不变
-
-## 代码质量改进
+## 代码质量
 
 ### 文档覆盖率
 
 - 文件头: 100%
 - 类定义: 100%
 - 公共方法: 100%
-- 内部方法: 80%
 
 ### 代码组织
 
@@ -259,20 +224,6 @@ builder.end_table();
 - 依赖倒置: 高层模块不依赖低层细节
 - 接口隔离: 提供最小必要接口
 - 开闭原则: 对扩展开放，对修改关闭
-
-### 编译优化
-
-- 前向声明减少头文件依赖
-- 模板实例化优化
-- 内联函数合理使用
-
-## 后续建议
-
-1. **完善测试覆盖**: 为新代码添加单元测试
-2. **性能优化**: 针对大文档的性能测试和优化
-3. **功能扩展**: 实现 TODO 标记的未完成功能
-4. **CI/CD**: 集成文档自动生成和发布
-5. **示例更新**: 更新示例代码使用新 API 风格
 
 ## 贡献指南
 

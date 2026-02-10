@@ -8,7 +8,7 @@
  * @author lonlng
  * @copyright MIT License
  * @date 2026
- * @version 0.3.0 - Optimized Version with Lazy Loading & Parallel Processing
+ * @version 0.3.0 - Optimized Version with Parallel Processing
  * @internal
  */
 
@@ -236,51 +236,6 @@ struct DocxTreeNode : public std::enable_shared_from_this<DocxTreeNode> {
      * @return Shared pointer to directory node
      */
     std::shared_ptr<DocxTreeNode> find_or_create_directory(const std::string& dir_name);
-};
-
-// ============================================================================
-// LRU Cache for XML Nodes
-// ============================================================================
-
-/**
- * @class LRUCache
- * @brief LRU cache for managing XML node memory
- * @internal
- */
-class LRUCache {
-public:
-    using NodePtr = std::shared_ptr<DocxTreeNode>;
-    
-private:
-    size_t max_size_;
-    size_t current_size_ = 0;
-    size_t max_memory_mb_;
-    size_t current_memory_mb_ = 0;
-    
-    std::list<std::string> lru_list_;  ///< Most recent at front
-    std::map<std::string, std::pair<NodePtr, std::list<std::string>::iterator>> cache_;
-    mutable std::shared_mutex mutex_;
-    
-public:
-    LRUCache(size_t max_nodes, size_t max_memory_mb)
-        : max_size_(max_nodes), max_memory_mb_(max_memory_mb) {}
-    
-    // Access node (update LRU)
-    NodePtr touch(const std::string& path);
-    
-    // Add node to cache
-    void add(const std::string& path, NodePtr node, size_t estimated_mb);
-    
-    // Remove from cache
-    void remove(const std::string& path);
-    
-    // Serialize and release least recently used nodes until memory limit is met
-    void evict_if_needed();
-    
-    // Clear cache
-    void clear();
-    
-    size_t size() const { return current_size_; }
 };
 
 // ============================================================================
@@ -596,9 +551,6 @@ public:
     
     // Create empty document
     bool create_empty_document();
-    
-    // Memory management helpers (kept for API compatibility)
-    size_t unload_to_free_memory();
     
     // Statistics
     const LoadStatistics& get_last_load_stats() const { return last_load_stats_; }

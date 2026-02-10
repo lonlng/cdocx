@@ -6,8 +6,8 @@
  *          PIMPL (Pointer to Implementation) idiom to hide implementation
  *          details and maintain ABI stability.
  * 
- *          Optimized version with lazy loading, parallel processing, and
- *          advanced memory management.
+ *          Optimized version with parallel processing and advanced
+ *          memory management.
  * 
  * @author lonlng
  * @copyright MIT License
@@ -228,39 +228,8 @@ public:
     LoadResult get_last_load_result() const;
 
     // ========================================================================
-    // Memory Management (Optimized)
+    // Document Creation
     // ========================================================================
-
-    /**
-     * @brief Preload all files (deprecated, no-op)
-     * @return true if document is open
-     * @details All files are now loaded into memory when the document is opened.
-     *          This function is kept for API compatibility.
-     * @since 0.3.0
-     * @deprecated This function is no longer needed and always returns true.
-     */
-    bool preload_all_files();
-
-    /**
-     * @brief Unload files to free memory (deprecated, no-op)
-     * @return Always returns 0
-     * @details This feature has been removed. All data is kept in memory.
-     *          Function kept for API compatibility.
-     * @since 0.3.0
-     * @deprecated This function no longer performs any operation.
-     */
-    size_t unload_to_free_memory();
-
-    /**
-     * @brief Set storage thresholds (deprecated, no-op)
-     * @param[in] memory_threshold Ignored
-     * @param[in] mmap_threshold Ignored
-     * @details These thresholds are no longer used. All data is stored in memory.
-     *          Function kept for API compatibility.
-     * @since 0.3.0
-     * @deprecated Storage thresholds are no longer used. Parameters are ignored.
-     */
-    void set_storage_thresholds(size_t memory_threshold, size_t mmap_threshold);
 
     /**
      * @brief Create a new empty document
@@ -513,19 +482,6 @@ public:
      */
     std::string generate_unique_image_name(const std::string& base_name) const;
 
-    // ========================================================================
-    // Legacy Compatibility Methods
-    // ========================================================================
-    
-    /** @brief Preload image cache (deprecated, no-op) */
-    void preload_image_cache();
-    
-    /** @brief Clear image cache (deprecated, no-op) */
-    void clear_image_cache();
-    
-    /** @brief Get image cache size (deprecated, returns media count) */
-    size_t get_image_cache_size() const;
-
     /**
      * @brief Add media with relationship (optimized version)
      * @deprecated Use add_media_with_rel() instead
@@ -558,31 +514,15 @@ public:
  * @since 0.3.0
  */
 struct LoadConfig {
-    // Note: Lazy loading has been removed for simplicity and reliability.
-    // All files are loaded into memory when opening the document.
-    
-    // Size thresholds (bytes) - kept for potential future use
-    size_t memory_threshold = 10 * 1024 * 1024;     ///< 10MB, small files in memory
-    size_t temp_file_threshold = 100 * 1024 * 1024; ///< 100MB, huge files temp storage
-    
     // Parallel loading settings
     bool enable_parallel_loading = true;       ///< Enable parallel loading
     size_t parallel_threshold = 50;            ///< Enable parallel above this file count
     size_t max_threads = 0;                    ///< 0 = use hardware concurrency
     
-    // Cache settings
-    bool enable_lru_cache = true;              ///< Enable LRU cache
-    size_t max_cached_xml_nodes = 20;          ///< Max cached XML nodes
-    size_t max_cached_media_mb = 100;          ///< Max cached media size (MB)
-    
     // Error handling
     bool allow_partial_load = true;            ///< Allow partial load
     bool skip_corrupted_files = true;          ///< Skip corrupted files
     size_t max_errors = 100;                   ///< Max error count
-    
-    // XML parsing optimization
-    bool enable_xml_prealloc = true;           ///< XML memory preallocation
-    size_t xml_prealloc_factor = 2;            ///< Preallocation factor
     
     // Progress callback
     std::function<void(int percent, const std::string& current_file)> progress_callback;
@@ -595,16 +535,6 @@ struct LoadConfig {
         cfg.enable_parallel_loading = true;
         cfg.max_threads = 0;
         return cfg;
-    }
-    
-    /**
-     * @brief Create default configuration optimized for memory
-     * @note Lazy loading has been removed. This function is equivalent to optimized_for_speed().
-     */
-    static LoadConfig optimized_for_memory() {
-        // Note: All files are loaded into memory regardless of configuration.
-        // This function is kept for API compatibility.
-        return optimized_for_speed();
     }
 };
 

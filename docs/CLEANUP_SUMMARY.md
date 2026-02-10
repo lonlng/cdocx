@@ -1,47 +1,10 @@
 # CDocx 代码清理总结
 
-## 清理时间
-2024年
+## 概述
 
-## 清理内容
+本文档总结 CDocx 项目的代码结构和清理状态。
 
-### 1. 备份的旧文件
-
-以下旧文件已备份到 `bak/` 目录：
-
-#### 旧头文件 (bak/include/)
-| 文件 | 说明 | 替代文件 |
-|------|------|----------|
-| `cdocxIterator.h` | 旧迭代器头文件 | `include/cdocx/iterator.h` |
-| `cdocx_advanced.h` | 旧高级功能头文件 | `include/cdocx/advanced.h` |
-| `constants.h` | 旧常量定义 | `include/cdocx/constants.h` |
-| `detail/cdocx_impl.h` | 旧实现细节头文件 | `include/detail/impl.h` |
-| `cdocx_full.h` | 旧完整实现头文件 | 已移除（功能合并到 advanced.h） |
-
-#### 旧源文件 (bak/src/)
-| 文件 | 说明 | 替代文件 |
-|------|------|----------|
-| `cdocx_document.cpp` | 旧 Document 实现 | `src/document.cpp` |
-| `cdocx_content.cpp` | 旧内容类实现 | `src/base_content.cpp` |
-| `cdocx_impl.cpp` | 旧实现 | `src/impl.cpp` |
-| `cdocx_tree.cpp` | 旧树结构实现 | `src/tree.cpp` |
-| `cdocx_template.cpp` | 旧模板实现 | `src/template.cpp` |
-| `cdocx_advanced.cpp` | 旧高级功能实现 | `src/advanced.cpp` |
-| `cdocx_full_impl.cpp` | 旧完整实现 | 已移除 |
-| `cdocx_full_builder.cpp` | 旧完整实现 | 已移除 |
-| `cdocx_full_extras.cpp` | 旧完整实现 | 已移除 |
-
-### 2. 归档的文档
-
-以下分析和设计文档已归档到 `docs/archive/`：
-
-- `ASPOSE_FEATURES_ANALYSIS.md` - Aspose 功能分析
-- `ASPOSE_WORDS_IMPLEMENTATION_COMPLETE.md` - 完整实现文档
-- `IMPLEMENTATION_SUMMARY.md` - 实现总结
-- `FEATURE_ANALYSIS.md` - 功能分析
-- `CRUD_FEATURES.md` - CRUD 功能文档
-
-### 3. 清理后的文件结构
+## 文件组织结构
 
 ```
 cdocx/
@@ -68,87 +31,60 @@ cdocx/
 │   └── advanced.cpp         # 高级功能实现
 ├── docs/
 │   ├── CLEANUP_SUMMARY.md   # 本文件
-│   ├── REFACTORING_SUMMARY.md # 重构总结
-│   ├── CODE_REFACTORING_PLAN.md # 重构计划
-│   ├── archive/             # 归档文档
-│   └── doxygen/             # Doxygen 生成文档（如存在）
-├── bak/                     # 备份的旧文件
-│   ├── include/             # 旧头文件备份
-│   └── src/                 # 旧源文件备份
-└── [其他标准目录...]
+│   ├── REFACTORING_SUMMARY.md # 重构说明
+│   ├── INSTALL.md           # 安装指南
+│   └── archive/             # 归档文档
+├── examples/                # 示例程序
+├── test/                    # 测试套件
+├── thirdparty/              # 依赖库
+│   ├── pugixml/             # XML 解析
+│   └── zip/                 # ZIP 处理
+├── CMakeLists.txt
+├── README.md
+├── AGENTS.md
+└── LICENSE
 ```
 
-### 4. CMakeLists.txt 更新
+## 核心设计原则
 
-移除的选项：
-- `USE_LEGACY_SOURCES` - 不再需要，只使用新结构
-- `ENABLE_FULL_ASPOSE` - 功能已合并到主代码中
-- `ENABLE_ADVANCED_FEATURES` - 默认启用，不再需要开关
-
-简化的源文件列表：
-```cmake
-set(CDOCX_SOURCES
-    src/base_content.cpp
-    src/document.cpp
-    src/template.cpp
-    src/inserter.cpp
-    src/tree.cpp
-    src/impl.cpp
-    src/advanced.cpp
-)
-```
-
-### 5. 新的代码特性
-
-#### 模块化设计
+### 1. 模块化设计
 - 每个功能模块有独立的头文件和实现文件
 - 清晰的依赖关系
 - 减少编译时间
 
-#### 完整的 Doxygen 文档
-- 所有公共 API 都有完整的文档注释
+### 2. PIMPL 模式
+- 隐藏实现细节
+- 保持 ABI 稳定性
+- 减少头文件依赖
+
+### 3. 树形结构
+- 内部使用树结构表示 DOCX 包
+- 支持完整的文档结构访问
+- 保留所有 XML 部件和媒体文件
+
+### 4. 完整的 Doxygen 文档
+- 所有公共 API 都有文档注释
 - 使用示例代码
 - 版本和作者信息
 
-#### 一致的命名规范
-- 类名：PascalCase
-- 方法名：snake_case
-- 成员变量：尾部下划线
-- 常量：constexpr
+## 命名规范
 
-## 如何恢复旧文件
+| 元素 | 规范 | 示例 |
+|------|------|------|
+| 类名 | PascalCase | `Document`, `Paragraph` |
+| 方法名 | snake_case | `get_text()`, `set_bold()` |
+| 成员变量 | 尾部下划线 | `parent_`, `current_` |
+| 常量 | constexpr | `kMaxImageSize` |
 
-如果需要恢复旧文件，可以从 `bak/` 目录复制：
-
-```bash
-# 恢复所有旧头文件
-cp bak/include/*.h include/
-cp bak/include/detail/*.h include/detail/
-
-# 恢复所有旧源文件
-cp bak/src/*.cpp src/
-```
-
-## 向后兼容性
-
-新的代码结构保持 API 向后兼容：
-- 所有公共类和方法名称不变
-- `cdocx.h` 仍然包含所有功能
-- 现有的用户代码无需修改即可编译
-
-## 建议
-
-1. **保留备份**：`bak/` 目录包含所有旧文件，建议保留一段时间
-2. **更新文档**：参考 `docs/REFACTORING_SUMMARY.md` 了解详细改进
-3. **生成文档**：运行 `doxygen Doxyfile` 生成 API 文档
-
-## 清理后验证
+## 构建说明
 
 ```bash
-# 清理构建目录
-rm -rf build
+# 克隆仓库
+git clone https://github.com/lonlng/CDocx.git
+cd CDocx
+git submodule update --init --recursive
 
-# 重新配置和构建
+# 构建
 mkdir build && cd build
 cmake ..
 cmake --build .
@@ -156,3 +92,31 @@ cmake --build .
 # 运行测试
 ctest
 ```
+
+## 主要特性
+
+- **文档操作**：创建、读取、写入 DOCX 文件
+- **模板系统**：占位符替换（`{{key}}` 模式）
+- **文档插入**：合并文档到指定位置
+- **XML 部件 API**：直接访问所有 DOCX 内部组件
+- **媒体管理**：添加、删除、替换图片
+- **表格操作**：完整的表格创建和编辑
+- **并行加载**：支持多线程加载大文档
+
+## 依赖
+
+- **pugixml**: XML 解析（Git 子模块）
+- **zip**: ZIP 压缩/解压（ bundled ）
+
+## 文档索引
+
+- [README.md](../README.md) - 项目概览和快速开始
+- [AGENTS.md](../AGENTS.md) - 完整 API 文档
+- [CONTRIBUTING.md](../CONTRIBUTING.md) - 贡献指南
+- [SECURITY.md](../SECURITY.md) - 安全政策
+- [docs/INSTALL.md](INSTALL.md) - 详细安装说明
+- [docs/REFACTORING_SUMMARY.md](REFACTORING_SUMMARY.md) - 重构说明
+
+## 许可证
+
+MIT License - 详见 [LICENSE](../LICENSE) 文件。

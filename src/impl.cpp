@@ -307,7 +307,7 @@ bool DocumentImpl::load_tree_parallel(LoadStatistics& stats) {
         }
     }
     
-    // Process non-lazy files in parallel
+    // Process files in parallel
     size_t num_threads = load_config_.max_threads > 0 ? 
                          load_config_.max_threads : 
                          std::thread::hardware_concurrency();
@@ -743,15 +743,6 @@ std::string DocumentImpl::get_mime_type(const std::string& filename) const {
     }
     
     return "application/octet-stream";
-}
-
-// ============================================================================
-// Memory Management Helpers (kept for API compatibility)
-// ============================================================================
-
-size_t DocumentImpl::unload_to_free_memory() {
-    // Feature removed. Kept for API compatibility.
-    return 0;
 }
 
 // ============================================================================

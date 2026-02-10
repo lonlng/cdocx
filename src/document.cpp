@@ -207,24 +207,6 @@ LoadResult Document::get_last_load_result() const {
     return impl_->get_last_load_result();
 }
 
-bool Document::preload_all_files() {
-    // All files are already loaded into memory when document is opened.
-    // This function is kept for API compatibility and always returns true.
-    return is_open();
-}
-
-size_t Document::unload_to_free_memory() {
-    // This feature has been removed. All data is kept in memory.
-    // Function kept for API compatibility.
-    return 0;
-}
-
-void Document::set_storage_thresholds(size_t memory_threshold, size_t mmap_threshold) {
-    // These thresholds are no longer used. Function kept for API compatibility.
-    (void)memory_threshold;
-    (void)mmap_threshold;
-}
-
 bool Document::create_empty(const std::string& filepath) {
     close();
     
@@ -723,28 +705,6 @@ std::string Document::generate_unique_image_name(const std::string& base_name) c
     }
     
     return name;
-}
-
-// ============================================================================
-// Legacy Compatibility Methods
-// ============================================================================
-
-void Document::preload_image_cache() {
-    // No-op in current implementation
-}
-
-void Document::clear_image_cache() {
-    // No-op in current implementation
-}
-
-size_t Document::get_image_cache_size() const {
-    size_t count = 0;
-    impl_->tree_.iterate_files([&count](std::shared_ptr<DocxTreeNode> node) {
-        if (node->type == DocxNodeType::MediaFile && !node->is_deleted) {
-            count++;
-        }
-    });
-    return count;
 }
 
 std::string Document::add_media_optimized(const std::string& image_path,

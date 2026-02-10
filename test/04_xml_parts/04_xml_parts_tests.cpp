@@ -200,7 +200,7 @@ TEST_CASE("get_xml_part returns valid document or nullptr") {
     pugi::xml_document* nonexistent = doc.get_xml_part("nonexistent.xml");
     CHECK(nonexistent == nullptr);
     
-    // Test lazy loading - try to load a part that wasn't loaded initially
+    // Test accessing a specific XML part
     pugi::xml_document* styles = doc.get_xml_part("word/styles.xml");
     // May or may not exist, but should not crash
     if (styles) {

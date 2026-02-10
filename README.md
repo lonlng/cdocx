@@ -135,7 +135,42 @@ doc.export_media("image.jpg", "output/path.jpg");
 
 ## Documentation
 
-See [AGENTS.md](AGENTS.md) for complete API documentation, technical implementation details, build instructions, and examples.
+- [AGENTS.md](AGENTS.md) - Complete API documentation and technical details
+- [docs/INSTALL.md](docs/INSTALL.md) - Installation instructions
+- [docs/REFACTORING_SUMMARY.md](docs/REFACTORING_SUMMARY.md) - Code structure documentation
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
+- [SECURITY.md](SECURITY.md) - Security policy
+
+## Build Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `BUILD_SHARED_LIBS` | OFF | Build shared library |
+| `BUILD_EXAMPLES` | ON | Build example programs |
+| `BUILD_TESTING` | ON | Build test suite |
+| `INSTALL_DOCS` | OFF | Install documentation |
+
+## CMake Integration
+
+```cmake
+# Method 1: After installation
+find_package(cdocx REQUIRED)
+target_link_libraries(your_target PRIVATE cdocx::cdocx)
+
+# Method 2: As subdirectory
+add_subdirectory(path/to/cdocx)
+target_link_libraries(your_target PRIVATE cdocx::cdocx)
+
+# Method 3: FetchContent
+include(FetchContent)
+FetchContent_Declare(
+    cdocx
+    GIT_REPOSITORY https://github.com/lonlng/CDocx.git
+    GIT_TAG v0.2.0
+)
+FetchContent_MakeAvailable(cdocx)
+target_link_libraries(your_target PRIVATE cdocx::cdocx)
+```
 
 ## Dependencies
 
