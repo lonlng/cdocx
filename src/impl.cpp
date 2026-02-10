@@ -125,9 +125,7 @@ LoadResult DocumentImpl::load_tree_with_result() {
         return result;
     }
     
-    // Set configuration for tree
-    tree_.set_config(load_config_);
-    tree_.set_zip_handle(zip_handle_, false);  // We own the handle, not the tree
+    // Tree will store all data directly in memory
     
     tree_.clear();
     
@@ -188,63 +186,41 @@ LoadResult DocumentImpl::load_tree_with_result() {
             bool is_dir = zip_entry_isdir(zip_handle_);
             
             if (!is_dir) {
-                // Determine if we should load or lazy-load
-                bool is_critical = (entry_name == "[Content_Types].xml" ||
-                                   entry_name == "_rels/.rels" ||
-                                   entry_name == "word/document.xml" ||
-                                   entry_name.find(".rels") != std::string::npos);
+                // Read entry data immediately (all data stored in memory)
+                void* data = nullptr;
+                size_t size = 0;
                 
-                bool should_lazy_load = load_config_.enable_lazy_loading &&
-                                       !is_critical &&
-                                       entry_name.find("word/media/") == 0;
-                
-                size_t entry_size = zip_entry_size(zip_handle_);
-                result.total_bytes += entry_size;
-                
-                if (should_lazy_load) {
-                    // Mark for lazy loading
-                    tree_.add_zip_entry(entry_name, {}, i, entry_size);
-                    result.lazy_loaded_files.push_back(entry_name);
-                    stats.lazy_loaded++;
-                } else {
-                    // Read entry data immediately
-                    void* data = nullptr;
-                    size_t size = 0;
+                int read_result = zip_entry_read(zip_handle_, &data, &size);
+                if (read_result >= 0 && data && size > 0) {
+                    std::vector<uint8_t> buffer(size);
+                    std::memcpy(buffer.data(), data, size);
+                    free(data);
                     
-                    int read_result = zip_entry_read(zip_handle_, &data, &size);
-                    if (read_result >= 0 && data && size > 0) {
-                        std::vector<uint8_t> buffer(size);
-                        std::memcpy(buffer.data(), data, size);
-                        free(data);
+                    // Add to tree (data is now in memory)
+                    auto node = tree_.add_zip_entry(entry_name, buffer);
+                    if (node) {
+                        result.loaded_files++;
                         
-                        // Add to tree
-                        auto node = tree_.add_zip_entry(entry_name, buffer, i, size);
-                        if (node) {
-                            result.loaded_files++;
-                            result.loaded_bytes += size;
-                            stats.total_bytes_read += size;
-                            
-                            // Track file types
-                            if (node->type == DocxNodeType::XmlFile) {
-                                stats.xml_files++;
-                            } else if (node->type == DocxNodeType::MediaFile) {
-                                stats.media_files++;
-                            } else {
-                                stats.binary_files++;
-                            }
+                        // Track file types
+                        if (node->type == DocxNodeType::XmlFile) {
+                            stats.xml_files++;
+                        } else if (node->type == DocxNodeType::MediaFile) {
+                            stats.media_files++;
                         } else {
-                            if (!load_config_.skip_corrupted_files) {
-                                result.errors.emplace_back(LoadErrorType::XmlParseFailed,
-                                                           entry_name,
-                                                           "Failed to parse XML");
-                            }
+                            stats.binary_files++;
                         }
                     } else {
                         if (!load_config_.skip_corrupted_files) {
-                            result.errors.emplace_back(LoadErrorType::ZipEntryReadFailed,
+                            result.errors.emplace_back(LoadErrorType::XmlParseFailed,
                                                        entry_name,
-                                                       "Failed to read entry data");
+                                                       "Failed to parse XML");
                         }
+                    }
+                } else {
+                    if (!load_config_.skip_corrupted_files) {
+                        result.errors.emplace_back(LoadErrorType::ZipEntryReadFailed,
+                                                   entry_name,
+                                                   "Failed to read entry data");
                     }
                 }
             }
@@ -322,27 +298,13 @@ bool DocumentImpl::load_tree_parallel(LoadStatistics& stats) {
         zip_entry_close(zip_handle_);
     }
     
-    // Filter out directories and non-critical files that should be lazy-loaded
+    // Filter out directories only
     std::vector<EntryInfo> to_load_now;
-    std::vector<EntryInfo> to_lazy_load;
     
     for (const auto& entry : entries) {
-        if (entry.is_dir) continue;
-        
-        bool should_lazy = load_config_.enable_lazy_loading &&
-                          !entry.is_critical &&
-                          entry.name.find("word/media/") == 0;
-        
-        if (should_lazy) {
-            to_lazy_load.push_back(entry);
-        } else {
+        if (!entry.is_dir) {
             to_load_now.push_back(entry);
         }
-    }
-    
-    // Mark lazy-load files in tree (single-threaded)
-    for (const auto& entry : to_lazy_load) {
-        tree_.add_zip_entry(entry.name, {}, entry.index, entry.size);
     }
     
     // Process non-lazy files in parallel
@@ -381,7 +343,7 @@ bool DocumentImpl::load_tree_parallel(LoadStatistics& stats) {
             // Add to tree (protected by mutex)
             {
                 std::lock_guard<std::mutex> lock(tree_mutex);
-                tree_.add_zip_entry(entry.name, buffer, entry.index, size);
+                tree_.add_zip_entry(entry.name, buffer);
             }
             
             processed++;
@@ -437,7 +399,7 @@ bool DocumentImpl::load_tree_parallel(LoadStatistics& stats) {
                 
                 {
                     std::lock_guard<std::mutex> lock(tree_mutex);
-                    tree_.add_zip_entry(entry.name, buffer, entry.index, size);
+                    tree_.add_zip_entry(entry.name, buffer);
                 }
                 
                 processed++;
@@ -708,9 +670,6 @@ bool DocumentImpl::save_tree_to_zip(::zip_t* zip) {
         return false;
     }
     
-    // First, ensure all lazy-loaded files are loaded
-    tree_.preload_all();
-    
     // Iterate all files in tree
     bool success = true;
     tree_.iterate_files([this, zip, &success](std::shared_ptr<DocxTreeNode> node) {
@@ -741,8 +700,7 @@ bool DocumentImpl::write_tree_node(::zip_t* zip, std::shared_ptr<DocxTreeNode> n
         auto data = node->serialize_xml_to_binary();
         success = zip_entry_write(zip, data.data(), data.size()) == 0;
     } else {
-        // Write binary data - need to load if lazy
-        node->file_storage.ensure_loaded(load_config_);
+        // Write binary data directly from memory
         auto data = node->file_storage.get_data();
         success = zip_entry_write(zip, data.data(), data.size()) == 0;
     }
@@ -788,15 +746,12 @@ std::string DocumentImpl::get_mime_type(const std::string& filename) const {
 }
 
 // ============================================================================
-// Lazy Loading Helpers
+// Memory Management Helpers (kept for API compatibility)
 // ============================================================================
 
-bool DocumentImpl::preload_all_lazy_files() {
-    return tree_.preload_all();
-}
-
 size_t DocumentImpl::unload_to_free_memory() {
-    return tree_.unload_non_critical();
+    // Feature removed. Kept for API compatibility.
+    return 0;
 }
 
 // ============================================================================

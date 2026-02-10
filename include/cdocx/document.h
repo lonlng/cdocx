@@ -232,35 +232,33 @@ public:
     // ========================================================================
 
     /**
-     * @brief Preload all lazy-loaded files
-     * @return true if all files loaded successfully
-     * @details Forces loading of all files that were marked for lazy loading
+     * @brief Preload all files (deprecated, no-op)
+     * @return true if document is open
+     * @details All files are now loaded into memory when the document is opened.
+     *          This function is kept for API compatibility.
      * @since 0.3.0
+     * @deprecated This function is no longer needed and always returns true.
      */
     bool preload_all_files();
 
     /**
-     * @brief Unload non-critical files to free memory
-     * @return Number of files unloaded
-     * @details Serializes XML documents and unloads media files that are not
-     *          critical document parts. They will be reloaded on demand.
+     * @brief Unload files to free memory (deprecated, no-op)
+     * @return Always returns 0
+     * @details This feature has been removed. All data is kept in memory.
+     *          Function kept for API compatibility.
      * @since 0.3.0
+     * @deprecated This function no longer performs any operation.
      */
     size_t unload_to_free_memory();
 
     /**
-     * @brief Configure lazy loading behavior
-     * @param[in] enable Enable/disable lazy loading
-     * @param[in] lazy_media Enable lazy loading for media files
+     * @brief Set storage thresholds (deprecated, no-op)
+     * @param[in] memory_threshold Ignored
+     * @param[in] mmap_threshold Ignored
+     * @details These thresholds are no longer used. All data is stored in memory.
+     *          Function kept for API compatibility.
      * @since 0.3.0
-     */
-    void configure_lazy_loading(bool enable, bool lazy_media = true);
-
-    /**
-     * @brief Set size thresholds for different storage strategies
-     * @param[in] memory_threshold Files smaller than this stay in memory (bytes)
-     * @param[in] mmap_threshold Files larger than this use memory mapping (bytes)
-     * @since 0.3.0
+     * @deprecated Storage thresholds are no longer used. Parameters are ignored.
      */
     void set_storage_thresholds(size_t memory_threshold, size_t mmap_threshold);
 
@@ -560,14 +558,11 @@ public:
  * @since 0.3.0
  */
 struct LoadConfig {
-    // Lazy loading settings
-    bool enable_lazy_loading = true;           ///< Enable lazy loading
-    bool lazy_load_media = true;               ///< Lazy load media files
-    bool lazy_load_xml = false;                ///< Lazy load non-critical XML
+    // Note: Lazy loading has been removed for simplicity and reliability.
+    // All files are loaded into memory when opening the document.
     
-    // Size thresholds (bytes)
+    // Size thresholds (bytes) - kept for potential future use
     size_t memory_threshold = 10 * 1024 * 1024;     ///< 10MB, small files in memory
-    size_t mmap_threshold = 50 * 1024 * 1024;       ///< 50MB, large files memory mapped
     size_t temp_file_threshold = 100 * 1024 * 1024; ///< 100MB, huge files temp storage
     
     // Parallel loading settings
@@ -598,23 +593,18 @@ struct LoadConfig {
     static LoadConfig optimized_for_speed() {
         LoadConfig cfg;
         cfg.enable_parallel_loading = true;
-        cfg.enable_lazy_loading = false;
         cfg.max_threads = 0;
         return cfg;
     }
     
     /**
      * @brief Create default configuration optimized for memory
+     * @note Lazy loading has been removed. This function is equivalent to optimized_for_speed().
      */
     static LoadConfig optimized_for_memory() {
-        LoadConfig cfg;
-        cfg.enable_lazy_loading = true;
-        cfg.lazy_load_media = true;
-        cfg.lazy_load_xml = true;
-        cfg.memory_threshold = 5 * 1024 * 1024;   // 5MB
-        cfg.max_cached_xml_nodes = 10;
-        cfg.max_cached_media_mb = 50;
-        return cfg;
+        // Note: All files are loaded into memory regardless of configuration.
+        // This function is kept for API compatibility.
+        return optimized_for_speed();
     }
 };
 
@@ -696,12 +686,9 @@ struct LoadResult {
     DocumentIntegrity integrity = DocumentIntegrity::Corrupted;  ///< Integrity level
     std::vector<LoadError> errors;              ///< All errors encountered
     std::vector<std::string> skipped_files;     ///< Files that were skipped
-    std::vector<std::string> lazy_loaded_files; ///< Files marked for lazy loading
     
     size_t total_files = 0;                     ///< Total files in document
     size_t loaded_files = 0;                    ///< Successfully loaded files
-    size_t total_bytes = 0;                     ///< Total bytes
-    size_t loaded_bytes = 0;                    ///< Loaded bytes
     double load_time_ms = 0.0;                  ///< Load time in milliseconds
     
     /**

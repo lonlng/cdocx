@@ -23,6 +23,7 @@ set(CDOCX_EXAMPLES
     07_media_management
     08_create_empty
     09_text_formatting
+    10_edit_document
 )
 
 if(ENABLE_ADVANCED_FEATURES)

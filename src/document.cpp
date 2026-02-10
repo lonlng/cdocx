@@ -208,27 +208,21 @@ LoadResult Document::get_last_load_result() const {
 }
 
 bool Document::preload_all_files() {
-    if (!is_open()) {
-        return false;
-    }
-    return impl_->preload_all_lazy_files();
+    // All files are already loaded into memory when document is opened.
+    // This function is kept for API compatibility and always returns true.
+    return is_open();
 }
 
 size_t Document::unload_to_free_memory() {
-    if (!is_open()) {
-        return 0;
-    }
-    return impl_->unload_to_free_memory();
-}
-
-void Document::configure_lazy_loading(bool enable, bool lazy_media) {
-    impl_->load_config_.enable_lazy_loading = enable;
-    impl_->load_config_.lazy_load_media = lazy_media;
+    // This feature has been removed. All data is kept in memory.
+    // Function kept for API compatibility.
+    return 0;
 }
 
 void Document::set_storage_thresholds(size_t memory_threshold, size_t mmap_threshold) {
-    impl_->load_config_.memory_threshold = memory_threshold;
-    impl_->load_config_.mmap_threshold = mmap_threshold;
+    // These thresholds are no longer used. Function kept for API compatibility.
+    (void)memory_threshold;
+    (void)mmap_threshold;
 }
 
 bool Document::create_empty(const std::string& filepath) {
