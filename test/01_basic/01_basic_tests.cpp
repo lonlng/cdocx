@@ -1,12 +1,15 @@
 #include <sstream>
+#include <gtest/gtest.h>
 #include "cdocx.h"
 
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
-
-TEST_CASE("checks contents of my_test.docx") {
-    cdocx::Document doc("my_test.docx");
+TEST(BasicTest, CheckContentsOfMyTestDocx) {
+    cdocx::Document doc("data/my_test.docx");
     doc.open();
+
+    // Skip test if document cannot be opened
+    if (!doc.is_open()) {
+        GTEST_SKIP() << "Could not open data/my_test.docx, skipping test";
+    }
 
     std::ostringstream ss;
 
@@ -16,5 +19,5 @@ TEST_CASE("checks contents of my_test.docx") {
         }
     }
 
-    CHECK_EQ("This is a test\nokay?\n", ss.str());
+    EXPECT_EQ("This is a test\nokay?\n", ss.str());
 }

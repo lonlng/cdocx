@@ -839,4 +839,142 @@ bool DocumentImpl::create_empty_document() {
     return true;
 }
 
+// ============================================================================
+// Section Support Implementation (v0.5.0)
+// ============================================================================
+
+void DocumentImpl::load_sections() {
+    // Get document.xml
+    auto doc_node = tree_.find_node("word/document.xml");
+    if (!doc_node || !doc_node->xml_doc) return;
+    
+    auto body = doc_node->xml_doc->child("w:body");
+    if (!body) return;
+    
+    sections_.clear();
+    current_section_ = nullptr;
+    
+    // Track the current sectPr for paragraphs
+    pugi::xml_node current_sectPr;
+    pugi::xml_node body_for_section = body;
+    bool is_first = true;
+    
+    // Iterate through all children of body to find sectPr elements
+    for (auto child = body.first_child(); child; child = child.next_sibling()) {
+        // Check if this is a sectPr element
+        if (std::strcmp(child.name(), "w:sectPr") == 0) {
+            // This is a section property element
+            if (is_first) {
+                // First sectPr is the default document section
+                sections_.emplace_back(child, body, document_, true);
+                is_first = false;
+            } else {
+                // Subsequent sectPr elements define section breaks
+                sections_.emplace_back(child, body_for_section, document_, false);
+            }
+            
+            current_section_ = &sections_.back();
+            current_sectPr = child;
+        }
+    }
+    
+    // If no sections found, create one from the body
+    if (sections_.empty()) {
+        // Find the last sectPr in body (should be at the end)
+        auto sectPr = body.child("w:sectPr");
+        if (sectPr) {
+            sections_.emplace_back(sectPr, body, document_, true);
+            current_section_ = &sections_.back();
+        }
+    }
+}
+
+void DocumentImpl::save_sections() {
+    // Apply section properties to XML
+    for (auto& sect : sections_) {
+        sect.apply_properties();
+    }
+}
+
+Section* DocumentImpl::add_section_internal() {
+    // Implementation in Document::add_section()
+    return nullptr;
+}
+
+// ============================================================================
+// Numbering Support Implementation (v0.5.0)
+// ============================================================================
+
+void DocumentImpl::init_numbering_manager() {
+    numbering_manager_ = std::make_unique<NumberingManager>(document_);
+    load_numbering();
+}
+
+void DocumentImpl::load_numbering() {
+    if (!numbering_manager_) return;
+    
+    auto num_node = tree_.find_node("word/numbering.xml");
+    if (num_node && num_node->xml_doc) {
+        numbering_manager_->load_from_xml(num_node->xml_doc->root());
+    }
+}
+
+void DocumentImpl::save_numbering() {
+    if (!numbering_manager_ || !numbering_manager_->has_definitions()) return;
+    
+    // Get or create numbering.xml
+    auto num_node = tree_.find_or_create_node("word/numbering.xml", DocxNodeType::XmlFile);
+    if (!num_node->xml_doc) {
+        num_node->xml_doc = std::make_shared<pugi::xml_document>();
+    }
+    
+    // Clear and rebuild
+    auto root = num_node->xml_doc->root();
+    for (auto child : root.children()) {
+        root.remove_child(child);
+    }
+    
+    auto numbering = root.append_child("w:numbering");
+    numbering_manager_->save_to_xml(numbering);
+    
+    num_node->is_modified = true;
+    modified_parts_.insert("word/numbering.xml");
+    
+    // Add content type for numbering.xml
+    add_content_type_override("/word/numbering.xml",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml");
+    
+    // Add relationship for numbering.xml if not exists
+    std::string rel_id = find_relationship_id("word/_rels/document.xml.rels", "numbering.xml");
+    if (rel_id.empty()) {
+        add_relationship("word/_rels/document.xml.rels",
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering",
+            "numbering.xml");
+    }
+}
+
+// ============================================================================
+// XML Part Helpers (v0.5.0)
+// ============================================================================
+
+pugi::xml_document* DocumentImpl::get_xml_part(const std::string& part_path) {
+    auto node = tree_.find_node(part_path);
+    if (node && node->xml_doc) {
+        return node->xml_doc.get();
+    }
+    return nullptr;
+}
+
+pugi::xml_document& DocumentImpl::create_xml_part(const std::string& part_path) {
+    auto node = tree_.find_or_create_node(part_path, DocxNodeType::XmlFile);
+    if (!node->xml_doc) {
+        node->xml_doc = std::make_shared<pugi::xml_document>();
+    }
+    node->is_new = true;
+    node->is_modified = true;
+    modified_parts_.insert(part_path);
+    xml_parts_cache_[part_path] = node;
+    return *node->xml_doc;
+}
+
 } // namespace cdocx

@@ -9,6 +9,8 @@
 #   include(CDocxHelpers)
 #   add_cdocx_example(01_basic_read main.cpp)
 #   add_cdocx_test(01_basic_tests 01_basic_tests.cpp DATA my_test.docx LABELS "core")
+#
+# Supports: Linux, Windows (MSVC/MinGW), macOS
 
 include(CMakeParseArguments)
 
@@ -53,9 +55,19 @@ function(add_cdocx_executable target_name)
 
     target_link_libraries(${target_name} PRIVATE cdocx)
     
-    target_include_directories(${target_name} PRIVATE
-        ${CMAKE_SOURCE_DIR}/test  # For doctest.h
-    )
+    # Windows-specific settings
+    if(WIN32)
+        target_compile_definitions(${target_name} PRIVATE
+            NOMINMAX
+            WIN32_LEAN_AND_MEAN
+            _CRT_SECURE_NO_WARNINGS
+        )
+        # Windows may need specific runtime library settings
+        if(MSVC)
+            set_property(TARGET ${target_name} PROPERTY
+                MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<BOOL:${BUILD_SHARED_LIBS}>:DLL>")
+        endif()
+    endif()
 
     if(MSVC)
         target_compile_options(${target_name} PRIVATE /utf-8)
@@ -115,6 +127,15 @@ function(add_cdocx_test test_name test_file)
     # Create test executable
     add_cdocx_executable(${test_name} SOURCES ${test_file})
     
+    # Link with Google Test
+    if(TARGET GTest::gtest_main)
+        target_link_libraries(${test_name} PRIVATE GTest::gtest_main)
+    elseif(TARGET gtest_main)
+        target_link_libraries(${test_name} PRIVATE gtest_main)
+    else()
+        message(WARNING "Google Test not found, test ${test_name} may not link correctly")
+    endif()
+    
     # Ensure data directory exists
     set(TEST_DATA_DIR ${CMAKE_CURRENT_BINARY_DIR}/data)
     file(MAKE_DIRECTORY ${TEST_DATA_DIR})
@@ -141,6 +162,13 @@ function(add_cdocx_test test_name test_file)
     
     if(ARG_TIMEOUT)
         set_tests_properties(${test_name} PROPERTIES TIMEOUT ${ARG_TIMEOUT})
+    endif()
+    
+    # Windows: Add DLL path for shared library builds
+    if(WIN32 AND BUILD_SHARED_LIBS)
+        set_tests_properties(${test_name} PROPERTIES
+            ENVIRONMENT "PATH=${CMAKE_BINARY_DIR};$ENV{PATH}"
+        )
     endif()
 endfunction()
 
@@ -169,4 +197,4 @@ endfunction()
 # ============================================================================
 # Module loaded
 # ============================================================================
-message(STATUS "CDocxHelpers.cmake loaded")
+message(STATUS "CDocxHelpers.cmake loaded (Platform: ${CMAKE_SYSTEM_NAME})")

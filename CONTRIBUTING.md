@@ -75,16 +75,16 @@ All public APIs must include Doxygen documentation:
 
 ### Writing Tests
 
-We use doctest for unit testing. Tests are located in the `test/` directory.
+We use Google Test for unit testing. Tests are located in the `test/` directory.
 
 ```cpp
-#include "doctest.h"
+#include <gtest/gtest.h>
 #include <cdocx.h>
 
-TEST_CASE("Document opening") {
+TEST(DocumentTest, DocumentOpening) {
     cdocx::Document doc("test.docx");
     doc.open();
-    CHECK(doc.is_open());
+    EXPECT_TRUE(doc.is_open());
 }
 ```
 
@@ -94,6 +94,18 @@ TEST_CASE("Document opening") {
 cd build
 ctest --output-on-failure
 ```
+
+### Common Assertions
+
+| Assertion | Description |
+|-----------|-------------|
+| `EXPECT_TRUE(expr)` | Expect expression to be true |
+| `EXPECT_FALSE(expr)` | Expect expression to be false |
+| `EXPECT_EQ(a, b)` | Expect a equals b |
+| `EXPECT_NE(a, b)` | Expect a not equals b |
+| `ASSERT_TRUE(expr)` | Assert expression is true (fails test immediately) |
+| `ASSERT_EQ(a, b)` | Assert a equals b (fails test immediately) |
+| `GTEST_SKIP()` | Skip the current test |
 
 ## 🐛 Reporting Bugs
 

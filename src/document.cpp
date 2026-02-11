@@ -31,6 +31,7 @@ Document::Document() : impl_(std::make_unique<DocumentImpl>()) {
     // Initialize iterator helpers
     impl_->paragraph_ = new Paragraph();
     impl_->table_ = new Table();
+    impl_->document_ = this;
 }
 
 Document::Document(const std::string& filepath) 
@@ -39,6 +40,7 @@ Document::Document(const std::string& filepath)
     // Initialize iterator helpers
     impl_->paragraph_ = new Paragraph();
     impl_->table_ = new Table();
+    impl_->document_ = this;
 }
 
 Document::~Document() = default;
@@ -176,6 +178,12 @@ void Document::save(const std::string& filepath) {
     if (!is_open()) {
         return;
     }
+    
+    // Save sections (apply section properties to XML)
+    impl_->save_sections();
+    
+    // Save numbering definitions (create/update numbering.xml)
+    impl_->save_numbering();
     
     // Update all modified relationship files
     for (const auto& rels_pair : impl_->relationships_) {
@@ -745,6 +753,134 @@ BookmarkCollection Document::get_bookmarks() {
 
 int Document::generate_unique_bookmark_id() {
     return impl_->next_bookmark_id_++;
+}
+
+// ============================================================================
+// Section Support (v0.5.0)
+// ============================================================================
+
+Section* Document::add_section() {
+    // Get document.xml body
+    auto* doc_xml = get_document_xml();
+    if (!doc_xml) return nullptr;
+    
+    auto body = doc_xml->child("w:body");
+    if (!body) return nullptr;
+    
+    // Create section properties node before the last sectPr
+    auto existing_sectPr = body.child("w:sectPr");
+    pugi::xml_node new_sectPr;
+    
+    if (existing_sectPr) {
+        // Insert new sectPr before the existing one
+        new_sectPr = body.insert_child_before("w:sectPr", existing_sectPr);
+    } else {
+        // No existing sectPr, append to body
+        new_sectPr = body.append_child("w:sectPr");
+    }
+    
+    // Add required attributes
+    new_sectPr.append_attribute("xmlns:w").set_value("http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+    new_sectPr.append_attribute("xmlns:r").set_value("http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+    
+    // Create and add section
+    impl_->sections_.emplace_back(new_sectPr, pugi::xml_node(), this, false);
+    return &impl_->sections_.back();
+}
+
+Section* Document::get_first_section() {
+    // Initialize sections if not loaded
+    if (impl_->sections_.empty()) {
+        impl_->load_sections();
+    }
+    
+    if (!impl_->sections_.empty()) {
+        return &impl_->sections_.front();
+    }
+    return nullptr;
+}
+
+SectionCollection Document::sections() {
+    // Initialize sections if not loaded
+    if (impl_->sections_.empty()) {
+        impl_->load_sections();
+    }
+    
+    return SectionCollection(*this);
+}
+
+size_t Document::get_section_count() const {
+    return impl_->sections_.size();
+}
+
+Section* Document::get_section(size_t index) {
+    if (index >= impl_->sections_.size()) {
+        return nullptr;
+    }
+    
+    auto it = impl_->sections_.begin();
+    std::advance(it, index);
+    return &*it;
+}
+
+void Document::set_default_section_properties(const SectionProperties& props) {
+    auto* sect = get_first_section();
+    if (sect) {
+        sect->prop = props;
+    }
+}
+
+SectionProperties Document::get_default_section_properties() const {
+    if (!impl_->sections_.empty()) {
+        return impl_->sections_.front().prop;
+    }
+    return SectionProperties();
+}
+
+// ============================================================================
+// Numbering (List) Support (v0.5.0)
+// ============================================================================
+
+NumberingId Document::add_bulleted_list_definition() {
+    if (!impl_->numbering_manager_) {
+        impl_->init_numbering_manager();
+    }
+    return impl_->numbering_manager_->add_bulleted_list_definition();
+}
+
+NumberingId Document::add_numbered_list_definition(NumberStyle style) {
+    if (!impl_->numbering_manager_) {
+        impl_->init_numbering_manager();
+    }
+    return impl_->numbering_manager_->add_numbered_list_definition(style);
+}
+
+NumberingId Document::add_chinese_numbered_list_definition() {
+    if (!impl_->numbering_manager_) {
+        impl_->init_numbering_manager();
+    }
+    return impl_->numbering_manager_->add_chinese_numbered_list_definition();
+}
+
+NumberingId Document::add_outline_list_definition() {
+    if (!impl_->numbering_manager_) {
+        impl_->init_numbering_manager();
+    }
+    return impl_->numbering_manager_->add_outline_list_definition();
+}
+
+NumberingManager* Document::get_numbering_manager() {
+    if (!impl_->numbering_manager_) {
+        impl_->init_numbering_manager();
+    }
+    return impl_->numbering_manager_.get();
+}
+
+const NumberingDefinition* Document::get_numbering_definition(NumberingId id) const {
+    if (!impl_->numbering_manager_) {
+        return nullptr;
+    }
+    return impl_->numbering_manager_->get_numbering_definition(id);
 }
 
 } // namespace cdocx

@@ -136,4 +136,36 @@ class IteratorHelper;
 template <class T, class P, class C = P>
 class Iterator;
 
+// ============================================================================
+// Section and Numbering Classes (v0.5.0)
+// ============================================================================
+
+/**
+ * @brief Section class for managing document sections
+ * @see Section
+ * @since 0.5.0
+ */
+class Section;
+
+/**
+ * @brief Section iterator
+ * @see SectionIterator
+ * @since 0.5.0
+ */
+class SectionIterator;
+
+/**
+ * @brief Section collection for range-based for loops
+ * @see SectionCollection
+ * @since 0.5.0
+ */
+class SectionCollection;
+
+/**
+ * @brief Numbering manager for list definitions
+ * @see NumberingManager
+ * @since 0.5.0
+ */
+class NumberingManager;
+
 } // namespace cdocx

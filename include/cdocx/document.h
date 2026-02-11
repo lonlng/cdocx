@@ -46,6 +46,9 @@
 #include <cdocx/fwd.h>
 #include <cdocx/base.h>
 #include <cdocx/iterator.h>
+#include <cdocx/properties.h>
+#include <cdocx/section.h>
+#include <cdocx/numbering.h>
 #include <pugixml.hpp>
 #include <cstdint>
 #include <functional>
@@ -104,6 +107,7 @@ private:
     friend class DocumentBuilder;
     friend class DocumentSearch;
     friend class IteratorHelper;
+    friend class Section;  ///< Grant Section access to impl_ (v0.5.0)
 
     std::unique_ptr<DocumentImpl> impl_;  ///< Pointer to implementation
 
@@ -520,6 +524,109 @@ public:
      * @internal
      */
     int generate_unique_bookmark_id();
+    
+    // ========================================================================
+    // Section Support (v0.5.0)
+    // ========================================================================
+    
+    /**
+     * @brief Add a new section to the document
+     * @return Pointer to the new Section
+     * @since 0.5.0
+     */
+    Section* add_section();
+    
+    /**
+     * @brief Get the first section
+     * @return Pointer to first section, nullptr if none
+     * @since 0.5.0
+     */
+    Section* get_first_section();
+    
+    /**
+     * @brief Get all sections in the document
+     * @return SectionCollection for iteration
+     * @since 0.5.0
+     */
+    SectionCollection sections();
+    
+    /**
+     * @brief Get section count
+     * @return Number of sections
+     * @since 0.5.0
+     */
+    size_t get_section_count() const;
+    
+    /**
+     * @brief Get section by index
+     * @param index Section index (0-based)
+     * @return Pointer to section, nullptr if out of range
+     * @since 0.5.0
+     */
+    Section* get_section(size_t index);
+    
+    /**
+     * @brief Set document default section properties
+     * @param props Section properties to apply
+     * @since 0.5.0
+     */
+    void set_default_section_properties(const SectionProperties& props);
+    
+    /**
+     * @brief Get document default section properties
+     * @return Current section properties
+     * @since 0.5.0
+     */
+    SectionProperties get_default_section_properties() const;
+    
+    // ========================================================================
+    // Numbering (List) Support (v0.5.0)
+    // ========================================================================
+    
+    /**
+     * @brief Create a bulleted list definition
+     * @return NumberingId for the new list
+     * @since 0.5.0
+     */
+    NumberingId add_bulleted_list_definition();
+    
+    /**
+     * @brief Create a numbered list definition
+     * @param style Numbering style (default: Decimal)
+     * @return NumberingId for the new list
+     * @since 0.5.0
+     */
+    NumberingId add_numbered_list_definition(NumberStyle style = NumberStyle::Decimal);
+    
+    /**
+     * @brief Create a Chinese-style numbered list
+     * @return NumberingId for the new list
+     * @since 0.5.0
+     */
+    NumberingId add_chinese_numbered_list_definition();
+    
+    /**
+     * @brief Create an outline list definition
+     * @return NumberingId for the new list
+     * @since 0.5.0
+     */
+    NumberingId add_outline_list_definition();
+    
+    /**
+     * @brief Get the numbering manager
+     * @return Pointer to numbering manager
+     * @internal
+     * @since 0.5.0
+     */
+    NumberingManager* get_numbering_manager();
+    
+    /**
+     * @brief Get numbering definition by ID
+     * @param id Numbering ID
+     * @return Pointer to definition, nullptr if not found
+     * @since 0.5.0
+     */
+    const NumberingDefinition* get_numbering_definition(NumberingId id) const;
 };
 
 // ============================================================================

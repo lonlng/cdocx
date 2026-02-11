@@ -1,14 +1,19 @@
 # ============================================================================
-# CDocx - Modern CMake Build System
+# CDocx - Cross-Platform CMake Build System
 # ============================================================================
 # C++17 library for creating, reading, and writing Microsoft Word DOCX files
 # https://github.com/lonlng/CDocx
 #
+# Supported Platforms:
+#   - Linux (GCC 7+, Clang 5+)
+#   - Windows (MSVC 2017+, MinGW-w64)
+#   - macOS (Xcode 10+)
+#
 # Usage:
 #   mkdir build && cd build
 #   cmake .. -DBUILD_EXAMPLES=ON -DBUILD_TESTING=ON
-#   cmake --build . --target cdocx
-#   ctest -C Debug
+#   cmake --build . --target cdocx --parallel
+#   ctest --output-on-failure
 # ============================================================================
 
 cmake_minimum_required(VERSION 3.14...3.28)
@@ -29,14 +34,35 @@ project(cdocx
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
 # ----------------------------------------------------------------------------
+# Platform Detection
+# ----------------------------------------------------------------------------
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "MSYS")
+    set(CDOCX_PLATFORM_WINDOWS TRUE)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(CDOCX_PLATFORM_LINUX TRUE)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(CDOCX_PLATFORM_MACOS TRUE)
+endif()
+
+# Detect compiler
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(CDOCX_COMPILER_GCC TRUE)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
+    set(CDOCX_COMPILER_CLANG TRUE)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    set(CDOCX_COMPILER_MSVC TRUE)
+endif()
+
+# ----------------------------------------------------------------------------
 # Build Options
 # ----------------------------------------------------------------------------
 option(BUILD_SHARED_LIBS "Build shared instead of static library" OFF)
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_TESTING "Build tests" ON)
 option(BUILD_DOCS "Build documentation with Doxygen" OFF)
-option(ENABLE_COVERAGE "Enable code coverage reporting" OFF)
+option(ENABLE_COVERAGE "Enable code coverage reporting (GCC/Clang only)" OFF)
 option(ENABLE_WERROR "Treat warnings as errors" OFF)
+option(USE_SYSTEM_GTEST "Use system installed Google Test instead of fetching" OFF)
 
 # ----------------------------------------------------------------------------
 # Language Standards
@@ -47,24 +73,65 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+# Set default build type if not specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    message(STATUS "Setting build type to 'Release' as none was specified")
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the build type" FORCE)
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
+
 # ----------------------------------------------------------------------------
-# Compiler Warnings & Encoding
+# Compiler Warnings & Platform-specific Settings
 # ----------------------------------------------------------------------------
-if(MSVC)
-    add_compile_options(/utf-8 /W4)
+if(CDOCX_COMPILER_MSVC)
+    # MSVC specific options
+    add_compile_options(
+        /utf-8              # UTF-8 source and execution character set
+        /W4                 # Warning level 4
+        /permissive-        # Strict conformance mode
+        /Zc:__cplusplus     # Enable updated __cplusplus macro
+    )
     if(ENABLE_WERROR)
         add_compile_options(/WX)
     endif()
-else()
+    # Disable specific warnings that are common in third-party code
     add_compile_options(
-        -finput-charset=utf-8
-        -fexec-charset=utf-8
-        -Wall -Wextra -Wpedantic
+        /wd4267             # conversion from 'size_t' to 'type'
+        /wd4244             # conversion from 'type1' to 'type2'
     )
+elseif(CDOCX_COMPILER_GCC OR CDOCX_COMPILER_CLANG)
+    # GCC/Clang options
+    add_compile_options(
+        -Wall
+        -Wextra
+        -Wpedantic
+        -Wno-unused-parameter
+        -Wno-sign-compare
+    )
+    
+    # UTF-8 support on Linux
+    if(CDOCX_PLATFORM_LINUX)
+        add_compile_options(
+            -finput-charset=utf-8
+            -fexec-charset=utf-8
+        )
+    endif()
+    
     if(ENABLE_WERROR)
         add_compile_options(-Werror)
     endif()
+    
+    # Coverage support
+    if(ENABLE_COVERAGE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+        add_compile_options(-fprofile-arcs -ftest-coverage)
+        add_link_options(-fprofile-arcs -ftest-coverage)
+    endif()
 endif()
+
+# ----------------------------------------------------------------------------
+# Position Independent Code (required for shared libraries)
+# ----------------------------------------------------------------------------
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # ----------------------------------------------------------------------------
 # Source Files (Auto-collecting)
@@ -90,9 +157,12 @@ target_include_directories(cdocx
         ${CMAKE_CURRENT_SOURCE_DIR}/include/detail
 )
 
+# Export macros for shared library
 target_compile_definitions(cdocx
     PUBLIC
         $<$<BOOL:${BUILD_SHARED_LIBS}>:CDOCX_SHARED>
+    PRIVATE
+        $<$<BOOL:${BUILD_SHARED_LIBS}>:CDOCX_EXPORTS>
 )
 
 # ----------------------------------------------------------------------------
@@ -106,8 +176,15 @@ target_link_libraries(cdocx
     PRIVATE zip::zip
 )
 
+# Platform-specific libraries
 if(WIN32)
     target_link_libraries(cdocx PRIVATE bcrypt)
+    # Windows-specific defines
+    target_compile_definitions(cdocx PRIVATE
+        NOMINMAX            # Prevent min/max macro conflicts
+        WIN32_LEAN_AND_MEAN # Reduce Windows.h bloat
+        _CRT_SECURE_NO_WARNINGS
+    )
 endif()
 
 # ----------------------------------------------------------------------------
@@ -125,6 +202,40 @@ endif()
 if(BUILD_TESTING AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     message(STATUS "")
     message(STATUS "[Testing] ENABLED")
+    
+    # Google Test integration
+    if(USE_SYSTEM_GTEST)
+        find_package(GTest QUIET)
+        if(GTest_FOUND)
+            message(STATUS "Using system Google Test")
+        else()
+            message(WARNING "System Google Test not found, falling back to FetchContent")
+            set(USE_SYSTEM_GTEST OFF)
+        endif()
+    endif()
+    
+    if(NOT USE_SYSTEM_GTEST)
+        include(FetchContent)
+        
+        # Set options to speed up FetchContent
+        set(FETCHCONTENT_QUIET OFF)
+        set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
+        
+        FetchContent_Declare(
+            googletest
+            GIT_REPOSITORY https://github.com/google/googletest.git
+            GIT_TAG v1.17.0
+            GIT_SHALLOW TRUE
+            GIT_PROGRESS TRUE
+        )
+        
+        # For Windows: Prevent overriding the parent project's compiler/linker settings
+        set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+        
+        # Make available with timeout handling
+        FetchContent_MakeAvailable(googletest)
+    endif()
+    
     enable_testing()
     add_subdirectory(test)
 elseif(BUILD_TESTING)
@@ -193,6 +304,7 @@ add_custom_target(clean-all
     COMMENT "Cleaning all build artifacts"
 )
 
+# Format target
 find_program(CLANG_FORMAT clang-format)
 if(CLANG_FORMAT)
     file(GLOB_RECURSE FORMAT_SOURCES
@@ -212,12 +324,14 @@ message(STATUS "")
 message(STATUS "╔════════════════════════════════════════════════════════════╗")
 message(STATUS "║              CDocx Build Configuration                     ║")
 message(STATUS "╠════════════════════════════════════════════════════════════╣")
-message(STATUS "║ Version:          ${PROJECT_VERSION}                       ║")
-message(STATUS "║ C++ Standard:     C++${CMAKE_CXX_STANDARD}                 ║")
-message(STATUS "║ Build Type:       ${CMAKE_BUILD_TYPE}                      ║")
-message(STATUS "║ Shared Library:   ${BUILD_SHARED_LIBS}                     ║")
-message(STATUS "║ Examples:         ${BUILD_EXAMPLES}                        ║")
-message(STATUS "║ Testing:          ${BUILD_TESTING}                         ║")
-message(STATUS "║ Documentation:    ${BUILD_DOCS}                            ║")
+message(STATUS "║ Version:          ${PROJECT_VERSION}                                     ║")
+message(STATUS "║ Platform:         ${CMAKE_SYSTEM_NAME}                                 ║")
+message(STATUS "║ Compiler:         ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}           ║")
+message(STATUS "║ C++ Standard:     C++${CMAKE_CXX_STANDARD}                                ║")
+message(STATUS "║ Build Type:       ${CMAKE_BUILD_TYPE}                              ║")
+message(STATUS "║ Shared Library:   ${BUILD_SHARED_LIBS}                                  ║")
+message(STATUS "║ Examples:         ${BUILD_EXAMPLES}                                   ║")
+message(STATUS "║ Testing:          ${BUILD_TESTING}                                    ║")
+message(STATUS "║ Documentation:    ${BUILD_DOCS}                                   ║")
 message(STATUS "╚════════════════════════════════════════════════════════════╝")
 message(STATUS "")

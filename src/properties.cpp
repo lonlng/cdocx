@@ -8,6 +8,8 @@
 #include <cdocx/base.h>
 #include <cdocx/format_context.h>
 
+#include <cstring>
+
 namespace cdocx {
 
 // ============================================================================

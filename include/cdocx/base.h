@@ -27,6 +27,7 @@
 #include <cdocx/fwd.h>
 #include <cdocx/constants.h>
 #include <cdocx/properties.h>
+#include <cdocx/numbering.h>
 #include <pugixml.hpp>
 #include <string>
 
@@ -591,6 +592,75 @@ public:
      * @since 0.4.0
      */
     bool set_borders(const ParagraphProperties::Borders& borders);
+    
+    // ===================================================================
+    // List/Numbering Support (v0.5.0)
+    // ===================================================================
+    
+    /**
+     * @brief Set numbering/list properties
+     * @param numId Numbering definition ID
+     * @param level List level (default: Level1)
+     * @return true if successful
+     * @since 0.5.0
+     * @par Usage Example:
+     * @code
+     * auto numId = doc.add_bulleted_list_definition();
+     * auto para = doc.paragraphs().add_paragraph_after("Item 1");
+     * para.set_numbering(numId, NumberingLevel::Level1);
+     * @endcode
+     */
+    bool set_numbering(NumberingId numId, NumberingLevel level = NumberingLevel::Level1);
+    
+    /**
+     * @brief Remove numbering from paragraph
+     * @return true if successful
+     * @since 0.5.0
+     */
+    bool remove_numbering();
+    
+    /**
+     * @brief Check if paragraph has numbering
+     * @return true if paragraph is part of a list
+     * @since 0.5.0
+     */
+    bool has_numbering() const;
+    
+    /**
+     * @brief Get current numbering ID
+     * @return NumberingId, 0 if none
+     * @since 0.5.0
+     */
+    NumberingId get_numbering_id() const;
+    
+    /**
+     * @brief Get current numbering level
+     * @return NumberingLevel
+     * @since 0.5.0
+     */
+    NumberingLevel get_numbering_level() const;
+    
+    /**
+     * @brief Set list level
+     * @param level New level
+     * @return true if successful
+     * @since 0.5.0
+     */
+    bool set_list_level(NumberingLevel level);
+    
+    /**
+     * @brief Increment list level (make it more indented)
+     * @return true if successful
+     * @since 0.5.0
+     */
+    bool increase_list_level();
+    
+    /**
+     * @brief Decrement list level (make it less indented)
+     * @return true if successful
+     * @since 0.5.0
+     */
+    bool decrease_list_level();
 };
 
 /**

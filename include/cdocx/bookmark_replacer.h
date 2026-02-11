@@ -49,6 +49,7 @@
 
 #include <cdocx/fwd.h>
 #include <cdocx/advanced.h>
+#include <cstdint>
 #include <functional>
 #include <map>
 #include <optional>

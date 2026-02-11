@@ -554,6 +554,159 @@ bool Paragraph::set_underline(bool underline) {
 }
 
 // ============================================================================
+// List/Numbering Support (v0.5.0)
+// ============================================================================
+
+bool Paragraph::set_numbering(NumberingId numId, NumberingLevel level) {
+    if (!current_) {
+        return false;
+    }
+    
+    pugi::xml_node pPr = get_or_create_pPr(current_);
+    
+    // Remove existing numPr if any
+    pugi::xml_node existing_numPr = pPr.child("w:numPr");
+    if (existing_numPr) {
+        pPr.remove_child(existing_numPr);
+    }
+    
+    // Create numPr element
+    pugi::xml_node numPr = pPr.append_child("w:numPr");
+    
+    // Add ilvl (level)
+    pugi::xml_node ilvl = numPr.append_child("w:ilvl");
+    ilvl.append_attribute("w:val").set_value(numbering_level_to_int(level));
+    
+    // Add numId
+    pugi::xml_node numId_node = numPr.append_child("w:numId");
+    numId_node.append_attribute("w:val").set_value(static_cast<unsigned int>(numId));
+    
+    return true;
+}
+
+bool Paragraph::remove_numbering() {
+    if (!current_) {
+        return false;
+    }
+    
+    pugi::xml_node pPr = current_.child("w:pPr");
+    if (!pPr) {
+        return false;
+    }
+    
+    pugi::xml_node numPr = pPr.child("w:numPr");
+    if (!numPr) {
+        return false;
+    }
+    
+    return pPr.remove_child(numPr);
+}
+
+bool Paragraph::has_numbering() const {
+    if (!current_) {
+        return false;
+    }
+    
+    pugi::xml_node pPr = current_.child("w:pPr");
+    if (!pPr) {
+        return false;
+    }
+    
+    return pPr.child("w:numPr") != nullptr;
+}
+
+NumberingId Paragraph::get_numbering_id() const {
+    if (!current_) {
+        return 0;
+    }
+    
+    pugi::xml_node pPr = current_.child("w:pPr");
+    if (!pPr) {
+        return 0;
+    }
+    
+    pugi::xml_node numPr = pPr.child("w:numPr");
+    if (!numPr) {
+        return 0;
+    }
+    
+    pugi::xml_node numId = numPr.child("w:numId");
+    if (!numId) {
+        return 0;
+    }
+    
+    return numId.attribute("w:val").as_uint();
+}
+
+NumberingLevel Paragraph::get_numbering_level() const {
+    if (!current_) {
+        return NumberingLevel::Level1;
+    }
+    
+    pugi::xml_node pPr = current_.child("w:pPr");
+    if (!pPr) {
+        return NumberingLevel::Level1;
+    }
+    
+    pugi::xml_node numPr = pPr.child("w:numPr");
+    if (!numPr) {
+        return NumberingLevel::Level1;
+    }
+    
+    pugi::xml_node ilvl = numPr.child("w:ilvl");
+    if (!ilvl) {
+        return NumberingLevel::Level1;
+    }
+    
+    int level = ilvl.attribute("w:val").as_int();
+    if (level < 0 || level > 8) {
+        return NumberingLevel::Level1;
+    }
+    
+    return static_cast<NumberingLevel>(level);
+}
+
+bool Paragraph::set_list_level(NumberingLevel level) {
+    if (!current_) {
+        return false;
+    }
+    
+    pugi::xml_node pPr = current_.child("w:pPr");
+    if (!pPr) {
+        return false;
+    }
+    
+    pugi::xml_node numPr = pPr.child("w:numPr");
+    if (!numPr) {
+        return false;
+    }
+    
+    pugi::xml_node ilvl = numPr.child("w:ilvl");
+    if (!ilvl) {
+        ilvl = numPr.prepend_child("w:ilvl");
+    }
+    
+    ilvl.attribute("w:val").set_value(numbering_level_to_int(level));
+    return true;
+}
+
+bool Paragraph::increase_list_level() {
+    int current_level = numbering_level_to_int(get_numbering_level());
+    if (current_level < 8) {
+        return set_list_level(static_cast<NumberingLevel>(current_level + 1));
+    }
+    return false;
+}
+
+bool Paragraph::decrease_list_level() {
+    int current_level = numbering_level_to_int(get_numbering_level());
+    if (current_level > 0) {
+        return set_list_level(static_cast<NumberingLevel>(current_level - 1));
+    }
+    return false;
+}
+
+// ============================================================================
 // TableCell Implementation
 // ============================================================================
 

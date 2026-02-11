@@ -13,7 +13,7 @@ CDocx is a C++17 library for creating, reading, and writing Microsoft Office Wor
 - **External Dependencies**: 
   - pugixml (Git submodule for XML parsing)
   - zip library (bundled from kuba--/zip for archive handling)
-- **Test Framework**: doctest (header-only)
+- **Test Framework**: Google Test (fetched via CMake FetchContent)
 
 ## Roadmap
 

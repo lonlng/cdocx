@@ -485,6 +485,20 @@ public:
     // Bookmark ID generation
     int next_bookmark_id_ = 1;  ///< Next available bookmark ID
     
+    // Section support (v0.5.0)
+    std::list<Section> sections_;  ///< Document sections
+    Section* current_section_ = nullptr;  ///< Current active section
+    
+    // Numbering support (v0.5.0)
+    std::unique_ptr<NumberingManager> numbering_manager_;  ///< List/numbering manager
+    
+    // Header/Footer counters (v0.5.0)
+    int next_header_number_ = 1;  ///< Next header file number
+    int next_footer_number_ = 1;  ///< Next footer file number
+    
+    // Parent document pointer (v0.5.0)
+    Document* document_ = nullptr;  ///< Parent document for callbacks
+    
     /** @brief Constructor */
     DocumentImpl();
     
@@ -558,6 +572,22 @@ public:
     // Statistics
     const LoadStatistics& get_last_load_stats() const { return last_load_stats_; }
     const LoadResult& get_last_load_result() const { return last_load_result_; }
+    
+    // Section support (v0.5.0)
+    void load_sections();
+    void save_sections();
+    Section* add_section_internal();
+    int get_next_header_number() { return next_header_number_++; }
+    int get_next_footer_number() { return next_footer_number_++; }
+    
+    // Numbering support (v0.5.0)
+    void init_numbering_manager();
+    void load_numbering();
+    void save_numbering();
+    
+    // XML Part helpers (v0.5.0)
+    pugi::xml_document* get_xml_part(const std::string& part_path);
+    pugi::xml_document& create_xml_part(const std::string& part_path);
 };
 
 } // namespace cdocx

@@ -35,6 +35,9 @@ endif()
 list(APPEND CDOCX_EXAMPLES 11_bookmark_replacement)
 list(APPEND CDOCX_EXAMPLES 12_caption_generation)
 
+# v0.5.0: Section and list support examples
+list(APPEND CDOCX_EXAMPLES 13_section_and_list)
+
 # Process each example
 foreach(example ${CDOCX_EXAMPLES})
     set(example_dir ${CMAKE_CURRENT_SOURCE_DIR}/${example})
