@@ -375,6 +375,58 @@ public:
      * @return The parent body or cell node
      */
     pugi::xml_node get_parent_node() const { return parent_; }
+    
+    // ========================================================================
+    // Text Formatting Methods (Applied to first run or create new run)
+    // ========================================================================
+    
+    /**
+     * @brief Set text color for the paragraph
+     * @details Applies to the first run if exists, otherwise creates a new run
+     * @param[in] color_hex Hex color code (e.g., "FF0000" for red)
+     * @return true if successful
+     */
+    bool set_color(const std::string& color_hex);
+    
+    /**
+     * @brief Set font size for the paragraph
+     * @details Applies to the first run if exists, otherwise creates a new run
+     * @param[in] size Font size in half-points (e.g., 24 for 12pt)
+     * @return true if successful
+     */
+    bool set_font_size(int size);
+    
+    /**
+     * @brief Set font name for the paragraph
+     * @details Applies to the first run if exists, otherwise creates a new run
+     * @param[in] font_name Font family name (e.g., "Arial", "Times New Roman")
+     * @return true if successful
+     */
+    bool set_font_name(const std::string& font_name);
+    
+    /**
+     * @brief Set bold formatting for the paragraph
+     * @details Applies to the first run if exists, otherwise creates a new run
+     * @param[in] bold true to apply bold, false to remove
+     * @return true if successful
+     */
+    bool set_bold(bool bold);
+    
+    /**
+     * @brief Set italic formatting for the paragraph
+     * @details Applies to the first run if exists, otherwise creates a new run
+     * @param[in] italic true to apply italic, false to remove
+     * @return true if successful
+     */
+    bool set_italic(bool italic);
+    
+    /**
+     * @brief Set underline formatting for the paragraph
+     * @details Applies to the first run if exists, otherwise creates a new run
+     * @param[in] underline true to apply underline, false to remove
+     * @return true if successful
+     */
+    bool set_underline(bool underline);
 };
 
 /**

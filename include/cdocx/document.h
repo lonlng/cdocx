@@ -501,6 +501,17 @@ public:
     
     /** @brief Check media exists (optimized version) */
     bool has_media_optimized(const std::string& image_name) const;
+    
+    // ========================================================================
+    // Bookmark Management
+    // ========================================================================
+    
+    /**
+     * @brief Get all bookmarks in the document
+     * @return BookmarkCollection containing all bookmarks
+     * @since 0.3.0
+     */
+    BookmarkCollection get_bookmarks();
 };
 
 // ============================================================================

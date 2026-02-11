@@ -155,6 +155,274 @@ bool Bookmark::remove_with_content() {
 }
 
 // ============================================================================
+// Enhanced Format-Preserving Methods (v0.3.0)
+// ============================================================================
+
+BookmarkFormat Bookmark::get_format() const {
+    BookmarkFormat fmt;
+    
+    if (!is_valid()) {
+        return fmt;
+    }
+    
+    // Find the first run between bookmark start and end
+    pugi::xml_node para = start_node_.parent();
+    pugi::xml_node run = para.child("w:r");
+    
+    // Find first run that is between bookmark markers
+    while (run) {
+        // Simple case: check if this run is after start_node
+        // In full implementation, need to check position more carefully
+        pugi::xml_node rPr = run.child("w:rPr");
+        if (rPr) {
+            // Extract fonts
+            pugi::xml_node rFonts = rPr.child("w:rFonts");
+            if (rFonts) {
+                fmt.font_ascii = rFonts.attribute("w:ascii").value();
+                fmt.font_far_east = rFonts.attribute("w:eastAsia").value();
+                fmt.font_hansi = rFonts.attribute("w:hAnsi").value();
+                fmt.font_hint = rFonts.attribute("w:hint").value();
+            }
+            
+            // Extract font size
+            pugi::xml_node sz = rPr.child("w:sz");
+            if (sz) {
+                fmt.font_size = sz.attribute("w:val").as_int();
+            }
+            
+            // Extract color
+            pugi::xml_node color = rPr.child("w:color");
+            if (color) {
+                fmt.color = color.attribute("w:val").value();
+            }
+            
+            // Extract bold
+            pugi::xml_node b = rPr.child("w:b");
+            fmt.bold = b != nullptr;
+            
+            // Extract italic
+            pugi::xml_node i = rPr.child("w:i");
+            fmt.italic = i != nullptr;
+            
+            // Extract underline
+            pugi::xml_node u = rPr.child("w:u");
+            fmt.underline = u != nullptr;
+            
+            // Extract strikethrough
+            pugi::xml_node strike = rPr.child("w:strike");
+            fmt.strikethrough = strike != nullptr;
+            
+            // Format found, return it
+            return fmt;
+        }
+        run = run.next_sibling("w:r");
+    }
+    
+    return fmt;
+}
+
+bool Bookmark::set_text_keep_format(const std::string& text) {
+    if (!is_valid()) {
+        return false;
+    }
+    
+    // Extract existing format
+    BookmarkFormat fmt = get_format();
+    
+    // Use formatted text setting
+    return set_text_formatted(text, fmt);
+}
+
+bool Bookmark::set_text_formatted(const std::string& text, const BookmarkFormat& format) {
+    if (!is_valid()) {
+        return false;
+    }
+    
+    pugi::xml_node para = start_node_.parent();
+    
+    // Find and remove all runs between bookmark start and end
+    // Note: This is simplified - full implementation needs to handle
+    // runs that span across bookmark boundaries
+    pugi::xml_node current = start_node_.next_sibling();
+    while (current && current != end_node_) {
+        pugi::xml_node next = current.next_sibling();
+        if (std::string(current.name()) == "w:r") {
+            para.remove_child(current);
+        }
+        current = next;
+    }
+    
+    // Create new run with format
+    pugi::xml_node new_run = para.insert_child_before("w:r", end_node_);
+    
+    // Apply formatting if specified
+    if (format.is_valid() || format.bold || format.italic || format.underline || format.strikethrough) {
+        pugi::xml_node rPr = new_run.append_child("w:rPr");
+        
+        // Font settings
+        if (!format.font_ascii.empty() || !format.font_far_east.empty() || 
+            !format.font_hansi.empty() || !format.font_hint.empty()) {
+            pugi::xml_node rFonts = rPr.append_child("w:rFonts");
+            if (!format.font_ascii.empty())
+                rFonts.append_attribute("w:ascii").set_value(format.font_ascii.c_str());
+            if (!format.font_far_east.empty())
+                rFonts.append_attribute("w:eastAsia").set_value(format.font_far_east.c_str());
+            if (!format.font_hansi.empty())
+                rFonts.append_attribute("w:hAnsi").set_value(format.font_hansi.c_str());
+            if (!format.font_hint.empty())
+                rFonts.append_attribute("w:hint").set_value(format.font_hint.c_str());
+        }
+        
+        // Font size
+        if (format.font_size > 0) {
+            pugi::xml_node sz = rPr.append_child("w:sz");
+            sz.append_attribute("w:val").set_value(format.font_size);
+            pugi::xml_node szCs = rPr.append_child("w:szCs");
+            szCs.append_attribute("w:val").set_value(format.font_size);
+        }
+        
+        // Color
+        if (!format.color.empty()) {
+            pugi::xml_node color = rPr.append_child("w:color");
+            color.append_attribute("w:val").set_value(format.color.c_str());
+        }
+        
+        // Bold
+        if (format.bold) {
+            rPr.append_child("w:b");
+        }
+        
+        // Italic
+        if (format.italic) {
+            rPr.append_child("w:i");
+        }
+        
+        // Underline
+        if (format.underline) {
+            pugi::xml_node u = rPr.append_child("w:u");
+            u.append_attribute("w:val").set_value("single");
+        }
+        
+        // Strikethrough
+        if (format.strikethrough) {
+            rPr.append_child("w:strike");
+        }
+    }
+    
+    // Add text content
+    pugi::xml_node t = new_run.append_child("w:t");
+    t.text().set(text.c_str());
+    
+    return true;
+}
+
+bool Bookmark::is_cross_paragraph() const {
+    if (!is_valid()) {
+        return false;
+    }
+    
+    return start_node_.parent() != end_node_.parent();
+}
+
+std::vector<pugi::xml_node> Bookmark::get_covered_paragraphs() const {
+    std::vector<pugi::xml_node> paragraphs;
+    
+    if (!is_valid()) {
+        return paragraphs;
+    }
+    
+    pugi::xml_node start_para = start_node_.parent();
+    pugi::xml_node end_para = end_node_.parent();
+    
+    // Same paragraph
+    if (start_para == end_para) {
+        paragraphs.push_back(start_para);
+        return paragraphs;
+    }
+    
+    // Cross-paragraph: collect all paragraphs
+    paragraphs.push_back(start_para);
+    
+    pugi::xml_node current = start_para.next_sibling("w:p");
+    while (current && current != end_para) {
+        paragraphs.push_back(current);
+        current = current.next_sibling("w:p");
+    }
+    
+    if (end_para) {
+        paragraphs.push_back(end_para);
+    }
+    
+    return paragraphs;
+}
+
+bool Bookmark::set_text_cross_paragraph(const std::string& text) {
+    if (!is_valid()) {
+        return false;
+    }
+    
+    auto paragraphs = get_covered_paragraphs();
+    if (paragraphs.empty()) {
+        return false;
+    }
+    
+    // Single paragraph - use normal method
+    if (paragraphs.size() == 1) {
+        return set_text_keep_format(text);
+    }
+    
+    // Multi-paragraph handling:
+    // 1. Extract format from first paragraph
+    BookmarkFormat fmt;
+    pugi::xml_node first_run = paragraphs[0].child("w:r");
+    if (first_run) {
+        pugi::xml_node rPr = first_run.child("w:rPr");
+        if (rPr) {
+            pugi::xml_node rFonts = rPr.child("w:rFonts");
+            if (rFonts) {
+                fmt.font_ascii = rFonts.attribute("w:ascii").value();
+                fmt.font_far_east = rFonts.attribute("w:eastAsia").value();
+            }
+            pugi::xml_node sz = rPr.child("w:sz");
+            if (sz) {
+                fmt.font_size = sz.attribute("w:val").as_int();
+            }
+        }
+    }
+    
+    // 2. Remove intermediate paragraphs
+    for (size_t i = 1; i < paragraphs.size() - 1; ++i) {
+        paragraphs[i].parent().remove_child(paragraphs[i]);
+    }
+    
+    // 3. Move bookmarkEnd to first paragraph
+    pugi::xml_node last_para = paragraphs.back();
+    std::string bookmark_id = start_node_.attribute("w:id").value();
+    
+    for (pugi::xml_node node = last_para.first_child(); node; node = node.next_sibling()) {
+        if (std::string(node.name()) == "w:bookmarkEnd") {
+            if (node.attribute("w:id").value() == bookmark_id) {
+                // Move to first paragraph
+                paragraphs[0].append_copy(node);
+                last_para.remove_child(node);
+                break;
+            }
+        }
+    }
+    
+    // 4. Remove last paragraph
+    if (paragraphs.size() > 1) {
+        last_para.parent().remove_child(last_para);
+    }
+    
+    // 5. Update end_node_ reference
+    end_node_ = paragraphs[0].last_child();
+    
+    // 6. Set text with preserved format
+    return set_text_formatted(text, fmt);
+}
+
+// ============================================================================
 // BookmarkCollection Implementation
 // ============================================================================
 
@@ -291,6 +559,16 @@ std::vector<Bookmark>::const_iterator BookmarkCollection::begin() const {
 std::vector<Bookmark>::const_iterator BookmarkCollection::end() const {
     collect_bookmarks();
     return bookmarks_.end();
+}
+
+std::vector<std::string> BookmarkCollection::get_names() const {
+    collect_bookmarks();
+    std::vector<std::string> names;
+    names.reserve(bookmarks_.size());
+    for (const auto& bm : bookmarks_) {
+        names.push_back(bm.get_name());
+    }
+    return names;
 }
 
 // ============================================================================

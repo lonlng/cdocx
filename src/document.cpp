@@ -12,6 +12,7 @@
  */
 
 #include <cdocx/document.h>
+#include <cdocx/advanced.h>
 #include <detail/impl.h>
 
 #include <algorithm>
@@ -732,6 +733,14 @@ bool Document::export_media_optimized(const std::string& image_name,
 
 bool Document::has_media_optimized(const std::string& image_name) const {
     return has_media(image_name);
+}
+
+// ============================================================================
+// Bookmark Management
+// ============================================================================
+
+BookmarkCollection Document::get_bookmarks() {
+    return BookmarkCollection(this);
 }
 
 } // namespace cdocx

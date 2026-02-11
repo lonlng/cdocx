@@ -36,6 +36,7 @@ add_test_suite(04_xml_parts "my_test.docx" "advanced;xml;parts" 30)
 add_test_suite(05_complete_structure "complex.docx" "advanced;structure" 45)
 add_test_suite(06_create_empty "" "core;create" 30)
 add_test_suite(07_text_formatting "formatted.docx" "formatting;styles" 30)
+add_test_suite(08_bookmark_replacement "" "advanced;bookmark;replacement" 60)
 
 # ----------------------------------------------------------------------------
 # Test Execution Targets

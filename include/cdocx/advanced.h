@@ -63,6 +63,115 @@ namespace cdocx {
 // Forward declarations
 class Range;
 class DocumentSearch;
+class BookmarkReplacer;
+class CaptionGenerator;
+
+// ============================================================================
+// Bookmark Format Structure (v0.3.0)
+// ============================================================================
+
+/**
+ * @struct BookmarkFormat
+ * @brief Represents formatting information extracted from a bookmark
+ * @details Stores character formatting properties that can be extracted
+ *          from bookmark content and reapplied after text replacement.
+ * 
+ * @see Bookmark
+ * @since 0.3.0
+ */
+struct BookmarkFormat {
+    std::string font_ascii;      ///< Western font name (ASCII)
+    std::string font_far_east;   ///< East Asian font name (FarEast)
+    std::string font_hansi;      ///< ANSI font name
+    std::string font_hint;       ///< Font hint (eastAsia, default)
+    int font_size = 0;           ///< Font size in half-points
+    std::string color;           ///< Text color (RGB hex)
+    bool bold = false;           ///< Bold flag
+    bool italic = false;         ///< Italic flag
+    bool underline = false;      ///< Underline flag
+    bool strikethrough = false;  ///< Strikethrough flag
+    std::string alignment;       ///< Paragraph alignment
+    
+    /**
+     * @brief Check if format is valid (has meaningful data)
+     * @return true if font_size > 0 or any font is specified
+     */
+    bool is_valid() const { return font_size > 0 || !font_ascii.empty() || !font_far_east.empty(); }
+    
+    /**
+     * @brief Reset all format values to defaults
+     */
+    void clear() {
+        font_ascii.clear();
+        font_far_east.clear();
+        font_hansi.clear();
+        font_hint.clear();
+        font_size = 0;
+        color.clear();
+        bold = false;
+        italic = false;
+        underline = false;
+        strikethrough = false;
+        alignment.clear();
+    }
+};
+
+// ============================================================================
+// Image Support Structures (v0.3.0)
+// ============================================================================
+
+/**
+ * @enum ImageAlignment
+ * @brief Image alignment options for inserted images
+ * @since 0.3.0
+ */
+enum class ImageAlignment {
+    Left,    ///< Left-aligned (using anchor positioning)
+    Center,  ///< Center-aligned (using inline positioning)
+    Right    ///< Right-aligned (using anchor positioning)
+};
+
+/**
+ * @struct ImageSize
+ * @brief Image dimensions specification
+ * @details Supports both point and EMU (English Metric Unit) measurements.
+ *          1 point = 12700 EMU
+ * @since 0.3.0
+ */
+struct ImageSize {
+    double width_pt = 0;   ///< Width in points (1 inch = 72 points)
+    double height_pt = 0;  ///< Height in points
+    
+    /**
+     * @brief Default constructor
+     */
+    ImageSize() = default;
+    
+    /**
+     * @brief Construct with dimensions
+     * @param w Width in points
+     * @param h Height in points
+     */
+    ImageSize(double w, double h) : width_pt(w), height_pt(h) {}
+    
+    /**
+     * @brief Convert width to EMU
+     * @return Width in EMU units
+     */
+    int64_t width_emu() const { return static_cast<int64_t>(width_pt * 12700); }
+    
+    /**
+     * @brief Convert height to EMU
+     * @return Height in EMU units
+     */
+    int64_t height_emu() const { return static_cast<int64_t>(height_pt * 12700); }
+    
+    /**
+     * @brief Check if size is valid (both dimensions > 0)
+     * @return true if valid
+     */
+    bool is_valid() const { return width_pt > 0 && height_pt > 0; }
+};
 
 // ============================================================================
 // Bookmark Classes
@@ -162,6 +271,62 @@ public:
      * @details Removes both the bookmark markers and all enclosed content
      */
     bool remove_with_content();
+    
+    // ===================================================================
+    // Enhanced Format-Preserving Methods (New in v0.3.0)
+    // ===================================================================
+    
+    /**
+     * @brief Extract formatting information from bookmark content
+     * @return BookmarkFormat structure containing extracted format
+     * @details Scans the first run within the bookmark range and extracts
+     *          all formatting properties including fonts, size, color, etc.
+     * @since 0.3.0
+     */
+    BookmarkFormat get_format() const;
+    
+    /**
+     * @brief Set text content while preserving original format
+     * @param[in] text New text content
+     * @return true if successful
+     * @details Extracts format from existing content before replacement,
+     *          then applies the same format to the new text.
+     * @since 0.3.0
+     */
+    bool set_text_keep_format(const std::string& text);
+    
+    /**
+     * @brief Set text with explicit format control
+     * @param[in] text New text content
+     * @param[in] format Format specification to apply
+     * @return true if successful
+     * @since 0.3.0
+     */
+    bool set_text_formatted(const std::string& text, const BookmarkFormat& format);
+    
+    /**
+     * @brief Check if bookmark spans multiple paragraphs
+     * @return true if start and end are in different paragraphs
+     * @since 0.3.0
+     */
+    bool is_cross_paragraph() const;
+    
+    /**
+     * @brief Get all paragraphs covered by this bookmark
+     * @return Vector of paragraph xml_nodes
+     * @since 0.3.0
+     */
+    std::vector<pugi::xml_node> get_covered_paragraphs() const;
+    
+    /**
+     * @brief Set text for cross-paragraph bookmark
+     * @param[in] text New text content
+     * @return true if successful
+     * @details Merges multiple paragraphs into one and sets text.
+     *          Use with caution as it modifies document structure.
+     * @since 0.3.0
+     */
+    bool set_text_cross_paragraph(const std::string& text);
 };
 
 /**
@@ -273,6 +438,13 @@ public:
     std::vector<Bookmark>::iterator end();
     std::vector<Bookmark>::const_iterator begin() const;
     std::vector<Bookmark>::const_iterator end() const;
+    
+    /**
+     * @brief Get bookmark names as a list
+     * @return Vector of bookmark names
+     * @since 0.3.0
+     */
+    std::vector<std::string> get_names() const;
 };
 
 // ============================================================================

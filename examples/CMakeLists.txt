@@ -31,6 +31,10 @@ if(ENABLE_ADVANCED_FEATURES)
     list(APPEND CDOCX_EXAMPLES 10_optimized_loading)
 endif()
 
+# v0.3.0: Bookmark replacement and caption generation examples
+list(APPEND CDOCX_EXAMPLES 11_bookmark_replacement)
+list(APPEND CDOCX_EXAMPLES 12_caption_generation)
+
 # Process each example
 foreach(example ${CDOCX_EXAMPLES})
     set(example_dir ${CMAKE_CURRENT_SOURCE_DIR}/${example})

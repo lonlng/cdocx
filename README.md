@@ -135,7 +135,10 @@ doc.export_media("image.jpg", "output/path.jpg");
 
 ## Documentation
 
-- [AGENTS.md](AGENTS.md) - Complete API documentation and technical details
+- [AGENTS.md](AGENTS.md) - Complete API documentation, technical details and roadmap
+- [docs/OPTIMIZATION_UPGRADE_PLAN.md](docs/OPTIMIZATION_UPGRADE_PLAN.md) - **Optimization and upgrade master plan**
+- [docs/ASPOSE_COMPARISON_AND_ROADMAP.md](docs/ASPOSE_COMPARISON_AND_ROADMAP.md) - Feature comparison with Aspose.Words and development roadmap
+- [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) - Detailed implementation plan for new features
 - [docs/INSTALL.md](docs/INSTALL.md) - Installation instructions
 - [docs/REFACTORING_SUMMARY.md](docs/REFACTORING_SUMMARY.md) - Code structure documentation
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines

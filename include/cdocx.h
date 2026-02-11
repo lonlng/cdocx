@@ -72,14 +72,17 @@
  */
 
 // Include all public headers
-#include <cdocx/fwd.h>        ///< @ingroup Core Forward declarations
-#include <cdocx/constants.h>  ///< @ingroup Core Formatting flags
-#include <cdocx/iterator.h>   ///< @ingroup Iterators Iterator classes
-#include <cdocx/base.h>       ///< @ingroup Core Base content classes
+#include <cdocx/fwd.h>              ///< @ingroup Core Forward declarations
+#include <cdocx/constants.h>        ///< @ingroup Core Formatting flags
+#include <cdocx/iterator.h>         ///< @ingroup Iterators Iterator classes
+#include <cdocx/format_context.h>   ///< @ingroup Core Text formatting context
+#include <cdocx/base.h>             ///< @ingroup Core Base content classes
 #include <cdocx/document.h>   ///< @ingroup Core Document class
 #include <cdocx/template.h>   ///< @ingroup Utilities Template replacement
 #include <cdocx/inserter.h>   ///< @ingroup Utilities Document insertion
-#include <cdocx/advanced.h>   ///< @ingroup Advanced Advanced features
+#include <cdocx/advanced.h>           ///< @ingroup Advanced Advanced features
+#include <cdocx/bookmark_replacer.h>  ///< @ingroup Advanced Bookmark replacement API
+#include <cdocx/caption_generator.h>  ///< @ingroup Advanced Figure caption generation
 
 // ============================================================================
 // Version Information
@@ -93,7 +96,7 @@
 /**
  * @brief CDocx minor version
  */
-#define CDOCX_VERSION_MINOR 2
+#define CDOCX_VERSION_MINOR 3
 
 /**
  * @brief CDocx patch version
@@ -103,7 +106,7 @@
 /**
  * @brief CDocx version string
  */
-#define CDOCX_VERSION "0.2.0"
+#define CDOCX_VERSION "0.3.0"
 
 // ============================================================================
 // Namespace Documentation

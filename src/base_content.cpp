@@ -11,6 +11,7 @@
  */
 
 #include <cdocx/base.h>
+#include <cdocx/format_context.h>
 #include <cctype>
 #include <cstring>
 
@@ -78,138 +79,28 @@ bool Run::has_next() const {
 // Run Formatting Methods
 // ============================================================================
 
-/**
- * @internal
- * @brief Get or create the w:rPr (run properties) element
- * @param run The w:r element
- * @return The w:rPr element (created if didn't exist)
- */
-static pugi::xml_node get_or_create_rPr(pugi::xml_node run) {
-    pugi::xml_node rPr = run.child("w:rPr");
-    if (!rPr) {
-        // Prepend to ensure rPr comes before w:t
-        rPr = run.prepend_child("w:rPr");
-    }
-    return rPr;
-}
-
 bool Run::set_color(const std::string& color_hex) {
-    if (!current_) {
-        return false;
-    }
-    
-    // Get or create run properties
-    pugi::xml_node rPr = get_or_create_rPr(current_);
-    
-    // Get or create color element
-    pugi::xml_node color = rPr.child("w:color");
-    if (!color) {
-        color = rPr.append_child("w:color");
-    }
-    
-    // Set color value (hex without #)
-    color.append_attribute("w:val").set_value(color_hex.c_str());
-    return true;
+    return TextFormatContext::apply_color(current_, color_hex);
 }
 
 bool Run::set_font_size(int size) {
-    if (!current_) {
-        return false;
-    }
-    
-    pugi::xml_node rPr = get_or_create_rPr(current_);
-    
-    // Set sz (size) element
-    pugi::xml_node sz = rPr.child("w:sz");
-    if (!sz) {
-        sz = rPr.append_child("w:sz");
-    }
-    sz.append_attribute("w:val").set_value(size);
-    
-    // Set szCs (complex script size) element
-    pugi::xml_node szCs = rPr.child("w:szCs");
-    if (!szCs) {
-        szCs = rPr.append_child("w:szCs");
-    }
-    szCs.append_attribute("w:val").set_value(size);
-    
-    return true;
+    return TextFormatContext::apply_font_size(current_, size);
 }
 
 bool Run::set_font_name(const std::string& font_name) {
-    if (!current_) {
-        return false;
-    }
-    
-    pugi::xml_node rPr = get_or_create_rPr(current_);
-    
-    // Get or create rFonts element
-    pugi::xml_node rFonts = rPr.child("w:rFonts");
-    if (!rFonts) {
-        rFonts = rPr.append_child("w:rFonts");
-    }
-    
-    // Set font attributes for different character sets
-    rFonts.append_attribute("w:ascii").set_value(font_name.c_str());
-    rFonts.append_attribute("w:hAnsi").set_value(font_name.c_str());
-    rFonts.append_attribute("w:cs").set_value(font_name.c_str());
-    
-    return true;
+    return TextFormatContext::apply_font_name(current_, font_name);
 }
 
 bool Run::set_bold(bool bold) {
-    if (!current_) {
-        return false;
-    }
-    
-    pugi::xml_node rPr = get_or_create_rPr(current_);
-    
-    if (bold) {
-        // Add bold element if not present
-        if (!rPr.child("w:b")) {
-            rPr.append_child("w:b");
-        }
-    } else {
-        // Remove bold element
-        rPr.remove_child("w:b");
-    }
-    return true;
+    return TextFormatContext::apply_bold(current_, bold);
 }
 
 bool Run::set_italic(bool italic) {
-    if (!current_) {
-        return false;
-    }
-    
-    pugi::xml_node rPr = get_or_create_rPr(current_);
-    
-    if (italic) {
-        if (!rPr.child("w:i")) {
-            rPr.append_child("w:i");
-        }
-    } else {
-        rPr.remove_child("w:i");
-    }
-    return true;
+    return TextFormatContext::apply_italic(current_, italic);
 }
 
 bool Run::set_underline(bool underline) {
-    if (!current_) {
-        return false;
-    }
-    
-    pugi::xml_node rPr = get_or_create_rPr(current_);
-    
-    if (underline) {
-        pugi::xml_node u = rPr.child("w:u");
-        if (!u) {
-            u = rPr.append_child("w:u");
-        }
-        u.append_attribute("w:val").set_value("single");
-    } else {
-        rPr.remove_child("w:u");
-    }
-    return true;
+    return TextFormatContext::apply_underline(current_, underline);
 }
 
 // ============================================================================
@@ -519,6 +410,78 @@ bool Paragraph::set_indent(int left, int right, int first_line) {
     }
     
     return true;
+}
+
+// ============================================================================
+// Paragraph Text Formatting Methods
+// ============================================================================
+
+/**
+ * @internal
+ * @brief Get or create the first run in a paragraph for formatting
+ * @param para The w:p element
+ * @return The w:r element (created if didn't exist)
+ */
+static pugi::xml_node get_or_create_first_run(pugi::xml_node para) {
+    pugi::xml_node run = para.child("w:r");
+    if (!run) {
+        // Create new run element
+        run = para.append_child("w:r");
+        // Create run properties
+        run.append_child("w:rPr");
+        // Create empty text element
+        pugi::xml_node t = run.append_child("w:t");
+        t.text().set("");
+    }
+    return run;
+}
+
+bool Paragraph::set_color(const std::string& color_hex) {
+    if (!current_) {
+        return false;
+    }
+    pugi::xml_node run = get_or_create_first_run(current_);
+    return TextFormatContext::apply_color(run, color_hex);
+}
+
+bool Paragraph::set_font_size(int size) {
+    if (!current_) {
+        return false;
+    }
+    pugi::xml_node run = get_or_create_first_run(current_);
+    return TextFormatContext::apply_font_size(run, size);
+}
+
+bool Paragraph::set_font_name(const std::string& font_name) {
+    if (!current_) {
+        return false;
+    }
+    pugi::xml_node run = get_or_create_first_run(current_);
+    return TextFormatContext::apply_font_name(run, font_name);
+}
+
+bool Paragraph::set_bold(bool bold) {
+    if (!current_) {
+        return false;
+    }
+    pugi::xml_node run = get_or_create_first_run(current_);
+    return TextFormatContext::apply_bold(run, bold);
+}
+
+bool Paragraph::set_italic(bool italic) {
+    if (!current_) {
+        return false;
+    }
+    pugi::xml_node run = get_or_create_first_run(current_);
+    return TextFormatContext::apply_italic(run, italic);
+}
+
+bool Paragraph::set_underline(bool underline) {
+    if (!current_) {
+        return false;
+    }
+    pugi::xml_node run = get_or_create_first_run(current_);
+    return TextFormatContext::apply_underline(run, underline);
 }
 
 // ============================================================================

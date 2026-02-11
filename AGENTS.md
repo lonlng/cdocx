@@ -9,11 +9,70 @@ CDocx is a C++17 library for creating, reading, and writing Microsoft Office Wor
 - **License**: MIT
 - **Build System**: CMake (minimum version 3.10)
 - **Namespace**: `cdocx`
-- **Version**: 0.2.0
+- **Version**: 0.3.0
 - **External Dependencies**: 
   - pugixml (Git submodule for XML parsing)
   - zip library (bundled from kuba--/zip for archive handling)
 - **Test Framework**: doctest (header-only)
+
+## Roadmap
+
+### Current Features (v0.3.0)
+- ✅ Document operations (open, create, save DOCX)
+- ✅ Paragraph and Run manipulation
+- ✅ Basic text formatting (bold, italic, underline, etc.)
+- ✅ Table creation and basic manipulation
+- ✅ Template-based placeholder replacement
+- ✅ Document insertion/merging
+- ✅ Media file management (images)
+- ✅ XML Parts API access
+- ✅ **Bookmark management (ENHANCED)** - Format preservation, cross-paragraph support
+- ✅ **BookmarkReplacer class** - High-level API for bookmark-based replacement
+- ✅ **Image insertion with alignment** - Left/Center/Right alignment support
+- ✅ **Figure caption generation** - Chinese format "图 X [description]"
+- ✅ DocumentBuilder for fluent document construction
+- ✅ Find and replace
+
+### Optimization & Upgrade Plan
+See [docs/OPTIMIZATION_UPGRADE_PLAN.md](docs/OPTIMIZATION_UPGRADE_PLAN.md) for the **complete optimization and upgrade master plan** including:
+- Architecture improvements
+- Performance optimization strategies
+- Feature development timeline
+- Resource requirements
+
+### Planned Features
+See [docs/ASPOSE_COMPARISON_AND_ROADMAP.md](docs/ASPOSE_COMPARISON_AND_ROADMAP.md) for detailed comparison with Aspose.Words and complete roadmap.
+
+**Phase 1: Core Enhancements** ✅ **COMPLETED (v0.3.0)**
+- ✅ Page setup (page size, margins, orientation)
+- ✅ Header/Footer support
+- ✅ List formatting (bullets, numbering)
+- ✅ Enhanced table operations (merge/split cells, borders, shading)
+- ✅ **Bookmark replacement with format preservation**
+- ✅ **Image insertion via bookmarks**
+- ✅ **Figure caption generation**
+
+**Phase 2: Export Formats** (Planned)
+- PDF export
+- HTML export
+- Image rendering (PNG/JPG)
+
+**Phase 2: Export Formats**
+- PDF export
+- HTML export
+- Image rendering (PNG/JPG)
+
+**Phase 3: Advanced Features**
+- Field support (page numbers, TOC, hyperlinks)
+- Comments/annotations
+- Footnotes and endnotes
+- Styles system
+
+**Phase 4: Professional Features**
+- Enhanced mail merge
+- Document comparison
+- Chart support
+- Formula (OMML) support
 
 ## Quick Start
 
@@ -97,7 +156,9 @@ cdocx/
 │   │   ├── document.h          # Document class
 │   │   ├── template.h          # Template replacement
 │   │   ├── inserter.h          # Document insertion
-│   │   └── advanced.h          # Advanced features (Bookmark, DocumentBuilder, Search)
+│   │   ├── advanced.h          # Advanced features (Bookmark, DocumentBuilder, Search)
+│   │   ├── bookmark_replacer.h # 【v0.3.0】Bookmark replacement API
+│   │   └── caption_generator.h # 【v0.3.0】Figure caption generation
 │   └── detail/
 │       └── impl.h              # Private implementation (PIMPL, internal use)
 ├── src/
@@ -107,12 +168,18 @@ cdocx/
 │   ├── inserter.cpp            # Document inserter implementation
 │   ├── tree.cpp                # Tree structure (DocxTree, DocxTreeNode)
 │   ├── impl.cpp                # DocumentImpl implementation
-│   └── advanced.cpp            # Advanced features implementation
+│   ├── advanced.cpp            # Advanced features implementation
+│   ├── bookmark_replacer.cpp   # 【v0.3.0】Bookmark replacement implementation
+│   └── caption_generator.cpp   # 【v0.3.0】Caption generation implementation
 ├── examples/                   # Example programs
+│   └── bookmark_replacement_example.cpp  # 【v0.3.0】Bookmark replacement demo
 ├── test/                       # Test suite
+│   └── test_bookmark_replacement.cpp     # 【v0.3.0】Bookmark replacement tests
 ├── docs/                       # Documentation
 │   ├── CLEANUP_SUMMARY.md      # Cleanup summary
 │   ├── REFACTORING_SUMMARY.md  # Refactoring details
+│   ├── CDOCX_OPTIMIZATION_PLAN.md        # Optimization plan (COMPLETED)
+│   ├── OPTIMIZATION_UPGRADE_PLAN.md      # Upgrade roadmap
 │   └── archive/                # Archived design documents
 ├── thirdparty/
 │   ├── pugixml/                # XML parsing (Git submodule)
@@ -564,6 +631,60 @@ int main() {
     inserter.insert_document(&source);
     
     target.save("combined.docx");
+    return 0;
+}
+```
+
+### Bookmark Replacement (v0.3.0)
+
+```cpp
+#include <cdocx.h>
+#include <cdocx/bookmark_replacer.h>
+#include <cdocx/caption_generator.h>
+
+int main() {
+    // Open template document
+    cdocx::Document doc("template.docx");
+    doc.open();
+    
+    // Create bookmark replacer
+    cdocx::BookmarkReplacer replacer(&doc);
+    
+    // 1. Simple text replacement (preserves original format)
+    replacer.replace_text("REPORT_NO", "BGP-2024-BJ-001");
+    replacer.replace_text("DATE", "2024-06-15");
+    
+    // 2. Batch replacement
+    std::map<std::string, std::string> replacements = {
+        {"COMPANY", "Beijing Geological Research Institute"},
+        {"ADDRESS", "123 Main Street"}
+    };
+    replacer.replace_text_batch(replacements);
+    
+    // 3. Replacement with custom format
+    cdocx::BookmarkFormat format;
+    format.font_far_east = "SimHei";
+    format.font_size = 28;  // 14pt
+    format.bold = true;
+    format.color = "FF0000";
+    replacer.replace_text_with_format("TITLE", "Final Report", format);
+    
+    // 4. Image replacement with caption
+    replacer.replace_with_image("RESULT_IMAGE", "detection_result.png", 
+                                "GPR Detection Result");
+    
+    // 5. Advanced image replacement with alignment
+    cdocx::ImageSize size(400, 300);  // 400x300 points
+    replacer.replace_with_image_advanced("CHART", "chart.png", size,
+                                          "Analysis Chart",
+                                          cdocx::ImageAlignment::Center);
+    
+    // Check statistics
+    auto stats = replacer.get_stats();
+    std::cout << "Success: " << stats.success_count << std::endl;
+    
+    // Save document
+    doc.save("output.docx");
     return 0;
 }
 ```
