@@ -482,6 +482,9 @@ public:
     LoadStatistics last_load_stats_;
     LoadResult last_load_result_;
     
+    // Bookmark ID generation
+    int next_bookmark_id_ = 1;  ///< Next available bookmark ID
+    
     /** @brief Constructor */
     DocumentImpl();
     

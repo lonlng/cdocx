@@ -53,6 +53,7 @@
 #include <cdocx/base.h>
 #include <cdocx/constants.h>
 #include <functional>
+#include <map>
 #include <optional>
 #include <string>
 #include <utility>
@@ -700,6 +701,9 @@ private:
     pugi::xml_node current_table_;      ///< Current table node
     pugi::xml_node current_row_;        ///< Current row node
     pugi::xml_node current_cell_;       ///< Current cell node
+    
+    // Bookmark stack for tracking open bookmarks
+    std::map<std::string, int> bookmark_stack_;
 
     /**
      * @brief Ensure current paragraph exists

@@ -743,5 +743,9 @@ BookmarkCollection Document::get_bookmarks() {
     return BookmarkCollection(this);
 }
 
+int Document::generate_unique_bookmark_id() {
+    return impl_->next_bookmark_id_++;
+}
+
 } // namespace cdocx
 

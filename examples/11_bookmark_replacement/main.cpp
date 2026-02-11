@@ -2,11 +2,13 @@
  * Example 11: Bookmark Replacement
  * 
  * This example demonstrates how to:
- * 1. Open a document with bookmarks
- * 2. Use BookmarkReplacer for text and image replacement
- * 3. Preserve formatting during text replacement
- * 4. Insert images with captions at bookmark locations
- * 5. Use batch replacement for multiple bookmarks
+ * 1. Create a document with bookmarks using add_run_with_bookmark()
+ * 2. Create bookmarks using DocumentBuilder::start_bookmark()/end_bookmark()
+ * 3. Open a document with bookmarks
+ * 4. Use BookmarkReplacer for text and image replacement
+ * 5. Preserve formatting during text replacement
+ * 6. Insert images with captions at bookmark locations
+ * 7. Use batch replacement for multiple bookmarks
  * 
  * @since 0.3.0
  */
@@ -14,14 +16,16 @@
 #include <cdocx.h>
 #include <cdocx/bookmark_replacer.h>
 #include <cdocx/caption_generator.h>
+#include <cdocx/advanced.h>  // For DocumentBuilder
 #include <iostream>
 #include <filesystem>
 #include <map>
 
 namespace fs = std::filesystem;
 
-// Forward declaration
+// Forward declarations
 bool create_template_with_bookmarks(const std::string& doc_path);
+bool create_template_with_bookmarks_using_builder(const std::string& doc_path);
 bool create_sample_image(const std::string& image_path);
 
 int main() {
@@ -207,7 +211,10 @@ int main() {
 }
 
 /**
- * Create a template document with sample bookmarks
+ * Create a template document with actual bookmarks using add_run_with_bookmark()
+ * 
+ * This function demonstrates how to create a document with proper Word bookmarks
+ * that can be replaced using BookmarkReplacer.
  */
 bool create_template_with_bookmarks(const std::string& doc_path) {
     cdocx::Document doc;
@@ -216,49 +223,51 @@ bool create_template_with_bookmarks(const std::string& doc_path) {
         return false;
     }
     
-    // Create a document with various bookmarks
+    std::cout << "Creating template with actual Word bookmarks..." << std::endl;
     
-    // Title bookmark
+    // Create a document with various bookmarks using add_run_with_bookmark()
+    
+    // Title bookmark - using add_run_with_bookmark() to create a bookmark around text
     auto p1 = doc.paragraphs().insert_paragraph_after("");
-    auto r1 = p1.add_run("[TITLE]", cdocx::bold);
+    auto r1 = p1.add_run_with_bookmark(doc, "[TITLE_PLACEHOLDER]", "TITLE", cdocx::bold);
     r1.set_font_size(36);  // 18pt
     
     // Empty paragraph
     doc.paragraphs().insert_paragraph_after("");
     
-    // Report info section
+    // Report info section with bookmarks
     auto p2 = doc.paragraphs().insert_paragraph_after("Report Number: ");
-    auto r2 = p2.add_run("[REPORT_NO]");
+    auto r2 = p2.add_run_with_bookmark(doc, "[REPORT_NO_PLACEHOLDER]", "REPORT_NO");
     
     auto p3 = doc.paragraphs().insert_paragraph_after("Date: ");
-    auto r3 = p3.add_run("[DATE]");
+    auto r3 = p3.add_run_with_bookmark(doc, "[DATE_PLACEHOLDER]", "DATE");
     
     // Empty paragraph
     doc.paragraphs().insert_paragraph_after("");
     
-    // Company info section
+    // Company info section with bookmarks
     auto p4 = doc.paragraphs().insert_paragraph_after("Company: ");
-    auto r4 = p4.add_run("[COMPANY]");
+    auto r4 = p4.add_run_with_bookmark(doc, "[COMPANY_PLACEHOLDER]", "COMPANY");
     
     auto p5 = doc.paragraphs().insert_paragraph_after("Address: ");
-    auto r5 = p5.add_run("[ADDRESS]");
+    auto r5 = p5.add_run_with_bookmark(doc, "[ADDRESS_PLACEHOLDER]", "ADDRESS");
     
     // Empty paragraph
     doc.paragraphs().insert_paragraph_after("");
     
-    // Status section
+    // Status section with bookmark
     auto p6 = doc.paragraphs().insert_paragraph_after("Status: ");
-    auto r6 = p6.add_run("[STATUS_PLACEHOLDER]");
+    auto r6 = p6.add_run_with_bookmark(doc, "[STATUS_PLACEHOLDER]", "STATUS");
     
     // Empty paragraph
     doc.paragraphs().insert_paragraph_after("");
     
-    // Image placeholders
+    // Image placeholders with bookmarks
     auto p7 = doc.paragraphs().insert_paragraph_after("Result Image:");
     p7.set_bold(true);
     
     auto p8 = doc.paragraphs().insert_paragraph_after("");
-    auto r8 = p8.add_run("[RESULT_IMAGE]");
+    auto r8 = p8.add_run_with_bookmark(doc, "[RESULT_IMAGE_PLACEHOLDER]", "RESULT_IMAGE");
     r8.set_color("FF0000");  // Red color to indicate placeholder
     
     // Empty paragraph
@@ -268,15 +277,102 @@ bool create_template_with_bookmarks(const std::string& doc_path) {
     p9.set_bold(true);
     
     auto p10 = doc.paragraphs().insert_paragraph_after("");
-    auto r10 = p10.add_run("[CHART_IMAGE]");
+    auto r10 = p10.add_run_with_bookmark(doc, "[CHART_IMAGE_PLACEHOLDER]", "CHART_IMAGE");
     r10.set_color("FF0000");  // Red color to indicate placeholder
-    
-    // Note: In a real template, you would use DocumentBuilder::start_bookmark() 
-    // and end_bookmark() to create actual bookmarks. For this example, we create
-    // a document with placeholder text that simulates bookmarks.
     
     doc.save(doc_path);
     std::cout << "  Created: " << doc_path << std::endl;
+    std::cout << "  (Template contains actual Word bookmarks that can be replaced)" << std::endl;
+    return true;
+}
+
+/**
+ * Alternative: Create a template using DocumentBuilder with bookmarks
+ * 
+ * This demonstrates using DocumentBuilder::start_bookmark() and end_bookmark()
+ * to create bookmarks around multiple runs or complex content.
+ */
+bool create_template_with_bookmarks_using_builder(const std::string& doc_path) {
+    cdocx::Document doc;
+    if (!doc.create_empty(doc_path)) {
+        std::cerr << "Failed to create empty document" << std::endl;
+        return false;
+    }
+    
+    std::cout << "Creating template using DocumentBuilder..." << std::endl;
+    
+    cdocx::DocumentBuilder builder(&doc);
+    
+    // Title with bookmark
+    builder.set_bold(true);
+    builder.set_font_size(18);
+    builder.start_bookmark("TITLE");
+    builder.writeln("[TITLE_PLACEHOLDER]");
+    builder.end_bookmark("TITLE");
+    builder.clear_formatting();
+    builder.writeln();
+    
+    // Report info section
+    builder.write("Report Number: ");
+    builder.start_bookmark("REPORT_NO");
+    builder.write("[REPORT_NO_PLACEHOLDER]");
+    builder.end_bookmark("REPORT_NO");
+    builder.writeln();
+    
+    builder.write("Date: ");
+    builder.start_bookmark("DATE");
+    builder.write("[DATE_PLACEHOLDER]");
+    builder.end_bookmark("DATE");
+    builder.writeln();
+    builder.writeln();
+    
+    // Company info section
+    builder.write("Company: ");
+    builder.start_bookmark("COMPANY");
+    builder.write("[COMPANY_PLACEHOLDER]");
+    builder.end_bookmark("COMPANY");
+    builder.writeln();
+    
+    builder.write("Address: ");
+    builder.start_bookmark("ADDRESS");
+    builder.write("[ADDRESS_PLACEHOLDER]");
+    builder.end_bookmark("ADDRESS");
+    builder.writeln();
+    builder.writeln();
+    
+    // Status section
+    builder.write("Status: ");
+    builder.start_bookmark("STATUS");
+    builder.write("[STATUS_PLACEHOLDER]");
+    builder.end_bookmark("STATUS");
+    builder.writeln();
+    builder.writeln();
+    
+    // Image placeholders
+    builder.set_bold(true);
+    builder.writeln("Result Image:");
+    builder.clear_formatting();
+    builder.start_bookmark("RESULT_IMAGE");
+    builder.set_color("FF0000");
+    builder.write("[RESULT_IMAGE_PLACEHOLDER]");
+    builder.end_bookmark("RESULT_IMAGE");
+    builder.clear_formatting();
+    builder.writeln();
+    builder.writeln();
+    
+    builder.set_bold(true);
+    builder.writeln("Chart Image:");
+    builder.clear_formatting();
+    builder.start_bookmark("CHART_IMAGE");
+    builder.set_color("FF0000");
+    builder.write("[CHART_IMAGE_PLACEHOLDER]");
+    builder.end_bookmark("CHART_IMAGE");
+    builder.clear_formatting();
+    builder.writeln();
+    
+    doc.save(doc_path);
+    std::cout << "  Created: " << doc_path << std::endl;
+    std::cout << "  (Template created using DocumentBuilder with bookmarks)" << std::endl;
     return true;
 }
 

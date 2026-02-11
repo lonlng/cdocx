@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <cctype>
 #include <map>
+#include <unordered_map>
 
 namespace cdocx {
 
@@ -909,11 +910,44 @@ void DocumentBuilder::insert_hyperlink(const std::string& text, const std::strin
 
 // Bookmark
 void DocumentBuilder::start_bookmark(const std::string& name) {
-    // TODO: Implement bookmark start
+    if (!doc_) {
+        return;
+    }
+    
+    ensure_paragraph();
+    
+    // Generate unique bookmark ID
+    int bookmark_id = doc_->generate_unique_bookmark_id();
+    
+    // Store bookmark ID for later matching with end_bookmark
+    bookmark_stack_[name] = bookmark_id;
+    
+    // Create bookmarkStart element
+    pugi::xml_node bookmark_start = current_paragraph_.append_child("w:bookmarkStart");
+    bookmark_start.append_attribute("w:id").set_value(bookmark_id);
+    bookmark_start.append_attribute("w:name").set_value(name.c_str());
 }
 
 void DocumentBuilder::end_bookmark(const std::string& name) {
-    // TODO: Implement bookmark end
+    if (!doc_) {
+        return;
+    }
+    
+    ensure_paragraph();
+    
+    // Find the bookmark ID from the stack
+    auto it = bookmark_stack_.find(name);
+    if (it == bookmark_stack_.end()) {
+        // No matching start_bookmark called
+        return;
+    }
+    
+    int bookmark_id = it->second;
+    bookmark_stack_.erase(it);
+    
+    // Create bookmarkEnd element
+    pugi::xml_node bookmark_end = current_paragraph_.append_child("w:bookmarkEnd");
+    bookmark_end.append_attribute("w:id").set_value(bookmark_id);
 }
 
 // Image

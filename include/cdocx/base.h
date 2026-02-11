@@ -26,6 +26,7 @@
 
 #include <cdocx/fwd.h>
 #include <cdocx/constants.h>
+#include <cdocx/properties.h>
 #include <pugixml.hpp>
 #include <string>
 
@@ -180,6 +181,76 @@ public:
      * @return true if successful
      */
     bool set_underline(bool underline);
+    
+    // ===================================================================
+    // Enhanced Text Properties (v0.4.0)
+    // ===================================================================
+    
+    /**
+     * @brief Apply comprehensive text properties
+     * @param[in] props TextProperties structure
+     * @since 0.4.0
+     */
+    void set_properties(const TextProperties& props);
+    
+    /**
+     * @brief Get current text properties
+     * @return TextProperties structure
+     * @since 0.4.0
+     */
+    TextProperties get_properties() const;
+    
+    /**
+     * @brief Set highlight color
+     * @param[in] color Highlight color
+     * @return true if successful
+     * @since 0.4.0
+     */
+    bool set_highlight(TextProperties::Highlight color);
+    
+    /**
+     * @brief Set underline with style and color
+     * @param[in] style Underline style
+     * @param[in] color Color (RRGGBB or "auto")
+     * @return true if successful
+     * @since 0.4.0
+     */
+    bool set_underline_style(TextProperties::UnderlineStyle style, 
+                             const std::string& color = "auto");
+    
+    /**
+     * @brief Set strikethrough style
+     * @param[in] style Strike style
+     * @return true if successful
+     * @since 0.4.0
+     */
+    bool set_strike(TextProperties::StrikeStyle style);
+    
+    /**
+     * @brief Set character scale
+     * @param[in] percent Scale percentage (1-600, 100 = normal)
+     * @return true if successful
+     * @since 0.4.0
+     */
+    bool set_scale(int percent);
+    
+    /**
+     * @brief Set character spacing
+     * @param[in] type Spacing type
+     * @param[in] value Spacing value (20 = 1pt)
+     * @return true if successful
+     * @since 0.4.0
+     */
+    bool set_spacing(TextProperties::SpacingType type, int value);
+    
+    /**
+     * @brief Set character position
+     * @param[in] type Position type
+     * @param[in] value Position value (2 = 1pt)
+     * @return true if successful
+     * @since 0.4.0
+     */
+    bool set_position(TextProperties::PositionType type, int value);
 };
 
 /**
@@ -273,6 +344,33 @@ public:
      * @return Reference to the new Run
      */
     Run& add_run(const char* text, formatting_flag flag = none);
+    
+    /**
+     * @brief Add a new run with text, formatting and bookmark
+     * @param[in] doc The document to add bookmark to (needed for generating unique ID)
+     * @param[in] text The text content
+     * @param[in] bookmark_name Name of the bookmark to create around this run
+     * @param[in] flag Formatting flags (default: none)
+     * @return Reference to the new Run
+     * @since 0.3.0
+     * @par Usage Example:
+     * @code
+     * auto para = doc.paragraphs();
+     * para.add_run_with_bookmark(doc, "Report Number: BGP-2024-001", "REPORT_NO", cdocx::bold);
+     * @endcode
+     */
+    Run& add_run_with_bookmark(Document& doc, const std::string& text, const std::string& bookmark_name, formatting_flag flag = none);
+    
+    /**
+     * @brief Add a new run with bookmark (C-string version)
+     * @param[in] doc The document to add bookmark to (needed for generating unique ID)
+     * @param[in] text The text content (null-terminated)
+     * @param[in] bookmark_name Name of the bookmark to create around this run
+     * @param[in] flag Formatting flags (default: none)
+     * @return Reference to the new Run
+     * @since 0.3.0
+     */
+    Run& add_run_with_bookmark(Document& doc, const char* text, const std::string& bookmark_name, formatting_flag flag = none);
     
     /**
      * @brief Remove a run from this paragraph
@@ -427,6 +525,72 @@ public:
      * @return true if successful
      */
     bool set_underline(bool underline);
+    
+    // ===================================================================
+    // Enhanced Paragraph Properties (v0.4.0)
+    // ===================================================================
+    
+    /**
+     * @brief Apply comprehensive paragraph properties
+     * @param[in] props ParagraphProperties structure
+     * @since 0.4.0
+     */
+    void set_properties(const ParagraphProperties& props);
+    
+    /**
+     * @brief Get current paragraph properties
+     * @return ParagraphProperties structure
+     * @since 0.4.0
+     */
+    ParagraphProperties get_properties() const;
+    
+    /**
+     * @brief Set outline level
+     * @param[in] level Outline level
+     * @return true if successful
+     * @since 0.4.0
+     */
+    bool set_outline_level(ParagraphProperties::OutlineLevel level);
+    
+    /**
+     * @brief Set keep with next paragraph
+     * @param[in] value true to keep with next
+     * @return true if successful
+     * @since 0.4.0
+     */
+    bool set_keep_next(bool value);
+    
+    /**
+     * @brief Set keep lines together
+     * @param[in] value true to keep lines on same page
+     * @return true if successful
+     * @since 0.4.0
+     */
+    bool set_keep_lines(bool value);
+    
+    /**
+     * @brief Set page break before
+     * @param[in] value true to insert page break before
+     * @return true if successful
+     * @since 0.4.0
+     */
+    bool set_page_break_before(bool value);
+    
+    /**
+     * @brief Set page break after
+     * @param[in] value true to insert page break after
+     * @return true if successful
+     * @since 0.4.0
+     */
+    bool set_page_break_after(bool value);
+    
+    /**
+     * @brief Set paragraph borders
+     * @param[in] borders Borders structure
+     * @return true if successful
+     * @since 0.4.0
+     */
+    bool set_borders(const ParagraphProperties::Borders& borders);
 };
 
 /**
@@ -630,6 +794,75 @@ public:
      * @return Reference to the TableRow iterator
      */
     TableRow& rows();
+    
+    // ===================================================================
+    // Enhanced Table Operations (v0.4.0)
+    // ===================================================================
+    
+    /**
+     * @brief Access cell at specific position (with bounds checking)
+     * @param[in] row Row index (0-based)
+     * @param[in] col Column index (0-based)
+     * @return TableCell at the position (may be invalid if out of bounds)
+     * @since 0.4.0
+     */
+    TableCell cellAt(size_t row, size_t col) const;
+    
+    /**
+     * @brief Access cell at specific position (no bounds checking)
+     * @param[in] row Row index (0-based)
+     * @param[in] col Column index (0-based)
+     * @return TableCell at the position (undefined if out of bounds)
+     * @since 0.4.0
+     */
+    TableCell cellAtUnsafe(size_t row, size_t col) const;
+    
+    /**
+     * @brief Get number of rows
+     * @return Row count
+     * @since 0.4.0
+     */
+    size_t getRowCount() const;
+    
+    /**
+     * @brief Get number of columns (max columns in any row)
+     * @return Column count
+     * @since 0.4.0
+     */
+    size_t getColumnCount() const;
+    
+    /**
+     * @brief Merge cells in a range
+     * @param[in] startRow Start row index
+     * @param[in] startCol Start column index
+     * @param[in] rowCount Number of rows to merge
+     * @param[in] colCount Number of columns to merge
+     * @return The merged cell
+     * @since 0.4.0
+     */
+    TableCell merge(size_t startRow, size_t startCol, 
+                    size_t rowCount, size_t colCount);
+    
+    /**
+     * @brief Split a merged cell
+     * @param[in] row Row index of the merged cell
+     * @param[in] col Column index of the merged cell
+     * @since 0.4.0
+     */
+    void split(size_t row, size_t col);
+    
+    /**
+     * @brief Dump table structure to console (for debugging)
+     * @since 0.4.0
+     */
+    void dumpStructure() const;
+    
+    /**
+     * @brief Apply table properties
+     * @param[in] props TableProperties structure
+     * @since 0.4.0
+     */
+    void set_properties(const TableProperties& props);
 };
 
 } // namespace cdocx

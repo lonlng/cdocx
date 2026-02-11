@@ -11,6 +11,7 @@
  */
 
 #include <cdocx/base.h>
+#include <cdocx/document.h>
 #include <cdocx/format_context.h>
 #include <cctype>
 #include <cstring>
@@ -197,6 +198,74 @@ Run& Paragraph::add_run(const char* text, formatting_flag f) {
     
     // Set text content
     new_run_text.text().set(text);
+    run_.set_current(new_run);
+    
+    return run_;
+}
+
+Run& Paragraph::add_run_with_bookmark(Document& doc, const std::string& text, const std::string& bookmark_name, formatting_flag f) {
+    return add_run_with_bookmark(doc, text.c_str(), bookmark_name, f);
+}
+
+Run& Paragraph::add_run_with_bookmark(Document& doc, const char* text, const std::string& bookmark_name, formatting_flag f) {
+    if (!current_) {
+        return run_;
+    }
+    
+    // Generate unique bookmark ID
+    int bookmark_id = doc.generate_unique_bookmark_id();
+    
+    // Create bookmarkStart element before the run
+    pugi::xml_node bookmark_start = current_.append_child("w:bookmarkStart");
+    bookmark_start.append_attribute("w:id").set_value(bookmark_id);
+    bookmark_start.append_attribute("w:name").set_value(bookmark_name.c_str());
+    
+    // Create new run element (same as add_run)
+    pugi::xml_node new_run = current_.append_child("w:r");
+    
+    // Create run properties element
+    pugi::xml_node meta = new_run.append_child("w:rPr");
+    
+    // Apply formatting flags
+    if (f & bold) {
+        meta.append_child("w:b");
+    }
+    if (f & italic) {
+        meta.append_child("w:i");
+    }
+    if (f & underline) {
+        meta.append_child("w:u").append_attribute("w:val").set_value("single");
+    }
+    if (f & strikethrough) {
+        meta.append_child("w:strike").append_attribute("w:val").set_value("true");
+    }
+    if (f & superscript) {
+        meta.append_child("w:vertAlign").append_attribute("w:val").set_value("superscript");
+    } else if (f & subscript) {
+        meta.append_child("w:vertAlign").append_attribute("w:val").set_value("subscript");
+    }
+    if (f & smallcaps) {
+        meta.append_child("w:smallCaps").append_attribute("w:val").set_value("true");
+    }
+    if (f & shadow) {
+        meta.append_child("w:shadow").append_attribute("w:val").set_value("true");
+    }
+    
+    // Create text element
+    pugi::xml_node new_run_text = new_run.append_child("w:t");
+    
+    // Preserve spaces if text starts or ends with whitespace
+    if (*text != 0 && (std::isspace(text[0]) || std::isspace(text[std::strlen(text) - 1]))) {
+        new_run_text.append_attribute("xml:space").set_value("preserve");
+    }
+    
+    // Set text content
+    new_run_text.text().set(text);
+    
+    // Create bookmarkEnd element after the run
+    pugi::xml_node bookmark_end = current_.append_child("w:bookmarkEnd");
+    bookmark_end.append_attribute("w:id").set_value(bookmark_id);
+    
     run_.set_current(new_run);
     
     return run_;

@@ -512,6 +512,14 @@ public:
      * @since 0.3.0
      */
     BookmarkCollection get_bookmarks();
+    
+    /**
+     * @brief Generate a unique bookmark ID
+     * @return A unique integer ID for bookmark creation
+     * @since 0.3.0
+     * @internal
+     */
+    int generate_unique_bookmark_id();
 };
 
 // ============================================================================

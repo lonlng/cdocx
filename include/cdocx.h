@@ -76,6 +76,7 @@
 #include <cdocx/constants.h>        ///< @ingroup Core Formatting flags
 #include <cdocx/iterator.h>         ///< @ingroup Iterators Iterator classes
 #include <cdocx/format_context.h>   ///< @ingroup Core Text formatting context
+#include <cdocx/properties.h>       ///< @ingroup Core Property structures (v0.4.0)
 #include <cdocx/base.h>             ///< @ingroup Core Base content classes
 #include <cdocx/document.h>   ///< @ingroup Core Document class
 #include <cdocx/template.h>   ///< @ingroup Utilities Template replacement
@@ -96,7 +97,7 @@
 /**
  * @brief CDocx minor version
  */
-#define CDOCX_VERSION_MINOR 3
+#define CDOCX_VERSION_MINOR 4
 
 /**
  * @brief CDocx patch version
@@ -106,7 +107,7 @@
 /**
  * @brief CDocx version string
  */
-#define CDOCX_VERSION "0.3.0"
+#define CDOCX_VERSION "0.4.0"
 
 // ============================================================================
 // Namespace Documentation
