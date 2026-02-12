@@ -27,8 +27,8 @@ cmake_minimum_required(VERSION 3.14...3.28)
 # Project Definition
 # ----------------------------------------------------------------------------
 project(cdocx
-    VERSION 0.4.0
-    DESCRIPTION "C++ library for creating, reading, and writing Microsoft Word DOCX files"
+    VERSION 0.5.0
+    DESCRIPTION "C++17 library for Microsoft Word DOCX files (Google C++ Style)"
     HOMEPAGE_URL "https://github.com/lonlng/cdocx"
     LANGUAGES CXX C
 )
@@ -358,7 +358,11 @@ add_custom_target(clean-all
     COMMENT "Cleaning all build artifacts"
 )
 
-# Format target
+# ----------------------------------------------------------------------------
+# Code Quality Tools - Clang-Format & Clang-Tidy
+# ----------------------------------------------------------------------------
+
+# ---- Clang-Format ---------------------------------------------------------
 find_program(CLANG_FORMAT clang-format)
 if(CLANG_FORMAT)
     file(GLOB_RECURSE FORMAT_SOURCES
@@ -369,6 +373,78 @@ if(CLANG_FORMAT)
         COMMAND ${CLANG_FORMAT} -i ${FORMAT_SOURCES}
         COMMENT "Formatting source code with clang-format"
     )
+    add_custom_target(format-check
+        COMMAND ${CLANG_FORMAT} --dry-run --Werror ${FORMAT_SOURCES}
+        COMMENT "Checking code formatting"
+    )
+    message(STATUS "[Tools] clang-format found: ${CLANG_FORMAT}")
+else()
+    message(STATUS "[Tools] clang-format not found")
+endif()
+
+# ---- Clang-Tidy -------------------------------------------------------------
+find_program(CLANG_TIDY clang-tidy)
+if(CLANG_TIDY)
+    # Collect source files for analysis
+    file(GLOB_RECURSE TIDY_SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+    )
+    
+    # Get compile commands directory
+    set(TIDY_COMPILE_COMMANDS_DIR ${CMAKE_BINARY_DIR})
+    
+    # Create tidy target (analysis only)
+    add_custom_target(tidy
+        COMMAND ${CLANG_TIDY}
+            -p ${TIDY_COMPILE_COMMANDS_DIR}
+            --config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy
+            ${TIDY_SOURCES}
+        COMMENT "Running clang-tidy static analysis"
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+    
+    # Create tidy-fix target (auto-fix issues)
+    add_custom_target(tidy-fix
+        COMMAND ${CLANG_TIDY}
+            -p ${TIDY_COMPILE_COMMANDS_DIR}
+            --config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy
+            --fix
+            --fix-errors
+            ${TIDY_SOURCES}
+        COMMENT "Running clang-tidy with auto-fix"
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+    
+    # Optional: Enable tidy checks during compilation (for CI)
+    option(ENABLE_CLANG_TIDY_DURING_BUILD "Run clang-tidy during compilation" OFF)
+    if(ENABLE_CLANG_TIDY_DURING_BUILD)
+        set(CMAKE_CXX_CLANG_TIDY 
+            ${CLANG_TIDY}
+            -p ${TIDY_COMPILE_COMMANDS_DIR}
+            --config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy
+        )
+    endif()
+    
+    message(STATUS "[Tools] clang-tidy found: ${CLANG_TIDY}")
+    message(STATUS "[Tools] clang-tidy targets: tidy, tidy-fix")
+    if(ENABLE_CLANG_TIDY_DURING_BUILD)
+        message(STATUS "[Tools] clang-tidy during build: ENABLED")
+    endif()
+else()
+    message(STATUS "[Tools] clang-tidy not found")
+endif()
+
+# ---- Code Quality Summary Target --------------------------------------------
+if(CLANG_FORMAT OR CLANG_TIDY)
+    add_custom_target(code-quality
+        COMMENT "Running all code quality checks"
+    )
+    if(CLANG_FORMAT)
+        add_dependencies(code-quality format-check)
+    endif()
+    if(CLANG_TIDY)
+        add_dependencies(code-quality tidy)
+    endif()
 endif()
 
 # ----------------------------------------------------------------------------

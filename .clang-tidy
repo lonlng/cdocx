@@ -1,0 +1,261 @@
+# ============================================================================
+# CDocx - C++ Linting Configuration (Google-based with customizations)
+# ============================================================================
+# Based on: Google C++ Style Guide
+# Customizations:
+#   - Allows #pragma once (disabled llvm-header-guard check)
+#   - 4-space indentation compatible
+#
+# Naming conventions (Google style):
+#   - Types: CamelCase
+#   - Functions/Methods: CamelCase
+#   - Variables: snake_case
+#   - Members: snake_case_
+#   - Constants: kCamelCase
+#
+# Usage:
+#   clang-tidy src/*.cpp -- -Iinclude -std=c++17
+#   cmake --build . --target tidy
+# ============================================================================
+
+---
+Checks: >
+  -*,
+  
+  # ==========================================================================
+  # Google C++ Style Guide (Primary)
+  # ==========================================================================
+  google-*,
+  -google-readability-todo,
+  -google-runtime-int,
+  -google-build-namespaces,    # Allow using directives in cc files
+  
+  # ==========================================================================
+  # Modern C++ (C++11/14/17 improvements)
+  # ==========================================================================
+  modernize-*,
+  -modernize-avoid-c-arrays,
+  -modernize-use-trailing-return-type,
+  -modernize-use-nodiscard,
+  -modernize-concat-nested-namespaces,
+  
+  # ==========================================================================
+  # C++ Core Guidelines
+  # ==========================================================================
+  cppcoreguidelines-*,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-avoid-c-arrays,
+  -cppcoreguidelines-special-member-functions,
+  -cppcoreguidelines-explicit-virtual-functions,
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  
+  # ==========================================================================
+  # Performance optimizations
+  # ==========================================================================
+  performance-*,
+  -performance-avoid-endl,
+  
+  # ==========================================================================
+  # Readability
+  # ==========================================================================
+  readability-*,
+  -readability-identifier-length,
+  -readability-named-parameter,
+  -readability-magic-numbers,
+  -readability-braces-around-statements,
+  -readability-uppercase-literal-suffix,
+  -readability-else-after-return,
+  -readability-implicit-bool-conversion,
+  -readability-simplify-boolean-expr,
+  -readability-container-data-pointer,
+  -readability-convert-member-functions-to-static,
+  -readability-redundant-access-specifiers,
+  -readability-function-cognitive-complexity,
+  
+  # ==========================================================================
+  # Bug prevention
+  # ==========================================================================
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-exception-escape,
+  -bugprone-lambda-function-name,
+  -bugprone-unchecked-optional-access,
+  
+  # ==========================================================================
+  # Security (CERT guidelines)
+  # ==========================================================================
+  cert-*,
+  -cert-err58-cpp,
+  -cert-msc32-c,
+  -cert-msc51-cpp,
+  
+  # ==========================================================================
+  # Clang static analyzer
+  # ==========================================================================
+  clang-analyzer-*,
+  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
+  
+  # ==========================================================================
+  # Miscellaneous
+  # ==========================================================================
+  misc-*,
+  -misc-include-cleaner,
+  -misc-non-private-member-variables-in-classes,
+  -misc-no-recursion,
+  -misc-use-anonymous-namespace,
+  
+  # ==========================================================================
+  # Portability
+  # ==========================================================================
+  portability-*,
+  
+  # ==========================================================================
+  # Disabled: Not applicable
+  # ==========================================================================
+  -abseil-*,
+  -fuchsia-*,
+  -llvm-header-guard,          # We use #pragma once
+  -llvm-include-order,         # clang-format handles this
+
+# ============================================================================
+# Check-specific configuration (Google Style with customizations)
+# ============================================================================
+CheckOptions:
+  # --------------------------------------------------------------------------
+  # Google Naming Conventions
+  # --------------------------------------------------------------------------
+  # Types: CamelCase (MyClass, MyStruct, MyEnum)
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.TemplateParameterCase
+    value: CamelCase
+  - key: readability-identifier-naming.TypeAliasCase
+    value: CamelCase
+  - key: readability-identifier-naming.TypedefCase
+    value: CamelCase
+  - key: readability-identifier-naming.UnionCase
+    value: CamelCase
+  
+  # Variables: snake_case (my_variable)
+  - key: readability-identifier-naming.VariableCase
+    value: lower_case
+  - key: readability-identifier-naming.ParameterCase
+    value: lower_case
+  - key: readability-identifier-naming.GlobalVariableCase
+    value: lower_case
+  
+  # Class members: snake_case_ (trailing underscore)
+  - key: readability-identifier-naming.MemberCase
+    value: lower_case
+  - key: readability-identifier-naming.MemberSuffix
+    value: _
+  - key: readability-identifier-naming.PrivateMemberCase
+    value: lower_case
+  - key: readability-identifier-naming.PrivateMemberSuffix
+    value: _
+  - key: readability-identifier-naming.ProtectedMemberCase
+    value: lower_case
+  - key: readability-identifier-naming.ProtectedMemberSuffix
+    value: _
+  - key: readability-identifier-naming.ClassMemberCase
+    value: lower_case
+  - key: readability-identifier-naming.ClassMemberSuffix
+    value: _
+  
+  # Constants: kCamelCase (kMaxSize)
+  - key: readability-identifier-naming.ConstantCase
+    value: camelBack
+  - key: readability-identifier-naming.ConstantPrefix
+    value: k
+  - key: readability-identifier-naming.ConstexprVariableCase
+    value: camelBack
+  - key: readability-identifier-naming.ConstexprVariablePrefix
+    value: k
+  - key: readability-identifier-naming.StaticConstantCase
+    value: camelBack
+  - key: readability-identifier-naming.StaticConstantPrefix
+    value: k
+  
+  # Functions: CamelCase (MyFunction)
+  - key: readability-identifier-naming.FunctionCase
+    value: CamelCase
+  - key: readability-identifier-naming.MethodCase
+    value: CamelCase
+  
+  # Macros: UPPER_CASE
+  - key: readability-identifier-naming.MacroDefinitionCase
+    value: UPPER_CASE
+  
+  # Namespaces: lower_case
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case
+  
+  # --------------------------------------------------------------------------
+  # Function complexity
+  # --------------------------------------------------------------------------
+  - key: readability-function-cognitive-complexity.Threshold
+    value: 25
+  - key: readability-function-cognitive-complexity.IgnoreMacros
+    value: true
+  
+  # --------------------------------------------------------------------------
+  # Modernize settings
+  # --------------------------------------------------------------------------
+  - key: modernize-loop-convert.MaxCopySize
+    value: 16
+  - key: modernize-loop-convert.MinConfidence
+    value: reasonable
+  - key: modernize-loop-convert.NamingStyle
+    value: lower_case
+  - key: modernize-pass-by-value.IncludeStyle
+    value: google
+  - key: modernize-use-nullptr.NullMacros
+    value: 'NULL'
+  
+  # --------------------------------------------------------------------------
+  # Special member functions
+  # --------------------------------------------------------------------------
+  - key: cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
+    value: true
+  - key: cppcoreguidelines-special-member-functions.AllowMissingMoveFunctions
+    value: false
+  
+  # --------------------------------------------------------------------------
+  # Magic numbers (relaxed for document processing)
+  # --------------------------------------------------------------------------
+  - key: cppcoreguidelines-avoid-magic-numbers.IgnoreAllFloatingPointValues
+    value: true
+  - key: cppcoreguidelines-avoid-magic-numbers.IgnoreBitFieldsWidths
+    value: true
+  - key: readability-magic-numbers.IgnoreAllFloatingPointValues
+    value: true
+  - key: readability-magic-numbers.IgnoreBitFieldsWidths
+    value: true
+
+# ============================================================================
+# File patterns
+# ============================================================================
+HeaderFilterRegex: 'include/.*|src/.*'
+ExcludeHeaderFilterRegex: 'thirdparty/.*|build/.*|_deps/.*'
+
+# ============================================================================
+# Analysis settings
+# ============================================================================
+AnalyzeTemporaryDtors: true
+FormatStyle: file
+User: cdocx
+SystemHeaders: false
+
+# ============================================================================
+# Warnings as errors (enable in CI with care)
+# ============================================================================
+# WarningsAsErrors: 'google-*,clang-analyzer-*,bugprone-*,cert-*'
+---

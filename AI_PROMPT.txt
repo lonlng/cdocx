@@ -1,0 +1,346 @@
+===========================================================================
+CDocx AI CODE GENERATION PROMPT - PROJECT CODING STANDARDS
+===========================================================================
+
+ROLE: You generate code for the CDocx C++17 DOCX library.
+Follow these rules EXACTLY:
+
+---------------------------------------------------------------------------
+CODE QUALITY TOOLS (REQUIRED)
+---------------------------------------------------------------------------
+All code MUST pass:
+- clang-format: Code formatting (see .clang-format)
+- clang-tidy: Static analysis (see .clang-tidy)
+
+Before submitting code:
+  clang-format -i src/*.cpp include/*.h include/**/*.h
+  cmake --build build --target tidy
+
+See docs/CODE_QUALITY.md for detailed usage.
+
+---------------------------------------------------------------------------
+PROJECT OVERVIEW
+---------------------------------------------------------------------------
+- Language: C++17 (C99 for zip component)
+- Library: CDocx - Microsoft Word DOCX manipulation library
+- Version: 0.5.0
+- Namespace: cdocx
+- Build System: CMake 3.14+
+- License: MIT
+
+---------------------------------------------------------------------------
+CODING STANDARDS (Google-based with customizations)
+---------------------------------------------------------------------------
+
+BASED ON: Google C++ Style Guide
+CUSTOMIZATIONS:
+  - Indent: 4 spaces (instead of Google's 2)
+  - Column limit: 100 (instead of Google's 80)
+  - Header guards: #pragma once (allowed)
+
+NAMING CONVENTIONS (Google style):
+  Types:           CamelCase       (Document, Paragraph, NumberStyle)
+  Functions:       CamelCase       (GetText(), SetValue(), IsOpen())
+  Methods:         CamelCase       (AddRun(), Save(), Open())
+  Variables:       snake_case      (my_variable, file_path)
+  Class Members:   snake_case_     (impl_, filepath_, is_open_)
+  Constants:       kCamelCase      (kMaxBufferSize, kBold, kItalic)
+  Macros:          UPPER_CASE      (CDOCX_API, DISALLOW_COPY_AND_ASSIGN)
+  Files:           snake_case      (document.h, base_content.cpp)
+  Namespaces:      lower_case      (cdocx)
+  Directories:     XX_description  (01_basic_read, 02_iterator)
+
+Private members ALWAYS have trailing underscore: member_variable_
+
+FORMATTING:
+  Indent:          4 spaces
+  Tab Width:       4 spaces (UseTab: Never)
+  Column Limit:    100 characters
+  Braces:          Attach (K&R style)
+  Line Endings:    LF
+
+---------------------------------------------------------------------------
+HEADER FILES
+---------------------------------------------------------------------------
+Use #pragma once for header guards:
+  #pragma once
+
+Include order (Google style):
+  1. Related header (e.g., document.cpp includes document.h first)
+  2. C system headers (<unistd.h>, <sys/types.h>)
+  3. C++ standard library headers (<string>, <vector>)
+  4. Third-party headers (<pugixml.hpp>)
+  5. Project headers ("cdocx/document.h")
+
+Each group separated by blank line.
+
+---------------------------------------------------------------------------
+ARCHITECTURE PATTERNS
+---------------------------------------------------------------------------
+
+1. PIMPL IDIOM (REQUIRED for public classes):
+   // Header (document.h)
+   class Document {
+   private:
+       std::unique_ptr<DocumentImpl> impl_;
+   public:
+       // Public API only
+       void Open();
+       bool IsOpen() const;
+   };
+   
+   // Implementation (detail/impl.h)
+   class DocumentImpl {
+       // All implementation details
+   };
+
+2. ITERATOR PATTERN:
+   // Traditional iteration
+   for (auto p = doc.Paragraphs(); p.HasNext(); p.Next()) { ... }
+   
+   // Range-based for (C++11)
+   for (auto& p : doc.Paragraphs()) { ... }
+
+3. DISALLOW_COPY_AND_ASSIGN macro:
+   class MyClass {
+   public:
+       MyClass();
+   private:
+       DISALLOW_COPY_AND_ASSIGN(MyClass);
+   };
+
+---------------------------------------------------------------------------
+DOXYGEN COMMENTS (REQUIRED)
+---------------------------------------------------------------------------
+
+File header:
+  /**
+   * @file document.h
+   * @brief Brief description
+   * @details Detailed description
+   * @author lonlng
+   * @copyright MIT License
+   * @date 2026
+   * @version 0.5.0
+   */
+
+Classes:
+  /**
+   * @brief Brief description
+   * @details Detailed description
+   */
+  class MyClass {
+   public:
+       // ...
+   };
+
+Functions/Methods:
+  /**
+   * @brief Brief description
+   * @param param_name Description
+   * @return Description of return value
+   * @note Important note
+   * @since 0.5.0
+   */
+  ReturnType MyMethod(ParamType param_name);
+
+---------------------------------------------------------------------------
+EXAMPLE CODE REQUIREMENTS
+---------------------------------------------------------------------------
+
+Example directory structure:
+  examples/XX_description/
+  ├── main.cpp
+  ├── CMakeLists.txt
+  └── data/
+      └── XX_sample.docx
+
+Example header format:
+  /**
+   * Example XX: Name
+   * Demonstrates:
+   * 1. Feature 1
+   * 2. Feature 2
+   * Input: XX_sample.docx
+   */
+
+Error handling pattern:
+  cdocx::Document doc("file.docx");
+  doc.Open();
+  if (!doc.IsOpen()) {
+      std::cerr << "Failed to open: file.docx" << std::endl;
+      return 1;
+  }
+
+Resource paths:
+  std::string path = "data/01_sample.docx";
+
+---------------------------------------------------------------------------
+TEST CODE REQUIREMENTS
+---------------------------------------------------------------------------
+
+Test directory structure:
+  test/XX_description/
+  ├── XX_description_tests.cpp
+  ├── CMakeLists.txt (optional)
+  └── data/
+
+Test file naming: XX_description_tests.cpp
+
+Using Google Test:
+  #include <gtest/gtest.h>
+  #include <cdocx.h>
+  
+  TEST(TestSuiteName, TestName) {
+      cdocx::Document doc("data/file.docx");
+      doc.Open();
+      ASSERT_TRUE(doc.IsOpen());
+      // Test code
+  }
+  
+  int main(int argc, char **argv) {
+      ::testing::InitGoogleTest(&argc, argv);
+      return RUN_ALL_TESTS();
+  }
+
+---------------------------------------------------------------------------
+CMAKE TEMPLATES
+---------------------------------------------------------------------------
+
+Example CMakeLists.txt:
+  cmake_minimum_required(VERSION 3.14)
+  include(CDocxHelpers)
+  add_cdocx_example(XX_description main.cpp)
+
+Test CMakeLists.txt:
+  cmake_minimum_required(VERSION 3.14)
+  include(CDocxHelpers)
+  add_cdocx_test(XX_tests XX_tests.cpp
+      DATA test_file.docx
+      LABELS "core"
+      TIMEOUT 30)
+
+---------------------------------------------------------------------------
+DEPENDENCIES
+---------------------------------------------------------------------------
+- pugixml (v1.15) - XML parsing
+- zip (v0.3.6) - ZIP archive handling
+- Google Test (v1.17.0) - Testing framework
+
+---------------------------------------------------------------------------
+CORE API REFERENCE
+---------------------------------------------------------------------------
+
+Document operations:
+  cdocx::Document doc("file.docx");
+  doc.Open();
+  doc.Save();
+  doc.Save("new.docx");
+  bool is_open = doc.IsOpen();
+
+Content access:
+  Paragraph& paragraphs = doc.Paragraphs();
+  Table& tables = doc.Tables();
+
+Text formatting flags:
+  cdocx::kBold | cdocx::kItalic | cdocx::kUnderline
+  cdocx::kStrikethrough | cdocx::kSuperscript | cdocx::kSubscript
+
+Template replacement:
+  cdocx::Template tmpl(&doc);
+  tmpl.Set("key", "value");
+  tmpl.ReplaceAll();
+
+XML Parts API:
+  pugi::xml_document* part = doc.GetXmlPart("word/styles.xml");
+  pugi::xml_document* styles = doc.GetStyles();
+  pugi::xml_document* numbering = doc.GetNumbering();
+
+Media management:
+  doc.AddMedia("path/to/image.jpg");
+  doc.AddMediaFromMemory("image.png", data, "image/png");
+
+Section support (v0.5.0):
+  Section* section = doc.AddSection();
+  SectionCollection sections = doc.Sections();
+
+Numbering/Lists (v0.5.0):
+  NumberingId bullet = doc.AddBulletedListDefinition();
+  NumberingId numbered = doc.AddNumberedListDefinition();
+
+---------------------------------------------------------------------------
+VALIDATION CHECKLIST FOR NEW CODE
+---------------------------------------------------------------------------
+[ ] File uses #pragma once
+[ ] File has Doxygen header with @file, @brief, @version
+[ ] Indentation is 4 spaces
+[ ] Line length <= 100 characters
+[ ] Types use CamelCase (MyClass)
+[ ] Functions/Methods use CamelCase (MyFunction)
+[ ] Variables use snake_case (my_variable)
+[ ] Private members have trailing underscore (member_)
+[ ] Constants use kCamelCase (kConstantName)
+[ ] Public classes use PIMPL idiom
+[ ] Example: XX_description format directory
+[ ] Test: XX_description_tests.cpp naming
+[ ] Error handling checks IsOpen()
+[ ] NO 0-byte resource files
+[ ] Resource names match directory number
+[ ] Code passes clang-format (4-space, 100-col)
+[ ] Code passes clang-tidy (Google naming)
+[ ] Include order: related -> C -> C++ -> third-party -> project
+
+---------------------------------------------------------------------------
+PROHIBITED
+---------------------------------------------------------------------------
+- NO 2-space indentation (use 4)
+- NO snake_case function names (use CamelCase)
+- NO UPPER_CASE constants (use kCamelCase)
+- NO raw pointers without ownership semantics
+- NO exposing implementation details in public headers
+- NO missing error handling for file operations
+- NO inconsistent naming conventions
+- NO 0-byte test resource files
+- NO hardcoded absolute paths
+- NO git mutations without explicit permission
+
+---------------------------------------------------------------------------
+CODE QUALITY COMMANDS
+---------------------------------------------------------------------------
+
+Format code:
+  clang-format -i src/*.cpp include/*.h include/**/*.h
+  cmake --build build --target format
+
+Check formatting (CI):
+  cmake --build build --target format-check
+
+Static analysis:
+  cmake --build build --target tidy
+
+Auto-fix issues:
+  cmake --build build --target tidy-fix
+
+Run all checks:
+  ./scripts/code-quality.sh all      # Linux/macOS
+  scripts\code-quality.bat all       # Windows
+
+See docs/CODE_QUALITY.md for full documentation.
+
+---------------------------------------------------------------------------
+BUILD COMMANDS REFERENCE
+---------------------------------------------------------------------------
+
+Windows (Visual Studio):
+  mkdir build && cd build
+  cmake .. -G "Visual Studio 17 2022" -A x64
+  cmake --build . --config Release --parallel
+  ctest -C Release --output-on-failure
+
+Linux/macOS:
+  mkdir build && cd build
+  cmake .. -DCMAKE_BUILD_TYPE=Release
+  cmake --build . --parallel
+  ctest --output-on-failure
+
+===========================================================================
