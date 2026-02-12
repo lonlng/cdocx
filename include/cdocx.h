@@ -1,124 +1,140 @@
 /**
  * @file cdocx.h
- * @brief Main header file for CDocx library
- * @details CDocx is a C++17 library for creating, reading, and writing
- *          Microsoft Office Word (.docx) files. This header includes
- *          all public API components.
+ * @brief CDocx v2.0 - Main aggregated header
+ * @version 2.0.0
  * 
- * @author lonlng
- * @copyright MIT License
- * @date 2026
- * @version 0.2.0
+ * CDocx is a modern C++17 library for creating, reading, and writing
+ * Microsoft Office Word (.docx) files.
  * 
- * @section Features
- * - Create and modify DOCX files
- * - Read and write paragraphs with formatted text
- * - Work with tables
- * - Manage images and media files
- * - Template-based placeholder replacement
- * - Document insertion and merging
- * - Advanced features: bookmarks, DocumentBuilder, search/replace
+ * Usage:
+ *   #include <cdocx.h>
+ *   using namespace cdocx;
  * 
- * @section Example
- * @code
- * #include <cdocx.h>
- * #include <iostream>
- * 
- * int main() {
- *     // Create a new document
- *     cdocx::Document doc;
- *     doc.create_empty("output.docx");
- *     
- *     // Add content
- *     auto para = doc.paragraphs();
- *     para.add_run("Hello, ", cdocx::bold);
- *     para.add_run("World!", cdocx::italic);
- *     
- *     // Save
- *     doc.save();
- *     return 0;
- * }
- * @endcode
- * 
- * @section Links
- * - Repository: https://github.com/lonlng/CDocx
- * - Issues: https://github.com/lonlng/CDocx/issues
+ *   // Create a new document
+ *   auto doc = CDocx::create_document();
+ *   
+ *   // Add content using fluent API
+ *   doc->add_paragraph("Hello, World!")
+ *      ->add_run(" Bold text", Font().set_bold(true));
+ *   
+ *   // Save the document
+ *   doc->save("output.docx");
  */
 
 #pragma once
 
-// ============================================================================
-// CDocx Library - Main Include
-// ============================================================================
-
-/**
- * @defgroup Core Core Components
- * Basic document structure and content classes
- */
-
-/**
- * @defgroup Iterators Iterator Support
- * Classes for traversing document elements
- */
-
-/**
- * @defgroup Advanced Advanced Features
- * Extended functionality including bookmarks, builders, and search
- */
-
-/**
- * @defgroup Utilities Utility Classes
- * Helper classes and functions
- */
-
-// Include all public headers
-#include <cdocx/fwd.h>              ///< @ingroup Core Forward declarations
-#include <cdocx/constants.h>        ///< @ingroup Core Formatting flags
-#include <cdocx/iterator.h>         ///< @ingroup Iterators Iterator classes
-#include <cdocx/format_context.h>   ///< @ingroup Core Text formatting context
-#include <cdocx/properties.h>       ///< @ingroup Core Property structures (v0.4.0)
-#include <cdocx/numbering.h>        ///< @ingroup Core List/Numbering system (v0.5.0)
-#include <cdocx/section.h>          ///< @ingroup Core Section support (v0.5.0)
-#include <cdocx/base.h>             ///< @ingroup Core Base content classes
-#include <cdocx/document.h>   ///< @ingroup Core Document class
-#include <cdocx/template.h>   ///< @ingroup Utilities Template replacement
-#include <cdocx/inserter.h>   ///< @ingroup Utilities Document insertion
-#include <cdocx/advanced.h>           ///< @ingroup Advanced Advanced features
-#include <cdocx/bookmark_replacer.h>  ///< @ingroup Advanced Bookmark replacement API
-#include <cdocx/caption_generator.h>  ///< @ingroup Advanced Figure caption generation
-#include <cdocx/table_builder.h>      ///< @ingroup Advanced Table building (v0.5.0)
-
-// ============================================================================
-// Version Information
-// ============================================================================
-
-/**
- * @brief CDocx major version
- */
-#define CDOCX_VERSION_MAJOR 0
-
-/**
- * @brief CDocx minor version
- */
-#define CDOCX_VERSION_MINOR 5
-
-/**
- * @brief CDocx patch version
- */
+// Version information
+#define CDOCX_VERSION_MAJOR 2
+#define CDOCX_VERSION_MINOR 0
 #define CDOCX_VERSION_PATCH 0
-
-/**
- * @brief CDocx version string
- */
-#define CDOCX_VERSION "0.5.0"
+#define CDOCX_VERSION "2.0.0"
 
 // ============================================================================
-// Namespace Documentation
+// Core Headers
 // ============================================================================
 
+#include "cdocx/enums.h"
+#include "cdocx/format.h"
+#include "cdocx/node.h"
+#include "cdocx/document.h"
+#include "cdocx/paragraph.h"
+#include "cdocx/table.h"
+
+// ============================================================================
+// Convenience / Aggregated Header
+// ============================================================================
+
+namespace cdocx {
+
+// Forward declarations for builder classes
+class DocumentBuilder;
+class ParagraphBuilder;
+class TableBuilder;
+
 /**
- * @namespace cdocx
- * @brief Main namespace for all CDocx library components
- * @details All public classes, functions, and constants are defined
- *          within the cdocx namespace.
+ * @brief Main CDocx API entry point
+ * 
+ * Provides static factory methods for creating documents and builders.
  */
+class CDocx {
+public:
+    // ========================================================================
+    // Document Factory Methods
+    // ========================================================================
+    
+    /**
+     * @brief Create a new empty document
+     * @return Shared pointer to the new document
+     */
+    static std::shared_ptr<Document> create_document();
+    
+    /**
+     * @brief Load a document from file
+     * @param path Path to the DOCX file
+     * @return Shared pointer to the loaded document, or nullptr if failed
+     */
+    static std::shared_ptr<Document> load_document(const std::string& path);
+    
+    /**
+     * @brief Save a document to file
+     * @param doc Document to save
+     * @param path Path where to save the document
+     * @return true if successful, false otherwise
+     */
+    static bool save_document(std::shared_ptr<Document> doc, const std::string& path);
+    
+    // ========================================================================
+    // Builder Factory Methods (Fluent API)
+    // ========================================================================
+    
+    /**
+     * @brief Create a new document builder
+     * @return Shared pointer to a DocumentBuilder
+     */
+    static std::shared_ptr<DocumentBuilder> document();
+    
+    /**
+     * @brief Create a new paragraph builder
+     * @return Shared pointer to a ParagraphBuilder
+     */
+    static std::shared_ptr<ParagraphBuilder> paragraph();
+    
+    /**
+     * @brief Create a new paragraph builder with initial text
+     * @param text Initial text for the paragraph
+     * @return Shared pointer to a ParagraphBuilder
+     */
+    static std::shared_ptr<ParagraphBuilder> paragraph(const std::string& text);
+    
+    /**
+     * @brief Create a new table builder
+     * @return Shared pointer to a TableBuilder
+     */
+    static std::shared_ptr<TableBuilder> table();
+    
+    /**
+     * @brief Create a new table builder with specified dimensions
+     * @param rows Number of rows
+     * @param columns Number of columns
+     * @return Shared pointer to a TableBuilder
+     */
+    static std::shared_ptr<TableBuilder> table(size_t rows, size_t columns);
+    
+    // ========================================================================
+    // Version Information
+    // ========================================================================
+    
+    /**
+     * @brief Get the library version string
+     * @return Version string (e.g., "2.0.0")
+     */
+    static std::string version();
+    
+    /**
+     * @brief Get the full library version string
+     * @return Full version string (e.g., "CDocx v2.0.0")
+     */
+    static std::string version_string();
+};
+
+} // namespace cdocx

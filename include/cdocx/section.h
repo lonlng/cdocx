@@ -31,8 +31,10 @@
 #pragma once
 
 #include <cdocx/fwd.h>
+#include <cdocx/enums.h>
 #include <cdocx/properties.h>
 #include <cdocx/base.h>
+#include <cdocx/table.h>
 #include <memory>
 #include <list>
 
@@ -42,15 +44,6 @@ namespace cdocx {
 class Section;
 class SectionIterator;
 using SectionPointer = std::shared_ptr<Section>;
-
-/**
- * @brief Header/Footer type enumeration
- */
-enum class HeaderFooterType {
-    Default,    ///< Default header/footer
-    First,      ///< First page only
-    Even        ///< Even pages only
-};
 
 /**
  * @brief Header/Footer reference structure

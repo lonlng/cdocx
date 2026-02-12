@@ -13,6 +13,7 @@
 
 #include <cdocx/document.h>
 #include <cdocx/advanced.h>
+#include <cdocx/table.h>
 #include <detail/impl.h>
 
 #include <algorithm>

@@ -11,6 +11,7 @@
 
 #include <cdocx/inserter.h>
 #include <cdocx/document.h>
+#include <cdocx/paragraph.h>
 
 namespace cdocx {
 

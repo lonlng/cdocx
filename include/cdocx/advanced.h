@@ -748,6 +748,34 @@ public:
  * @since 0.2.0
  */
 class DocumentBuilder {
+
+public:
+    DocumentBuilder();
+    ~DocumentBuilder();
+    
+    // Document properties
+    DocumentBuilder& with_title(const std::string& title);
+    DocumentBuilder& with_author(const std::string& author);
+    DocumentBuilder& with_subject(const std::string& subject);
+    DocumentBuilder& with_keywords(const std::string& keywords);
+    
+    // Page setup
+    DocumentBuilder& with_page_size(double width, double height);
+    DocumentBuilder& with_margins(double top, double bottom, double left, double right);
+    DocumentBuilder& with_orientation(PageOrientation orientation);
+    
+    // Content
+    DocumentBuilder& add_paragraph(std::shared_ptr<Paragraph> paragraph);
+    DocumentBuilder& add_paragraph(const std::string& text);
+    DocumentBuilder& add_table(std::shared_ptr<Table> table);
+    DocumentBuilder& add_table(size_t rows, size_t columns);
+    
+    // Builder
+    std::shared_ptr<Document> build();
+    
+private:
+    std::shared_ptr<Document> doc_sptr;
+
 private:
     Document* doc_;                    ///< Target document
     pugi::xml_node current_node_;      ///< Current position node

@@ -5,6 +5,8 @@
 
 #include <cdocx/section.h>
 #include <cdocx/document.h>
+#include <cdocx/paragraph.h>
+#include <cdocx/table.h>
 #include <detail/impl.h>
 #include <sstream>
 

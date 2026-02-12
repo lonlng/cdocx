@@ -12,6 +12,7 @@
 
 #include <cdocx/template.h>
 #include <cdocx/document.h>
+#include <cdocx/table.h>
 
 namespace cdocx {
 

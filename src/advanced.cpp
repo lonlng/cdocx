@@ -12,6 +12,7 @@
 
 #include <cdocx/advanced.h>
 #include <cdocx/document.h>
+#include <cdocx/paragraph.h>
 #include <algorithm>
 #include <cctype>
 #include <fstream>

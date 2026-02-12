@@ -7,6 +7,7 @@
 #include <cdocx/properties.h>
 #include <cdocx/base.h>
 #include <cdocx/format_context.h>
+#include <cdocx/paragraph.h>
 
 #include <cstring>
 
