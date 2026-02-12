@@ -4,18 +4,22 @@
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://isocpp.org/)
 [![CMake](https://img.shields.io/badge/CMake-3.14+-green.svg)](https://cmake.org/)
 
-C++17 library for creating, reading, and writing Microsoft Office Word (.docx) files.
+**CDocx** is a modern C++17 library for creating, reading, and writing Microsoft Office Word (.docx) files. It provides a clean, iterator-based API with comprehensive document manipulation capabilities.
 
 ## Features
 
-- **📄 Document Operations**: Read, write, and edit DOCX files with complete structure support
-- **🔄 Template System**: Placeholder replacement with `{{key}}` pattern
+- **📄 Complete Document Operations**: Read, write, create DOCX files with full structure preservation
+- **🔄 Template System**: Placeholder replacement with customizable patterns (`{{key}}`)
 - **📑 Document Insertion**: Merge documents at specific positions
-- **🔧 XML Parts API**: Direct access to all DOCX internal components
-- **🖼️ Media Management**: Add, delete, replace images in `word/media/`
-- **🌳 Tree-Based Storage**: Internal tree structure mirrors ZIP organization
+- **📐 Section Support**: Page setup, margins, orientation (v0.5.0+)
+- **📋 List/Numbering**: Bulleted, numbered, and Chinese numbering lists (v0.5.0+)
+- **🧩 Node Hierarchy**: Unified document model with Visitor pattern (v0.6.0+)
+- **🎨 Rich Formatting**: Paragraph and character formatting with colors, borders, shading (v0.6.0+)
+- **🔖 Bookmark Management**: Replace bookmarks with text or images
+- **🖼️ Media Management**: Add, delete, replace images
+- **🌳 XML Parts API**: Direct access to all DOCX internal components
 - **⚡ Modern C++17**: Iterator-based API with range-based for loop support
-- **✅ Cross-Platform**: Linux, Windows (MSVC/MinGW), macOS support
+- **✅ Cross-Platform**: Linux, Windows (MSVC/MinGW), macOS
 
 ## Quick Start
 
@@ -25,49 +29,34 @@ C++17 library for creating, reading, and writing Microsoft Office Word (.docx) f
 - C++17 compiler (GCC 7+, Clang 5+, MSVC 2017+)
 - Git
 
-### Build (Linux/macOS)
+### Build
 
+**Linux/macOS:**
 ```bash
 git clone https://github.com/lonlng/CDocx.git
 cd CDocx
-
-# Using the build script
 ./scripts/build-linux.sh Release
-
-# Or manually
-mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . --parallel
-ctest --output-on-failure
 ```
 
-### Build (Windows)
-
+**Windows:**
 ```cmd
 git clone https://github.com/lonlng/CDocx.git
 cd CDocx
-
-:: Using the build script (run in Visual Studio Developer Command Prompt)
 scripts\build-windows.bat Release x64
-
-:: Or manually
-mkdir build && cd build
-cmake .. -G "Visual Studio 17 2022" -A x64
-cmake --build . --config Release --parallel
-ctest -C Release --output-on-failure
 ```
 
-### Example
+### Example Usage
 
 ```cpp
 #include <cdocx.h>
 #include <iostream>
 
 int main() {
-    // Read document
-    cdocx::Document doc("file.docx");
+    // Read existing document
+    cdocx::Document doc("input.docx");
     doc.open();
     
+    // Iterate through paragraphs
     for (auto& p : doc.paragraphs()) {
         for (auto& r : p.runs()) {
             std::cout << r.get_text() << std::endl;
@@ -77,6 +66,7 @@ int main() {
     // Template replacement
     cdocx::Template tmpl(&doc);
     tmpl.set("name", "John Doe");
+    tmpl.set("date", "2024-01-15");
     tmpl.replace_all();
     
     doc.save("output.docx");
@@ -84,146 +74,150 @@ int main() {
 }
 ```
 
-## Cross-Platform Build Guide
-
-### Linux
-
-**Ubuntu/Debian:**
-```bash
-sudo apt-get update
-sudo apt-get install -y cmake g++ git ninja-build
-./scripts/build-linux.sh Release
-```
-
-**Fedora/RHEL:**
-```bash
-sudo dnf install cmake gcc-c++ git ninja-build
-./scripts/build-linux.sh Release
-```
-
-**Arch:**
-```bash
-sudo pacman -S cmake gcc git ninja
-./scripts/build-linux.sh Release
-```
-
-### Windows
-
-**Visual Studio 2019/2022:**
-```cmd
-:: Open "x64 Native Tools Command Prompt for VS"
-cd CDocx
-scripts\build-windows.bat Release x64
-```
-
-**MinGW-w64:**
-```cmd
-cd CDocx
-mkdir build && cd build
-cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
-cmake --build . --parallel
-```
-
-### macOS
-
-```bash
-brew install cmake ninja
-./scripts/build-linux.sh Release
-```
-
-## Project Structure
-
-```
-cdocx/
-├── include/
-│   ├── cdocx.h              # Main public API header
-│   ├── cdocx/               # Modular headers
-│   │   ├── fwd.h            # Forward declarations
-│   │   ├── constants.h      # Formatting flags
-│   │   ├── iterator.h       # Iterator helpers
-│   │   ├── base.h           # Run, Paragraph, Table classes
-│   │   ├── document.h       # Document class
-│   │   ├── template.h       # Template replacement
-│   │   ├── inserter.h       # Document insertion
-│   │   └── advanced.h       # Bookmark, DocumentBuilder, Search
-│   └── detail/
-│       └── impl.h           # Private implementation (PIMPL)
-├── src/
-│   ├── base_content.cpp     # Content classes implementation
-│   ├── document.cpp         # Document class implementation
-│   ├── template.cpp         # Template implementation
-│   ├── inserter.cpp         # Document inserter implementation
-│   ├── tree.cpp             # Tree structure implementation
-│   ├── impl.cpp             # DocumentImpl implementation
-│   └── advanced.cpp         # Advanced features implementation
-├── examples/                # Example programs
-├── test/                    # Test suite (Google Test)
-├── docs/                    # Documentation
-│   └── archive/             # Archived design documents
-├── scripts/                 # Build scripts
-└── thirdparty/              # Dependencies (pugixml, zip)
-```
-
-**Key Design:** Tree-based internal structure completely hidden from public API using PIMPL pattern. All DOCX components (XML parts, media files, relationships) are loaded into memory and preserved on save.
-
-## API Overview
+### Creating a New Document
 
 ```cpp
-// Document operations
-cdocx::Document doc("file.docx");
-doc.open();
-if (doc.is_open()) {
-    // Process document
+#include <cdocx.h>
+
+int main() {
+    // Create empty document
+    cdocx::Document doc("output.docx");
+    doc.create_empty();
+    
+    // Add formatted paragraph
+    auto& para = doc.paragraphs();
+    para.add_run("Hello, ", cdocx::bold);
+    para.add_run("World!", cdocx::italic | cdocx::underline);
+    
+    // Create a table
+    auto* table = doc.tables().add(3, 2);
+    auto* cell = table->rows().first()->cells().first();
+    cell->paragraphs().add_run("Cell content");
+    
     doc.save();
+    return 0;
 }
-
-// Paragraph iteration
-for (auto p = doc.paragraphs(); p.has_next(); p.next()) {
-    for (auto r = p.runs(); r.has_next(); r.next()) {
-        std::string text = r.get_text();
-    }
-}
-
-// Template processing
-cdocx::Template tmpl(&doc);
-tmpl.set("key", "value");
-tmpl.replace_all();
-
-// Document insertion
-cdocx::DocumentInserter inserter(&target);
-inserter.insert_document(&source);
-
-// XML Parts access
-pugi::xml_document* styles = doc.get_styles();
-pugi::xml_document* settings = doc.get_settings();
-
-// Media management
-doc.add_media("image.jpg");
-doc.export_media("image.jpg", "output/path.jpg");
 ```
 
-## Documentation
+### Using Sections (v0.5.0+)
 
-- [AGENTS.md](AGENTS.md) - Complete API documentation, technical details and roadmap
-- [docs/OPTIMIZATION_UPGRADE_PLAN.md](docs/OPTIMIZATION_UPGRADE_PLAN.md) - **Optimization and upgrade master plan**
-- [docs/ASPOSE_COMPARISON_AND_ROADMAP.md](docs/ASPOSE_COMPARISON_AND_ROADMAP.md) - Feature comparison with Aspose.Words and development roadmap
-- [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) - Detailed implementation plan for new features
-- [docs/INSTALL.md](docs/INSTALL.md) - Installation instructions
-- [docs/REFACTORING_SUMMARY.md](docs/REFACTORING_SUMMARY.md) - Code structure documentation
-- [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
-- [SECURITY.md](SECURITY.md) - Security policy
+```cpp
+#include <cdocx.h>
 
-## Build Options
+int main() {
+    cdocx::Document doc("output.docx");
+    doc.create_empty();
+    
+    // Configure section
+    Section* section = doc.get_first_section();
+    section->properties().orientation = SectionProperties::Orientation::Landscape;
+    section->properties().pageSize.width = 15840;   // A4 landscape width
+    section->properties().pageSize.height = 12240;
+    
+    // Add content to section
+    section->add_paragraph("Landscape content", cdocx::bold);
+    
+    doc.save();
+    return 0;
+}
+```
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `BUILD_SHARED_LIBS` | OFF | Build shared library |
-| `BUILD_EXAMPLES` | ON | Build example programs |
-| `BUILD_TESTING` | ON | Build test suite |
-| `BUILD_DOCS` | OFF | Build documentation |
-| `ENABLE_COVERAGE` | OFF | Enable code coverage (GCC/Clang) |
-| `ENABLE_WERROR` | OFF | Treat warnings as errors |
-| `USE_SYSTEM_GTEST` | OFF | Use system Google Test |
+### Using Lists (v0.5.0+)
+
+```cpp
+#include <cdocx.h>
+
+int main() {
+    cdocx::Document doc("output.docx");
+    doc.create_empty();
+    
+    // Create list definitions
+    NumberingId bullet = doc.add_bulleted_list_definition();
+    NumberingId number = doc.add_numbered_list_definition(NumberStyle::Decimal);
+    
+    // Add list items
+    auto& p1 = doc.paragraphs();
+    p1.add_run("First bullet item");
+    p1.set_numbering(bullet, 0);
+    
+    auto& p2 = doc.paragraphs();
+    p2.add_run("Second bullet item");
+    p2.set_numbering(bullet, 0);
+    
+    doc.save();
+    return 0;
+}
+```
+
+### Using Format Attributes (v0.6.0+)
+
+```cpp
+#include <cdocx.h>
+
+int main() {
+    cdocx::Document doc("output.docx");
+    doc.create_empty();
+    
+    // Configure paragraph format
+    ParagraphFormat format;
+    format.set_alignment(ParagraphAlignment::Center);
+    format.set_line_spacing(360, LineSpacingRule::Auto);  // 1.5x spacing
+    format.set_space_before(12);      // 12 points before
+    format.set_first_line_indent(24); // 24 points indent
+    
+    // Set border and shading
+    Border border(BorderType::Single, Color(0, 0, 0), 4);
+    format.borders().set_all(border);
+    format.shading().set_solid_fill(Color(240, 240, 240));
+    
+    // Apply to paragraph
+    auto& para = doc.paragraphs();
+    para.set_format(format);
+    
+    // Configure font
+    Font font;
+    font.set_name("Arial");
+    font.set_size(14);
+    font.set_bold(true);
+    font.set_color(Color(255, 0, 0));
+    
+    auto* run = para.add_run("Formatted text");
+    run->set_font(font);
+    
+    doc.save();
+    return 0;
+}
+```
+
+### Using Visitor Pattern (v0.6.0+)
+
+```cpp
+#include <cdocx.h>
+#include <iostream>
+
+class TextExtractor : public cdocx::DocumentVisitor {
+public:
+    VisitorAction visit_run(cdocx::Run& run) override {
+        std::cout << run.get_text();
+        return VisitorAction::Continue;
+    }
+    
+    VisitorAction visit_paragraph_end(cdocx::Paragraph&) override {
+        std::cout << std::endl;
+        return VisitorAction::Continue;
+    }
+};
+
+int main() {
+    cdocx::Document doc("input.docx");
+    doc.open();
+    
+    TextExtractor extractor;
+    doc.accept(&extractor);
+    
+    return 0;
+}
+```
 
 ## CMake Integration
 
@@ -241,17 +235,45 @@ include(FetchContent)
 FetchContent_Declare(
     cdocx
     GIT_REPOSITORY https://github.com/lonlng/CDocx.git
-    GIT_TAG v0.4.0
+    GIT_TAG v0.6.0
 )
 FetchContent_MakeAvailable(cdocx)
 target_link_libraries(your_target PRIVATE cdocx::cdocx)
 ```
 
-## Dependencies
+## Documentation
 
-- [pugixml](https://github.com/zeux/pugixml) - XML parsing
-- [zip](https://github.com/kuba--/zip) - ZIP archive handling
-- [Google Test](https://github.com/google/googletest) - Testing framework (fetched automatically)
+- **[AGENTS.md](AGENTS.md)** - Complete API documentation, architecture details, and development guide
+
+## Project Structure
+
+```
+cdocx/
+├── include/
+│   ├── cdocx.h              # Main public API header
+│   └── cdocx/               # Modular headers
+│       ├── document.h       # Document class
+│       ├── base.h           # Paragraph, Run, Table
+│       ├── template.h       # Template replacement
+│       ├── section.h        # Section support (v0.5.0+)
+│       ├── numbering.h      # List/Numbering (v0.5.0+)
+│       ├── node.h           # Node hierarchy (v0.6.0+)
+│       └── format.h         # Format attributes (v0.6.0+)
+├── src/                     # Implementation files
+├── test/                    # Test suite (Google Test)
+├── examples/                # Example programs (14 examples)
+└── scripts/                 # Build scripts
+```
+
+## Build Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `BUILD_SHARED_LIBS` | OFF | Build shared library |
+| `BUILD_EXAMPLES` | ON | Build example programs |
+| `BUILD_TESTING` | ON | Build test suite |
+| `BUILD_DOCS` | OFF | Build documentation |
+| `ENABLE_COVERAGE` | OFF | Enable code coverage |
 
 ## Supported Platforms
 
@@ -263,6 +285,31 @@ target_link_libraries(your_target PRIVATE cdocx::cdocx)
 | Windows | MinGW-w64 | ✅ Supported |
 | macOS | Xcode 10+ | ✅ Supported |
 
+## Version History
+
+- **v0.6.0** - Node hierarchy with Visitor pattern, Format attributes (Font, Color, Border, etc.)
+- **v0.5.0** - Section support, List/Numbering system
+- **v0.4.0** - Bookmark replacement, Caption generation
+- **v0.3.0** - Template system, Document insertion, XML Parts API
+- **v0.2.0** - Media management, DocumentBuilder, Search/Replace
+- **v0.1.0** - Initial release with core document operations
+
+## Dependencies
+
+- [pugixml](https://github.com/zeux/pugixml) - XML parsing
+- [zip](https://github.com/kuba--/zip) - ZIP archive handling
+- [Google Test](https://github.com/google/googletest) - Testing framework (auto-fetched)
+
+All dependencies are automatically fetched via CMake FetchContent.
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) file.
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+---
+
+*For complete technical documentation, see [AGENTS.md](AGENTS.md).*
