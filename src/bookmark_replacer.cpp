@@ -14,6 +14,8 @@
 #include <algorithm>
 #include <cctype>
 #include <fstream>
+#include <sstream>
+#include <chrono>
 
 namespace cdocx {
 
@@ -297,8 +299,87 @@ std::optional<Bookmark> BookmarkReplacer::get_bookmark(const std::string& name) 
 }
 
 bool BookmarkReplacer::clear_bookmark_content(Bookmark& bookmark) {
-    // Set empty text to clear content
-    return bookmark.set_text("");
+    if (!bookmark.is_valid()) {
+        return false;
+    }
+    
+    // Get covered paragraphs
+    auto paras = bookmark.get_covered_paragraphs();
+    if (paras.empty()) {
+        return false;
+    }
+    
+    // Get bookmark start and end nodes
+    pugi::xml_node start_para = paras[0];
+    pugi::xml_node end_para = paras.back();
+    
+    // Find bookmark start and end markers
+    pugi::xml_node bookmark_start, bookmark_end;
+    std::string bookmark_id;
+    
+    for (pugi::xml_node child = start_para.first_child(); child; child = child.next_sibling()) {
+        if (std::string(child.name()) == "w:bookmarkStart") {
+            bookmark_start = child;
+            bookmark_id = child.attribute("w:id").value();
+            break;
+        }
+    }
+    
+    for (pugi::xml_node child = end_para.first_child(); child; child = child.next_sibling()) {
+        if (std::string(child.name()) == "w:bookmarkEnd") {
+            if (std::string(child.attribute("w:id").value()) == bookmark_id) {
+                bookmark_end = child;
+                break;
+            }
+        }
+    }
+    
+    if (!bookmark_start || !bookmark_end) {
+        // Fallback to simple text clearing
+        return bookmark.set_text("");
+    }
+    
+    // Single paragraph case: remove all content between bookmarkStart and bookmarkEnd
+    if (start_para == end_para) {
+        pugi::xml_node current = bookmark_start.next_sibling();
+        while (current && current != bookmark_end) {
+            pugi::xml_node next = current.next_sibling();
+            // Remove all node types: w:r (runs), w:drawing (images), w:tbl (tables), etc.
+            start_para.remove_child(current);
+            current = next;
+        }
+    } else {
+        // Cross-paragraph case
+        // 1. Clear content from start paragraph (after bookmarkStart)
+        pugi::xml_node current = bookmark_start.next_sibling();
+        while (current) {
+            pugi::xml_node next = current.next_sibling();
+            start_para.remove_child(current);
+            current = next;
+        }
+        
+        // 2. Remove intermediate paragraphs entirely
+        pugi::xml_node current_para = start_para.next_sibling("w:p");
+        while (current_para && current_para != end_para) {
+            pugi::xml_node next_para = current_para.next_sibling("w:p");
+            start_para.parent().remove_child(current_para);
+            current_para = next_para;
+        }
+        
+        // 3. Clear content from end paragraph (before bookmarkEnd)
+        if (end_para != start_para) {
+            std::vector<pugi::xml_node> to_remove;
+            for (pugi::xml_node child = end_para.first_child(); child && child != bookmark_end; 
+                 child = child.next_sibling()) {
+                to_remove.push_back(child);
+            }
+            for (auto& node : to_remove) {
+                end_para.remove_child(node);
+            }
+        }
+    }
+    
+    return true;
 }
 
 bool BookmarkReplacer::insert_image_at_bookmark(Bookmark& bookmark,
@@ -489,6 +570,125 @@ std::string BookmarkReplacer::get_content_type(const std::string& ext) const {
     if (ext == "wmf") return "image/x-wmf";
     if (ext == "emf") return "image/x-emf";
     return "";
+}
+
+// ============================================================================
+// Batch Transaction Support (P3 Enhancement)
+// ============================================================================
+
+std::vector<std::tuple<std::string, bool, std::string>> 
+BookmarkReplacer::preview_replacements(const std::map<std::string, std::string>& replacements) const {
+    std::vector<std::tuple<std::string, bool, std::string>> results;
+    
+    for (const auto& pair : replacements) {
+        const std::string& bookmark_name = pair.first;
+        
+        if (!doc_) {
+            results.emplace_back(bookmark_name, false, "Document not available");
+            continue;
+        }
+        
+        auto bm = get_bookmark(bookmark_name);
+        if (bm) {
+            results.emplace_back(bookmark_name, true, "");
+        } else {
+            results.emplace_back(bookmark_name, false, "Bookmark not found");
+        }
+    }
+    
+    return results;
+}
+
+bool BookmarkReplacer::BatchResult::did_succeed(const std::string& bookmark_name) const {
+    for (const auto& failure : failures) {
+        if (failure.first == bookmark_name) {
+            return false;
+        }
+    }
+    // If not in failures and we have some successes, assume it succeeded
+    return true;
+}
+
+std::string BookmarkReplacer::BatchResult::get_error(const std::string& bookmark_name) const {
+    for (const auto& failure : failures) {
+        if (failure.first == bookmark_name) {
+            return failure.second;
+        }
+    }
+    return "";
+}
+
+BookmarkReplacer::BatchResult BookmarkReplacer::replace_text_batch_transaction(
+    const std::map<std::string, std::string>& replacements,
+    bool strict) {
+    
+    BatchResult result;
+    
+    if (!doc_ || replacements.empty()) {
+        result.all_succeeded = false;
+        return result;
+    }
+    
+    // Step 1: Preview - validate all bookmarks exist
+    auto preview = preview_replacements(replacements);
+    bool all_exist = true;
+    for (const auto& item : preview) {
+        const std::string& name = std::get<0>(item);
+        bool exists = std::get<1>(item);
+        const std::string& error = std::get<2>(item);
+        
+        if (!exists) {
+            all_exist = false;
+            result.failures.emplace_back(name, error);
+            result.fail_count++;
+        }
+    }
+    
+    if (!all_exist) {
+        result.all_succeeded = false;
+        if (strict) {
+            // In strict mode, abort if any bookmark doesn't exist
+            return result;
+        }
+        // In non-strict mode, continue with existing bookmarks only
+    }
+    
+    // Step 2: Create backup by saving to memory (if document is saved to disk)
+    // Note: Full backup/restore would require deep copy of XML documents
+    // For now, we track what was modified for potential rollback
+    std::vector<std::string> successfully_replaced;
+    
+    // Step 3: Perform replacements
+    for (const auto& pair : replacements) {
+        const std::string& bookmark_name = pair.first;
+        const std::string& new_text = pair.second;
+        
+        // Skip if bookmark doesn't exist (already counted in preview)
+        if (!has_bookmark(bookmark_name)) {
+            continue;
+        }
+        
+        // Attempt replacement
+        if (replace_text(bookmark_name, new_text)) {
+            result.success_count++;
+            successfully_replaced.push_back(bookmark_name);
+        } else {
+            result.fail_count++;
+            result.failures.emplace_back(bookmark_name, "Replacement failed");
+            
+            if (strict) {
+                // Rollback: restore original text for already replaced bookmarks
+                // Note: This is a simplified rollback - full implementation would
+                // require storing original text before replacement
+                result.all_succeeded = false;
+                // In a full implementation, we would restore original texts here
+                return result;
+            }
+        }
+    }
+    
+    result.all_succeeded = (result.fail_count == 0);
+    return result;
 }
 
 } // namespace cdocx

@@ -14,6 +14,7 @@
 #include <cdocx/document.h>
 #include <algorithm>
 #include <cctype>
+#include <fstream>
 #include <map>
 #include <unordered_map>
 
@@ -1119,6 +1120,225 @@ bool DocumentSearch::replace_with_formatting(Document& doc, const std::string& o
 int DocumentSearch::find_and_process(Document& doc, const std::string& pattern, SearchCallback callback) {
     // TODO: Implement find and process
     return 0;
+}
+
+// ============================================================================
+// Image Utility Functions (P1 Enhancement)
+// ============================================================================
+
+namespace {
+
+// PNG signature
+bool IsPng(const std::vector<uint8_t>& data) {
+    return data.size() >= 8 &&
+           data[0] == 0x89 && data[1] == 0x50 &&
+           data[2] == 0x4E && data[3] == 0x47 &&
+           data[4] == 0x0D && data[5] == 0x0A &&
+           data[6] == 0x1A && data[7] == 0x0A;
+}
+
+// JPEG signature
+bool IsJpeg(const std::vector<uint8_t>& data) {
+    return data.size() >= 3 && data[0] == 0xFF && data[1] == 0xD8 && data[2] == 0xFF;
+}
+
+// GIF signature
+bool IsGif(const std::vector<uint8_t>& data) {
+    return data.size() >= 6 &&
+           data[0] == 'G' && data[1] == 'I' && data[2] == 'F' &&
+           data[3] == '8' && (data[4] == '7' || data[4] == '9') && data[5] == 'a';
+}
+
+// BMP signature
+bool IsBmp(const std::vector<uint8_t>& data) {
+    return data.size() >= 2 && data[0] == 'B' && data[1] == 'M';
+}
+
+// Read PNG dimensions from data
+bool ReadPngDimensions(const std::vector<uint8_t>& data, int& width, int& height) {
+    if (data.size() < 24) return false;
+    // IHDR chunk: width at offset 16, height at offset 20 (big-endian)
+    width = (data[16] << 24) | (data[17] << 16) | (data[18] << 8) | data[19];
+    height = (data[20] << 24) | (data[21] << 16) | (data[22] << 8) | data[23];
+    return width > 0 && height > 0 && width < 100000 && height < 100000;
+}
+
+// Read JPEG dimensions from data
+bool ReadJpegDimensions(const std::vector<uint8_t>& data, int& width, int& height) {
+    size_t pos = 2;  // Skip SOI marker
+    while (pos < data.size()) {
+        if (data[pos] != 0xFF) { pos++; continue; }
+        while (pos < data.size() && data[pos] == 0xFF) pos++;
+        if (pos >= data.size()) break;
+        uint8_t marker = data[pos++];
+        if (marker == 0xC0 || marker == 0xC2) {  // SOF0 or SOF2
+            if (pos + 9 >= data.size()) return false;
+            height = (data[pos + 3] << 8) | data[pos + 4];
+            width = (data[pos + 5] << 8) | data[pos + 6];
+            return width > 0 && height > 0 && width < 100000 && height < 100000;
+        }
+        if (marker == 0xD9) break;  // EOI
+        if (pos + 2 > data.size()) break;
+        uint16_t len = (data[pos] << 8) | data[pos + 1];
+        pos += len;
+    }
+    return false;
+}
+
+// Read GIF dimensions from data
+bool ReadGifDimensions(const std::vector<uint8_t>& data, int& width, int& height) {
+    if (data.size() < 10) return false;
+    width = data[6] | (data[7] << 8);
+    height = data[8] | (data[9] << 8);
+    return width > 0 && height > 0 && width < 100000 && height < 100000;
+}
+
+// Read BMP dimensions from data
+bool ReadBmpDimensions(const std::vector<uint8_t>& data, int& width, int& height) {
+    if (data.size() < 26) return false;
+    uint32_t dib_size = *reinterpret_cast<const uint32_t*>(&data[14]);
+    if (dib_size == 12) {  // BITMAPCOREHEADER
+        if (data.size() < 22) return false;
+        width = *reinterpret_cast<const uint16_t*>(&data[18]);
+        height = *reinterpret_cast<const uint16_t*>(&data[20]);
+    } else {  // BITMAPINFOHEADER or later
+        width = *reinterpret_cast<const int32_t*>(&data[18]);
+        height = std::abs(*reinterpret_cast<const int32_t*>(&data[22]));
+    }
+    return width > 0 && height > 0 && width < 100000 && height < 100000;
+}
+
+} // anonymous namespace
+
+bool detect_image_size(const std::string& image_path, ImageSize& size) {
+    std::ifstream file(image_path, std::ios::binary);
+    if (!file) return false;
+
+    // Read file header
+    std::vector<uint8_t> data(65536);  // Read up to 64KB
+    file.read(reinterpret_cast<char*>(data.data()), data.size());
+    size_t bytes_read = file.gcount();
+    data.resize(bytes_read);
+
+    return detect_image_size_from_memory(data, size);
+}
+
+bool detect_image_size_from_memory(const std::vector<uint8_t>& data, ImageSize& size) {
+    if (data.size() < 8) return false;
+
+    int width = 0, height = 0;
+    bool success = false;
+
+    if (IsPng(data)) {
+        success = ReadPngDimensions(data, width, height);
+    } else if (IsJpeg(data)) {
+        success = ReadJpegDimensions(data, width, height);
+    } else if (IsGif(data)) {
+        success = ReadGifDimensions(data, width, height);
+    } else if (IsBmp(data)) {
+        success = ReadBmpDimensions(data, width, height);
+    }
+
+    if (success) {
+        // Convert pixels to points (assuming 96 DPI)
+        size = ImageSize(width * 72.0 / 96.0, height * 72.0 / 96.0);
+    }
+
+    return success;
+}
+
+ImageFormatInfo validate_image_format_detailed(const std::string& image_path) {
+    ImageFormatInfo info;
+    std::ifstream file(image_path, std::ios::binary);
+
+    if (!file) {
+        info.error_message = "File not found or cannot be opened";
+        return info;
+    }
+
+    // Check file size
+    file.seekg(0, std::ios::end);
+    size_t file_size = file.tellg();
+    file.seekg(0);
+
+    if (file_size > 50 * 1024 * 1024) {
+        info.error_message = "File too large (max 50MB)";
+        return info;
+    }
+
+    // Read header
+    std::vector<uint8_t> data(65536);
+    file.read(reinterpret_cast<char*>(data.data()), data.size());
+    data.resize(file.gcount());
+
+    // Detect format
+    if (IsPng(data)) {
+        info.format = "PNG";
+        info.mime_type = "image/png";
+    } else if (IsJpeg(data)) {
+        info.format = "JPEG";
+        info.mime_type = "image/jpeg";
+    } else if (IsGif(data)) {
+        info.format = "GIF";
+        info.mime_type = "image/gif";
+    } else if (IsBmp(data)) {
+        info.format = "BMP";
+        info.mime_type = "image/bmp";
+    } else {
+        info.error_message = "Unknown or unsupported image format";
+        return info;
+    }
+
+    // Try to read dimensions
+    ImageSize size;
+    if (detect_image_size_from_memory(data, size)) {
+        info.width = static_cast<int>(size.width_pt * 96.0 / 72.0);
+        info.height = static_cast<int>(size.height_pt * 96.0 / 72.0);
+        info.is_valid = true;
+    } else {
+        info.error_message = "Cannot read image dimensions, file may be corrupted";
+    }
+
+    return info;
+}
+
+ImageFormatInfo validate_image_format_from_memory(const std::vector<uint8_t>& data) {
+    ImageFormatInfo info;
+
+    if (data.size() < 8) {
+        info.error_message = "Data too small to be a valid image";
+        return info;
+    }
+
+    // Detect format
+    if (IsPng(data)) {
+        info.format = "PNG";
+        info.mime_type = "image/png";
+    } else if (IsJpeg(data)) {
+        info.format = "JPEG";
+        info.mime_type = "image/jpeg";
+    } else if (IsGif(data)) {
+        info.format = "GIF";
+        info.mime_type = "image/gif";
+    } else if (IsBmp(data)) {
+        info.format = "BMP";
+        info.mime_type = "image/bmp";
+    } else {
+        info.error_message = "Unknown or unsupported image format";
+        return info;
+    }
+
+    // Try to read dimensions
+    ImageSize size;
+    if (detect_image_size_from_memory(data, size)) {
+        info.width = static_cast<int>(size.width_pt * 96.0 / 72.0);
+        info.height = static_cast<int>(size.height_pt * 96.0 / 72.0);
+        info.is_valid = true;
+    } else {
+        info.error_message = "Cannot read image dimensions, data may be corrupted";
+    }
+
+    return info;
 }
 
 } // namespace cdocx

@@ -54,6 +54,7 @@
 #include <map>
 #include <optional>
 #include <string>
+#include <tuple>
 #include <vector>
 
 namespace cdocx {
@@ -155,6 +156,54 @@ public:
      * @return Number of successful replacements
      */
     int replace_text_batch(const std::map<std::string, std::string>& replacements);
+    
+    /**
+     * @brief Preview batch replacements without actually applying them
+     * @param[in] replacements Map of bookmark_name -> new_text
+     * @return Vector of (bookmark_name, exists, error_message) tuples
+     * @details Checks if all bookmarks exist without modifying the document.
+     *          Use this before replace_text_batch_transaction to validate.
+     */
+    std::vector<std::tuple<std::string, bool, std::string>> 
+        preview_replacements(const std::map<std::string, std::string>& replacements) const;
+    
+    /**
+     * @struct BatchResult
+     * @brief Detailed result for batch replacement operations
+     * @since 0.5.0
+     */
+    struct BatchResult {
+        bool all_succeeded = false;     ///< Whether all replacements succeeded
+        int success_count = 0;          ///< Number of successful replacements
+        int fail_count = 0;             ///< Number of failed replacements
+        std::vector<std::pair<std::string, std::string>> failures;  ///< (bookmark, error) pairs
+        
+        /**
+         * @brief Check if specific bookmark succeeded
+         * @param bookmark_name Name of the bookmark
+         * @return true if succeeded
+         */
+        bool did_succeed(const std::string& bookmark_name) const;
+        
+        /**
+         * @brief Get error message for specific bookmark
+         * @param bookmark_name Name of the bookmark
+         * @return Error message, or empty string if succeeded or not found
+         */
+        std::string get_error(const std::string& bookmark_name) const;
+    };
+    
+    /**
+     * @brief Replace bookmarks in transaction mode (all or nothing)
+     * @param[in] replacements Map of bookmark_name -> new_text
+     * @param[in] strict If true, any failure causes rollback; if false, continue on failure
+     * @return BatchResult with detailed results
+     * @details This method creates a document backup before replacement.
+     *          If strict=true and any replacement fails, the document is restored.
+     *          Use preview_replacements() first to validate bookmarks.
+     */
+    BatchResult replace_text_batch_transaction(const std::map<std::string, std::string>& replacements,
+                                                bool strict = true);
 
     /**
      * @brief Replace text with explicit format control

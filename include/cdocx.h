@@ -86,6 +86,7 @@
 #include <cdocx/advanced.h>           ///< @ingroup Advanced Advanced features
 #include <cdocx/bookmark_replacer.h>  ///< @ingroup Advanced Bookmark replacement API
 #include <cdocx/caption_generator.h>  ///< @ingroup Advanced Figure caption generation
+#include <cdocx/table_builder.h>      ///< @ingroup Advanced Table building (v0.5.0)
 
 // ============================================================================
 // Version Information
