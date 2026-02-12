@@ -1,6 +1,0 @@
-[submodule "thirdparty/pugixml"]
-	path = thirdparty/pugixml
-	url = https://github.com/zeux/pugixml.git
-[submodule "thirdparty/zip"]
-	path = thirdparty/zip
-	url = https://github.com/kuba--/zip.git

@@ -10,9 +10,9 @@ CDocx is a C++17 library for creating, reading, and writing Microsoft Office Wor
 - **Build System**: CMake (minimum version 3.10)
 - **Namespace**: `cdocx`
 - **Version**: 0.3.0
-- **External Dependencies**: 
-  - pugixml (Git submodule for XML parsing)
-  - zip library (bundled from kuba--/zip for archive handling)
+- **External Dependencies** (all fetched via CMake FetchContent):
+  - pugixml v1.15 (XML parsing)
+  - zip v0.3.6 (ZIP archive handling)
 - **Test Framework**: Google Test (fetched via CMake FetchContent)
 
 ## Roadmap
@@ -80,17 +80,16 @@ See [docs/ASPOSE_COMPARISON_AND_ROADMAP.md](docs/ASPOSE_COMPARISON_AND_ROADMAP.m
 
 - CMake 3.10+
 - C++17 compiler (GCC 7+, Clang 5+, MSVC 2017+)
-- Git (for submodules)
+- Git (for FetchContent)
 
 ### Build Instructions
 
 ```bash
-# Clone and initialize
+# Clone
 git clone https://github.com/lonlng/CDocx.git
 cd CDocx
-git submodule update --init --recursive
 
-# Build
+# Build (dependencies are fetched automatically via CMake FetchContent)
 mkdir build && cd build
 cmake ..
 cmake --build .

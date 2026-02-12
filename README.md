@@ -30,7 +30,6 @@ C++17 library for creating, reading, and writing Microsoft Office Word (.docx) f
 ```bash
 git clone https://github.com/lonlng/CDocx.git
 cd CDocx
-git submodule update --init --recursive
 
 # Using the build script
 ./scripts/build-linux.sh Release
@@ -47,7 +46,6 @@ ctest --output-on-failure
 ```cmd
 git clone https://github.com/lonlng/CDocx.git
 cd CDocx
-git submodule update --init --recursive
 
 :: Using the build script (run in Visual Studio Developer Command Prompt)
 scripts\build-windows.bat Release x64

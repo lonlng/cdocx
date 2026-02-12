@@ -134,6 +134,19 @@ endif()
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # ----------------------------------------------------------------------------
+# MSVC Runtime Library Settings (Windows only)
+# ----------------------------------------------------------------------------
+# Set globally to ensure all targets (cdocx, thirdparty libs, examples, tests)
+# use the same runtime library to avoid LNK2038 errors.
+# Default: Static runtime (/MT, /MTd). Use BUILD_SHARED_LIBS=ON for dynamic.
+# ----------------------------------------------------------------------------
+if(MSVC AND NOT DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY 
+        "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<BOOL:${BUILD_SHARED_LIBS}>:DLL>")
+    message(STATUS "MSVC Runtime Library: ${CMAKE_MSVC_RUNTIME_LIBRARY}")
+endif()
+
+# ----------------------------------------------------------------------------
 # Source Files (Auto-collecting)
 # ----------------------------------------------------------------------------
 file(GLOB_RECURSE CDOCX_SOURCES CONFIGURE_DEPENDS 
@@ -165,11 +178,45 @@ target_compile_definitions(cdocx
         $<$<BOOL:${BUILD_SHARED_LIBS}>:CDOCX_EXPORTS>
 )
 
+# MSVC runtime library settings (must match examples and tests)
+if(MSVC)
+    set_property(TARGET cdocx PROPERTY
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<BOOL:${BUILD_SHARED_LIBS}>:DLL>")
+endif()
+
 # ----------------------------------------------------------------------------
-# Dependencies
+# Dependencies - FetchContent
 # ----------------------------------------------------------------------------
-add_subdirectory(thirdparty/pugixml)
-add_subdirectory(thirdparty/zip)
+include(FetchContent)
+
+# Set options to speed up FetchContent
+set(FETCHCONTENT_QUIET OFF)
+set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
+
+# ----------------------------------------------------------------------------
+# pugixml - XML parsing library
+# ----------------------------------------------------------------------------
+FetchContent_Declare(
+    pugixml
+    GIT_REPOSITORY https://gitee.com/lonlng/pugixml.git
+    GIT_TAG v1.15
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+)
+
+# ----------------------------------------------------------------------------
+# zip - ZIP archive handling library
+# ----------------------------------------------------------------------------
+FetchContent_Declare(
+    zip
+    GIT_REPOSITORY https://gitee.com/lonlng/zip.git
+    GIT_TAG v0.3.6
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+)
+
+# Make dependencies available
+FetchContent_MakeAvailable(pugixml zip)
 
 target_link_libraries(cdocx 
     PUBLIC pugixml
@@ -223,7 +270,8 @@ if(BUILD_TESTING AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         
         FetchContent_Declare(
             googletest
-            GIT_REPOSITORY https://github.com/google/googletest.git
+            # GIT_REPOSITORY https://github.com/google/googletest.git
+            GIT_REPOSITORY https://gitee.com/lonlng/googletest.git
             GIT_TAG v1.17.0
             GIT_SHALLOW TRUE
             GIT_PROGRESS TRUE
@@ -268,7 +316,7 @@ endif()
 # ----------------------------------------------------------------------------
 include(GNUInstallDirs)
 
-install(TARGETS cdocx pugixml
+install(TARGETS cdocx
     EXPORT cdocxConfig
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
