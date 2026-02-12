@@ -679,6 +679,18 @@ std::string Document::add_media_with_rel(const std::string& image_path,
         "media/" + name);
 }
 
+std::string Document::add_media_from_memory_with_rel(const std::string& name, 
+                                                      const std::vector<uint8_t>& data,
+                                                      const std::string& content_type) {
+    if (!add_media_from_memory(name, data, content_type)) {
+        return "";
+    }
+    
+    return impl_->add_relationship("word/_rels/document.xml.rels",
+        "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image",
+        "media/" + name);
+}
+
 bool Document::validate_image_format(const std::string& image_path) const {
     std::string ext = std::filesystem::path(image_path).extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);

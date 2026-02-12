@@ -11,9 +11,14 @@
 #
 # Usage:
 #   mkdir build && cd build
-#   cmake .. -DBUILD_EXAMPLES=ON -DBUILD_TESTING=ON
+#   cmake .. -G Ninja -DBUILD_EXAMPLES=ON -DBUILD_TESTING=ON
 #   cmake --build . --target cdocx --parallel
 #   ctest --output-on-failure
+#
+# Build Generators:
+#   - Ninja (recommended): cmake .. -G Ninja
+#   - Makefiles: cmake .. -G "Unix Makefiles"
+#   - Visual Studio: cmake .. -G "Visual Studio 17 2022" -A x64
 # ============================================================================
 
 cmake_minimum_required(VERSION 3.14...3.28)
@@ -152,6 +157,7 @@ endif()
 file(GLOB_RECURSE CDOCX_SOURCES CONFIGURE_DEPENDS 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
+list(APPEND CDOCX_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/image_utils.cpp)
 file(GLOB_RECURSE CDOCX_PUBLIC_HEADERS CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
 )

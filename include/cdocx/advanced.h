@@ -81,6 +81,7 @@ class CaptionGenerator;
  * @since 0.3.0
  */
 struct BookmarkFormat {
+    // Character formatting (from w:rPr)
     std::string font_ascii;      ///< Western font name (ASCII)
     std::string font_far_east;   ///< East Asian font name (FarEast)
     std::string font_hansi;      ///< ANSI font name
@@ -91,7 +92,19 @@ struct BookmarkFormat {
     bool italic = false;         ///< Italic flag
     bool underline = false;      ///< Underline flag
     bool strikethrough = false;  ///< Strikethrough flag
-    std::string alignment;       ///< Paragraph alignment
+    
+    // Paragraph formatting (from w:pPr) - P1 enhancement
+    std::string alignment;       ///< Paragraph alignment (left, center, right, both, distribute)
+    int line_spacing = 0;        ///< Line spacing in twips (1/20 of a point)
+    std::string line_rule;       ///< Line rule (auto, exact, atLeast)
+    int space_before = 0;        ///< Space before paragraph in twips
+    int space_after = 0;         ///< Space after paragraph in twips
+    int first_line_indent = 0;   ///< First line indent in twips (positive) or hanging (negative)
+    int left_indent = 0;         ///< Left indent in twips
+    int right_indent = 0;        ///< Right indent in twips
+    bool keep_next = false;      ///< Keep with next paragraph
+    bool keep_lines = false;     ///< Keep lines together (no page break within)
+    bool page_break_before = false; ///< Page break before paragraph
     
     /**
      * @brief Check if format is valid (has meaningful data)
@@ -114,6 +127,16 @@ struct BookmarkFormat {
         underline = false;
         strikethrough = false;
         alignment.clear();
+        line_spacing = 0;
+        line_rule.clear();
+        space_before = 0;
+        space_after = 0;
+        first_line_indent = 0;
+        left_indent = 0;
+        right_indent = 0;
+        keep_next = false;
+        keep_lines = false;
+        page_break_before = false;
     }
 };
 
@@ -173,6 +196,56 @@ struct ImageSize {
      */
     bool is_valid() const { return width_pt > 0 && height_pt > 0; }
 };
+
+// ============================================================================
+// Image Utilities (P1 Enhancement)
+// ============================================================================
+
+/**
+ * @brief Detect image dimensions from file data
+ * @param[in] image_path Path to image file
+ * @param[out] size Detected image size in points (using 96 DPI default)
+ * @return true if dimensions were successfully detected
+ * @details Supports PNG, JPEG, BMP, and GIF formats
+ */
+bool detect_image_size(const std::string& image_path, ImageSize& size);
+
+/**
+ * @brief Detect image dimensions from memory buffer
+ * @param[in] data Binary image data
+ * @param[out] size Detected image size in points
+ * @return true if dimensions were successfully detected
+ */
+bool detect_image_size_from_memory(const std::vector<uint8_t>& data, ImageSize& size);
+
+/**
+ * @brief Image format information
+ */
+struct ImageFormatInfo {
+    std::string format;          ///< Detected format ("PNG", "JPEG", "BMP", "GIF", "UNKNOWN")
+    std::string mime_type;       ///< MIME type
+    int width = 0;               ///< Width in pixels
+    int height = 0;              ///< Height in pixels
+    int dpi_x = 96;              ///< Horizontal DPI
+    int dpi_y = 96;              ///< Vertical DPI
+    bool is_valid = false;       ///< Whether the file is valid
+    std::string error_message;   ///< Error message if detection failed
+};
+
+/**
+ * @brief Validate and detect image format using magic numbers
+ * @param[in] image_path Path to image file
+ * @return ImageFormatInfo with detection results
+ * @details Performs file header (magic number) validation, not just extension check
+ */
+ImageFormatInfo validate_image_format_detailed(const std::string& image_path);
+
+/**
+ * @brief Validate image format from memory buffer
+ * @param[in] data Binary image data
+ * @return ImageFormatInfo with detection results
+ */
+ImageFormatInfo validate_image_format_from_memory(const std::vector<uint8_t>& data);
 
 // ============================================================================
 // Bookmark Classes

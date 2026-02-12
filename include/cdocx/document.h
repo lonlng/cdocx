@@ -414,6 +414,17 @@ public:
                                const std::string& content_type = "");
 
     /**
+     * @brief Add media from memory buffer with relationship
+     * @param[in] name Name for the media file
+     * @param[in] data Binary data
+     * @param[in] content_type MIME type (e.g., "image/png")
+     * @return Relationship ID (rIdX), or empty string on failure
+     */
+    std::string add_media_from_memory_with_rel(const std::string& name, 
+                                                const std::vector<uint8_t>& data,
+                                                const std::string& content_type = "");
+
+    /**
      * @brief Delete a media file
      * @param[in] image_name Name of the image to delete
      * @return true if deleted successfully

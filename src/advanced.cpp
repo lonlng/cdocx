@@ -166,14 +166,54 @@ BookmarkFormat Bookmark::get_format() const {
         return fmt;
     }
     
-    // Find the first run between bookmark start and end
+    // Get the paragraph containing the bookmark
     pugi::xml_node para = start_node_.parent();
+    
+    // ========== Extract Paragraph Format (w:pPr) ==========
+    pugi::xml_node pPr = para.child("w:pPr");
+    if (pPr) {
+        // Alignment (w:jc)
+        pugi::xml_node jc = pPr.child("w:jc");
+        if (jc) {
+            fmt.alignment = jc.attribute("w:val").value();
+        }
+        
+        // Spacing (w:spacing)
+        pugi::xml_node spacing = pPr.child("w:spacing");
+        if (spacing) {
+            fmt.line_spacing = spacing.attribute("w:line").as_int();
+            fmt.line_rule = spacing.attribute("w:lineRule").value();
+            fmt.space_before = spacing.attribute("w:before").as_int();
+            fmt.space_after = spacing.attribute("w:after").as_int();
+        }
+        
+        // Indentation (w:ind)
+        pugi::xml_node ind = pPr.child("w:ind");
+        if (ind) {
+            fmt.first_line_indent = ind.attribute("w:firstLine").as_int();
+            if (fmt.first_line_indent == 0) {
+                // Check for hanging indent (negative first line)
+                fmt.first_line_indent = -ind.attribute("w:hanging").as_int();
+            }
+            fmt.left_indent = ind.attribute("w:left").as_int();
+            fmt.right_indent = ind.attribute("w:right").as_int();
+        }
+        
+        // Keep with next (w:keepNext)
+        fmt.keep_next = pPr.child("w:keepNext") != nullptr;
+        
+        // Keep lines together (w:keepLines)
+        fmt.keep_lines = pPr.child("w:keepLines") != nullptr;
+        
+        // Page break before (w:pageBreakBefore)
+        fmt.page_break_before = pPr.child("w:pageBreakBefore") != nullptr;
+    }
+    
+    // ========== Extract Character Format (w:rPr) ==========
     pugi::xml_node run = para.child("w:r");
     
     // Find first run that is between bookmark markers
     while (run) {
-        // Simple case: check if this run is after start_node
-        // In full implementation, need to check position more carefully
         pugi::xml_node rPr = run.child("w:rPr");
         if (rPr) {
             // Extract fonts
@@ -241,9 +281,84 @@ bool Bookmark::set_text_formatted(const std::string& text, const BookmarkFormat&
     
     pugi::xml_node para = start_node_.parent();
     
+    // ========== Apply Paragraph Format (w:pPr) ==========
+    pugi::xml_node pPr = para.child("w:pPr");
+    if (!pPr) {
+        pPr = para.prepend_child("w:pPr");
+    }
+    
+    // Alignment (w:jc)
+    if (!format.alignment.empty()) {
+        pugi::xml_node jc = pPr.child("w:jc");
+        if (!jc) {
+            jc = pPr.append_child("w:jc");
+        }
+        jc.append_attribute("w:val").set_value(format.alignment.c_str());
+    }
+    
+    // Spacing (w:spacing)
+    if (format.line_spacing > 0 || format.space_before > 0 || format.space_after > 0 || 
+        !format.line_rule.empty()) {
+        pugi::xml_node spacing = pPr.child("w:spacing");
+        if (!spacing) {
+            spacing = pPr.append_child("w:spacing");
+        }
+        if (format.line_spacing > 0) {
+            spacing.append_attribute("w:line").set_value(format.line_spacing);
+        }
+        if (!format.line_rule.empty()) {
+            spacing.append_attribute("w:lineRule").set_value(format.line_rule.c_str());
+        }
+        if (format.space_before > 0) {
+            spacing.append_attribute("w:before").set_value(format.space_before);
+        }
+        if (format.space_after > 0) {
+            spacing.append_attribute("w:after").set_value(format.space_after);
+        }
+    }
+    
+    // Indentation (w:ind)
+    if (format.first_line_indent != 0 || format.left_indent > 0 || format.right_indent > 0) {
+        pugi::xml_node ind = pPr.child("w:ind");
+        if (!ind) {
+            ind = pPr.append_child("w:ind");
+        }
+        if (format.first_line_indent > 0) {
+            ind.append_attribute("w:firstLine").set_value(format.first_line_indent);
+        } else if (format.first_line_indent < 0) {
+            ind.append_attribute("w:hanging").set_value(-format.first_line_indent);
+        }
+        if (format.left_indent > 0) {
+            ind.append_attribute("w:left").set_value(format.left_indent);
+        }
+        if (format.right_indent > 0) {
+            ind.append_attribute("w:right").set_value(format.right_indent);
+        }
+    }
+    
+    // Keep with next (w:keepNext)
+    if (format.keep_next) {
+        if (!pPr.child("w:keepNext")) {
+            pPr.append_child("w:keepNext");
+        }
+    }
+    
+    // Keep lines together (w:keepLines)
+    if (format.keep_lines) {
+        if (!pPr.child("w:keepLines")) {
+            pPr.append_child("w:keepLines");
+        }
+    }
+    
+    // Page break before (w:pageBreakBefore)
+    if (format.page_break_before) {
+        if (!pPr.child("w:pageBreakBefore")) {
+            pPr.append_child("w:pageBreakBefore");
+        }
+    }
+    
+    // ========== Handle Run Content ==========
     // Find and remove all runs between bookmark start and end
-    // Note: This is simplified - full implementation needs to handle
-    // runs that span across bookmark boundaries
     pugi::xml_node current = start_node_.next_sibling();
     while (current && current != end_node_) {
         pugi::xml_node next = current.next_sibling();
@@ -253,10 +368,10 @@ bool Bookmark::set_text_formatted(const std::string& text, const BookmarkFormat&
         current = next;
     }
     
-    // Create new run with format
+    // Create new run with character format
     pugi::xml_node new_run = para.insert_child_before("w:r", end_node_);
     
-    // Apply formatting if specified
+    // Apply character formatting if specified
     if (format.is_valid() || format.bold || format.italic || format.underline || format.strikethrough) {
         pugi::xml_node rPr = new_run.append_child("w:rPr");
         
@@ -444,8 +559,10 @@ void BookmarkCollection::collect_bookmarks() const {
     }
     
     // Find all bookmarkStart and bookmarkEnd elements
-    std::map<std::string, pugi::xml_node> starts;
-    std::map<std::string, pugi::xml_node> ends;
+    // Use ID-based matching for accurate pairing
+    std::map<std::string, pugi::xml_node> starts;  // id -> node
+    std::map<std::string, std::string> id_to_name; // id -> name
+    std::map<std::string, pugi::xml_node> ends;    // id -> node
     
     for (pugi::xml_node para = doc_xml->child("w:document").child("w:body").child("w:p");
          para; para = para.next_sibling("w:p")) {
@@ -454,21 +571,34 @@ void BookmarkCollection::collect_bookmarks() const {
             if (name == "w:bookmarkStart") {
                 std::string id = child.attribute("w:id").value();
                 std::string bm_name = child.attribute("w:name").value();
-                starts[bm_name] = child;
+                if (!id.empty()) {
+                    starts[id] = child;
+                    id_to_name[id] = bm_name;
+                }
             } else if (name == "w:bookmarkEnd") {
                 std::string id = child.attribute("w:id").value();
-                // Match by id - would need to store id->name mapping
-                // For now, simplified implementation
+                if (!id.empty()) {
+                    ends[id] = child;
+                }
             }
         }
     }
     
-    // Create Bookmark objects
+    // Create Bookmark objects by matching IDs
     for (const auto& pair : starts) {
-        // Find corresponding end (simplified - assumes same paragraph)
-        // In full implementation, match by ID
-        bookmarks_.emplace_back(doc_, pair.first, pair.second, pair.second);
+        const std::string& id = pair.first;
+        const pugi::xml_node& start_node = pair.second;
+        
+        // Find corresponding end by ID
+        auto end_it = ends.find(id);
+        if (end_it != ends.end()) {
+            // Valid bookmark with matching start and end
+            bookmarks_.emplace_back(doc_, id_to_name[id], start_node, end_it->second);
+        }
+        // Else: orphaned bookmark start (no matching end), skip it
     }
+    
+    // Note: orphaned bookmark ends (no matching start) are ignored
     
     collected_ = true;
 }

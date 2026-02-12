@@ -84,8 +84,12 @@ bool BookmarkReplacer::replace_text_with_format(const std::string& bookmark_name
 bool BookmarkReplacer::replace_with_image(const std::string& bookmark_name,
                                            const std::string& image_path,
                                            const std::string& caption) {
-    // Default size: will be determined from image or use default
-    ImageSize size(400, 300);  // Default 400x300 points
+    // Try to auto-detect image size
+    ImageSize size;
+    if (!detect_image_size(image_path, size)) {
+        // Use default size if detection fails
+        size = ImageSize(400, 300);
+    }
     
     return replace_with_image_advanced(bookmark_name, image_path, size, caption, ImageAlignment::Center);
 }
@@ -120,16 +124,12 @@ bool BookmarkReplacer::replace_with_image_advanced(const std::string& bookmark_n
     // Generate unique image name
     std::string image_name = "image_" + std::to_string(generate_image_id()) + "." + ext;
     
-    // Add media file to document
+    // Add media file to document with relationship
+    // This ensures the relationship ID is properly synchronized with document.xml.rels
     std::string rel_id = doc_->add_media_with_rel(image_path, &image_name);
     if (rel_id.empty()) {
-        // Try alternative method
-        if (!doc_->add_media(image_path, &image_name)) {
-            stats_.fail_count++;
-            return false;
-        }
-        // Get or create relationship
-        rel_id = "rId" + std::to_string(100 + next_image_id_);
+        stats_.fail_count++;
+        return false;
     }
     
     // Clear bookmark content
@@ -177,8 +177,10 @@ bool BookmarkReplacer::replace_with_image_from_memory(const std::string& bookmar
         content_type = "image/png";  // Default
     }
     
-    // Add media from memory
-    if (!doc_->add_media_from_memory(image_name, image_data, content_type)) {
+    // Add media from memory and create relationship
+    // This returns the proper relationship ID that matches document.xml.rels
+    std::string rel_id = doc_->add_media_from_memory_with_rel(image_name, image_data, content_type);
+    if (rel_id.empty()) {
         stats_.fail_count++;
         return false;
     }
@@ -189,13 +191,22 @@ bool BookmarkReplacer::replace_with_image_from_memory(const std::string& bookmar
         return false;
     }
     
-    // Create relationship ID
-    std::string rel_id = "rId" + std::to_string(100 + next_image_id_++);
+    // Insert image at bookmark location using the relationship ID
+    if (!insert_image_at_bookmark(*bm, image_name, size, align, rel_id)) {
+        stats_.fail_count++;
+        return false;
+    }
     
-    // Insert image
-    // Note: This requires the image_path for the actual insertion, 
-    // so we need a different approach for memory-based images
-    // For now, use a placeholder
+    // Add caption if provided
+    if (!caption.empty()) {
+        int figure_number = CaptionGenerator::get_next_figure_number(doc_);
+        pugi::xml_node bookmark_para = bm->get_covered_paragraphs().empty() ? 
+                                       pugi::xml_node() : bm->get_covered_paragraphs()[0];
+        if (bookmark_para) {
+            CaptionGenerator::insert_figure_caption(doc_, bookmark_para, caption, figure_number);
+        }
+    }
+    
     stats_.success_count++;
     return true;
 }

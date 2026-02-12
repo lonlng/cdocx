@@ -2,100 +2,115 @@
 
 ## Project Overview
 
-CDocx is a C++17 library for creating, reading, and writing Microsoft Office Word (.docx) files. The library provides a simple, iterator-based API for document manipulation with support for text formatting, paragraphs, tables, template-based document generation, document insertion, and advanced XML parts access.
+CDocx is a C++17 library for creating, reading, and writing Microsoft Office Word (.docx) files. The library provides a modern, iterator-based API for document manipulation with support for text formatting, paragraphs, tables, template-based document generation, document insertion, bookmarks, sections, lists, and advanced XML parts access.
 
 **Key Facts:**
 - **Language**: C++17 (C99 for zip library component)
 - **License**: MIT
-- **Build System**: CMake (minimum version 3.10)
+- **Build System**: CMake (minimum version 3.14)
 - **Namespace**: `cdocx`
-- **Version**: 0.3.0
-- **External Dependencies** (all fetched via CMake FetchContent):
-  - pugixml v1.15 (XML parsing)
-  - zip v0.3.6 (ZIP archive handling)
-- **Test Framework**: Google Test (fetched via CMake FetchContent)
+- **Version**: 0.5.0
+- **External Dependencies** (fetched via CMake FetchContent):
+  - [pugixml](https://gitee.com/lonlng/pugixml) (v1.15) - XML parsing
+  - [zip](https://gitee.com/lonlng/zip) (v0.3.6) - ZIP archive handling
+  - [Google Test](https://gitee.com/lonlng/googletest) (v1.17.0) - Testing framework
 
-## Roadmap
+## Project Structure
 
-### Current Features (v0.3.0)
-- ✅ Document operations (open, create, save DOCX)
-- ✅ Paragraph and Run manipulation
-- ✅ Basic text formatting (bold, italic, underline, etc.)
-- ✅ Table creation and basic manipulation
-- ✅ Template-based placeholder replacement
-- ✅ Document insertion/merging
-- ✅ Media file management (images)
-- ✅ XML Parts API access
-- ✅ **Bookmark management (ENHANCED)** - Format preservation, cross-paragraph support
-- ✅ **BookmarkReplacer class** - High-level API for bookmark-based replacement
-- ✅ **Image insertion with alignment** - Left/Center/Right alignment support
-- ✅ **Figure caption generation** - Chinese format "图 X [description]"
-- ✅ DocumentBuilder for fluent document construction
-- ✅ Find and replace
-
-### Optimization & Upgrade Plan
-See [docs/OPTIMIZATION_UPGRADE_PLAN.md](docs/OPTIMIZATION_UPGRADE_PLAN.md) for the **complete optimization and upgrade master plan** including:
-- Architecture improvements
-- Performance optimization strategies
-- Feature development timeline
-- Resource requirements
-
-### Planned Features
-See [docs/ASPOSE_COMPARISON_AND_ROADMAP.md](docs/ASPOSE_COMPARISON_AND_ROADMAP.md) for detailed comparison with Aspose.Words and complete roadmap.
-
-**Phase 1: Core Enhancements** ✅ **COMPLETED (v0.3.0)**
-- ✅ Page setup (page size, margins, orientation)
-- ✅ Header/Footer support
-- ✅ List formatting (bullets, numbering)
-- ✅ Enhanced table operations (merge/split cells, borders, shading)
-- ✅ **Bookmark replacement with format preservation**
-- ✅ **Image insertion via bookmarks**
-- ✅ **Figure caption generation**
-
-**Phase 2: Export Formats** (Planned)
-- PDF export
-- HTML export
-- Image rendering (PNG/JPG)
-
-**Phase 2: Export Formats**
-- PDF export
-- HTML export
-- Image rendering (PNG/JPG)
-
-**Phase 3: Advanced Features**
-- Field support (page numbers, TOC, hyperlinks)
-- Comments/annotations
-- Footnotes and endnotes
-- Styles system
-
-**Phase 4: Professional Features**
-- Enhanced mail merge
-- Document comparison
-- Chart support
-- Formula (OMML) support
-
-## Quick Start
-
-### Prerequisites
-
-- CMake 3.10+
-- C++17 compiler (GCC 7+, Clang 5+, MSVC 2017+)
-- Git (for FetchContent)
-
-### Build Instructions
-
-```bash
-# Clone
-git clone https://github.com/lonlng/CDocx.git
-cd CDocx
-
-# Build (dependencies are fetched automatically via CMake FetchContent)
-mkdir build && cd build
-cmake ..
-cmake --build .
-
-# Run tests
-ctest
+```
+cdocx/
+├── CMakeLists.txt              # Main CMake configuration
+├── .clang-format               # Code formatting rules (LLVM style, 4-space indent)
+├── README.md                   # User-facing documentation
+├── AGENTS.md                   # This file - agent-focused documentation
+├── LICENSE                     # MIT License
+├── CONTRIBUTING.md             # Contribution guidelines
+├── SECURITY.md                 # Security policy
+│
+├── cmake/
+│   └── modules/
+│       └── CDocxHelpers.cmake  # CMake helper functions for examples/tests
+│
+├── include/                    # Public API headers
+│   ├── cdocx.h                 # Main aggregated header (includes all modules)
+│   └── cdocx/                  # Modular headers
+│       ├── fwd.h               # Forward declarations
+│       ├── constants.h         # Formatting flags (bold, italic, etc.)
+│       ├── iterator.h          # Iterator helpers
+│       ├── base.h              # Base content classes (Run, Paragraph, Table)
+│       ├── document.h          # Document class (main entry point)
+│       ├── template.h          # Template replacement
+│       ├── inserter.h          # Document insertion
+│       ├── advanced.h          # Advanced features (Bookmark, DocumentBuilder, Search)
+│       ├── bookmark_replacer.h # Bookmark replacement API
+│       ├── caption_generator.h # Figure caption generation
+│       ├── format_context.h    # Text formatting context
+│       ├── properties.h        # Property structures (v0.4.0+)
+│       ├── section.h           # Section support (v0.5.0)
+│       └── numbering.h         # List/Numbering system (v0.5.0)
+│
+├── src/                        # Implementation files
+│   ├── base_content.cpp        # Content classes implementation
+│   ├── document.cpp            # Document class implementation
+│   ├── template.cpp            # Template implementation
+│   ├── inserter.cpp            # Document inserter implementation
+│   ├── tree.cpp                # Tree structure (DocxTree, DocxTreeNode)
+│   ├── impl.cpp                # DocumentImpl implementation
+│   ├── advanced.cpp            # Advanced features implementation
+│   ├── bookmark_replacer.cpp   # Bookmark replacement implementation
+│   ├── caption_generator.cpp   # Caption generation implementation
+│   ├── format_context.cpp      # Format context implementation
+│   ├── properties.cpp          # Properties implementation
+│   ├── section.cpp             # Section implementation (v0.5.0)
+│   └── numbering.cpp           # Numbering implementation (v0.5.0)
+│
+├── include/detail/
+│   └── impl.h                  # Private implementation details (PIMPL)
+│
+├── test/                       # Test suite (Google Test)
+│   ├── CMakeLists.txt          # Test configuration
+│   ├── 01_basic/               # Basic functionality tests
+│   ├── 02_iterator/            # Iterator tests
+│   ├── 03_template/            # Template tests
+│   ├── 04_xml_parts/           # XML Parts API tests
+│   ├── 05_complete_structure/  # Complete structure tests
+│   ├── 06_create_empty/        # Empty document creation tests
+│   ├── 07_text_formatting/     # Text formatting tests
+│   ├── 08_bookmark_replacement/# Bookmark replacement tests
+│   └── 09_section_and_list/    # Section and list tests (v0.5.0)
+│
+├── examples/                   # Example programs
+│   ├── CMakeLists.txt          # Examples configuration
+│   ├── 01_basic_read/          # Basic document reading
+│   ├── 02_basic_create/        # Basic document creation
+│   ├── 03_template_basic/      # Basic template usage
+│   ├── 04_template_advanced/   # Advanced template features
+│   ├── 05_document_insert/     # Document insertion
+│   ├── 06_xml_parts/           # XML Parts API usage
+│   ├── 07_media_management/    # Media file management
+│   ├── 08_create_empty/        # Empty document creation
+│   ├── 09_text_formatting/     # Text formatting examples
+│   ├── 10_advanced_crud/       # Advanced CRUD operations
+│   ├── 10_edit_document/       # Document editing
+│   ├── 11_bookmark_replacement/# Bookmark replacement demo
+│   ├── 12_caption_generation/  # Figure caption generation
+│   ├── 13_enhanced_properties/ # Enhanced properties demo
+│   └── 13_section_and_list/    # Section and list demo (v0.5.0)
+│
+├── docs/                       # Documentation
+│   ├── INDEX.md                # Documentation index
+│   ├── INSTALL.md              # Installation instructions
+│   ├── REFACTORING_SUMMARY.md  # Code structure documentation
+│   ├── OPTIMIZATION_UPGRADE_PLAN.md  # Optimization roadmap
+│   ├── ASPOSE_COMPARISON_AND_ROADMAP.md  # Feature comparison
+│   ├── V0.5.0_IMPLEMENTATION_SUMMARY.md  # v0.5.0 implementation details
+│   └── archive/                # Archived design documents
+│
+├── scripts/                    # Build scripts
+│   ├── install.sh              # Installation script
+│   └── README.md               # Scripts documentation
+│
+└── build/                      # Build directory (created by CMake)
 ```
 
 ## Architecture
@@ -106,19 +121,18 @@ ctest
 - Entry point for all DOCX operations
 - **Complete Structure Support**: Loads entire DOCX package into memory including all XML parts, media files, and relationships
 - **Tree-Based Storage**: Internal tree structure mirrors ZIP file organization
-- Handles file I/O and ZIP archive management using zip library
-- Provides access to paragraphs and tables
+- Uses PIMPL idiom: `std::unique_ptr<DocumentImpl> impl_` hides implementation details
+- Handles file I/O and ZIP archive management
+- Provides access to paragraphs, tables, sections, and lists
 - Manages XML document structure using pugixml
-- **Advanced Feature**: XML Parts API for accessing all document components
-- **Media Management**: Complete in-memory media management - add, delete, replace, list images in `word/media/`
-- **Relationship Management**: Full support for `_rels/*.rels` files
 
 #### 2. Paragraph Class (`cdocx::Paragraph`)
 - Represents document paragraphs
 - Contains runs (text segments with formatting)
 - Supports insertion and text manipulation
 - Iterator-based traversal with `has_next()` and `next()` methods
-- Compatible with C++11 range-based for loops via iterator system
+- Compatible with C++11 range-based for loops
+- List/Numbering support via `set_numbering()` method (v0.5.0)
 
 #### 3. Run Class (`cdocx::Run`)
 - Represents formatted text segments
@@ -130,64 +144,33 @@ ctest
 - Row and cell iteration
 - Hierarchical structure: Table → Row → Cell → Paragraph
 
-#### 5. Template Class (`cdocx::Template`)
+#### 5. Section Class (`cdocx::Section`) (v0.5.0)
+- Document section management
+- Page setup (size, orientation, margins)
+- Header/Footer references
+- Content addition (paragraphs, tables)
+
+#### 6. Numbering System (`cdocx::NumberingManager`, etc.) (v0.5.0)
+- List definition management
+- Bulleted and numbered lists
+- Chinese numbering support
+- Outline list support
+
+#### 7. Template Class (`cdocx::Template`)
 - Template-based document generation
 - Placeholder replacement with custom patterns (default: `{{` and `}}`)
 - Supports text and image placeholders
-- FSM-based (Finite State Machine) placeholder processing
 
-#### 6. DocumentInserter Class (`cdocx::DocumentInserter`)
+#### 8. DocumentInserter Class (`cdocx::DocumentInserter`)
 - Insert content from one document into another
 - Position-based insertion (beginning, specific location, end)
 - Support for paragraphs only, tables only, or complete documents
 
-### File Organization
-
-```
-cdocx/
-├── include/
-│   ├── cdocx.h                 # Main public API header (aggregates all modules)
-│   ├── cdocx/                  # Modular headers
-│   │   ├── fwd.h               # Forward declarations
-│   │   ├── constants.h         # Formatting flags
-│   │   ├── iterator.h          # Iterator helpers
-│   │   ├── base.h              # Base content classes (Run, Paragraph, Table)
-│   │   ├── document.h          # Document class
-│   │   ├── template.h          # Template replacement
-│   │   ├── inserter.h          # Document insertion
-│   │   ├── advanced.h          # Advanced features (Bookmark, DocumentBuilder, Search)
-│   │   ├── bookmark_replacer.h # 【v0.3.0】Bookmark replacement API
-│   │   └── caption_generator.h # 【v0.3.0】Figure caption generation
-│   └── detail/
-│       └── impl.h              # Private implementation (PIMPL, internal use)
-├── src/
-│   ├── base_content.cpp        # Content classes implementation
-│   ├── document.cpp            # Document class implementation
-│   ├── template.cpp            # Template implementation
-│   ├── inserter.cpp            # Document inserter implementation
-│   ├── tree.cpp                # Tree structure (DocxTree, DocxTreeNode)
-│   ├── impl.cpp                # DocumentImpl implementation
-│   ├── advanced.cpp            # Advanced features implementation
-│   ├── bookmark_replacer.cpp   # 【v0.3.0】Bookmark replacement implementation
-│   └── caption_generator.cpp   # 【v0.3.0】Caption generation implementation
-├── examples/                   # Example programs
-│   └── bookmark_replacement_example.cpp  # 【v0.3.0】Bookmark replacement demo
-├── test/                       # Test suite
-│   └── test_bookmark_replacement.cpp     # 【v0.3.0】Bookmark replacement tests
-├── docs/                       # Documentation
-│   ├── CLEANUP_SUMMARY.md      # Cleanup summary
-│   ├── REFACTORING_SUMMARY.md  # Refactoring details
-│   ├── CDOCX_OPTIMIZATION_PLAN.md        # Optimization plan (COMPLETED)
-│   ├── OPTIMIZATION_UPGRADE_PLAN.md      # Upgrade roadmap
-│   └── archive/                # Archived design documents
-├── thirdparty/
-│   ├── pugixml/                # XML parsing (Git submodule)
-│   └── zip/                    # ZIP handling
-├── CMakeLists.txt
-└── README.md
-```
-
-## Technical Implementation
+#### 9. BookmarkReplacer Class (`cdocx::BookmarkReplacer`)
+- High-level API for bookmark-based replacement
+- Format preservation during replacement
+- Image insertion with alignment support
+- Figure caption generation
 
 ### Internal Tree Structure
 
@@ -209,7 +192,7 @@ struct DocxTreeNode {
     std::string full_path;                      // Full path in ZIP
     DocxNodeType type;                          // Node type
     std::shared_ptr<pugi::xml_document> xml_doc;     // For XmlFile
-    std::vector<uint8_t> binary_data;                // For Media/Binary
+    FileDataStorage file_storage;                    // Unified file data storage
     std::string content_type;                        // MIME type
     bool is_modified = false;
     bool is_new = false;
@@ -217,11 +200,11 @@ struct DocxTreeNode {
 };
 ```
 
-**Implementation Details:**
+**Key Design Points:**
 - Tree structure is **completely hidden** from public API (in `detail/impl.h`)
-- Uses PIMPL pattern: `Document` class contains `std::unique_ptr<DocumentImpl> impl_`
+- All data stored directly in memory (simplified from earlier versions)
 - Path mapping provides O(1) lookup performance
-- Supports iteration, search, and filter operations
+- Thread-safe read operations via shared_mutex
 
 ### DOCX Package Structure
 
@@ -243,7 +226,7 @@ document.docx
 │   ├── styles.xml               # Style definitions
 │   ├── settings.xml             # Document settings
 │   ├── fontTable.xml            # Font table
-│   ├── numbering.xml            # Numbering definitions
+│   ├── numbering.xml            # Numbering definitions (v0.5.0)
 │   ├── footnotes.xml            # Footnotes
 │   ├── endnotes.xml             # Endnotes
 │   ├── footer1.xml              # Footer (can be multiple)
@@ -252,27 +235,173 @@ document.docx
 │   │   └── theme1.xml           # Theme definitions
 │   └── media/                   # Images and other media
 │       ├── image1.png
-│       ├── image2.jpg
 │       └── ...
 └── customXml/                   # Custom XML data
 ```
 
-### Loading Process
+## Build System
 
-1. **Open ZIP file**: Use zip library to open the DOCX file
-2. **Iterate entries**: For each entry in the ZIP:
-   - XML files (`.xml`, `.rels`): Parse into tree nodes
-   - Media files (`word/media/*`): Store binary data
-   - Other files: Store as binary entries
-3. **Parse relationships**: Load all `_rels/*.rels` files
-4. **Load content types**: Parse `[Content_Types].xml`
+### Build Options
 
-### Saving Process
+| Option | Default | Description |
+|--------|---------|-------------|
+| `BUILD_SHARED_LIBS` | OFF | Build shared instead of static library |
+| `BUILD_EXAMPLES` | ON | Build example programs |
+| `BUILD_TESTING` | ON | Build test suite |
+| `BUILD_DOCS` | OFF | Build documentation with Doxygen |
+| `ENABLE_COVERAGE` | OFF | Enable code coverage (GCC/Clang only) |
+| `ENABLE_WERROR` | OFF | Treat warnings as errors |
+| `USE_SYSTEM_GTEST` | OFF | Use system Google Test instead of fetching |
 
-1. **Update relationships**: Serialize modified relationship files
-2. **Update content types**: Ensure `[Content_Types].xml` is current
-3. **Traverse tree**: Write all non-deleted nodes to ZIP
-4. **Atomic replace**: Replace original file with temp file
+### Build Commands
+
+**Windows (Visual Studio):**
+```cmd
+mkdir build && cd build
+cmake .. -G "Visual Studio 17 2022" -A x64
+cmake --build . --config Release --parallel
+ctest -C Release --output-on-failure
+```
+
+**Windows (MinGW):**
+```cmd
+mkdir build && cd build
+cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+cmake --build . --parallel
+```
+
+**Linux/macOS:**
+```bash
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake --build . --parallel
+ctest --output-on-failure
+```
+
+**Using Build Scripts:**
+```bash
+# Linux/macOS
+./scripts/build-linux.sh Release
+
+# Windows (in Visual Studio Developer Command Prompt)
+scripts\build-windows.bat Release x64
+```
+
+### CMake Integration
+
+```cmake
+# Method 1: After installation
+find_package(cdocx REQUIRED)
+target_link_libraries(your_target PRIVATE cdocx::cdocx)
+
+# Method 2: As subdirectory
+add_subdirectory(path/to/cdocx)
+target_link_libraries(your_target PRIVATE cdocx::cdocx)
+
+# Method 3: FetchContent
+include(FetchContent)
+FetchContent_Declare(
+    cdocx
+    GIT_REPOSITORY https://github.com/lonlng/CDocx.git
+    GIT_TAG v0.5.0
+)
+FetchContent_MakeAvailable(cdocx)
+target_link_libraries(your_target PRIVATE cdocx::cdocx)
+```
+
+## Testing
+
+### Test Structure
+Tests are organized in numbered directories under `test/`:
+- `01_basic/` - Basic functionality tests
+- `02_iterator/` - Iterator tests
+- `03_template/` - Template system tests
+- `04_xml_parts/` - XML Parts API tests
+- `05_complete_structure/` - Complete structure tests
+- `06_create_empty/` - Empty document creation tests
+- `07_text_formatting/` - Text formatting tests
+- `08_bookmark_replacement/` - Bookmark replacement tests
+- `09_section_and_list/` - Section and list tests (v0.5.0)
+
+### Running Tests
+
+```bash
+# Run all tests
+ctest
+
+# Run with verbose output
+ctest -V
+
+# Run specific test categories
+ctest -L core           # Core functionality tests
+ctest -L template       # Template system tests
+ctest -L advanced       # Advanced feature tests
+
+# Using CMake targets
+cmake --build . --target test_all
+cmake --build . --target test_core
+cmake --build . --target test_quick
+cmake --build . --target test_template
+cmake --build . --target test_advanced
+```
+
+### Test Utilities (CDocxHelpers.cmake)
+
+The `add_cdocx_test()` function provides:
+- Automatic executable creation with proper settings
+- Data file copying from `data/` subdirectory
+- CTest registration with labels and timeouts
+- Google Test linking
+
+```cmake
+add_cdocx_test(test_name test.cpp
+    DATA file1.docx file2.docx    # Data files to copy
+    LABELS "core;basic"           # CTest labels
+    TIMEOUT 30                    # Test timeout in seconds
+)
+```
+
+## Code Style Guidelines
+
+### Formatting
+- **Tool**: clang-format with LLVM base style
+- **Indent**: 4 spaces
+- **Command**: `clang-format -i src/*.cpp include/*.h include/**/*.h`
+
+### Naming Conventions
+
+| Element | Convention | Examples |
+|---------|------------|----------|
+| Classes | PascalCase | `Document`, `Paragraph`, `Template` |
+| Methods | snake_case | `get_text()`, `set_text()`, `replace_all()` |
+| Constants | snake_case | `bold`, `italic`, `underline` |
+| Namespace | lowercase | `cdocx` |
+| Private members | trailing underscore | `filepath_`, `impl_` |
+| Type aliases | PascalCase | `formatting_flag`, `NumberingId` |
+
+### Header Files
+All public headers must use `#pragma once` and include appropriate documentation:
+
+```cpp
+/**
+ * @file filename.h
+ * @brief Brief description
+ * @details Detailed description
+ * @author lonlng
+ * @copyright MIT License
+ * @date 2026
+ * @version 0.5.0
+ */
+
+#pragma once
+
+// Includes here
+```
+
+### Implementation Files
+- Implementation files correspond to headers (e.g., `document.h` → `document.cpp`)
+- Use PIMPL idiom for implementation hiding
+- Private implementation details in `include/detail/impl.h`
 
 ## API Reference
 
@@ -289,27 +418,11 @@ bool open = doc.is_open();            // Check if document is open
 // Access content
 Paragraph& paragraphs();              // Get paragraphs iterator
 Table& tables();                      // Get tables iterator
-```
 
-### Paragraph Operations
-
-```cpp
-// Iterate paragraphs
-for (auto p = doc.paragraphs(); p.has_next(); p.next()) {
-    // Process paragraph
-}
-
-// Modern C++11 range-based for loop
-for (auto& p : doc.paragraphs()) {
-    for (auto& r : p.runs()) {
-        std::cout << r.get_text() << std::endl;
-    }
-}
-
-// Insert and modify
-Paragraph& insert_paragraph_after(const std::string& text, 
-                                   formatting_flag flag = none);
-Run& add_run(const std::string& text, formatting_flag flag = none);
+// Section support (v0.5.0)
+Section* add_section();
+Section* get_first_section();
+SectionCollection sections();
 ```
 
 ### Text Formatting Flags
@@ -347,384 +460,133 @@ cdocx::Template tmpl(&doc, "<%", "%>");  // Use <%key%> pattern
 tmpl.set_image("logo", "path/to/logo.png");
 ```
 
-### Document Insertion
-
-```cpp
-// Insert entire document
-cdocx::DocumentInserter inserter(&target_doc);
-inserter.insert_document(&source_doc);
-
-// Insert after specific paragraph
-inserter.insert_document_after(&source_doc, paragraph);
-
-// Insert at specific position
-inserter.insert_document_at(&source_doc, 2);  // After 2nd block
-
-// Insert only paragraphs or tables
-inserter.insert_paragraphs(&source_doc, position);
-inserter.insert_tables(&source_doc, position);
-```
-
 ### XML Parts API
 
 ```cpp
 // Access any XML part
 pugi::xml_document* part = doc.get_xml_part("word/styles.xml");
-const pugi::xml_document* part_const = doc.get_xml_part("word/styles.xml");
-
-// Create or replace XML part
-pugi::xml_document& new_part = doc.create_xml_part("word/custom.xml");
-
-// Remove XML part
-doc.remove_xml_part("word/custom.xml");
-
-// Mark part as modified (for incremental save)
-doc.mark_modified("word/document.xml");
-
-// List all loaded parts
-std::vector<std::string> names = doc.get_all_part_names();
-size_t count = doc.get_part_count();
-
-// Check if part exists
-bool exists = doc.has_xml_part("word/numbering.xml");
 
 // Convenience methods for common parts
 pugi::xml_document* doc_xml = doc.get_document_xml();
-pugi::xml_document* core = doc.get_core_properties();
-pugi::xml_document* app = doc.get_app_properties();
-pugi::xml_document* types = doc.get_content_types();
 pugi::xml_document* styles = doc.get_styles();
-pugi::xml_document* settings = doc.get_settings();
-pugi::xml_document* font_table = doc.get_font_table();
 pugi::xml_document* numbering = doc.get_numbering();
-pugi::xml_document* footnotes = doc.get_footnotes();
-pugi::xml_document* endnotes = doc.get_endnotes();
-pugi::xml_document* doc_rels = doc.get_document_rels();
-pugi::xml_document* pkg_rels = doc.get_package_rels();
 
 // Header/Footer access
 pugi::xml_document* footer1 = doc.get_footer(1);
 pugi::xml_document* header1 = doc.get_header(1);
-std::vector<std::string> footer_names = doc.get_footer_names();
-std::vector<std::string> header_names = doc.get_header_names();
 ```
 
 ### Media Management
 
-Complete in-memory media management:
-
 ```cpp
 // Add media from file
-doc.add_media("path/to/image.jpg");  // Auto-detect name
-doc.add_media("path/to/image.jpg", "custom_name.jpg");
-
-// Add media from memory
-std::vector<uint8_t> image_data = ...;
+doc.add_media("path/to/image.jpg");
 doc.add_media_from_memory("image.png", image_data, "image/png");
 
-// Delete media
-doc.delete_media("image_name.jpg");
-
-// Replace media
-doc.replace_media("old.jpg", "path/to/new.jpg");
-doc.replace_media_from_memory("old.jpg", new_data, "image/png");
-
-// List all media
+// List and check media
 std::vector<std::string> media = doc.list_media();
-
-// Check if media exists
 bool exists = doc.has_media("image.jpg");
 
-// Export media from DOCX
+// Export media
 doc.export_media("image.jpg", "output/path.jpg");
-
-// Get media data from memory
-std::vector<uint8_t> data = doc.get_media_data("image.jpg");
-
-// Add media with automatic relationship creation
-std::string rel_id = doc.add_media_with_rel("path/to/image.jpg");
-std::string rel_id2 = doc.add_media_from_memory_with_rel("image.png", data);
-
-// Batch operations
-doc.add_media_batch({{"path1.jpg", "name1.jpg"}, {"path2.jpg", "name2.jpg"}});
-doc.delete_media_batch({"name1.jpg", "name2.jpg"});
-
-// Utilities
-std::string unique_name = doc.generate_unique_image_name("image.png");
-std::string rel_id = doc.get_media_relationship_id("image.jpg");
-bool valid = doc.validate_image_format("image.jpg");
 ```
 
-### Relationship Management
+### List/Numbering (v0.5.0)
 
 ```cpp
-// Get relationships from a rels file
-std::vector<cdocx::Relationship> rels = doc.get_relationships("word/_rels/document.xml.rels");
+// Create list definitions
+NumberingId bullet_list = doc.add_bulleted_list_definition();
+NumberingId numbered_list = doc.add_numbered_list_definition(NumberStyle::Decimal);
+NumberingId chinese_list = doc.add_chinese_numbered_list_definition();
 
-// Add relationship
-std::string new_id = doc.add_relationship("word/_rels/document.xml.rels", 
-    "http://schemas.../image", "media/image1.png");
-
-// Remove relationship
-doc.remove_relationship("word/_rels/document.xml.rels", "rId5");
-
-// Find relationship ID
-std::string rel_id = doc.find_relationship_id("word/_rels/document.xml.rels", "media/image1.png");
-
-// Image relationship helpers
-std::string img_rel = doc.add_image_relationship("image1.png");
-doc.remove_image_relationship("image1.png");
+// Apply to paragraph (declaration, implementation pending)
+paragraph.set_numbering(bullet_list, 0);  // Level 0
 ```
 
-## Build System
+## Development Conventions
 
-### Build Options
+### Adding New Features
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `BUILD_SHARED_LIBS` | OFF | Build shared library |
-| `BUILD_SAMPLES` | ON | Build sample programs |
-| `BUILD_TESTING` | ON | Build test suite |
-| `ENABLE_ADVANCED_FEATURES` | ON | Enable advanced features |
+1. **Headers**: Add public declarations to `include/cdocx/*.h`
+2. **Implementation**: Add implementations to `src/*.cpp`
+3. **Update Main Header**: Add include to `include/cdocx.h` if new public API
+4. **Tests**: Add tests in `test/XX_feature_name/`
+5. **Examples**: Add example in `examples/XX_feature_name/`
+6. **Documentation**: Update relevant docs in `docs/`
 
-### CMake Integration
+### PIMPL Pattern Usage
 
-```cmake
-# Method 1: After installation
-find_package(cdocx REQUIRED)
-target_link_libraries(your_target PRIVATE cdocx::cdocx)
-
-# Method 2: As subdirectory
-add_subdirectory(path/to/cdocx)
-target_link_libraries(your_target PRIVATE cdocx::cdocx)
-
-# Method 3: FetchContent
-include(FetchContent)
-FetchContent_Declare(
-    cdocx
-    GIT_REPOSITORY https://github.com/lonlng/CDocx.git
-    GIT_TAG v0.2.0
-)
-FetchContent_MakeAvailable(cdocx)
-target_link_libraries(your_target PRIVATE cdocx::cdocx)
-```
-
-## Usage Examples
-
-### Complete Structure Support
-
-The Document class loads the entire DOCX package into memory:
+All public classes use the PIMPL idiom:
 
 ```cpp
-#include <cdocx.h>
+// In public header (document.h)
+class Document {
+private:
+    std::unique_ptr<DocumentImpl> impl_;
+public:
+    // Public API only, no implementation details
+};
 
-int main() {
-    cdocx::Document doc("template.docx");
-    doc.open();
-    
-    // All XML parts are loaded into memory
-    auto parts = doc.get_all_part_names();
-    std::cout << "Loaded " << parts.size() << " XML parts" << std::endl;
-    // Output: Loaded 20 XML parts
-    
-    // All media files are loaded into memory
-    auto media = doc.list_media();
-    std::cout << "Loaded " << media.size() << " media files" << std::endl;
-    // Output: Loaded 17 media files
-    
-    // Access any part
-    pugi::xml_document* styles = doc.get_styles();
-    pugi::xml_document* settings = doc.get_settings();
-    
-    // Get media data directly from memory
-    std::vector<uint8_t> image_data = doc.get_media_data("image1.png");
-    
-    // Modify any XML part
-    doc.mark_modified("word/styles.xml");
-    
-    // Save entire structure back to DOCX
-    doc.save("output.docx");
-    // All XML parts, media files, and relationships are preserved
-    
-    return 0;
+// In private header (detail/impl.h)
+class DocumentImpl {
+    // All implementation details
+};
+```
+
+### Iterator Pattern
+
+Classes that need iteration expose iterator methods:
+
+```cpp
+// Traditional iteration
+for (auto p = doc.paragraphs(); p.has_next(); p.next()) {
+    // Process paragraph
 }
-```
 
-### Reading a Document
-
-```cpp
-#include <cdocx.h>
-#include <iostream>
-
-int main() {
-    cdocx::Document doc("file.docx");
-    doc.open();
-    
-    // Traditional iterator
-    for (auto p = doc.paragraphs(); p.has_next(); p.next()) {
-        for (auto r = p.runs(); r.has_next(); r.next()) {
-            std::cout << r.get_text() << std::endl;
-        }
+// Range-based for (C++11)
+for (auto& p : doc.paragraphs()) {
+    for (auto& r : p.runs()) {
+        std::cout << r.get_text() << std::endl;
     }
-    
-    return 0;
 }
 ```
 
-### Creating a Document
+## Security Considerations
 
-```cpp
-#include <cdocx.h>
+- Input validation is performed on file paths and image formats
+- ZIP extraction limits prevent zip bomb attacks
+- XML parsing uses pugixml's secure defaults
+- File size validation available via `validate_image_size()`
 
-int main() {
-    cdocx::Document doc("output.docx");
-    doc.open();
-    
-    // Insert paragraph with formatting
-    cdocx::Paragraph p = doc.paragraphs().insert_paragraph_after("Hello ");
-    p.add_run("World", cdocx::bold);
-    p.add_run("!", cdocx::italic | cdocx::underline);
-    
-    doc.save();
-    return 0;
-}
-```
+## Platform-Specific Notes
 
-### Template Processing
+### Windows
+- MSVC Runtime Library is set globally to ensure consistency
+- Default: Static runtime (/MT, /MTd)
+- Use `BUILD_SHARED_LIBS=ON` for dynamic runtime (/MD, /MDd)
+- UTF-8 source and execution character set enforced
 
-```cpp
-#include <cdocx.h>
+### Linux/macOS
+- UTF-8 character set support via compiler flags
+- Code coverage support via `ENABLE_COVERAGE` option
 
-int main() {
-    cdocx::Document doc("template.docx");
-    doc.open();
-    
-    if (!doc.is_open()) {
-        std::cerr << "Failed to open document!" << std::endl;
-        return 1;
-    }
-    
-    cdocx::Template tmpl(&doc);
-    tmpl.set("name", "John Doe");
-    tmpl.set("department", "Engineering");
-    tmpl.replace_all();
-    
-    doc.save("output.docx");
-    return 0;
-}
-```
+## Troubleshooting
 
-### Document Insertion
+### Common Issues
 
-```cpp
-#include <cdocx.h>
+**"pugixml.hpp not found"**
+- Dependencies are fetched automatically via CMake FetchContent
+- Ensure network connectivity for initial build
 
-int main() {
-    cdocx::Document target("main.docx");
-    target.open();
-    
-    cdocx::Document source("content.docx");
-    source.open();
-    
-    cdocx::DocumentInserter inserter(&target);
-    inserter.insert_document(&source);
-    
-    target.save("combined.docx");
-    return 0;
-}
-```
+**LNK2038: Runtime library mismatch**
+- All targets use consistent runtime library settings
+- Check `CMAKE_MSVC_RUNTIME_LIBRARY` if customizing
 
-### Bookmark Replacement (v0.3.0)
-
-```cpp
-#include <cdocx.h>
-#include <cdocx/bookmark_replacer.h>
-#include <cdocx/caption_generator.h>
-
-int main() {
-    // Open template document
-    cdocx::Document doc("template.docx");
-    doc.open();
-    
-    // Create bookmark replacer
-    cdocx::BookmarkReplacer replacer(&doc);
-    
-    // 1. Simple text replacement (preserves original format)
-    replacer.replace_text("REPORT_NO", "BGP-2024-BJ-001");
-    replacer.replace_text("DATE", "2024-06-15");
-    
-    // 2. Batch replacement
-    std::map<std::string, std::string> replacements = {
-        {"COMPANY", "Beijing Geological Research Institute"},
-        {"ADDRESS", "123 Main Street"}
-    };
-    replacer.replace_text_batch(replacements);
-    
-    // 3. Replacement with custom format
-    cdocx::BookmarkFormat format;
-    format.font_far_east = "SimHei";
-    format.font_size = 28;  // 14pt
-    format.bold = true;
-    format.color = "FF0000";
-    replacer.replace_text_with_format("TITLE", "Final Report", format);
-    
-    // 4. Image replacement with caption
-    replacer.replace_with_image("RESULT_IMAGE", "detection_result.png", 
-                                "GPR Detection Result");
-    
-    // 5. Advanced image replacement with alignment
-    cdocx::ImageSize size(400, 300);  // 400x300 points
-    replacer.replace_with_image_advanced("CHART", "chart.png", size,
-                                          "Analysis Chart",
-                                          cdocx::ImageAlignment::Center);
-    
-    // Check statistics
-    auto stats = replacer.get_stats();
-    std::cout << "Success: " << stats.success_count << std::endl;
-    
-    // Save document
-    doc.save("output.docx");
-    return 0;
-}
-```
-
-## Testing
-
-```bash
-# Run all tests
-ctest
-
-# Run with verbose output
-ctest -V
-
-# Run specific categories
-ctest -L core       # Core functionality tests
-ctest -L template   # Template system tests
-
-# Using CMake targets
-cmake --build . --target test_all
-```
-
-## Code Style
-
-### Naming Conventions
-
-| Element | Convention | Examples |
-|---------|------------|----------|
-| Classes | PascalCase | `Document`, `Paragraph`, `Template` |
-| Methods | snake_case | `get_text()`, `set_text()`, `replace_all()` |
-| Constants | snake_case | `bold`, `italic`, `underline` |
-| Namespace | lowercase | `cdocx` |
-
-### Formatting
-
-- **Tool**: clang-format with LLVM base style
-- **Indent**: 4 spaces
-- **Command**: `clang-format -i src/*.cpp include/*.h`
+**CMake errors**
+- Ensure CMake 3.14+
+- Delete build directory and reconfigure if issues persist
 
 ## Contributing
-
-### Pull Request Process
 
 1. Discuss changes via issue or email before starting
 2. Make focused PRs that handle one specific topic
@@ -732,40 +594,50 @@ cmake --build . --target test_all
 4. Add tests for new functionality
 5. Update documentation if needed
 
-### Code of Conduct
+## Roadmap
 
-- Use welcoming and inclusive language
-- Be respectful of differing viewpoints
-- Gracefully accept constructive criticism
-- Focus on what is best for the community
+### Current Features (v0.5.0)
+- ✅ Document operations (open, create, save DOCX)
+- ✅ Paragraph and Run manipulation
+- ✅ Basic text formatting (bold, italic, underline, etc.)
+- ✅ Table creation and basic manipulation
+- ✅ Template-based placeholder replacement
+- ✅ Document insertion/merging
+- ✅ Media file management (images)
+- ✅ XML Parts API access
+- ✅ Bookmark management with format preservation
+- ✅ BookmarkReplacer class
+- ✅ Image insertion with alignment
+- ✅ Figure caption generation
+- ✅ DocumentBuilder for fluent document construction
+- ✅ Find and replace
+- ✅ **Section support** (page setup, margins, orientation)
+- ✅ **List/Numbering system** (bulleted, numbered, Chinese)
 
-## Troubleshooting
+### Planned Features
+See [docs/ASPOSE_COMPARISON_AND_ROADMAP.md](docs/ASPOSE_COMPARISON_AND_ROADMAP.md) for detailed roadmap.
 
-### Common Issues
+**Phase 2: Export Formats**
+- PDF export
+- HTML export
+- Image rendering (PNG/JPG)
 
-**"pugixml.hpp not found"**
-- Solution: Run `git submodule update --init --recursive`
+**Phase 3: Advanced Features**
+- Field support (page numbers, TOC, hyperlinks)
+- Comments/annotations
+- Footnotes and endnotes
+- Styles system
 
-**CMake errors**
-- Ensure CMake 3.10+
-- Check that submodules are initialized
-
-**Build fails**
-- Ensure C++17 compatible compiler
-- Check that all dependencies are available
-
-### Important Notes
-
-1. `Document::open()` returns `void`, not `bool`. Use `is_open()` to check status.
-2. Media management methods use `*_media` naming (e.g., `add_media`, `list_media`).
-3. Always check `is_open()` before operations:
-   ```cpp
-   doc.open();
-   if (!doc.is_open()) {
-       // Handle error
-   }
-   ```
+**Phase 4: Professional Features**
+- Enhanced mail merge
+- Document comparison
+- Chart support
+- Formula (OMML) support
 
 ## License
 
-MIT License - see LICENSE file for details.
+MIT License - see [LICENSE](LICENSE) file for details.
+
+---
+
+*This file is intended for AI coding agents. For user documentation, see [README.md](README.md).*
