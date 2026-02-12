@@ -62,6 +62,23 @@ enum class NumberingLevel {
     Level6, Level7, Level8, Level9
 };
 
+// ============================================================================
+// List Format (for paragraph-level list formatting)
+// ============================================================================
+
+/**
+ * @struct ListFormat
+ * @brief List formatting for paragraphs
+ * @details Links a paragraph to a specific list definition and level
+ */
+struct ListFormat {
+    NumberingId list_id = 0;  ///< 0 = no list
+    NumberingLevel level = NumberingLevel::Level1;
+    
+    bool is_list_item() const { return list_id != 0; }
+    void remove_list_format() { list_id = 0; }
+};
+
 /**
  * @brief Numbering style enumeration
  */

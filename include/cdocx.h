@@ -36,9 +36,12 @@
 #include "cdocx/enums.h"
 #include "cdocx/format.h"
 #include "cdocx/node.h"
+#include "cdocx/body.h"
 #include "cdocx/document.h"
 #include "cdocx/paragraph.h"
 #include "cdocx/table.h"
+#include "cdocx/section.h"
+#include "cdocx/base.h"
 
 // ============================================================================
 // Convenience / Aggregated Header

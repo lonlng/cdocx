@@ -20,6 +20,8 @@ enum class NodeType {
     Section,
     Body,
     HeaderFooter,
+    Header,       ///< Header content
+    Footer,       ///< Footer content
     Paragraph,
     Run,
     Table,

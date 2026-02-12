@@ -1,16 +1,20 @@
 /**
  * @file table.h
- * @brief Table classes for CDocx
- * @details Table, Row, Cell with full formatting support
+ * @brief Table classes for CDocx - DOM Style
+ * @details Table, Row, Cell with full DOM support, all inheriting from CompositeNode
+ * 
+ * @author lonlng
+ * @copyright MIT License
+ * @date 2026
+ * @version 0.7.0
  */
 
 #pragma once
 
-#include <pugixml.hpp>
-
 #include <cdocx/node.h>
 #include <cdocx/format.h>
-#include <cdocx/paragraph.h>
+
+#include <pugixml.hpp>
 #include <memory>
 #include <string>
 #include <vector>
@@ -23,132 +27,8 @@ class Body;
 class Paragraph;
 class ParagraphCollection;
 
-
-/**
- * @class TableCell
- * @brief Represents a cell in a table
- * @details A TableCell contains one or more Paragraph objects and can have
- *          cell-specific properties (width, borders, shading, etc.).
- * 
- * @see TableRow, Table, Paragraph
- * @since 0.1.0
- */
-class TableCell {
-private:
-    friend class IteratorHelper;
-    
-    pugi::xml_node parent_;      ///< Parent row node
-    pugi::xml_node current_;     ///< Current w:tc element
-    Paragraph paragraph_;        ///< Paragraph iterator for this cell
-
-public:
-    /**
-     * @brief Default constructor
-     */
-    TableCell();
-    
-    /**
-     * @brief Construct cell with parent and current nodes
-     * @param[in] parent The parent row node
-     * @param[in] current The current w:tc element
-     */
-    TableCell(pugi::xml_node parent, pugi::xml_node current);
-
-    /**
-     * @brief Set the parent node and initialize to first cell
-     * @param[in] node The parent row node
-     */
-    void set_parent(pugi::xml_node node);
-    
-    /**
-     * @brief Set the current node directly
-     * @param[in] node The w:tc element to set as current
-     */
-    void set_current(pugi::xml_node node);
-
-    /**
-     * @brief Get the paragraphs iterator for this cell
-     * @return Reference to the Paragraph iterator
-     */
-    Paragraph& paragraphs();
-
-    /**
-     * @brief Move to the next cell in the row
-     * @return Reference to this cell (now pointing to next sibling)
-     */
-    TableCell& next();
-    
-    /**
-     * @brief Check if this cell is valid
-     * @return true if valid, false if at end or invalid
-     */
-    bool has_next() const;
-};
-
-/**
- * @class TableRow
- * @brief Represents a row in a table
- * @details A TableRow contains one or more TableCell objects arranged
- *          horizontally.
- * 
- * @see TableCell, Table
- * @since 0.1.0
- */
-class TableRow {
-private:
-    friend class IteratorHelper;
-    
-    pugi::xml_node parent_;   ///< Parent table node
-    pugi::xml_node current_;  ///< Current w:tr element
-    TableCell cell_;          ///< Cell iterator for this row
-
-public:
-    /**
-     * @brief Default constructor
-     */
-    TableRow();
-    
-    /**
-     * @brief Construct row with parent and current nodes
-     * @param[in] parent The parent table node
-     * @param[in] current The current w:tr element
-     */
-    TableRow(pugi::xml_node parent, pugi::xml_node current);
-    
-    /**
-     * @brief Set the parent node and initialize to first row
-     * @param[in] node The parent table node
-     */
-    void set_parent(pugi::xml_node node);
-    
-    /**
-     * @brief Set the current node directly
-     * @param[in] node The w:tr element to set as current
-     */
-    void set_current(pugi::xml_node node);
-
-    /**
-     * @brief Get the cells iterator for this row
-     * @return Reference to the TableCell iterator
-     */
-    TableCell& cells();
-
-    /**
-     * @brief Check if this row is valid
-     * @return true if valid, false if at end or invalid
-     */
-    bool has_next() const;
-    
-    /**
-     * @brief Move to the next row in the table
-     * @return Reference to this row (now pointing to next sibling)
-     */
-    TableRow& next();
-};
-
-
 // ============================================================================
-// Cell Class
+// Cell Class - Table cell (CompositeNode containing Paragraphs and Tables)
 // ============================================================================
 
 class Cell : public CompositeNode {
@@ -156,24 +36,32 @@ public:
     Cell();
     explicit Cell(Document* doc);
     
+    // Node overrides
+    NodeType node_type() const override { return NodeType::Cell; }
+    void accept(DocumentVisitor* visitor) override;
+    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::string get_text() const override;
+    
     // Cell format
     CellFormat& get_cell_format() { return format_; }
     const CellFormat& get_cell_format() const { return format_; }
+    void set_cell_format(const CellFormat& format) { format_ = format; }
     
-    // Content access
-    ParagraphCollection get_paragraphs();
-    std::shared_ptr<Paragraph> get_first_paragraph();
-    
-    // Ensure cell has at least one paragraph
-    std::shared_ptr<Paragraph> ensure_minimum();
+    // Content access (Cell contains Paragraphs and Tables)
+    std::vector<std::shared_ptr<Paragraph>> get_paragraphs() const;
+    std::vector<std::shared_ptr<class Table>> get_tables() const;
+    std::shared_ptr<Paragraph> get_first_paragraph() const;
     
     // Content creation
     std::shared_ptr<Paragraph> append_paragraph(const std::string& text = "");
     std::shared_ptr<Paragraph> insert_paragraph(int index, const std::string& text = "");
+    std::shared_ptr<class Table> append_table(int rows = 1, int cols = 1);
+    
+    // Ensure cell has at least one paragraph
+    std::shared_ptr<Paragraph> ensure_minimum();
     
     // Convenient text setting
     void set_text(const std::string& text);
-    std::string get_text() const override;
     
     // Merge operations
     void merge_with(std::shared_ptr<Cell> other);
@@ -185,7 +73,7 @@ public:
     int get_horizontal_merge_span() const;
     
     // Parent row access
-    std::shared_ptr<class Row> get_parent_row();
+    std::shared_ptr<class Row> get_parent_row() const;
     
     // Column index
     int get_column_index() const;
@@ -196,11 +84,6 @@ public:
     
     void set_width(double width, bool preferred = false);
     double get_width() const;
-    
-    // Node overrides
-    NodeType node_type() const override { return NodeType::Cell; }
-    void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
     
 private:
     CellFormat format_;
@@ -217,8 +100,16 @@ public:
     using iterator = std::vector<std::shared_ptr<Cell>>::iterator;
     using const_iterator = std::vector<std::shared_ptr<Cell>>::const_iterator;
     
+    CellCollection() = default;
+    explicit CellCollection(const std::vector<std::shared_ptr<Cell>>& cells) : cells_(cells) {}
+    
     size_t get_count() const { return cells_.size(); }
-    std::shared_ptr<Cell> get_item(int index) const;
+    std::shared_ptr<Cell> get_item(int index) const {
+        if (index >= 0 && static_cast<size_t>(index) < cells_.size()) {
+            return cells_[index];
+        }
+        return nullptr;
+    }
     std::shared_ptr<Cell> operator[](int index) const { return get_item(index); }
     
     iterator begin() { return cells_.begin(); }
@@ -232,15 +123,18 @@ public:
     void clear();
     void insert(int index, std::shared_ptr<Cell> cell);
     
-    std::shared_ptr<Cell> first() const;
-    std::shared_ptr<Cell> last() const;
+    std::shared_ptr<Cell> first() const {
+        return cells_.empty() ? nullptr : cells_.front();
+    }
+    std::shared_ptr<Cell> last() const {
+        return cells_.empty() ? nullptr : cells_.back();
+    }
     
-    // Get all text from all cells
     std::string get_text() const;
 };
 
 // ============================================================================
-// Row Class
+// Row Class - Table row (CompositeNode containing Cells)
 // ============================================================================
 
 class Row : public CompositeNode {
@@ -248,15 +142,22 @@ public:
     Row();
     explicit Row(Document* doc);
     
+    // Node overrides
+    NodeType node_type() const override { return NodeType::Row; }
+    void accept(DocumentVisitor* visitor) override;
+    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::string get_text() const override;
+    
     // Row format
     RowFormat& get_row_format() { return format_; }
     const RowFormat& get_row_format() const { return format_; }
+    void set_row_format(const RowFormat& format) { format_ = format; }
     
     // Cell access
-    CellCollection get_cells();
-    std::shared_ptr<Cell> get_first_cell();
-    std::shared_ptr<Cell> get_last_cell();
-    std::shared_ptr<Cell> get_cell(int index);
+    CellCollection get_cells() const;
+    std::shared_ptr<Cell> get_first_cell() const;
+    std::shared_ptr<Cell> get_last_cell() const;
+    std::shared_ptr<Cell> get_cell(int index) const;
     
     // Cell creation
     std::shared_ptr<Cell> append_cell();
@@ -276,15 +177,7 @@ public:
     bool is_last_row() const;
     
     // Parent table
-    std::shared_ptr<class Table> get_parent_table();
-    
-    // Node overrides
-    NodeType node_type() const override { return NodeType::Row; }
-    void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
-    
-    // Text content
-    std::string get_text() const override;
+    std::shared_ptr<class Table> get_parent_table() const;
     
 private:
     RowFormat format_;
@@ -301,8 +194,16 @@ public:
     using iterator = std::vector<std::shared_ptr<Row>>::iterator;
     using const_iterator = std::vector<std::shared_ptr<Row>>::const_iterator;
     
+    RowCollection() = default;
+    explicit RowCollection(const std::vector<std::shared_ptr<Row>>& rows) : rows_(rows) {}
+    
     size_t get_count() const { return rows_.size(); }
-    std::shared_ptr<Row> get_item(int index) const;
+    std::shared_ptr<Row> get_item(int index) const {
+        if (index >= 0 && static_cast<size_t>(index) < rows_.size()) {
+            return rows_[index];
+        }
+        return nullptr;
+    }
     std::shared_ptr<Row> operator[](int index) const { return get_item(index); }
     
     iterator begin() { return rows_.begin(); }
@@ -316,57 +217,40 @@ public:
     void clear();
     void insert(int index, std::shared_ptr<Row> row);
     
-    std::shared_ptr<Row> first() const;
-    std::shared_ptr<Row> last() const;
+    std::shared_ptr<Row> first() const {
+        return rows_.empty() ? nullptr : rows_.front();
+    }
+    std::shared_ptr<Row> last() const {
+        return rows_.empty() ? nullptr : rows_.back();
+    }
 };
 
+// ============================================================================
+// Table Class - Table (CompositeNode containing Rows)
+// ============================================================================
 
-/**
- * @class Table
- * @brief Represents a table in the document
- * @details A Table is a block-level element containing one or more TableRow
- *          objects. It can have table-level properties (width, borders,
- *          alignment, etc.).
- * 
- * @par Usage Example:
- * @code
- * auto table = doc.tables();
- * 
- * while (table.has_next()) {
- *     auto row = table.rows();
- *     while (row.has_next()) {
- *         auto cell = row.cells();
- *         while (cell.has_next()) {
- *             auto para = cell.paragraphs();
- *             std::cout << para.get_text() << std::endl;
- *             cell.next();
- *         }
- *         row.next();
- *     }
- *     table.next();
- * }
- * @endcode
- * 
- * @see TableRow, TableCell
- * @since 0.1.0
- */
 class Table : public CompositeNode {
 public:
-    // Table();
+    Table();
     explicit Table(Document* doc);
-    
-    // Create table with dimensions
     Table(Document* doc, int rows, int cols);
+    
+    // Node overrides
+    NodeType node_type() const override { return NodeType::Table; }
+    void accept(DocumentVisitor* visitor) override;
+    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::string get_text() const override;
     
     // Table format
     TableFormat& get_table_format() { return format_; }
     const TableFormat& get_table_format() const { return format_; }
+    void set_table_format(const TableFormat& format) { format_ = format; }
     
     // Row access
-    RowCollection get_rows();
-    std::shared_ptr<Row> get_first_row();
-    std::shared_ptr<Row> get_last_row();
-    std::shared_ptr<Row> get_row(int index);
+    RowCollection get_rows() const;
+    std::shared_ptr<Row> get_first_row() const;
+    std::shared_ptr<Row> get_last_row() const;
+    std::shared_ptr<Row> get_row(int index) const;
     
     // Row creation
     std::shared_ptr<Row> append_row();
@@ -380,7 +264,7 @@ public:
     void remove_all_rows();
     
     // Cell access (convenience)
-    std::shared_ptr<Cell> get_cell(int row, int col);
+    std::shared_ptr<Cell> get_cell(int row, int col) const;
     
     // Dimensions
     int get_row_count() const;
@@ -416,133 +300,118 @@ public:
     // Check if table is complex (has merged cells, etc.)
     bool is_complex() const;
     
-    // Node overrides
-    NodeType node_type() const override { return NodeType::Table; }
-    void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
-    std::string get_text() const override;
-    
-private:
-    TableFormat format_;    
+    // Legacy iterator-style API (deprecated but kept for compatibility)
 private:
     friend class IteratorHelper;
     
-    pugi::xml_node parent_;   ///< Parent body node
-    pugi::xml_node current_;  ///< Current w:tbl element
-    TableRow row_;            ///< Row iterator for this table
-
+    pugi::xml_node parent_xml_;   ///< Parent body XML node (legacy)
+    pugi::xml_node current_xml_;  ///< Current w:tbl XML element (legacy)
+    
 public:
-    /**
-     * @brief Default constructor
-     */
-    Table();
-    
-    /**
-     * @brief Construct table with parent and current nodes
-     * @param[in] parent The parent body node
-     * @param[in] current The current w:tbl element
-     */
     Table(pugi::xml_node parent, pugi::xml_node current);
+    void set_parent_xml(pugi::xml_node node);
+    void set_current_xml(pugi::xml_node node);
+    pugi::xml_node get_current_xml() const { return current_xml_; }
+    pugi::xml_node get_parent_xml() const { return parent_xml_; }
     
-    /**
-     * @brief Set the parent node and initialize to first table
-     * @param[in] node The parent body node
-     */
-    void set_parent(pugi::xml_node node);
-    
-    /**
-     * @brief Set the current node directly
-     * @param[in] node The w:tbl element to set as current
-     */
-    void set_current(pugi::xml_node node);
-
-    /**
-     * @brief Move to the next table in the document
-     * @return Reference to this table (now pointing to next sibling)
-     */
     Table& next();
-    
-    /**
-     * @brief Check if this table is valid
-     * @return true if valid, false if at end or invalid
-     */
     bool has_next() const;
-
-    /**
-     * @brief Get the rows iterator for this table
-     * @return Reference to the TableRow iterator
-     */
-    TableRow& rows();
     
-    // ===================================================================
-    // Enhanced Table Operations (v0.4.0)
-    // ===================================================================
+    // Legacy row access
+    class TableRow rows_legacy();
     
-    /**
-     * @brief Access cell at specific position (with bounds checking)
-     * @param[in] row Row index (0-based)
-     * @param[in] col Column index (0-based)
-     * @return TableCell at the position (may be invalid if out of bounds)
-     * @since 0.4.0
-     */
-    TableCell cellAt(size_t row, size_t col) const;
-    
-    /**
-     * @brief Access cell at specific position (no bounds checking)
-     * @param[in] row Row index (0-based)
-     * @param[in] col Column index (0-based)
-     * @return TableCell at the position (undefined if out of bounds)
-     * @since 0.4.0
-     */
-    TableCell cellAtUnsafe(size_t row, size_t col) const;
-    
-    /**
-     * @brief Get number of rows
-     * @return Row count
-     * @since 0.4.0
-     */
+    // Legacy cell access (convenience)
+    class TableCell cellAt(size_t row, size_t col) const;
+    class TableCell cellAtUnsafe(size_t row, size_t col) const;
     size_t getRowCount() const;
-    
-    /**
-     * @brief Get number of columns (max columns in any row)
-     * @return Column count
-     * @since 0.4.0
-     */
     size_t getColumnCount() const;
-    
-    /**
-     * @brief Merge cells in a range
-     * @param[in] startRow Start row index
-     * @param[in] startCol Start column index
-     * @param[in] rowCount Number of rows to merge
-     * @param[in] colCount Number of columns to merge
-     * @return The merged cell
-     * @since 0.4.0
-     */
     TableCell merge(size_t startRow, size_t startCol, 
                     size_t rowCount, size_t colCount);
-    
-    /**
-     * @brief Split a merged cell
-     * @param[in] row Row index of the merged cell
-     * @param[in] col Column index of the merged cell
-     * @since 0.4.0
-     */
     void split(size_t row, size_t col);
-    
-    /**
-     * @brief Dump table structure to console (for debugging)
-     * @since 0.4.0
-     */
     void dumpStructure() const;
-    
-    /**
-     * @brief Apply table properties
-     * @param[in] props TableProperties structure
-     * @since 0.4.0
-     */
     void set_properties(const TableProperties& props);
+    
+private:
+    TableFormat format_;
 };
 
+// ============================================================================
+// TableCollection
+// ============================================================================
+
+class TableCollection {
+    std::vector<std::shared_ptr<Table>> tables_;
+    
+public:
+    using iterator = std::vector<std::shared_ptr<Table>>::iterator;
+    using const_iterator = std::vector<std::shared_ptr<Table>>::const_iterator;
+    
+    TableCollection() = default;
+    explicit TableCollection(const std::vector<std::shared_ptr<Table>>& tables) : tables_(tables) {}
+    
+    size_t get_count() const { return tables_.size(); }
+    std::shared_ptr<Table> get_item(int index) const {
+        if (index >= 0 && static_cast<size_t>(index) < tables_.size()) {
+            return tables_[index];
+        }
+        return nullptr;
+    }
+    std::shared_ptr<Table> operator[](int index) const { return get_item(index); }
+    
+    iterator begin() { return tables_.begin(); }
+    iterator end() { return tables_.end(); }
+    const_iterator begin() const { return tables_.begin(); }
+    const_iterator end() const { return tables_.end(); }
+    
+    std::shared_ptr<Table> first() const {
+        return tables_.empty() ? nullptr : tables_.front();
+    }
+    std::shared_ptr<Table> last() const {
+        return tables_.empty() ? nullptr : tables_.back();
+    }
+};
+
+// ============================================================================
+// Legacy TableRow/TableCell Classes (for backward compatibility)
+// ============================================================================
+
+class TableCell {
+private:
+    friend class IteratorHelper;
+    
+    pugi::xml_node parent_;      ///< Parent row node
+    pugi::xml_node current_;     ///< Current w:tc element
+    
+public:
+    TableCell();
+    TableCell(pugi::xml_node parent, pugi::xml_node current);
+    
+    void set_parent(pugi::xml_node node);
+    void set_current(pugi::xml_node node);
+    
+    Paragraph& paragraphs();
+    TableCell& next();
+    bool has_next() const;
+};
+
+class TableRow {
+private:
+    friend class IteratorHelper;
+    
+    pugi::xml_node parent_;   ///< Parent table node
+    pugi::xml_node current_;  ///< Current w:tr element
+    TableCell cell_;          ///< Cell iterator for this row
+    
+public:
+    TableRow();
+    TableRow(pugi::xml_node parent, pugi::xml_node current);
+    
+    void set_parent(pugi::xml_node node);
+    void set_current(pugi::xml_node node);
+    
+    TableCell& cells();
+    bool has_next() const;
+    TableRow& next();
+};
 
 } // namespace cdocx

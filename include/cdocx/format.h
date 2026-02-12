@@ -283,6 +283,7 @@ public:
     // Strikethrough
     StrikeType strike = StrikeType::None;
     bool double_strike = false;
+    bool strikethrough = false;  // Convenience flag for single strikethrough
     
     // Script position
     ScriptType script_type = ScriptType::Normal;

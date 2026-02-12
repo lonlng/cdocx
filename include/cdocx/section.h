@@ -1,13 +1,14 @@
 /**
  * @file section.h
- * @brief Section (分节) support for CDocx
+ * @brief Section support for CDocx - DOM Style
  * @details Provides Section class for managing document sections with independent
  *          page settings, headers, footers, and content.
+ *          Section now inherits from CompositeNode and contains Body and HeaderFooter.
  * 
  * @author CDocx Team
  * @copyright MIT License
  * @date 2026
- * @version 0.5.0
+ * @version 0.7.0
  * 
  * @par Usage Example:
  * @code
@@ -15,14 +16,15 @@
  * doc.open();
  * 
  * // Add a section with landscape orientation
- * auto sect = doc.add_section();
- * sect->prop.orientation = SectionProperties::Orientation::Landscape;
- * sect->prop.pageSize.width = 16840;  // A4 landscape width in twips
- * sect->prop.pageSize.height = 11900; // A4 landscape height
+ * auto sect = doc.append_section();
+ * sect->get_properties().orientation = SectionProperties::Orientation::Landscape;
+ * sect->get_properties().pageSize.width = 16840;  // A4 landscape width in twips
+ * sect->get_properties().pageSize.height = 11900; // A4 landscape height
  * 
- * // Add content to section
- * auto para = sect->add_paragraph();
- * para->add_run("This is in landscape section");
+ * // Add content to section via body
+ * auto body = sect->get_body();
+ * auto para = body->append_paragraph("This is in landscape section");
+ * para->append_run(" with bold text")->set_bold(true);
  * 
  * doc.save();
  * @endcode
@@ -30,297 +32,224 @@
 
 #pragma once
 
-#include <cdocx/fwd.h>
+#include <cdocx/node.h>
 #include <cdocx/enums.h>
 #include <cdocx/properties.h>
-#include <cdocx/base.h>
-#include <cdocx/table.h>
+#include <cdocx/body.h>
+
 #include <memory>
-#include <list>
+#include <vector>
 
 namespace cdocx {
 
 // Forward declarations
-class Section;
-class SectionIterator;
-using SectionPointer = std::shared_ptr<Section>;
+class Document;
+class HeaderFooter;
 
-/**
- * @brief Header/Footer reference structure
- */
+// ============================================================================
+// Header/Footer Reference Structure
+// ============================================================================
+
 struct HeaderFooterRef {
     HeaderFooterType type = HeaderFooterType::Default;
     std::string relationship_id;  ///< rId reference
     std::string part_path;        ///< Path like "word/header1.xml"
 };
 
-/**
- * @class Section
- * @brief Represents a document section with independent page settings
- * @details A Section is a container for paragraphs and tables with its own
- *          page setup (size, orientation, margins), headers, and footers.
- *          Multiple sections allow different page layouts within one document.
- * 
- * @par Section Properties:
- * - Page size and orientation
- * - Page margins
- * - Headers and footers
- * - Column layout
- * - Line numbering
- * 
- * @since 0.5.0
- */
-class Section {
+// ============================================================================
+// Section Class - Document section (CompositeNode containing Body)
+// ============================================================================
+
+class Section : public CompositeNode {
+public:
+    Section();
+    explicit Section(Document* doc);
+    
+    // Node overrides
+    NodeType node_type() const override { return NodeType::Section; }
+    void accept(DocumentVisitor* visitor) override;
+    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::string get_text() const override;
+    
+    // Section properties
+    SectionProperties& get_properties() { return properties_; }
+    const SectionProperties& get_properties() const { return properties_; }
+    void set_properties(const SectionProperties& props) { properties_ = props; }
+    
+    // Body (main content)
+    std::shared_ptr<Body> get_body() const;
+    void set_body(std::shared_ptr<Body> body);
+    std::shared_ptr<Body> ensure_body();
+    
+    // Convenience: Access body content directly
+    std::shared_ptr<class Paragraph> append_paragraph(const std::string& text = "");
+    std::shared_ptr<class Table> append_table(int rows = 1, int cols = 1);
+    
+    // Header/Footer operations
+    std::shared_ptr<HeaderFooter> add_header(HeaderFooterType type = HeaderFooterType::Default);
+    std::shared_ptr<HeaderFooter> add_footer(HeaderFooterType type = HeaderFooterType::Default);
+    std::shared_ptr<HeaderFooter> get_header(HeaderFooterType type = HeaderFooterType::Default) const;
+    std::shared_ptr<HeaderFooter> get_footer(HeaderFooterType type = HeaderFooterType::Default) const;
+    bool has_header(HeaderFooterType type = HeaderFooterType::Default) const;
+    bool has_footer(HeaderFooterType type = HeaderFooterType::Default) const;
+    void remove_header(HeaderFooterType type = HeaderFooterType::Default);
+    void remove_footer(HeaderFooterType type = HeaderFooterType::Default);
+    
+    // Get all headers/footers
+    std::vector<std::shared_ptr<HeaderFooter>> get_all_headers() const;
+    std::vector<std::shared_ptr<HeaderFooter>> get_all_footers() const;
+    
+    // Check if this is the first section
+    bool is_first_section() const { return is_first_section_; }
+    void set_first_section(bool is_first) { is_first_section_ = is_first; }
+    
+    // Parent document
+    Document* get_document() const { return document_; }
+    
+    // Apply/load properties (for XML serialization)
+    void apply_properties();
+    void load_properties();
+    
 private:
-    friend class Document;
-    friend class SectionIterator;
-    
-    pugi::xml_node sectPr_node_;        ///< Section properties node
-    pugi::xml_node body_node_;          ///< Body content node (for first section)
-    Document* document_ = nullptr;      ///< Parent document
-    
-    // Content tracking
-    std::list<Paragraph> paragraphs_;   ///< Paragraphs in this section
-    std::list<Table> tables_;           ///< Tables in this section
+    SectionProperties properties_;
+    Document* document_ = nullptr;
+    bool is_first_section_ = false;
     
     // Header/Footer references
-    std::vector<HeaderFooterRef> headers_;
-    std::vector<HeaderFooterRef> footers_;
+    std::vector<HeaderFooterRef> header_refs_;
+    std::vector<HeaderFooterRef> footer_refs_;
     
-    bool is_first_section_ = false;     ///< Is this the first section?
-
-public:
-    /**
-     * @brief Section properties
-     * @details Public structure for easy property access
-     */
-    SectionProperties prop;
-
-public:
-    /**
-     * @brief Default constructor
-     */
-    Section();
-    
-    /**
-     * @brief Construct section with XML nodes
-     * @param sectPr Section properties node
-     * @param body Body content node (nullptr for non-first sections)
-     * @param doc Parent document
-     * @param is_first Whether this is the first section
-     */
-    Section(pugi::xml_node sectPr, pugi::xml_node body, 
-            Document* doc, bool is_first = false);
-    
-    /**
-     * @brief Destructor
-     */
-    ~Section() = default;
-
-    // =======================================================================
-    // Content Operations
-    // =======================================================================
-    
-    /**
-     * @brief Add a paragraph to this section
-     * @param text Optional initial text
-     * @param flag Formatting flags for initial run
-     * @return Pointer to the new paragraph
-     */
-    Paragraph* add_paragraph(const std::string& text = "", 
-                              formatting_flag flag = none);
-    
-    /**
-     * @brief Add a table to this section
-     * @param rows Number of rows
-     * @param cols Number of columns
-     * @return Pointer to the new table
-     */
-    Table* add_table(size_t rows, size_t cols);
-    
-    /**
-     * @brief Get all paragraphs in this section
-     * @return List of paragraphs
-     */
-    std::list<Paragraph>& paragraphs();
-    
-    /**
-     * @brief Get all tables in this section
-     * @return List of tables
-     */
-    std::list<Table>& tables();
-
-    // =======================================================================
-    // Header/Footer Operations
-    // =======================================================================
-    
-    /**
-     * @brief Add a header to this section
-     * @param type Header type (default, first, even)
-     * @return true if successful
-     */
-    bool add_header(HeaderFooterType type = HeaderFooterType::Default);
-    
-    /**
-     * @brief Add a footer to this section
-     * @param type Footer type (default, first, even)
-     * @return true if successful
-     */
-    bool add_footer(HeaderFooterType type = HeaderFooterType::Default);
-    
-    /**
-     * @brief Check if section has header
-     * @param type Header type to check
-     * @return true if header exists
-     */
-    bool has_header(HeaderFooterType type = HeaderFooterType::Default) const;
-    
-    /**
-     * @brief Check if section has footer
-     * @param type Footer type to check
-     * @return true if footer exists
-     */
-    bool has_footer(HeaderFooterType type = HeaderFooterType::Default) const;
-    
-    /**
-     * @brief Get header XML document
-     * @param type Header type
-     * @return Pointer to header XML, nullptr if not exists
-     */
-    pugi::xml_document* get_header_xml(HeaderFooterType type = HeaderFooterType::Default);
-    
-    /**
-     * @brief Get footer XML document
-     * @param type Footer type
-     * @return Pointer to footer XML, nullptr if not exists
-     */
-    pugi::xml_document* get_footer_xml(HeaderFooterType type = HeaderFooterType::Default);
-
-    // =======================================================================
-    // Properties Application
-    // =======================================================================
-    
-    /**
-     * @brief Apply section properties to XML
-     * @internal Called by Document before saving
-     */
-    void apply_properties();
-    
-    /**
-     * @brief Load section properties from XML
-     * @internal Called by Document when loading
-     */
-    void load_properties();
-
-    // =======================================================================
-    // Utility Methods
-    // =======================================================================
-    
-    /**
-     * @brief Get the section properties XML node
-     * @return The w:sectPr node
-     */
-    pugi::xml_node get_sectPr_node() const { return sectPr_node_; }
-    
-    /**
-     * @brief Check if this is the first section
-     * @return true if first section
-     */
-    bool is_first_section() const { return is_first_section_; }
-    
-    /**
-     * @brief Get parent document
-     * @return Pointer to parent document
-     */
-    Document* get_document() const { return document_; }
+    // Cached HeaderFooter nodes
+    mutable std::vector<std::weak_ptr<HeaderFooter>> headers_;
+    mutable std::vector<std::weak_ptr<HeaderFooter>> footers_;
 };
 
-/**
- * @class SectionIterator
- * @brief Iterator for traversing sections in a document
- * @since 0.5.0
- */
-class SectionIterator {
+// ============================================================================
+// HeaderFooter Class - Header or footer content (CompositeNode)
+// ============================================================================
+
+class HeaderFooter : public CompositeNode {
+public:
+    HeaderFooter();
+    HeaderFooter(Document* doc, HeaderFooterType type, bool is_header);
+    
+    // Node overrides
+    NodeType node_type() const override { 
+        return is_header_ ? NodeType::Header : NodeType::Footer; 
+    }
+    void accept(DocumentVisitor* visitor) override;
+    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::string get_text() const override;
+    
+    // Type
+    HeaderFooterType get_header_footer_type() const { return type_; }
+    void set_header_footer_type(HeaderFooterType type) { type_ = type; }
+    
+    // Is header (false = footer)
+    bool is_header() const { return is_header_; }
+    bool is_footer() const { return !is_header_; }
+    
+    // Content operations
+    std::shared_ptr<class Paragraph> append_paragraph(const std::string& text = "");
+    std::shared_ptr<class Table> append_table(int rows = 1, int cols = 1);
+    std::vector<std::shared_ptr<class Paragraph>> get_paragraphs() const;
+    std::vector<std::shared_ptr<class Table>> get_tables() const;
+    
+    // Parent section
+    std::shared_ptr<Section> get_parent_section() const;
+    
+    // Ensure minimum content
+    void ensure_minimum();
+    
+    // XML part path
+    std::string get_part_path() const { return part_path_; }
+    void set_part_path(const std::string& path) { part_path_ = path; }
+    
+    // Relationship ID
+    std::string get_relationship_id() const { return relationship_id_; }
+    void set_relationship_id(const std::string& id) { relationship_id_ = id; }
+    
 private:
-    Document* document_ = nullptr;
-    std::list<Section>::iterator current_;
-    std::list<Section>::iterator end_;
-    
-public:
-    /**
-     * @brief Default constructor
-     */
-    SectionIterator();
-    
-    /**
-     * @brief Construct iterator for document
-     * @param doc Parent document
-     */
-    explicit SectionIterator(Document& doc);
-    
-    /**
-     * @brief Move to next section
-     * @return Reference to this iterator
-     */
-    SectionIterator& next();
-    
-    /**
-     * @brief Check if more sections available
-     * @return true if valid section available
-     */
-    bool has_next() const;
-    
-    /**
-     * @brief Get current section
-     * @return Reference to current section
-     */
-    Section& current();
-    
-    /**
-     * @brief Dereference operator
-     * @return Reference to current section
-     */
-    Section& operator*() { return current(); }
-    
-    /**
-     * @brief Arrow operator
-     * @return Pointer to current section
-     */
-    Section* operator->() { return &current(); }
-    
-    /**
-     * @brief Prefix increment
-     * @return Reference to this iterator
-     */
-    SectionIterator& operator++() { next(); return *this; }
+    HeaderFooterType type_ = HeaderFooterType::Default;
+    bool is_header_ = true;
+    std::string part_path_;
+    std::string relationship_id_;
 };
 
-/**
- * @brief Section collection for range-based for loops
- * @since 0.5.0
- */
+// ============================================================================
+// SectionCollection
+// ============================================================================
+
 class SectionCollection {
-private:
-    Document& document_;
+    std::vector<std::shared_ptr<Section>> sections_;
     
 public:
-    /**
-     * @brief Construct collection for document
-     * @param doc Parent document
-     */
-    explicit SectionCollection(Document& doc) : document_(doc) {}
+    using iterator = std::vector<std::shared_ptr<Section>>::iterator;
+    using const_iterator = std::vector<std::shared_ptr<Section>>::const_iterator;
     
-    /**
-     * @brief Get begin iterator
-     * @return Iterator to first section
-     */
-    SectionIterator begin();
+    SectionCollection() = default;
+    explicit SectionCollection(const std::vector<std::shared_ptr<Section>>& sections)
+        : sections_(sections) {}
     
-    /**
-     * @brief Get end iterator
-     * @return End iterator
-     */
-    SectionIterator end();
+    size_t get_count() const { return sections_.size(); }
+    std::shared_ptr<Section> get_item(int index) const {
+        if (index >= 0 && static_cast<size_t>(index) < sections_.size()) {
+            return sections_[index];
+        }
+        return nullptr;
+    }
+    std::shared_ptr<Section> operator[](int index) const { return get_item(index); }
+    
+    iterator begin() { return sections_.begin(); }
+    iterator end() { return sections_.end(); }
+    const_iterator begin() const { return sections_.begin(); }
+    const_iterator end() const { return sections_.end(); }
+    
+    std::shared_ptr<Section> first() const {
+        return sections_.empty() ? nullptr : sections_.front();
+    }
+    std::shared_ptr<Section> last() const {
+        return sections_.empty() ? nullptr : sections_.back();
+    }
+    
+    bool is_empty() const { return sections_.empty(); }
+};
+
+// ============================================================================
+// HeaderFooterCollection
+// ============================================================================
+
+class HeaderFooterCollection {
+    std::vector<std::shared_ptr<HeaderFooter>> items_;
+    
+public:
+    using iterator = std::vector<std::shared_ptr<HeaderFooter>>::iterator;
+    using const_iterator = std::vector<std::shared_ptr<HeaderFooter>>::const_iterator;
+    
+    HeaderFooterCollection() = default;
+    explicit HeaderFooterCollection(const std::vector<std::shared_ptr<HeaderFooter>>& items)
+        : items_(items) {}
+    
+    size_t get_count() const { return items_.size(); }
+    std::shared_ptr<HeaderFooter> get_item(int index) const {
+        if (index >= 0 && static_cast<size_t>(index) < items_.size()) {
+            return items_[index];
+        }
+        return nullptr;
+    }
+    std::shared_ptr<HeaderFooter> operator[](int index) const { return get_item(index); }
+    
+    iterator begin() { return items_.begin(); }
+    iterator end() { return items_.end(); }
+    const_iterator begin() const { return items_.begin(); }
+    const_iterator end() const { return items_.end(); }
+    
+    std::shared_ptr<HeaderFooter> first() const {
+        return items_.empty() ? nullptr : items_.front();
+    }
+    std::shared_ptr<HeaderFooter> last() const {
+        return items_.empty() ? nullptr : items_.back();
+    }
 };
 
 } // namespace cdocx

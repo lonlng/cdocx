@@ -1,24 +1,30 @@
 /**
  * @file base.h
- * @brief Base content classes for CDocx document model
- * @details Defines the fundamental content classes: Run, Paragraph, TableCell,
- *          TableRow, and Table. These classes provide the core document
- *          structure and content manipulation capabilities.
+ * @brief Base content classes for CDocx document model - DOM Style
+ * @details Defines the fundamental content classes: Run, SpecialChar,
+ *          Field, BookmarkStart, BookmarkEnd. These work with the DOM
+ *          architecture where Document is the root CompositeNode.
  * 
  * @author lonlng
  * @copyright MIT License
  * @date 2026
- * @version 0.2.0
+ * @version 0.7.0
  * 
  * @par Document Structure Hierarchy:
  * @code
- * Document
- * ├── Body
- * │   ├── Paragraph (contains Runs)
- * │   │   └── Run (formatted text segment)
- * │   └── Table (contains TableRows)
- * │       └── TableRow (contains TableCells)
- * │           └── TableCell (contains Paragraphs)
+ * Document (CompositeNode)
+ * ├── Section (CompositeNode)
+ * │   ├── Body (CompositeNode)
+ * │   │   ├── Paragraph (CompositeNode) - contains inline nodes
+ * │   │   │   ├── Run (Inline) - formatted text segment
+ * │   │   │   ├── SpecialChar (Inline) - breaks, tabs, etc.
+ * │   │   │   ├── Field (Inline) - dynamic fields
+ * │   │   │   ├── BookmarkStart/BookmarkEnd (Node) - bookmark markers
+ * │   │   │   └── Hyperlink (Field) - hyperlinks
+ * │   │   └── Table (CompositeNode)
+ * │   │       └── Row (CompositeNode)
+ * │   │           └── Cell (CompositeNode) - contains Paragraphs
+ * │   └── HeaderFooter (CompositeNode)
  * @endcode
  */
 
@@ -26,273 +32,140 @@
 
 #include <cdocx/fwd.h>
 #include <cdocx/constants.h>
-#include <cdocx/properties.h>
-#include <cdocx/numbering.h>
 #include <cdocx/node.h>
 #include <cdocx/format.h>
+#include <cdocx/properties.h>
 
 #include <pugixml.hpp>
 #include <string>
 
 namespace cdocx {
 
-// Forward declaration for iterator helper
+// Forward declarations
 class IteratorHelper;
+class Paragraph;
+class Document;
 
-/**
- * @class Run
- * @brief Represents a formatted text segment (run) within a paragraph
- * @details A Run is the smallest unit of text with uniform formatting.
- *          Multiple runs can exist in a paragraph, each with different
- *          formatting attributes (bold, italic, font, color, etc.).
- * 
- * @par Usage Example:
- * @code
- * auto para = doc.paragraphs();
- * auto run = para.runs();
- * 
- * // Modify text
- * run.set_text("New text");
- * 
- * // Apply formatting
- * run.set_bold(true);
- * run.set_color("FF0000");  // Red color
- * run.set_font_size(24);    // 12pt
- * @endcode
- * 
- * @see Paragraph, formatting_flag
- * @since 0.1.0
- */
-class Run : public Node {
+// ============================================================================
+// Inline Class - Base for inline-level nodes (Run, SpecialChar, Field, etc.)
+// ============================================================================
+
+class Inline : public Node {
 public:
-    // Construction
-    // Run();
-    explicit Run(Document* doc);
-    explicit Run(Document* doc, const std::string& text);
+    Inline();
+    explicit Inline(Document* doc);
     
-    // Text content
-    // std::string get_text() const override { return text_; }
-    void set_text(const std::string& text) { text_ = text; }
+    // Node overrides
+    bool is_composite() const override { return false; }
     
-    // Append/prepend text
-    void append_text(const std::string& text) { text_ += text; }
-    void prepend_text(const std::string& text) { text_ = text + text_; }
-    
-    // Font formatting
+    // Character formatting
     Font& get_font() { return font_; }
     const Font& get_font() const { return font_; }
+    void set_font(const Font& font) { font_ = font; }
     
-    // Convenience formatting methods (return *this for chaining)
-    Run& set_bold2(bool value) { font_.bold = value; return *this; }
-    Run& set_italic2(bool value) { font_.italic = value; return *this; }
-    Run& set_underline(UnderlineType value) { font_.underline = value; return *this; }
-    Run& set_font_size(double size) { font_.size = size; return *this; }
-    Run& set_font_name2(const std::string& name) { font_.name = name; return *this; }
-    Run& set_color(const Color& color) { font_.color = color; return *this; }
-    Run& set_highlight(HighlightColor color) { font_.highlight = color; return *this; }
-    Run& set_superscript() { font_.script_type = ScriptType::Superscript; return *this; }
-    Run& set_subscript() { font_.script_type = ScriptType::Subscript; return *this; }
+    // Parent paragraph
+    std::shared_ptr<Paragraph> get_parent_paragraph() const;
+    
+    // Convenience formatting methods (chainable)
+    Inline& set_bold(bool value);
+    Inline& set_italic(bool value);
+    Inline& set_underline(UnderlineType value);
+    Inline& set_strikethrough(bool value);
+    Inline& set_font_size(double size);
+    Inline& set_font_name(const std::string& name);
+    Inline& set_color(const Color& color);
+    Inline& set_highlight(HighlightColor color);
+    Inline& set_superscript();
+    Inline& set_subscript();
+    
+protected:
+    Font font_;
+};
+
+// ============================================================================
+// Run Class - Text with uniform formatting (Inline node)
+// ============================================================================
+
+class Run : public Inline {
+public:
+    // Construction
+    Run();
+    explicit Run(Document* doc);
+    Run(Document* doc, const std::string& text);
     
     // Node overrides
     NodeType node_type() const override { return NodeType::Run; }
     void accept(DocumentVisitor* visitor) override;
     std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::string get_text() const override { return text_; }
+    
+    // Text content
+    void set_text(const std::string& text) { text_ = text; }
+    void append_text(const std::string& text) { text_ += text; }
+    void prepend_text(const std::string& text) { text_ = text + text_; }
+    
+    // Convenience formatting (override Inline methods for chainability)
+    Run& set_bold(bool value) { font_.bold = value; return *this; }
+    Run& set_italic(bool value) { font_.italic = value; return *this; }
+    Run& set_underline(UnderlineType value) { font_.underline = value; return *this; }
+    Run& set_strikethrough(bool value) { font_.strikethrough = value; return *this; }
+    Run& set_font_size(double size) { font_.size = size; return *this; }
+    Run& set_font_name(const std::string& name) { font_.name = name; return *this; }
+    Run& set_color(const Color& color) { font_.color = color; return *this; }
+    Run& set_highlight(HighlightColor color) { font_.highlight = color; return *this; }
+    Run& set_superscript() { font_.script_type = ScriptType::Superscript; return *this; }
+    Run& set_subscript() { font_.script_type = ScriptType::Subscript; return *this; }
+    
+    // Legacy API support (for backward compatibility)
+    Run& set_bold2(bool value) { return set_bold(value); }
+    Run& set_italic2(bool value) { return set_italic(value); }
+    Run& set_font_name2(const std::string& name) { return set_font_name(name); }
+    
+    // Legacy iterator-style API (deprecated but kept for compatibility)
+    // These methods work with XML nodes directly
+private:
+    friend class IteratorHelper;
+    
+    pugi::xml_node parent_xml_;    ///< Parent paragraph XML node (legacy)
+    pugi::xml_node current_xml_;   ///< Current w:r XML element (legacy)
+    
+public:
+    // Legacy constructors and XML node methods
+    Run(pugi::xml_node parent, pugi::xml_node current);
+    void set_parent_xml(pugi::xml_node node);
+    void set_current_xml(pugi::xml_node node);
+    pugi::xml_node get_current_xml() const { return current_xml_; }
+    pugi::xml_node get_parent_xml() const { return parent_xml_; }
+    
+    // Legacy iteration methods
+    Run& next();
+    bool has_next() const;
+    
+    // Legacy text methods (work with XML)
+    bool set_text_xml(const std::string& text) const;
+    std::string get_text_xml() const;
+    
+    // Legacy formatting methods (work with XML)
+    bool set_color_xml(const std::string& color_hex);
+    bool set_font_size_xml(int size);
+    bool set_font_name_xml(const std::string& font_name);
+    bool set_bold_xml(bool bold);
+    bool set_italic_xml(bool italic);
+    bool set_underline_xml(bool underline);
+    
+    // Enhanced properties (v0.4.0) - XML versions
+    void set_properties_xml(const TextProperties& props);
+    TextProperties get_properties_xml() const;
+    bool set_highlight_xml(TextProperties::Highlight color);
+    bool set_underline_style_xml(TextProperties::UnderlineStyle style, 
+                                 const std::string& color = "auto");
+    bool set_strike_xml(TextProperties::StrikeStyle style);
+    bool set_scale_xml(int percent);
+    bool set_spacing_xml(TextProperties::SpacingType type, int value);
+    bool set_position_xml(TextProperties::PositionType type, int value);
     
 private:
     std::string text_;
-    Font font_;
-
-private:
-    friend class IteratorHelper;  ///< Grants access to set_parent/set_current
-    
-    pugi::xml_node parent_;   ///< Parent paragraph node
-    pugi::xml_node current_;  ///< Current w:r element
-
-public:
-    /**
-     * @brief Default constructor
-     * @details Creates an empty run with null nodes
-     */
-    Run();
-    
-    /**
-     * @brief Construct run with parent and current nodes
-     * @param[in] parent The parent paragraph XML node
-     * @param[in] current The current w:r XML node
-     */
-    Run(pugi::xml_node parent, pugi::xml_node current);
-
-    /**
-     * @brief Set the parent node and initialize to first run
-     * @param[in] node The parent paragraph node
-     */
-    void set_parent(pugi::xml_node node);
-    
-    /**
-     * @brief Set the current node directly
-     * @param[in] node The w:r element to set as current
-     */
-    void set_current(pugi::xml_node node);
-    
-    /**
-     * @brief Get the current XML node
-     * @return The current w:r XML node
-     */
-    pugi::xml_node get_current() const;
-    
-    /**
-     * @brief Get the parent XML node
-     * @return The parent paragraph XML node
-     */
-    pugi::xml_node get_parent() const;
-
-    /**
-     * @brief Get the text content of this run
-     * @return The text string (empty if no text)
-     */
-    std::string get_text() const;
-    
-    /**
-     * @brief Set the text content of this run
-     * @param[in] text The new text content
-     * @return true if successful, false if run is invalid
-     */
-    bool set_text(const std::string& text) const;
-    
-    /**
-     * @brief Set the text content (C-string version)
-     * @param[in] text The new text content (null-terminated)
-     * @return true if successful, false if run is invalid
-     */
-    bool set_text(const char* text) const;
-
-    /**
-     * @brief Move to the next run in the paragraph
-     * @return Reference to this run (now pointing to next sibling)
-     */
-    Run& next();
-    
-    /**
-     * @brief Check if this run is valid (has a current node)
-     * @return true if valid, false if at end or invalid
-     */
-    bool has_next() const;
-
-    // ========================================================================
-    // Formatting Methods
-    // ========================================================================
-    
-    /**
-     * @brief Set the text color
-     * @param[in] color_hex Hex color code (e.g., "FF0000" for red)
-     * @return true if successful
-     */
-    bool set_color(const std::string& color_hex);
-    
-    /**
-     * @brief Set the font size
-     * @param[in] size Font size in half-points (e.g., 24 for 12pt)
-     * @return true if successful
-     */
-    bool set_font_size(int size);
-    
-    /**
-     * @brief Set the font name
-     * @param[in] font_name Font family name (e.g., "Arial", "Times New Roman")
-     * @return true if successful
-     */
-    bool set_font_name(const std::string& font_name);
-    
-    /**
-     * @brief Set bold formatting
-     * @param[in] bold true to apply bold, false to remove
-     * @return true if successful
-     */
-    bool set_bold(bool bold);
-    
-    /**
-     * @brief Set italic formatting
-     * @param[in] italic true to apply italic, false to remove
-     * @return true if successful
-     */
-    bool set_italic(bool italic);
-    
-    /**
-     * @brief Set underline formatting
-     * @param[in] underline true to apply underline, false to remove
-     * @return true if successful
-     */
-    bool set_underline(bool underline);
-    
-    // ===================================================================
-    // Enhanced Text Properties (v0.4.0)
-    // ===================================================================
-    
-    /**
-     * @brief Apply comprehensive text properties
-     * @param[in] props TextProperties structure
-     * @since 0.4.0
-     */
-    void set_properties(const TextProperties& props);
-    
-    /**
-     * @brief Get current text properties
-     * @return TextProperties structure
-     * @since 0.4.0
-     */
-    TextProperties get_properties() const;
-    
-    /**
-     * @brief Set highlight color
-     * @param[in] color Highlight color
-     * @return true if successful
-     * @since 0.4.0
-     */
-    bool set_highlight(TextProperties::Highlight color);
-    
-    /**
-     * @brief Set underline with style and color
-     * @param[in] style Underline style
-     * @param[in] color Color (RRGGBB or "auto")
-     * @return true if successful
-     * @since 0.4.0
-     */
-    bool set_underline_style(TextProperties::UnderlineStyle style, 
-                             const std::string& color = "auto");
-    
-    /**
-     * @brief Set strikethrough style
-     * @param[in] style Strike style
-     * @return true if successful
-     * @since 0.4.0
-     */
-    bool set_strike(TextProperties::StrikeStyle style);
-    
-    /**
-     * @brief Set character scale
-     * @param[in] percent Scale percentage (1-600, 100 = normal)
-     * @return true if successful
-     * @since 0.4.0
-     */
-    bool set_scale(int percent);
-    
-    /**
-     * @brief Set character spacing
-     * @param[in] type Spacing type
-     * @param[in] value Spacing value (20 = 1pt)
-     * @return true if successful
-     * @since 0.4.0
-     */
-    bool set_spacing(TextProperties::SpacingType type, int value);
-    
-    /**
-     * @brief Set character position
-     * @param[in] type Position type
-     * @param[in] value Position value (2 = 1pt)
-     * @return true if successful
-     * @since 0.4.0
-     */
-    bool set_position(TextProperties::PositionType type, int value);
 };
 
 
@@ -300,9 +173,10 @@ public:
 // SpecialChar Class - Special characters (breaks, tabs, etc.)
 // ============================================================================
 
-class SpecialChar : public Node {
+class SpecialChar : public Inline {
 public:
-    explicit SpecialChar(char16_t char_code = 0);
+    SpecialChar();
+    explicit SpecialChar(char16_t char_code);
     
     char16_t get_char() const { return char_code_; }
     void set_char(char16_t ch) { char_code_ = ch; }
@@ -321,7 +195,7 @@ public:
     std::shared_ptr<Node> clone(bool deep = true) const override;
     
 private:
-    char16_t char_code_;
+    char16_t char_code_ = 0;
 };
 
 
@@ -336,8 +210,16 @@ public:
     using iterator = std::vector<std::shared_ptr<Run>>::iterator;
     using const_iterator = std::vector<std::shared_ptr<Run>>::const_iterator;
     
+    RunCollection() = default;
+    explicit RunCollection(const std::vector<std::shared_ptr<Run>>& runs) : runs_(runs) {}
+    
     size_t get_count() const { return runs_.size(); }
-    std::shared_ptr<Run> get_item(int index) const;
+    std::shared_ptr<Run> get_item(int index) const {
+        if (index >= 0 && static_cast<size_t>(index) < runs_.size()) {
+            return runs_[index];
+        }
+        return nullptr;
+    }
     std::shared_ptr<Run> operator[](int index) const { return get_item(index); }
     
     iterator begin() { return runs_.begin(); }
@@ -350,21 +232,26 @@ public:
     void remove_at(int index);
     void clear();
     
-    std::shared_ptr<Run> first() const;
-    std::shared_ptr<Run> last() const;
+    std::shared_ptr<Run> first() const {
+        return runs_.empty() ? nullptr : runs_.front();
+    }
+    std::shared_ptr<Run> last() const {
+        return runs_.empty() ? nullptr : runs_.back();
+    }
     
-    // Get all text from all runs
     std::string get_text() const;
 };
 
 
 // ============================================================================
-// Field Classes
+// Field Class - Dynamic field (inline)
 // ============================================================================
 
-class Field : public Node {
+class Field : public Inline {
 public:
-    explicit Field(FieldType type = FieldType::Unknown);
+    Field();
+    explicit Field(FieldType type);
+    explicit Field(Document* doc, FieldType type = FieldType::Unknown);
     
     FieldType get_type() const { return type_; }
     void set_type(FieldType type) { type_ = type; }
@@ -394,7 +281,7 @@ public:
     std::shared_ptr<Node> clone(bool deep = true) const override;
     
 private:
-    FieldType type_;
+    FieldType type_ = FieldType::Unknown;
     std::string field_code_;
     std::string result_;
     bool is_locked_ = false;
@@ -410,6 +297,7 @@ class BookmarkStart : public Node {
 public:
     BookmarkStart();
     BookmarkStart(const std::string& name, int id);
+    explicit BookmarkStart(Document* doc);
     
     std::string get_name() const { return name_; }
     void set_name(const std::string& name) { name_ = name; }
@@ -432,6 +320,7 @@ class BookmarkEnd : public Node {
 public:
     BookmarkEnd();
     explicit BookmarkEnd(int id);
+    explicit BookmarkEnd(Document* doc);
     
     int get_id() const { return id_; }
     void set_id(int id) { id_ = id; }
@@ -454,6 +343,7 @@ private:
 class Hyperlink : public Field {
 public:
     Hyperlink();
+    explicit Hyperlink(Document* doc);
     
     void set_address(const std::string& url);
     void set_bookmark_name(const std::string& name);
@@ -466,4 +356,5 @@ public:
     // Node overrides
     void update() override;
 };
+
 } // namespace cdocx

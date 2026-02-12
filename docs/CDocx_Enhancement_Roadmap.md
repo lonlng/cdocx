@@ -1,0 +1,562 @@
+# CDocx 功能增强路线图
+
+本文档基于与 Aspose.Words.C++ 的对比分析，提供详细的功能增强路线图。
+
+---
+
+## 版本规划概览
+
+| 版本 | 时间 | 主题 | 主要功能 |
+|-----|------|------|---------|
+| v0.7.0 | Q2 2026 | 核心增强 | 字段系统、超链接、样式改进 |
+| v0.8.0 | Q3 2026 | 导出功能 | PDF 导出、HTML 导出 |
+| v0.9.0 | Q4 2026 | 富媒体 | 形状、文本框、图片效果 |
+| v1.0.0 | Q1 2027 | 专业功能 | 图表、文档比较、修订跟踪 |
+
+---
+
+## v0.7.0 - 核心增强 (Core Enhancement)
+
+### 7.1 字段系统 (Field System)
+
+#### 目标字段类型 (优先级排序)
+
+```cpp
+// 基础字段命名空间
+namespace cdocx::fields {
+
+// 1. 页码相关 (最高优先级)
+class PageField;           // 当前页码
+class NumPagesField;       // 总页数
+class SectionPagesField;   // 节页数
+
+// 2. 日期时间 (高优先级)
+class DateField;           // 当前日期
+class TimeField;           // 当前时间
+class CreateDateField;     // 创建日期
+class SaveDateField;       // 保存日期
+
+// 3. 文档信息 (中优先级)
+class AuthorField;         // 作者
+class TitleField;          // 标题
+class SubjectField;        // 主题
+class KeywordsField;       // 关键字
+
+// 4. 交叉引用 (中优先级)
+class RefField;            // 书签引用
+class PageRefField;        // 页码引用
+class NumCharsField;       // 字符数
+class NumWordsField;       // 字数
+
+// 5. 索引目录 (低优先级)
+class TocField;            // 目录
+class IndexField;          // 索引
+
+} // namespace cdocx::fields
+```
+
+#### API 设计示例
+
+```cpp
+// 插入页码
+doc.add_field<fields::PageField>();
+
+// 插入日期（带格式）
+auto date_field = doc.add_field<fields::DateField>();
+date_field.set_format("yyyy-MM-dd");
+
+// 插入交叉引用
+auto ref = doc.add_field<fields::RefField>("bookmark_name");
+
+// 更新所有字段
+doc.update_fields();
+```
+
+### 7.2 超链接增强 (Hyperlink Enhancement)
+
+#### 当前状态
+- 通过底层字段操作实现
+
+#### 目标 API
+
+```cpp
+// 便捷插入超链接
+paragraph.add_hyperlink("点击访问", "https://example.com");
+
+// 书签链接
+paragraph.add_hyperlink("跳转到第一章", "bookmark_chapter1", 
+                        HyperlinkType::Bookmark);
+
+// 邮件链接
+paragraph.add_hyperlink("联系我们", "mailto:info@example.com");
+
+// 修改超链接
+hyperlink.set_url("https://new-url.com");
+hyperlink.set_text("新文本");
+```
+
+### 7.3 样式系统改进 (Style System)
+
+#### 新增 API
+
+```cpp
+// 获取或创建样式
+Style* style = doc.styles().add("CustomHeading", StyleType::Paragraph);
+
+// 配置样式
+style->set_based_on("Normal");
+style->font().set_name("Arial");
+style->font().set_size(16);
+style->font().set_bold(true);
+style->paragraph_format().set_space_before(12);
+
+// 应用样式
+paragraph.set_style("CustomHeading");
+
+// 遍历所有样式
+for (auto& s : doc.styles()) {
+    std::cout << s.name() << std::endl;
+}
+```
+
+### 7.4 脚注/尾注封装 (Footnotes & Endnotes)
+
+```cpp
+// 添加脚注
+Footnote* footnote = doc.add_footnote("这是脚注内容");
+paragraph.add_footnote_reference(footnote);
+
+// 添加尾注
+Footnote* endnote = doc.add_endnote("这是尾注内容", FootnoteType::Endnote);
+
+// 配置选项
+doc.footnote_options().set_location(FootnoteLocation::PageBottom);
+doc.footnote_options().set_numbering_rule(FootnoteNumberingRule::RestartPage);
+```
+
+---
+
+## v0.8.0 - 导出功能 (Export Capabilities)
+
+### 8.1 PDF 导出 (PDF Export)
+
+#### 依赖库选择
+- **libharu**: 轻量级，适合基础需求
+- **PDFium**: 功能完整，但体积大
+
+#### API 设计
+
+```cpp
+// 基础 PDF 导出
+PdfSaveOptions options;
+options.set_compliance(PdfCompliance::PdfA1a);
+doc.save_pdf("output.pdf", options);
+
+// 高级选项
+PdfSaveOptions options;
+options.set_embed_fonts(true);
+options.set_compress_images(true);
+options.set_image_compression(PdfImageCompression::Jpeg);
+options.set_jpeg_quality(80);
+
+// 页面范围
+options.set_page_range(1, 10);  // 导出前10页
+options.set_page_set(PageSet::Odd);  // 仅奇数页
+```
+
+### 8.2 HTML 导出 (HTML Export)
+
+```cpp
+HtmlSaveOptions options;
+options.set_css_style_sheet_type(CssStyleSheetType::Embedded);
+options.set_image_folder("images/");
+options.set_export_images_as_base64(false);
+
+doc.save_html("output.html", options);
+```
+
+### 8.3 图片导出 (Image Export)
+
+```cpp
+ImageSaveOptions options;
+options.set_image_format(ImageFormat::Png);
+options.set_resolution(300);  // DPI
+options.set_page_set(PageSet::All);
+
+doc.save_images("page_{0}.png", options);  // 每页一个图片
+```
+
+### 8.4 格式转换支持矩阵
+
+| 格式 | 导入 | 导出 | 库依赖 |
+|-----|------|------|-------|
+| DOCX | ✅ | ✅ | 内置 |
+| PDF | ❌ | 🔄 | libharu |
+| HTML | 🔄 | 🔄 | 内置 + Gumbo |
+| RTF | ❌ | 🔄 | 内置 |
+| TXT | 🔄 | 🔄 | 内置 |
+| Markdown | ❌ | 🔄 | 内置 |
+
+---
+
+## v0.9.0 - 富媒体支持 (Rich Media)
+
+### 9.1 形状系统 (Shapes)
+
+#### 基础形状
+
+```cpp
+// 插入矩形
+Shape* rect = doc.add_shape(ShapeType::Rectangle);
+rect->set_position(100, 100);  // pt
+rect->set_size(200, 100);      // pt
+rect->fill().set_solid_color(Color(255, 0, 0));
+rect->stroke().set_color(Color(0, 0, 0));
+rect->stroke().set_width(2);
+
+// 插入箭头
+Shape* arrow = doc.add_shape(ShapeType::RightArrow);
+arrow->set_position(100, 300);
+arrow->set_size(150, 50);
+
+// 插入椭圆
+Shape* ellipse = doc.add_shape(ShapeType::Ellipse);
+ellipse->fill().set_gradient(GradientStyle::Linear, 
+                             Color(255, 0, 0), 
+                             Color(0, 0, 255));
+```
+
+#### 文本框
+
+```cpp
+// 插入文本框
+TextBox* textbox = doc.add_textbox("文本框内容", 100, 100, 200, 150);
+textbox->set_wrap_mode(TextWrapMode::Square);
+textbox->set_text_anchor(TextBoxAnchor::Middle);
+
+// 配置内部段落
+textbox->paragraphs().add_run("更多文本", cdocx::bold);
+```
+
+### 9.2 图片效果 (Image Effects)
+
+```cpp
+// 添加带效果的图片
+Image* image = doc.add_image("photo.jpg");
+
+// 阴影
+image->shadow().set_type(ShadowType::Outer);
+image->shadow().set_color(Color(0, 0, 0, 128));
+image->shadow().set_blur(5);
+
+// 发光
+image->glow().set_color(Color(255, 255, 0));
+image->glow().set_radius(10);
+
+// 反射
+image->reflection().set_transparency(0.5);
+```
+
+### 9.3 组合形状
+
+```cpp
+// 创建组合
+GroupShape* group = doc.add_group();
+
+// 添加子形状
+Shape* rect = group->add_shape(ShapeType::Rectangle);
+Shape* circle = group->add_shape(ShapeType::Ellipse);
+
+// 整体移动
+group->set_position(200, 200);
+```
+
+---
+
+## v1.0.0 - 专业功能 (Professional Features)
+
+### 10.1 图表支持 (Charts)
+
+```cpp
+// 创建柱状图
+Chart* chart = doc.add_chart(ChartType::Column);
+
+// 添加数据系列
+ChartSeries* series1 = chart->series().add("销售额");
+series1->add_data_point("Q1", 100);
+series1->add_data_point("Q2", 150);
+series1->add_data_point("Q3", 120);
+series1->add_data_point("Q4", 200);
+
+// 配置坐标轴
+chart->x_axis().set_title("季度");
+chart->y_axis().set_title("金额（万元）");
+
+// 图例
+chart->legend().set_position(LegendPosition::Bottom);
+```
+
+### 10.2 文档比较 (Document Comparison)
+
+```cpp
+// 加载两个文档
+Document doc1("original.docx");
+Document doc2("modified.docx");
+
+// 比较选项
+CompareOptions options;
+options.set_granularity(Granularity::WordLevel);
+options.set_show_format_changes(true);
+
+// 执行比较
+doc1.compare(doc2, options);
+
+// 保存带修订标记的文档
+doc1.save("compared.docx");
+```
+
+### 10.3 修订跟踪 (Track Changes)
+
+```cpp
+// 启用跟踪
+doc.start_track_revisions("Author Name");
+
+// 所有修改将被记录为修订
+paragraph.set_text("修改后的文本");  // 记录为修订
+
+// 停止跟踪
+doc.stop_track_revisions();
+
+// 处理修订
+for (auto& revision : doc.revisions()) {
+    if (revision.type() == RevisionType::Insertion) {
+        revision.accept();
+    } else {
+        revision.reject();
+    }
+}
+
+// 接受所有修订
+doc.accept_all_revisions();
+```
+
+### 10.4 数字签名 (Digital Signatures)
+
+```cpp
+// 加载证书
+CertificateHolder cert = CertificateHolder::create("cert.pfx", "password");
+
+// 签名选项
+SignOptions sign_options;
+sign_options.set_comments("文档已签名");
+sign_options.set_sign_time(DateTime::now());
+
+// 签名文档
+DigitalSignatureUtil::sign("document.docx", 
+                           "signed.docx", 
+                           cert, 
+                           sign_options);
+```
+
+---
+
+## 技术实现细节
+
+### 命名空间规划
+
+```cpp
+namespace cdocx {
+    // 核心功能
+    class Document;
+    class Paragraph;
+    class Run;
+    
+    // 字段
+    namespace fields {
+        class Field;
+        class PageField;
+        class DateField;
+        // ...
+    }
+    
+    // 形状
+    namespace drawing {
+        class Shape;
+        class TextBox;
+        class Image;
+        // ...
+    }
+    
+    // 图表
+    namespace charts {
+        class Chart;
+        class ChartSeries;
+        // ...
+    }
+    
+    // 保存选项
+    namespace saving {
+        class SaveOptions;
+        class PdfSaveOptions;
+        class HtmlSaveOptions;
+        // ...
+    }
+    
+    // 加载选项
+    namespace loading {
+        class LoadOptions;
+        class HtmlLoadOptions;
+        // ...
+    }
+}
+```
+
+### 条件编译支持
+
+```cmake
+# CMakeLists.txt 选项
+option(CDOCX_ENABLE_PDF "Enable PDF export" ON)
+option(CDOCX_ENABLE_CHARTS "Enable chart support" ON)
+option(CDOCX_ENABLE_SIGNATURES "Enable digital signatures" OFF)
+
+# 代码中使用
+#ifdef CDOCX_ENABLE_PDF
+    // PDF 相关代码
+#endif
+```
+
+### 依赖管理
+
+```cmake
+# PDF 支持
+if(CDOCX_ENABLE_PDF)
+    FetchContent_Declare(
+        libharu
+        GIT_REPOSITORY https://github.com/libharu/libharu.git
+        GIT_TAG v2.4.3
+    )
+    FetchContent_MakeAvailable(libharu)
+    target_link_libraries(cdocx PRIVATE haru)
+    target_compile_definitions(cdocx PRIVATE CDOCX_ENABLE_PDF)
+endif()
+```
+
+---
+
+## 测试策略
+
+### 单元测试覆盖
+
+| 模块 | 测试用例数 | 关键测试点 |
+|-----|-----------|-----------|
+| 字段系统 | 50+ | 各种字段的插入、更新、删除 |
+| PDF 导出 | 30+ | 布局保持、字体嵌入、图片 |
+| 形状 | 40+ | 位置计算、渲染、组合 |
+| 图表 | 25+ | 数据绑定、样式、多种类型 |
+| 文档比较 | 20+ | 差异检测、修订生成 |
+
+### 集成测试
+
+```cpp
+// 端到端测试示例
+TEST(Integration, FullWorkflow) {
+    // 创建文档
+    Document doc;
+    doc.create_empty();
+    
+    // 添加内容
+    auto& para = doc.paragraphs();
+    para.add_run("标题", cdocx::bold);
+    para.add_field<fields::PageField>();
+    
+    // 添加表格
+    auto* table = doc.tables().add(2, 2);
+    // ... 填充表格
+    
+    // 导出 PDF
+    doc.save_pdf("test.pdf");
+    
+    // 验证 PDF 存在且非空
+    EXPECT_TRUE(std::filesystem::exists("test.pdf"));
+    EXPECT_GT(std::filesystem::file_size("test.pdf"), 0);
+}
+```
+
+---
+
+## 迁移指南
+
+### 从 v0.6.0 到 v0.7.0
+
+```cpp
+// 旧代码 (仍然兼容)
+paragraph.set_style("Heading1");
+
+// 新推荐写法
+auto style = doc.styles().get("Heading1");
+if (style) {
+    paragraph.apply_style(style);
+}
+```
+
+### 破坏性变更策略
+
+1. **v0.x 阶段**: 允许破坏性变更，但需文档说明
+2. **v1.0 之后**: 保持向后兼容，使用废弃标记
+
+```cpp
+// 废弃示例
+[[deprecated("Use add_hyperlink() instead")]]
+void add_hyperlink_field(...) { ... }
+```
+
+---
+
+## 贡献指南
+
+### 如何贡献新功能
+
+1. **选择功能**: 从 Roadmap 中选择未实现的功能
+2. **设计 API**: 参考 Aspose 设计，保持 CDocx 风格
+3. **实现功能**: 遵循现有代码规范
+4. **编写测试**: 单元测试 + 集成测试
+5. **更新文档**: API 文档 + 示例代码
+
+### 代码规范
+
+```cpp
+/**
+ * @brief 简短描述
+ * @details 详细描述
+ * @param name 参数说明
+ * @return 返回值说明
+ * @since v0.7.0
+ */
+class NewFeature {
+public:
+    // 使用 CamelCase 方法名
+    void do_something();
+    
+    // 私有成员使用下划线后缀
+private:
+    int private_member_;
+};
+```
+
+---
+
+## 总结
+
+本路线图规划了 CDocx 从 v0.6.0 到 v1.0.0 的发展路径，重点关注：
+
+1. **核心功能完善**: 字段、超链接、样式
+2. **格式扩展**: PDF、HTML 导出
+3. **富媒体**: 形状、图表
+4. **专业功能**: 比较、修订、签名
+
+通过逐步实现这些功能，CDocx 将成为功能完善、性能优异的开源 DOCX 解决方案。
+
+---
+
+*文档版本: 1.0*
+*最后更新: 2026-02-12*

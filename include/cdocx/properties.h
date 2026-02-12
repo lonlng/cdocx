@@ -13,6 +13,8 @@
 
 #include <cdocx/fwd.h>
 #include <optional>
+#include <map>
+#include <ctime>
 #include <string>
 
 namespace cdocx {
@@ -530,6 +532,76 @@ struct SectionProperties {
      * @param[in,out] sectPr_node The w:sectPr XML node
      */
     void applyTo(pugi::xml_node sectPr_node) const;
+};
+
+// ============================================================================
+// Document Properties
+// ============================================================================
+
+/**
+ * @class DocumentProperties
+ * @brief Document properties (builtin and custom)
+ * @details Manages document metadata properties like title, author, etc.
+ */
+class DocumentProperties {
+public:
+    // Standard builtin properties
+    std::string title;
+    std::string subject;
+    std::string author;
+    std::string manager;
+    std::string company;
+    std::string category;
+    std::string keywords;
+    std::string comments;
+    std::string template_name;
+    std::string revision;
+    std::string content_type;
+    std::string content_status;
+    
+    // Date/time properties
+    std::time_t created = 0;
+    std::time_t modified = 0;
+    std::time_t last_printed = 0;
+    
+    // Statistics (read-only from file)
+    int total_pages = 0;
+    int total_words = 0;
+    int total_chars = 0;
+    int total_chars_with_spaces = 0;
+    int total_lines = 0;
+    int total_paragraphs = 0;
+    
+    // Custom properties storage (string only for simplicity)
+    std::map<std::string, std::string> custom_properties;
+    
+    // Methods
+    DocumentProperties() = default;
+    
+    // Custom property access
+    void set_custom(const std::string& name, const std::string& value) {
+        custom_properties[name] = value;
+    }
+    
+    bool has_custom(const std::string& name) const {
+        return custom_properties.find(name) != custom_properties.end();
+    }
+    
+    std::string get_custom(const std::string& name) const {
+        auto it = custom_properties.find(name);
+        if (it != custom_properties.end()) {
+            return it->second;
+        }
+        return "";
+    }
+    
+    void remove_custom(const std::string& name) {
+        custom_properties.erase(name);
+    }
+    
+    void clear_custom() {
+        custom_properties.clear();
+    }
 };
 
 } // namespace cdocx
