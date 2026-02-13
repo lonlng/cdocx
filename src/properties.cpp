@@ -18,10 +18,10 @@ namespace cdocx {
 // ============================================================================
 
 void TextProperties::applyTo(Run& run) const {
-    if (!run.get_current()) {
+    if (!run.get_current_xml()) {
         return;
     }
-    applyTo(run.get_current());
+    applyTo(run.get_current_xml());
 }
 
 void TextProperties::applyTo(pugi::xml_node run_node) const {
@@ -165,7 +165,7 @@ void TextProperties::applyTo(pugi::xml_node run_node) const {
 }
 
 TextProperties TextProperties::extractFrom(const Run& run) {
-    return extractFrom(run.get_current());
+    return extractFrom(run.get_current_xml());
 }
 
 TextProperties TextProperties::extractFrom(pugi::xml_node run_node) {

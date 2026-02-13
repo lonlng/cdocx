@@ -47,7 +47,12 @@
 #include <cdocx/format.h>
 
 #include <pugixml.hpp>
-#include "zip.h"
+#include <zip.h>
+
+// Forward declaration for PIMPL
+namespace cdocx {
+    class DocumentImpl;
+}
 
 #include <cstdint>
 #include <chrono>
@@ -118,12 +123,21 @@ struct DocxTreeNode : public std::enable_shared_from_this<DocxTreeNode> {
     std::shared_ptr<DocxTreeNode> add_file(const std::string& file_name, DocxNodeType file_type);
     std::shared_ptr<DocxTreeNode> find_or_create_directory(const std::string& dir_name);
     std::vector<uint8_t> serialize_xml_to_binary() const;
+    void set_binary_data(std::vector<uint8_t>&& data);
 };
 
 class DocxTree {
 public:
     DocxTree();
     ~DocxTree();
+    
+    // Move constructor and move assignment (shared_mutex is not copyable)
+    DocxTree(DocxTree&& other) noexcept;
+    DocxTree& operator=(DocxTree&& other) noexcept;
+    
+    // Delete copy constructor and copy assignment
+    DocxTree(const DocxTree&) = delete;
+    DocxTree& operator=(const DocxTree&) = delete;
     
     std::shared_ptr<DocxTreeNode> get_root() const { return root_; }
     std::shared_ptr<DocxTreeNode> find_node(const std::string& path) const;
@@ -354,6 +368,10 @@ public:
     BookmarkCollection get_bookmarks();
     int generate_unique_bookmark_id();
     
+    // Header/Footer management (used by Section)
+    int get_next_header_number();
+    int get_next_footer_number();
+    
     // Document properties
     DocumentProperties& get_builtin_document_properties() { return builtin_properties_; };
     DocumentProperties& get_custom_document_properties() { return custom_properties_; };
@@ -395,7 +413,7 @@ protected:
     
     // DOM state (Document contains Sections as children)
     mutable std::vector<std::shared_ptr<Section>> sections_cache_;
-    bool sections_dirty_ = true;
+    mutable bool sections_dirty_ = true;
     
     // Numbering
     std::unique_ptr<NumberingManager> numbering_manager_;
@@ -412,6 +430,9 @@ protected:
     // Section properties
     SectionProperties default_section_properties_;
     
+    // PIMPL (backward compatibility during transition)
+    std::unique_ptr<DocumentImpl> impl_;
+    
     // Internal methods
     bool open_zip(const std::string& path);
     void close_zip();
@@ -427,10 +448,6 @@ protected:
     bool load_content_types();
     void parse_relationships(const std::string& rels_path);
     void load_all_relationships();
-    std::string add_relationship(const std::string& rels_path, 
-                                 const std::string& type, 
-                                 const std::string& target, 
-                                 const std::string& target_mode = "");
     void remove_relationship(const std::string& rels_path, const std::string& rel_id);
     std::string find_relationship_id(const std::string& rels_path, 
                                      const std::string& target) const;
@@ -438,6 +455,13 @@ protected:
     void add_content_type_override(const std::string& part_name, 
                                    const std::string& content_type);
     void update_content_types_xml();
+    
+public:
+    // Relationship management (public for Section and other internal classes)
+    std::string add_relationship(const std::string& rels_path, 
+                                 const std::string& type, 
+                                 const std::string& target, 
+                                 const std::string& target_mode = "");
     
     // Save operations
     bool save_to_zip(const std::string& output_path);
@@ -447,6 +471,7 @@ protected:
     // Media helpers
     std::string get_mime_type(const std::string& filename) const;
     std::string get_extension_from_mime(const std::string& mime_type) const;
+    std::string generate_unique_image_name(const std::string& base_name);
     
     // Create empty document
     bool create_empty_document();

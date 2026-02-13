@@ -40,18 +40,30 @@ bool Node::is_descendant_of(const Node* ancestor) const {
     return false;
 }
 
-std::shared_ptr<Node> Node::get_previous_node() const {
+std::shared_ptr<Node> Node::get_previous_node_in_document() const {
+    // TODO: Implement pre-order traversal
     if (prev_sibling_) {
         return prev_sibling_;
     }
     return nullptr;
 }
 
-std::shared_ptr<Node> Node::get_next_node() const {
+std::shared_ptr<Node> Node::get_next_node_in_document() const {
+    // TODO: Implement pre-order traversal
     if (next_sibling_) {
         return next_sibling_;
     }
     return nullptr;
+}
+
+std::shared_ptr<Node> Node::get_previous_logical() const {
+    // TODO: Implement logical previous
+    return get_previous_sibling();
+}
+
+std::shared_ptr<Node> Node::get_next_logical() const {
+    // TODO: Implement logical next
+    return get_next_sibling();
 }
 
 // ============================================================================

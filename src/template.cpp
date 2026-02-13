@@ -1,8 +1,7 @@
 /**
  * @file template.cpp
  * @brief Template class implementation
- * @details Implementation of placeholder replacement using FSM-based processing
- *          to handle placeholders split across multiple text runs.
+ * @details Implementation of placeholder replacement
  * 
  * @author lonlng
  * @copyright MIT License
@@ -13,6 +12,7 @@
 #include <cdocx/template.h>
 #include <cdocx/document.h>
 #include <cdocx/table.h>
+#include <cdocx/paragraph.h>
 
 namespace cdocx {
 
@@ -51,30 +51,19 @@ void Template::clear() {
     image_placeholders_.clear();
 }
 
-size_t Template::size() const {
-    return placeholders_.size() + image_placeholders_.size();
-}
-
 // ============================================================================
-// String Replacement
+// Text Replacement
 // ============================================================================
 
-/**
- * @internal
- * @brief Replace all occurrences in a string using the placeholder map
- * @param[in,out] text String to modify
- * @return true if any replacement was made
- */
-bool Template::replace_in_string(std::string& text) const {
+bool Template::try_replace_in_text(std::string& text) {
     bool replaced = false;
     
-    for (const auto& pair : placeholders_) {
-        std::string placeholder = pattern_prefix_ + pair.first + pattern_suffix_;
+    for (const auto& [key, value] : placeholders_) {
+        std::string pattern = pattern_prefix_ + key + pattern_suffix_;
         size_t pos = 0;
-        
-        while ((pos = text.find(placeholder, pos)) != std::string::npos) {
-            text.replace(pos, placeholder.length(), pair.second);
-            pos += pair.second.length();
+        while ((pos = text.find(pattern, pos)) != std::string::npos) {
+            text.replace(pos, pattern.length(), value);
+            pos += value.length();
             replaced = true;
         }
     }
@@ -82,174 +71,55 @@ bool Template::replace_in_string(std::string& text) const {
     return replaced;
 }
 
-/**
- * @internal
- * @brief Try to replace placeholder in a single run
- * @param[in,out] r Run to process
- * @return true if replacement was successful
- * 
- * This handles the simple case where the entire placeholder is in one run.
- */
-bool Template::try_replace_single_run(Run& r) const {
-    std::string text = r.get_text();
-    if (text.empty()) {
-        return false;
-    }
-    
-    std::string original = text;
-    if (replace_in_string(text)) {
-        r.set_text(text);
-        return true;
-    }
-    
-    return false;
-}
-
-// ============================================================================
-// FSM-Based Multi-Run Placeholder Processing
-// ============================================================================
-
-/**
- * @internal
- * @brief Transition to collecting state in the FSM
- * @param[in,out] ctx Placeholder context
- * @param[in,out] r Current run
- * @param[in] text Current text
- * @param[in] prefix_pos Position in prefix pattern where match started
- */
-void Template::transition_to_collecting_state(PlaceholderContext& ctx, Run& r, 
-                                               const std::string& text, size_t prefix_pos) {
-    ctx.first_run = &r;
-    ctx.prefix_pos = prefix_pos;
-    ctx.collected_text = text.substr(prefix_pos);
-    ctx.runs_to_delete.clear();
-}
-
-/**
- * @internal
- * @brief Try to replace a collected placeholder
- * @param[in] ctx Placeholder context with collected information
- * @param[in,out] p Current paragraph
- * @return true if replacement was successful
- */
-bool Template::try_replace_placeholder(const PlaceholderContext& ctx, Paragraph& p) {
-    // Find suffix in collected text
-    size_t suffix_pos = ctx.collected_text.find(pattern_suffix_);
-    if (suffix_pos == std::string::npos) {
-        return false;
-    }
-    
-    // Extract placeholder key
-    size_t prefix_len = pattern_prefix_.length();
-    size_t key_start = ctx.prefix_pos > 0 ? 0 : prefix_len;
-    size_t key_end = suffix_pos;
-    std::string key = ctx.collected_text.substr(key_start, key_end - key_start);
-    
-    // Look up replacement
-    auto it = placeholders_.find(key);
-    if (it == placeholders_.end()) {
-        return false;
-    }
-    
-    // Replace in first run
-    if (ctx.first_run) {
-        std::string first_text = ctx.first_run->get_text();
-        std::string before_placeholder = first_text.substr(0, ctx.prefix_pos);
-        ctx.first_run->set_text(before_placeholder + it->second);
-    }
-    
-    return true;
-}
-
-/**
- * @internal
- * @brief Delete runs that were collected during placeholder detection
- * @param[in] ctx Placeholder context
- * @param[in,out] p Current paragraph
- */
-void Template::delete_collected_runs(const PlaceholderContext& ctx, Paragraph& p) {
-    for (Run* run : ctx.runs_to_delete) {
-        p.remove_run(*run);
-    }
-}
-
-/**
- * @internal
- * @brief Process a single paragraph for placeholders
- * @param[in,out] p Paragraph to process
- * 
- * Uses a Finite State Machine (FSM) approach to handle placeholders
- * that span multiple text runs.
- */
-void Template::process_paragraph(Paragraph& p) {
-    PlaceholderContext ctx;
-    bool collecting = false;
-    
-    for (auto r = p.runs(); r.has_next(); r.next()) {
-        std::string text = r.get_text();
-        if (text.empty()) {
-            continue;
-        }
-        
-        if (!collecting) {
-            // Look for prefix pattern start
-            size_t prefix_pos = text.find(pattern_prefix_);
-            if (prefix_pos != std::string::npos) {
-                // Check if complete placeholder is in this run
-                size_t suffix_pos = text.find(pattern_suffix_, prefix_pos);
-                if (suffix_pos != std::string::npos) {
-                    // Complete placeholder in single run - process directly
-                    try_replace_single_run(r);
-                } else {
-                    // Start collecting across runs
-                    transition_to_collecting_state(ctx, r, text, prefix_pos);
-                    collecting = true;
-                }
-            }
-        } else {
-            // Currently collecting - append text
-            ctx.collected_text += text;
-            ctx.runs_to_delete.push_back(&r);
-            
-            // Check for suffix
-            size_t suffix_pos = ctx.collected_text.find(pattern_suffix_);
-            if (suffix_pos != std::string::npos) {
-                // Complete placeholder found
-                if (try_replace_placeholder(ctx, p)) {
-                    delete_collected_runs(ctx, p);
-                }
-                ctx.clear();
-                collecting = false;
-            }
-        }
-    }
-}
-
 // ============================================================================
 // Main Replacement Functions
 // ============================================================================
 
 void Template::replace_in_paragraphs() {
-    for (auto p = doc_->paragraphs(); p.has_next(); p.next()) {
-        // First try simple single-run replacement
-        for (auto r = p.runs(); r.has_next(); r.next()) {
-            try_replace_single_run(r);
-        }
+    if (!doc_) return;
+    
+    auto paragraphs = doc_->get_paragraphs();
+    for (auto& para : paragraphs) {
+        if (!para) continue;
         
-        // Then process multi-run placeholders with FSM
-        process_paragraph(p);
+        // Get runs in this paragraph
+        for (auto& child : para->get_children()) {
+            if (auto run = std::dynamic_pointer_cast<Run>(child)) {
+                std::string text = run->get_text();
+                if (try_replace_in_text(text)) {
+                    run->set_text(text);
+                }
+            }
+        }
     }
 }
 
 void Template::replace_in_tables() {
-    for (auto t = doc_->tables(); t.has_next(); t.next()) {
-        for (auto row = t.rows(); row.has_next(); row.next()) {
-            for (auto cell = row.cells(); cell.has_next(); cell.next()) {
-                for (auto p = cell.paragraphs(); p.has_next(); p.next()) {
-                    for (auto r = p.runs(); r.has_next(); r.next()) {
-                        try_replace_single_run(r);
+    if (!doc_) return;
+    
+    auto tables = doc_->get_tables();
+    for (auto& table : tables) {
+        if (!table) continue;
+        
+        // Process all cells in the table
+        for (auto& row_child : table->get_children()) {
+            if (auto row = std::dynamic_pointer_cast<Row>(row_child)) {
+                for (auto& cell_child : row->get_children()) {
+                    if (auto cell = std::dynamic_pointer_cast<Cell>(cell_child)) {
+                        // Process paragraphs in this cell
+                        for (auto& para_child : cell->get_children()) {
+                            if (auto para = std::dynamic_pointer_cast<Paragraph>(para_child)) {
+                                for (auto& run_child : para->get_children()) {
+                                    if (auto run = std::dynamic_pointer_cast<Run>(run_child)) {
+                                        std::string text = run->get_text();
+                                        if (try_replace_in_text(text)) {
+                                            run->set_text(text);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                    process_paragraph(p);
                 }
             }
         }
@@ -263,8 +133,18 @@ void Template::replace_all() {
     
     replace_in_paragraphs();
     replace_in_tables();
-    
-    // TODO: Handle image placeholders
+}
+
+void Template::replace_in_headers_footers() {
+    // TODO: Implement header/footer placeholder replacement
+}
+
+bool Template::has_placeholders() const {
+    return !placeholders_.empty() || !image_placeholders_.empty();
+}
+
+size_t Template::get_placeholder_count() const {
+    return placeholders_.size() + image_placeholders_.size();
 }
 
 } // namespace cdocx

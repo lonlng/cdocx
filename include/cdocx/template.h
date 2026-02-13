@@ -41,6 +41,7 @@
 
 #include <cdocx/fwd.h>
 #include <cdocx/base.h>
+#include <cdocx/paragraph.h>
 #include <map>
 #include <string>
 #include <vector>
@@ -68,7 +69,7 @@ namespace cdocx {
  * - Supports placeholders across multiple runs
  * - Image placeholders are replaced with actual images
  * 
- * @see Document, Document::paragraphs()
+ * @see Document, Document::get_paragraphs()
  * @since 0.1.0
  */
 class Template {
@@ -106,7 +107,7 @@ private:
      * @param[in,out] text Text to process (modified in place)
      * @return true if any replacement was made
      */
-    bool replace_in_string(std::string& text) const;
+    bool try_replace_in_text(std::string& text);
 
     /**
      * @brief Replace placeholders in all paragraphs
@@ -119,7 +120,40 @@ private:
     void replace_in_tables();
 
     /**
-     * @brief Transition to collecting state in FSM
+     * @brief Replace placeholders in headers and footers
+     */
+    void replace_in_headers_footers();
+    
+    /**
+     * @brief Legacy: Process a single paragraph for placeholders
+     * @param[in,out] p Paragraph to process
+     */
+    void process_paragraph(Paragraph& p);
+
+    /**
+     * @brief Legacy: Try to replace placeholder in a single run
+     * @param[in,out] r The run to process
+     * @return true if replacement was successful
+     */
+    bool try_replace_single_run(Run& r);
+
+    /**
+     * @brief Legacy: Try to replace a collected placeholder
+     * @param[in] ctx Placeholder context
+     * @param[in,out] p Current paragraph
+     * @return true if replacement was successful
+     */
+    bool try_replace_placeholder(const PlaceholderContext& ctx, Paragraph& p);
+    
+    /**
+     * @brief Legacy: Delete runs collected during placeholder detection
+     * @param[in] ctx Placeholder context
+     * @param[in,out] p Current paragraph
+     */
+    void delete_collected_runs(const PlaceholderContext& ctx, Paragraph& p);
+    
+    /**
+     * @brief Legacy: Transition to collecting state in FSM
      * @param[in,out] ctx Placeholder context
      * @param[in,out] r Current run
      * @param[in] text Current text
@@ -129,32 +163,11 @@ private:
                                         const std::string& text, size_t prefix_pos);
     
     /**
-     * @brief Try to replace a collected placeholder
-     * @param[in] ctx Placeholder context
-     * @param[in,out] p Current paragraph
-     * @return true if replacement was successful
+     * @brief Legacy: Process a paragraph using old API
+     * @param[in,out] para Paragraph to process
+     * @return true if any replacement was made
      */
-    bool try_replace_placeholder(const PlaceholderContext& ctx, Paragraph& p);
-    
-    /**
-     * @brief Delete runs collected during placeholder detection
-     * @param[in] ctx Placeholder context
-     * @param[in,out] p Current paragraph
-     */
-    void delete_collected_runs(const PlaceholderContext& ctx, Paragraph& p);
-    
-    /**
-     * @brief Process a single paragraph for placeholders
-     * @param[in,out] p Paragraph to process
-     */
-    void process_paragraph(Paragraph& p);
-    
-    /**
-     * @brief Try to replace placeholder in a single run (const version)
-     * @param[in,out] r The run to process
-     * @return true if replacement was successful
-     */
-    bool try_replace_single_run(Run& r) const;
+    bool process_paragraph_legacy(Paragraph& para);
 
 public:
     /**
@@ -236,7 +249,19 @@ public:
      * @brief Get the number of set placeholders
      * @return Total count of text and image placeholders
      */
-    size_t size() const;
+    size_t size() const { return placeholders_.size() + image_placeholders_.size(); }
+    
+    /**
+     * @brief Check if any placeholders are set
+     * @return true if there are placeholders to replace
+     */
+    bool has_placeholders() const;
+    
+    /**
+     * @brief Get total placeholder count
+     * @return Total number of placeholders
+     */
+    size_t get_placeholder_count() const;
 };
 
 } // namespace cdocx

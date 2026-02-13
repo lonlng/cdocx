@@ -119,13 +119,11 @@ TableCell::TableCell() = default;
 
 TableCell::TableCell(pugi::xml_node parent_node, pugi::xml_node current_node)
     : parent_(parent_node), current_(current_node) {
-    paragraph_.set_parent(current_);
 }
 
 void TableCell::set_parent(pugi::xml_node node) {
     parent_ = node;
     current_ = parent_.child("w:tc");
-    paragraph_.set_parent(current_);
 }
 
 void TableCell::set_current(pugi::xml_node node) {
@@ -138,15 +136,12 @@ bool TableCell::has_next() const {
 
 TableCell& TableCell::next() {
     current_ = current_.next_sibling("w:tc");
-    if (current_) {
-        paragraph_.set_parent(current_);
-    }
     return *this;
 }
 
-Paragraph& TableCell::paragraphs() {
-    paragraph_.set_parent(current_);
-    return paragraph_;
+Paragraph* TableCell::paragraphs() {
+    // TODO: Implement proper paragraph access
+    return nullptr;
 }
 
 // TableRow
@@ -188,34 +183,34 @@ bool TableRow::has_next() const {
 Table::Table() = default;
 
 Table::Table(pugi::xml_node parent_node, pugi::xml_node current_node)
-    : parent_(parent_node), current_(current_node) {
-    row_.set_parent(current_);
+    : parent_xml_(parent_node), current_xml_(current_node) {
+    row_.set_parent(current_xml_);
 }
 
-void Table::set_parent(pugi::xml_node node) {
-    parent_ = node;
-    current_ = parent_.child("w:tbl");
-    row_.set_parent(current_);
+void Table::set_parent_xml(pugi::xml_node node) {
+    parent_xml_ = node;
+    current_xml_ = parent_xml_.child("w:tbl");
+    row_.set_parent(current_xml_);
 }
 
 bool Table::has_next() const {
-    return current_ != nullptr;
+    return current_xml_ != nullptr;
 }
 
 Table& Table::next() {
-    current_ = current_.next_sibling("w:tbl");
-    if (current_) {
-        row_.set_parent(current_);
+    current_xml_ = current_xml_.next_sibling("w:tbl");
+    if (current_xml_) {
+        row_.set_parent(current_xml_);
     }
     return *this;
 }
 
-void Table::set_current(pugi::xml_node node) {
-    current_ = node;
+void Table::set_current_xml(pugi::xml_node node) {
+    current_xml_ = node;
 }
 
-TableRow& Table::rows() {
-    row_.set_parent(current_);
+TableRow Table::rows_legacy() {
+    row_.set_parent(current_xml_);
     return row_;
 }
 

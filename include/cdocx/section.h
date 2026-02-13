@@ -36,9 +36,13 @@
 #include <cdocx/enums.h>
 #include <cdocx/properties.h>
 #include <cdocx/body.h>
+#include <cdocx/constants.h>
+
+#include <pugixml.hpp>
 
 #include <memory>
 #include <vector>
+#include <list>
 
 namespace cdocx {
 
@@ -65,6 +69,9 @@ public:
     Section();
     explicit Section(Document* doc);
     
+    // Legacy constructor (backward compatibility)
+    Section(pugi::xml_node sectPr, pugi::xml_node body, Document* doc, bool is_first);
+    
     // Node overrides
     NodeType node_type() const override { return NodeType::Section; }
     void accept(DocumentVisitor* visitor) override;
@@ -84,6 +91,10 @@ public:
     // Convenience: Access body content directly
     std::shared_ptr<class Paragraph> append_paragraph(const std::string& text = "");
     std::shared_ptr<class Table> append_table(int rows = 1, int cols = 1);
+    
+    // Legacy API (backward compatibility)
+    class Paragraph* add_paragraph(const std::string& text = "", formatting_flag flag = 0);
+    class Table* add_table(size_t rows, size_t cols);
     
     // Header/Footer operations
     std::shared_ptr<HeaderFooter> add_header(HeaderFooterType type = HeaderFooterType::Default);
@@ -122,6 +133,12 @@ private:
     // Cached HeaderFooter nodes
     mutable std::vector<std::weak_ptr<HeaderFooter>> headers_;
     mutable std::vector<std::weak_ptr<HeaderFooter>> footers_;
+    
+    // Legacy members (backward compatibility)
+    pugi::xml_node sectPr_node_;
+    pugi::xml_node body_node_;
+    std::list<class Paragraph> paragraphs_;
+    std::list<class Table> tables_;
 };
 
 // ============================================================================

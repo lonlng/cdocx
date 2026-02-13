@@ -447,6 +447,11 @@ private:
 
 public:
     /**
+     * @brief Default constructor (creates empty collection)
+     */
+    BookmarkCollection() : doc_(nullptr), collected_(true) {}
+    
+    /**
      * @brief Construct collection for a document
      * @param[in] doc Target document
      */

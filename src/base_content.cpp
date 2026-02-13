@@ -171,20 +171,7 @@ void RunCollection::clear() {
     runs_.clear();
 }
 
-std::shared_ptr<Run> RunCollection::get_item(int index) const {
-    if (index >= 0 && static_cast<size_t>(index) < runs_.size()) {
-        return runs_[index];
-    }
-    return nullptr;
-}
-
-std::shared_ptr<Run> RunCollection::first() const {
-    return runs_.empty() ? nullptr : runs_.front();
-}
-
-std::shared_ptr<Run> RunCollection::last() const {
-    return runs_.empty() ? nullptr : runs_.back();
-}
+// get_item, first, last are inline in base.h
 
 std::string RunCollection::get_text() const {
     std::string result;

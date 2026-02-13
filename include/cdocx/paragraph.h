@@ -17,6 +17,8 @@
 #include <cdocx/base.h>
 #include <cdocx/numbering.h>
 
+#include <pugixml.hpp>
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -43,6 +45,7 @@ class Paragraph : public CompositeNode {
 public:
     Paragraph();
     explicit Paragraph(Document* doc);
+    Paragraph(pugi::xml_node parent_node, pugi::xml_node current_node);
     
     // Node overrides
     NodeType node_type() const override { return NodeType::Paragraph; }
@@ -102,9 +105,60 @@ public:
     void append_text(const std::string& text);
     void prepend_text(const std::string& text);
     
+    // Legacy API support (backward compatibility with iterator style)
+    void set_parent(pugi::xml_node node);
+    void set_current(pugi::xml_node node);
+    pugi::xml_node get_current() const { return current_; }
+    pugi::xml_node get_current_node() const { return current_; }
+    
+    // Legacy iteration methods
+    Paragraph& next();
+    bool has_next() const;
+    Run& runs();
+    Run& add_run(const std::string& text, formatting_flag f = 0);
+    Run& add_run(const char* text, formatting_flag f = 0);
+    Run& add_run_with_bookmark(Document& doc, const std::string& text, 
+                               const std::string& bookmark_name, formatting_flag f = 0);
+    Run& add_run_with_bookmark(Document& doc, const char* text,
+                               const std::string& bookmark_name, formatting_flag f = 0);
+    void remove_run(const Run& r);
+    Paragraph& insert_paragraph_after(const std::string& text, formatting_flag f = 0);
+    Paragraph* insert_before(const std::string& text, formatting_flag f = 0);
+    bool clear();
+    bool remove();
+    
+    // Legacy formatting methods
+    bool set_alignment(const std::string& alignment);
+    bool set_style(const std::string& style_id);
+    bool set_line_spacing(int line_spacing, bool is_exact = false);
+    bool set_spacing_before(int spacing);
+    bool set_spacing_after(int spacing);
+    bool set_indent(int left = -1, int right = -1, int first_line = 0);
+    bool set_color(const std::string& color_hex);
+    bool set_font_size(int size);
+    bool set_font_name(const std::string& font_name);
+    bool set_bold(bool bold);
+    bool set_italic(bool italic);
+    bool set_underline(bool underline);
+    
+    // Legacy numbering methods
+    bool set_numbering(NumberingId numId, NumberingLevel level = NumberingLevel::Level1);
+    bool remove_numbering();
+    bool has_numbering() const;
+    NumberingId get_numbering_id() const;
+    NumberingLevel get_numbering_level() const;
+    bool set_list_level(NumberingLevel level);
+    bool increase_list_level();
+    bool decrease_list_level();
+    
 private:
     ParagraphFormat format_;
     ListFormat list_format_;
+    
+    // Legacy iterator-style members
+    pugi::xml_node parent_;
+    pugi::xml_node current_;
+    Run run_;
 };
 
 // ============================================================================

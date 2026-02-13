@@ -7,7 +7,6 @@
 #include <cdocx/document.h>
 #include <cdocx/paragraph.h>
 #include <cdocx/table.h>
-#include <detail/impl.h>
 #include <sstream>
 
 namespace cdocx {
@@ -19,8 +18,8 @@ namespace cdocx {
 /**
  * @brief Generate a unique relationship ID
  */
-static std::string generate_rel_id(int& counter) {
-    return "rId" + std::to_string(++counter);
+static std::string generate_rel_id(int id) {
+    return "rId" + std::to_string(id);
 }
 
 /**
@@ -39,17 +38,70 @@ static const char* get_header_footer_type_str(HeaderFooterType type) {
 // ============================================================================
 
 Section::Section() 
-    : document_(nullptr), is_first_section_(false) {
+    : CompositeNode(), document_(nullptr), is_first_section_(false) {
+}
+
+Section::Section(Document* doc)
+    : CompositeNode(), document_(doc), is_first_section_(false) {
+    set_document(doc);
 }
 
 Section::Section(pugi::xml_node sectPr, pugi::xml_node body, 
                  Document* doc, bool is_first)
-    : sectPr_node_(sectPr), body_node_(body), 
+    : CompositeNode(),
+      sectPr_node_(sectPr), body_node_(body), 
       document_(doc), is_first_section_(is_first) {
     
     if (sectPr_node_) {
         load_properties();
     }
+}
+
+void Section::accept(DocumentVisitor* visitor) {
+    if (!visitor) return;
+    if (visitor->visit_section_start(*this) == VisitorAction::Continue) {
+        for (const auto& child : get_children()) {
+            child->accept(visitor);
+        }
+        visitor->visit_section_end(*this);
+    }
+}
+
+std::shared_ptr<Node> Section::clone(bool deep) const {
+    // TODO: Implement proper cloning
+    return nullptr;
+}
+
+std::string Section::get_text() const {
+    std::string result;
+    for (const auto& child : get_children()) {
+        result += child->get_text();
+    }
+    return result;
+}
+
+std::shared_ptr<Body> Section::get_body() const {
+    // TODO: Implement body access
+    return nullptr;
+}
+
+void Section::set_body(std::shared_ptr<Body> body) {
+    // TODO: Implement body setting
+}
+
+std::shared_ptr<Body> Section::ensure_body() {
+    // TODO: Implement body creation
+    return nullptr;
+}
+
+std::shared_ptr<class Paragraph> Section::append_paragraph(const std::string& text) {
+    // TODO: Implement
+    return nullptr;
+}
+
+std::shared_ptr<class Table> Section::append_table(int rows, int cols) {
+    // TODO: Implement
+    return nullptr;
 }
 
 Paragraph* Section::add_paragraph(const std::string& text, formatting_flag flag) {
@@ -140,29 +192,25 @@ Table* Section::add_table(size_t rows, size_t cols) {
     return &tables_.back();
 }
 
-std::list<Paragraph>& Section::paragraphs() {
-    return paragraphs_;
-}
-
-std::list<Table>& Section::tables() {
-    return tables_;
-}
-
-bool Section::add_header(HeaderFooterType type) {
-    if (!document_ || !sectPr_node_) return false;
+std::shared_ptr<HeaderFooter> Section::add_header(HeaderFooterType type) {
+    if (!document_ || !sectPr_node_) return nullptr;
     
     // Check if already exists
-    if (has_header(type)) return true;
+    if (has_header(type)) {
+        // Return existing header
+        for (auto& h : headers_) {
+            auto locked = h.lock();
+            if (locked && locked->get_header_footer_type() == type) return locked;
+        }
+    }
     
-    // Get document implementation for relationship management
     // Generate unique part name
-    std::string part_name = "word/header" + std::to_string(document_->impl_->get_next_header_number()) + ".xml";
-    
-    int& rel_counter = document_->impl_->next_bookmark_id_;
-    std::string rel_id = generate_rel_id(rel_counter);
+    std::string part_name = "word/header" + std::to_string(document_->get_next_header_number()) + ".xml";
+    int rel_id_num = document_->generate_unique_bookmark_id();
+    std::string rel_id = generate_rel_id(rel_id_num);
     
     // Create header XML
-    auto& header_doc = document_->impl_->create_xml_part(part_name);
+    auto& header_doc = document_->create_xml_part(part_name);
     auto root = header_doc.append_child("w:hdr");
     root.append_attribute("xmlns:w").set_value("http://schemas.openxmlformats.org/wordprocessingml/2006/main");
     root.append_attribute("xmlns:r").set_value("http://schemas.openxmlformats.org/officeDocument/2006/relationships");
@@ -174,7 +222,7 @@ bool Section::add_header(HeaderFooterType type) {
     t.text().set("");
     
     // Add relationship
-    document_->impl_->add_relationship("word/_rels/document.xml.rels", 
+    document_->add_relationship("word/_rels/document.xml.rels", 
         "http://schemas.openxmlformats.org/officeDocument/2006/relationships/header",
         part_name.substr(5)); // Remove "word/" prefix
     
@@ -183,29 +231,41 @@ bool Section::add_header(HeaderFooterType type) {
     headerRef.append_attribute("r:id").set_value(rel_id.c_str());
     headerRef.append_attribute("w:type").set_value(get_header_footer_type_str(type));
     
-    // Store reference
+    // Create HeaderFooter object
+    auto header = std::make_shared<HeaderFooter>(document_, type, true);
+    header->set_part_path(part_name);
+    header->set_relationship_id(rel_id);
+    headers_.push_back(header);
+    
+    // Add to refs
     HeaderFooterRef ref;
     ref.type = type;
     ref.relationship_id = rel_id;
     ref.part_path = part_name;
-    headers_.push_back(ref);
+    header_refs_.push_back(ref);
     
-    return true;
+    return header;
 }
 
-bool Section::add_footer(HeaderFooterType type) {
-    if (!document_ || !sectPr_node_) return false;
+std::shared_ptr<HeaderFooter> Section::add_footer(HeaderFooterType type) {
+    if (!document_ || !sectPr_node_) return nullptr;
     
     // Check if already exists
-    if (has_footer(type)) return true;
+    if (has_footer(type)) {
+        // Return existing footer
+        for (auto& f : footers_) {
+            auto locked = f.lock();
+            if (locked && locked->get_header_footer_type() == type) return locked;
+        }
+    }
     
     // Generate unique part name
-    std::string part_name = "word/footer" + std::to_string(document_->impl_->get_next_footer_number()) + ".xml";
-    
-    std::string rel_id = generate_rel_id(document_->impl_->next_bookmark_id_);
+    std::string part_name = "word/footer" + std::to_string(document_->get_next_footer_number()) + ".xml";
+    int rel_id_num = document_->generate_unique_bookmark_id();
+    std::string rel_id = generate_rel_id(rel_id_num);
     
     // Create footer XML
-    auto& footer_doc = document_->impl_->create_xml_part(part_name);
+    auto& footer_doc = document_->create_xml_part(part_name);
     auto root = footer_doc.append_child("w:ftr");
     root.append_attribute("xmlns:w").set_value("http://schemas.openxmlformats.org/wordprocessingml/2006/main");
     root.append_attribute("xmlns:r").set_value("http://schemas.openxmlformats.org/officeDocument/2006/relationships");
@@ -217,7 +277,7 @@ bool Section::add_footer(HeaderFooterType type) {
     t.text().set("");
     
     // Add relationship
-    document_->impl_->add_relationship("word/_rels/document.xml.rels",
+    document_->add_relationship("word/_rels/document.xml.rels",
         "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer",
         part_name.substr(5));
     
@@ -226,52 +286,102 @@ bool Section::add_footer(HeaderFooterType type) {
     footerRef.append_attribute("r:id").set_value(rel_id.c_str());
     footerRef.append_attribute("w:type").set_value(get_header_footer_type_str(type));
     
-    // Store reference
+    // Create HeaderFooter object
+    auto footer = std::make_shared<HeaderFooter>(document_, type, false);
+    footer->set_part_path(part_name);
+    footer->set_relationship_id(rel_id);
+    footers_.push_back(footer);
+    
+    // Add to refs
     HeaderFooterRef ref;
     ref.type = type;
     ref.relationship_id = rel_id;
     ref.part_path = part_name;
-    footers_.push_back(ref);
+    footer_refs_.push_back(ref);
     
-    return true;
+    return footer;
+}
+
+std::shared_ptr<HeaderFooter> Section::get_header(HeaderFooterType type) const {
+    for (const auto& h : headers_) {
+        auto locked = h.lock();
+        if (locked && locked->get_header_footer_type() == type) {
+            return locked;
+        }
+    }
+    return nullptr;
+}
+
+std::shared_ptr<HeaderFooter> Section::get_footer(HeaderFooterType type) const {
+    for (const auto& f : footers_) {
+        auto locked = f.lock();
+        if (locked && locked->get_header_footer_type() == type) {
+            return locked;
+        }
+    }
+    return nullptr;
 }
 
 bool Section::has_header(HeaderFooterType type) const {
     for (const auto& h : headers_) {
-        if (h.type == type) return true;
+        auto locked = h.lock();
+        if (locked && locked->get_header_footer_type() == type) return true;
     }
     return false;
 }
 
 bool Section::has_footer(HeaderFooterType type) const {
     for (const auto& f : footers_) {
-        if (f.type == type) return true;
+        auto locked = f.lock();
+        if (locked && locked->get_header_footer_type() == type) return true;
     }
     return false;
 }
 
-pugi::xml_document* Section::get_header_xml(HeaderFooterType type) {
-    for (const auto& h : headers_) {
-        if (h.type == type && document_) {
-            return document_->get_xml_part(h.part_path);
-        }
-    }
-    return nullptr;
+void Section::remove_header(HeaderFooterType type) {
+    headers_.erase(
+        std::remove_if(headers_.begin(), headers_.end(),
+            [type](const std::weak_ptr<HeaderFooter>& h) {
+                auto locked = h.lock();
+                return locked && locked->get_header_footer_type() == type;
+            }),
+        headers_.end()
+    );
 }
 
-pugi::xml_document* Section::get_footer_xml(HeaderFooterType type) {
-    for (const auto& f : footers_) {
-        if (f.type == type && document_) {
-            return document_->get_xml_part(f.part_path);
-        }
+void Section::remove_footer(HeaderFooterType type) {
+    footers_.erase(
+        std::remove_if(footers_.begin(), footers_.end(),
+            [type](const std::weak_ptr<HeaderFooter>& f) {
+                auto locked = f.lock();
+                return locked && locked->get_header_footer_type() == type;
+            }),
+        footers_.end()
+    );
+}
+
+std::vector<std::shared_ptr<HeaderFooter>> Section::get_all_headers() const {
+    std::vector<std::shared_ptr<HeaderFooter>> result;
+    for (const auto& h : headers_) {
+        auto locked = h.lock();
+        if (locked) result.push_back(locked);
     }
-    return nullptr;
+    return result;
+}
+
+std::vector<std::shared_ptr<HeaderFooter>> Section::get_all_footers() const {
+    std::vector<std::shared_ptr<HeaderFooter>> result;
+    for (const auto& f : footers_) {
+        auto locked = f.lock();
+        if (locked) result.push_back(locked);
+    }
+    return result;
 }
 
 void Section::apply_properties() {
     if (!sectPr_node_) return;
     
-    prop.applyTo(sectPr_node_);
+    properties_.applyTo(sectPr_node_);
 }
 
 void Section::load_properties() {
@@ -283,42 +393,83 @@ void Section::load_properties() {
 }
 
 // ============================================================================
-// SectionIterator Implementation
+// HeaderFooter Implementation
 // ============================================================================
 
-SectionIterator::SectionIterator() : document_(nullptr) {
+HeaderFooter::HeaderFooter() 
+    : CompositeNode(), type_(HeaderFooterType::Default), is_header_(true) {
 }
 
-SectionIterator::SectionIterator(Document& doc) : document_(&doc) {
-    // Initialize iteration over document sections
-    // This will be implemented when Document sections_ member is added
+HeaderFooter::HeaderFooter(Document* doc, HeaderFooterType type, bool is_header)
+    : CompositeNode(), 
+      type_(type), is_header_(is_header) {
+    set_document(doc);
 }
 
-SectionIterator& SectionIterator::next() {
-    if (current_ != end_) {
-        ++current_;
+std::string HeaderFooter::get_text() const {
+    std::string result;
+    for (const auto& child : get_children()) {
+        result += child->get_text();
     }
-    return *this;
+    return result;
 }
 
-bool SectionIterator::has_next() const {
-    return current_ != end_;
+void HeaderFooter::accept(DocumentVisitor* visitor) {
+    if (!visitor) return;
+    
+    // Determine visitor action based on header/footer type
+    VisitorAction action = VisitorAction::Continue;
+    if (is_header()) {
+        action = visitor->visit_header_start(*this);
+    } else {
+        action = visitor->visit_footer_start(*this);
+    }
+    
+    if (action == VisitorAction::Continue) {
+        for (const auto& child : get_children()) {
+            child->accept(visitor);
+        }
+        
+        if (is_header()) {
+            visitor->visit_header_end(*this);
+        } else {
+            visitor->visit_footer_end(*this);
+        }
+    }
 }
 
-Section& SectionIterator::current() {
-    return *current_;
+std::shared_ptr<Node> HeaderFooter::clone(bool deep) const {
+    // TODO: Implement proper cloning
+    return nullptr;
 }
 
-// ============================================================================
-// SectionCollection Implementation
-// ============================================================================
-
-SectionIterator SectionCollection::begin() {
-    return SectionIterator(document_);
+std::shared_ptr<class Paragraph> HeaderFooter::append_paragraph(const std::string& text) {
+    // TODO: Implement paragraph creation
+    return nullptr;
 }
 
-SectionIterator SectionCollection::end() {
-    return SectionIterator();
+std::shared_ptr<class Table> HeaderFooter::append_table(int rows, int cols) {
+    // TODO: Implement table creation
+    return nullptr;
+}
+
+std::vector<std::shared_ptr<class Paragraph>> HeaderFooter::get_paragraphs() const {
+    // TODO: Implement
+    return {};
+}
+
+std::vector<std::shared_ptr<class Table>> HeaderFooter::get_tables() const {
+    // TODO: Implement
+    return {};
+}
+
+std::shared_ptr<Section> HeaderFooter::get_parent_section() const {
+    // TODO: Implement
+    return nullptr;
+}
+
+void HeaderFooter::ensure_minimum() {
+    // TODO: Implement
 }
 
 } // namespace cdocx

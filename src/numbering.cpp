@@ -424,7 +424,7 @@ void NumberingManager::clear() {
 
 pugi::xml_document* NumberingManager::get_numbering_xml() {
     if (document_) {
-        return document_->get_numbering();
+        return document_->get_numbering_xml();
     }
     return nullptr;
 }

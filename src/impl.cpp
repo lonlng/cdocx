@@ -701,7 +701,7 @@ bool DocumentImpl::write_tree_node(::zip_t* zip, std::shared_ptr<DocxTreeNode> n
         success = zip_entry_write(zip, data.data(), data.size()) == 0;
     } else {
         // Write binary data directly from memory
-        auto data = node->file_storage.get_data();
+        auto data = node->binary_data;
         success = zip_entry_write(zip, data.data(), data.size()) == 0;
     }
     

@@ -43,7 +43,7 @@ Paragraph::Paragraph() = default;
 
 Paragraph::Paragraph(pugi::xml_node parent_node, pugi::xml_node current_node)
     : parent_(parent_node), current_(current_node) {
-    run_.set_parent(current_);
+    run_.set_parent_xml(current_);
 }
 
 void Paragraph::set_parent(pugi::xml_node node) {
@@ -52,7 +52,7 @@ void Paragraph::set_parent(pugi::xml_node node) {
     current_ = parent_.child("w:p");
     // Initialize run iterator for this paragraph
     if (current_) {
-        run_.set_parent(current_);
+        run_.set_parent_xml(current_);
     }
 }
 
@@ -65,7 +65,7 @@ Paragraph& Paragraph::next() {
     current_ = current_.next_sibling("w:p");
     // Update run iterator for new paragraph
     if (current_) {
-        run_.set_parent(current_);
+        run_.set_parent_xml(current_);
     }
     return *this;
 }
@@ -75,7 +75,7 @@ bool Paragraph::has_next() const {
 }
 
 Run& Paragraph::runs() {
-    run_.set_parent(current_);
+    run_.set_parent_xml(current_);
     return run_;
 }
 
@@ -129,7 +129,7 @@ Run& Paragraph::add_run(const char* text, formatting_flag f) {
     
     // Set text content
     new_run_text.text().set(text);
-    run_.set_current(new_run);
+    run_.set_current_xml(new_run);
     
     return run_;
 }
@@ -197,7 +197,7 @@ Run& Paragraph::add_run_with_bookmark(Document& doc, const char* text, const std
     pugi::xml_node bookmark_end = current_.append_child("w:bookmarkEnd");
     bookmark_end.append_attribute("w:id").set_value(bookmark_id);
     
-    run_.set_current(new_run);
+    run_.set_current_xml(new_run);
     
     return run_;
 }
@@ -206,7 +206,7 @@ void Paragraph::remove_run(const Run& r) {
     if (!current_) {
         return;
     }
-    current_.remove_child(r.get_current());
+    current_.remove_child(r.get_current_xml());
 }
 
 Paragraph& Paragraph::insert_paragraph_after(const std::string& text, formatting_flag f) {

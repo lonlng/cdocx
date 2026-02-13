@@ -45,7 +45,11 @@ std::shared_ptr<Node> Body::clone(bool deep) const {
 }
 
 std::shared_ptr<Section> Body::get_parent_section() const {
-    return get_ancestor<Section>();
+    Section* sect = get_ancestor<Section>();
+    if (sect) {
+        return std::static_pointer_cast<Section>(sect->shared_from_this());
+    }
+    return nullptr;
 }
 
 std::shared_ptr<Paragraph> Body::append_paragraph(const std::string& text) {
@@ -137,7 +141,11 @@ Inline::Inline(Document* doc) {
 }
 
 std::shared_ptr<Paragraph> Inline::get_parent_paragraph() const {
-    return get_ancestor<Paragraph>();
+    Paragraph* para = get_ancestor<Paragraph>();
+    if (para) {
+        return std::static_pointer_cast<Paragraph>(para->shared_from_this());
+    }
+    return nullptr;
 }
 
 Inline& Inline::set_bold(bool value) {

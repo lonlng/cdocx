@@ -46,7 +46,7 @@ void DocxTreeNode::set_binary_data(std::vector<uint8_t>&& data) {
             xml_doc = std::move(new_doc);
         }
     } else {
-        file_storage.store_in_memory(std::move(data));
+        binary_data = std::move(data);
     }
     is_modified = true;
 }
@@ -104,6 +104,31 @@ DocxTree::DocxTree() {
 }
 
 DocxTree::~DocxTree() = default;
+
+DocxTree::DocxTree(DocxTree&& other) noexcept
+    : root_(std::move(other.root_)),
+      path_map_(std::move(other.path_map_)),
+      path_map_mutex_() {
+    // Note: shared_mutex cannot be moved, so we leave it default-constructed
+    // The path_map_ is already moved, and the mutex is unlocked in the new object
+}
+
+DocxTree& DocxTree::operator=(DocxTree&& other) noexcept {
+    if (this != &other) {
+        // Clear current state (need to lock both mutexes to avoid deadlock)
+        root_.reset();
+        {
+            std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
+            path_map_.clear();
+        }
+        
+        // Move from other
+        root_ = std::move(other.root_);
+        path_map_ = std::move(other.path_map_);
+        // path_map_mutex_ is not moved, stays with current object
+    }
+    return *this;
+}
 
 bool DocxTree::is_critical_part(const std::string& path) const {
     static const std::set<std::string> critical_parts = {
@@ -236,39 +261,8 @@ std::shared_ptr<DocxTreeNode> DocxTree::add_zip_entry(const std::string& entry_p
             return nullptr;
         }
     } else {
-        auto data_copy = data;
-        node->file_storage.store_in_memory(std::move(data_copy));
+        node->binary_data = data;
     }
-    
-    return node;
-}
-
-std::shared_ptr<DocxTreeNode> DocxTree::add_xml_file(const std::string& path,
-                                                      pugi::xml_document&& doc) {
-    auto node = find_or_create_node(path, DocxNodeType::XmlFile);
-    if (!node) {
-        return nullptr;
-    }
-    
-    node->xml_doc = std::make_shared<pugi::xml_document>();
-    for (pugi::xml_node child = doc.first_child(); child; child = child.next_sibling()) {
-        node->xml_doc->append_copy(child);
-    }
-    
-    return node;
-}
-
-std::shared_ptr<DocxTreeNode> DocxTree::add_media_file(const std::string& path,
-                                                        const std::vector<uint8_t>& data,
-                                                        const std::string& content_type) {
-    auto node = find_or_create_node(path, DocxNodeType::MediaFile);
-    if (!node) {
-        return nullptr;
-    }
-    
-    auto data_copy = data;
-    node->file_storage.store_in_memory(std::move(data_copy));
-    node->content_type = content_type;
     
     return node;
 }

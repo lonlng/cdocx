@@ -225,7 +225,7 @@ FetchContent_MakeAvailable(pugixml zip)
 
 target_link_libraries(cdocx 
     PUBLIC pugixml
-    PRIVATE zip::zip
+    PUBLIC zip::zip
 )
 
 # Platform-specific libraries

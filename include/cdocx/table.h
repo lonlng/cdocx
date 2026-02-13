@@ -13,6 +13,7 @@
 
 #include <cdocx/node.h>
 #include <cdocx/format.h>
+#include <cdocx/properties.h>
 
 #include <pugixml.hpp>
 #include <memory>
@@ -26,6 +27,13 @@ class Document;
 class Body;
 class Paragraph;
 class ParagraphCollection;
+
+// ============================================================================
+// Legacy TableRow/TableCell Forward Declarations (for backward compatibility)
+// ============================================================================
+
+class TableRow;  // Forward declaration
+class TableCell; // Forward declaration
 
 // ============================================================================
 // Cell Class - Table cell (CompositeNode containing Paragraphs and Tables)
@@ -226,6 +234,53 @@ public:
 };
 
 // ============================================================================
+// Legacy TableCell Class (for backward compatibility)
+// ============================================================================
+
+class TableCell {
+private:
+    friend class IteratorHelper;
+    
+    pugi::xml_node parent_;      ///< Parent row node
+    pugi::xml_node current_;     ///< Current w:tc element
+    
+public:
+    TableCell();
+    TableCell(pugi::xml_node parent, pugi::xml_node current);
+    
+    void set_parent(pugi::xml_node node);
+    void set_current(pugi::xml_node node);
+    
+    Paragraph* paragraphs();
+    TableCell& next();
+    bool has_next() const;
+};
+
+// ============================================================================
+// Legacy TableRow Class (for backward compatibility)
+// ============================================================================
+
+class TableRow {
+private:
+    friend class IteratorHelper;
+    
+    pugi::xml_node parent_;   ///< Parent table node
+    pugi::xml_node current_;  ///< Current w:tr element
+    TableCell cell_;          ///< Cell iterator for this row
+    
+public:
+    TableRow();
+    TableRow(pugi::xml_node parent, pugi::xml_node current);
+    
+    void set_parent(pugi::xml_node node);
+    void set_current(pugi::xml_node node);
+    
+    TableCell& cells();
+    bool has_next() const;
+    TableRow& next();
+};
+
+// ============================================================================
 // Table Class - Table (CompositeNode containing Rows)
 // ============================================================================
 
@@ -306,6 +361,7 @@ private:
     
     pugi::xml_node parent_xml_;   ///< Parent body XML node (legacy)
     pugi::xml_node current_xml_;  ///< Current w:tbl XML element (legacy)
+    TableRow row_;                ///< Row iterator for this table
     
 public:
     Table(pugi::xml_node parent, pugi::xml_node current);
@@ -318,11 +374,11 @@ public:
     bool has_next() const;
     
     // Legacy row access
-    class TableRow rows_legacy();
+    TableRow rows_legacy();
     
     // Legacy cell access (convenience)
-    class TableCell cellAt(size_t row, size_t col) const;
-    class TableCell cellAtUnsafe(size_t row, size_t col) const;
+    TableCell cellAt(size_t row, size_t col) const;
+    TableCell cellAtUnsafe(size_t row, size_t col) const;
     size_t getRowCount() const;
     size_t getColumnCount() const;
     TableCell merge(size_t startRow, size_t startCol, 
@@ -369,49 +425,6 @@ public:
     std::shared_ptr<Table> last() const {
         return tables_.empty() ? nullptr : tables_.back();
     }
-};
-
-// ============================================================================
-// Legacy TableRow/TableCell Classes (for backward compatibility)
-// ============================================================================
-
-class TableCell {
-private:
-    friend class IteratorHelper;
-    
-    pugi::xml_node parent_;      ///< Parent row node
-    pugi::xml_node current_;     ///< Current w:tc element
-    
-public:
-    TableCell();
-    TableCell(pugi::xml_node parent, pugi::xml_node current);
-    
-    void set_parent(pugi::xml_node node);
-    void set_current(pugi::xml_node node);
-    
-    Paragraph& paragraphs();
-    TableCell& next();
-    bool has_next() const;
-};
-
-class TableRow {
-private:
-    friend class IteratorHelper;
-    
-    pugi::xml_node parent_;   ///< Parent table node
-    pugi::xml_node current_;  ///< Current w:tr element
-    TableCell cell_;          ///< Cell iterator for this row
-    
-public:
-    TableRow();
-    TableRow(pugi::xml_node parent, pugi::xml_node current);
-    
-    void set_parent(pugi::xml_node node);
-    void set_current(pugi::xml_node node);
-    
-    TableCell& cells();
-    bool has_next() const;
-    TableRow& next();
 };
 
 } // namespace cdocx
