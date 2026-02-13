@@ -81,17 +81,36 @@ std::string Section::get_text() const {
 }
 
 std::shared_ptr<Body> Section::get_body() const {
-    // TODO: Implement body access
+    // Return the first Body child if exists
+    for (const auto& child : get_children()) {
+        if (auto body = std::dynamic_pointer_cast<Body>(child)) {
+            return body;
+        }
+    }
     return nullptr;
 }
 
 void Section::set_body(std::shared_ptr<Body> body) {
-    // TODO: Implement body setting
+    if (!body) return;
+    
+    // Remove existing body if any
+    auto existing = get_body();
+    if (existing) {
+        remove_child(existing);
+    }
+    
+    // Add new body as child
+    body->set_document(get_document());
+    const_cast<Section*>(this)->append_child(body);
 }
 
 std::shared_ptr<Body> Section::ensure_body() {
-    // TODO: Implement body creation
-    return nullptr;
+    auto body = get_body();
+    if (!body) {
+        body = std::make_shared<Body>(get_document());
+        set_body(body);
+    }
+    return body;
 }
 
 std::shared_ptr<class Paragraph> Section::append_paragraph(const std::string& text) {

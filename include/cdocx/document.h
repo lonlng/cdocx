@@ -306,6 +306,9 @@ public:
     // Convenience: Get all paragraphs across all sections
     ParagraphCollection get_paragraphs() const;
     
+    // Legacy API: Get paragraph iterator (backward compatibility)
+    Paragraph paragraphs();
+    
     // Convenience: Get all tables across all sections
     TableCollection get_tables() const;
     

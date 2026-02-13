@@ -151,6 +151,14 @@ if(MSVC AND NOT DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
     message(STATUS "MSVC Runtime Library: ${CMAKE_MSVC_RUNTIME_LIBRARY}")
 endif()
 
+# Also set as cache variable so FetchContent dependencies can see it
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "${CMAKE_MSVC_RUNTIME_LIBRARY}" CACHE STRING "MSVC Runtime Library" FORCE)
+    # Set C runtime for C dependencies (like zip)
+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT" CACHE STRING "" FORCE)
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /MTd" CACHE STRING "" FORCE)
+endif()
+
 # ----------------------------------------------------------------------------
 # Source Files (Auto-collecting)
 # ----------------------------------------------------------------------------

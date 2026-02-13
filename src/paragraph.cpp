@@ -36,6 +36,35 @@ std::shared_ptr<Node> Paragraph::clone(bool deep) const {
 }
 
 // ============================================================================
+// Run Operations (DOM API)
+// ============================================================================
+
+std::shared_ptr<Run> Paragraph::append_run(const std::string& text) {
+    auto run = std::make_shared<Run>(get_document(), text);
+    append_child(run);
+    return run;
+}
+
+std::shared_ptr<Run> Paragraph::insert_run(int index, const std::string& text) {
+    auto run = std::make_shared<Run>(get_document(), text);
+    insert_child(index, run);
+    return run;
+}
+
+std::shared_ptr<Run> Paragraph::get_first_run() const {
+    return get_first_child<Run>();
+}
+
+std::shared_ptr<Run> Paragraph::get_last_run() const {
+    return get_last_child<Run>();
+}
+
+RunCollection Paragraph::get_runs() const {
+    auto runs = get_children_of_type<Run>();
+    return RunCollection(runs);
+}
+
+// ============================================================================
 // Legacy Paragraph Implementation (iterator style)
 // ============================================================================
 

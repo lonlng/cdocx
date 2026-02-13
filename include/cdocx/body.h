@@ -64,7 +64,15 @@ public:
     
     // Typed child access
     template<typename T>
-    std::vector<std::shared_ptr<T>> get_children_of_type() const;
+    std::vector<std::shared_ptr<T>> get_children_of_type() const {
+        std::vector<std::shared_ptr<T>> result;
+        for (const auto& child : get_children()) {
+            if (auto typed = std::dynamic_pointer_cast<T>(child)) {
+                result.push_back(typed);
+            }
+        }
+        return result;
+    }
     
     // Ensure minimum content (at least one paragraph)
     void ensure_minimum();

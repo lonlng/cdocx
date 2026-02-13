@@ -402,6 +402,38 @@ ParagraphCollection Document::get_paragraphs() const {
     return ParagraphCollection(all_paragraphs);
 }
 
+Paragraph Document::paragraphs() {
+    // Legacy API: return Paragraph iterator pointing to first paragraph in document
+    Paragraph para;
+    
+    if (!is_open_) {
+        return para;
+    }
+    
+    // Get document.xml
+    auto doc_xml = get_document_xml();
+    if (!doc_xml) {
+        return para;
+    }
+    
+    // Find body element
+    auto body = doc_xml->child("w:document").child("w:body");
+    if (!body) {
+        return para;
+    }
+    
+    // Find first paragraph
+    auto first_para = body.child("w:p");
+    if (!first_para) {
+        // No paragraph found, create one
+        return para;
+    }
+    
+    para.set_parent(body);
+    para.set_current(first_para);
+    return para;
+}
+
 TableCollection Document::get_tables() const {
     std::vector<std::shared_ptr<Table>> all_tables;
     
