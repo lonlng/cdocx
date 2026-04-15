@@ -7,6 +7,8 @@
 #include <cdocx/document.h>
 #include <cdocx/paragraph.h>
 #include <cdocx/table.h>
+#include <algorithm>
+#include <cstring>
 #include <sstream>
 
 namespace cdocx {
@@ -46,11 +48,11 @@ Section::Section(Document* doc)
     set_document(doc);
 }
 
-Section::Section(pugi::xml_node sectPr, pugi::xml_node body, 
+Section::Section(pugi::xml_node sectPr, pugi::xml_node body,
                  Document* doc, bool is_first)
     : CompositeNode(),
-      sectPr_node_(sectPr), body_node_(body), 
-      document_(doc), is_first_section_(is_first) {
+      document_(doc), is_first_section_(is_first),
+      sectPr_node_(sectPr), body_node_(body) {
     
     if (sectPr_node_) {
         load_properties();
@@ -68,8 +70,33 @@ void Section::accept(DocumentVisitor* visitor) {
 }
 
 std::shared_ptr<Node> Section::clone(bool deep) const {
-    // TODO: Implement proper cloning
-    return nullptr;
+    auto cloned = std::make_shared<Section>(get_document());
+    cloned->set_properties(properties_);
+    cloned->set_first_section(is_first_section_);
+    cloned->header_refs_ = header_refs_;
+    cloned->footer_refs_ = footer_refs_;
+    if (deep) {
+        if (auto body = get_body()) {
+            if (auto body_clone = std::dynamic_pointer_cast<Body>(body->clone(deep))) {
+                cloned->set_body(body_clone);
+            }
+        }
+        for (const auto& header : headers_) {
+            if (auto h = header.lock()) {
+                if (auto h_clone = std::dynamic_pointer_cast<HeaderFooter>(h->clone(deep))) {
+                    cloned->headers_.push_back(h_clone);
+                }
+            }
+        }
+        for (const auto& footer : footers_) {
+            if (auto f = footer.lock()) {
+                if (auto f_clone = std::dynamic_pointer_cast<HeaderFooter>(f->clone(deep))) {
+                    cloned->footers_.push_back(f_clone);
+                }
+            }
+        }
+    }
+    return cloned;
 }
 
 std::string Section::get_text() const {
@@ -114,13 +141,15 @@ std::shared_ptr<Body> Section::ensure_body() {
 }
 
 std::shared_ptr<class Paragraph> Section::append_paragraph(const std::string& text) {
-    // TODO: Implement
-    return nullptr;
+    auto body = ensure_body();
+    if (!body) return nullptr;
+    return body->append_paragraph(text);
 }
 
 std::shared_ptr<class Table> Section::append_table(int rows, int cols) {
-    // TODO: Implement
-    return nullptr;
+    auto body = ensure_body();
+    if (!body) return nullptr;
+    return body->append_table(rows, cols);
 }
 
 Paragraph* Section::add_paragraph(const std::string& text, formatting_flag flag) {
@@ -407,8 +436,42 @@ void Section::load_properties() {
     if (!sectPr_node_) return;
     
     // Load from XML into prop structure
-    // This is handled by the properties extraction mechanism
-    // For now, we keep default values
+    auto pgSz = sectPr_node_.child("w:pgSz");
+    if (pgSz) {
+        properties_.pageSize.width = pgSz.attribute("w:w").as_int();
+        properties_.pageSize.height = pgSz.attribute("w:h").as_int();
+        const char* orient = pgSz.attribute("w:orient").value();
+        if (std::strcmp(orient, "landscape") == 0) {
+            properties_.orientation = SectionProperties::Orientation::Landscape;
+        } else {
+            properties_.orientation = SectionProperties::Orientation::Portrait;
+        }
+    }
+    
+    auto pgMar = sectPr_node_.child("w:pgMar");
+    if (pgMar) {
+        properties_.pageMargins.top = pgMar.attribute("w:top").as_int();
+        properties_.pageMargins.right = pgMar.attribute("w:right").as_int();
+        properties_.pageMargins.bottom = pgMar.attribute("w:bottom").as_int();
+        properties_.pageMargins.left = pgMar.attribute("w:left").as_int();
+        properties_.pageMargins.header = pgMar.attribute("w:header").as_int(720);
+        properties_.pageMargins.footer = pgMar.attribute("w:footer").as_int(720);
+    }
+    
+    auto cols = sectPr_node_.child("w:cols");
+    if (cols) {
+        properties_.columns.count = cols.attribute("w:num").as_int(1);
+        properties_.columns.space = cols.attribute("w:space").as_int(720);
+        properties_.columns.separator = cols.attribute("w:sep").as_bool(false);
+    }
+}
+
+void Section::add_header_ref(const HeaderFooterRef& ref) {
+    header_refs_.push_back(ref);
+}
+
+void Section::add_footer_ref(const HeaderFooterRef& ref) {
+    footer_refs_.push_back(ref);
 }
 
 // ============================================================================
@@ -458,37 +521,55 @@ void HeaderFooter::accept(DocumentVisitor* visitor) {
 }
 
 std::shared_ptr<Node> HeaderFooter::clone(bool deep) const {
-    // TODO: Implement proper cloning
-    return nullptr;
+    auto cloned = std::make_shared<HeaderFooter>(get_document(), type_, is_header_);
+    cloned->set_part_path(part_path_);
+    cloned->set_relationship_id(relationship_id_);
+    if (deep) {
+        for (const auto& child : get_children()) {
+            if (auto child_clone = child->clone(deep)) {
+                cloned->append_child(child_clone);
+            }
+        }
+    }
+    return cloned;
 }
 
 std::shared_ptr<class Paragraph> HeaderFooter::append_paragraph(const std::string& text) {
-    // TODO: Implement paragraph creation
-    return nullptr;
+    auto para = std::make_shared<Paragraph>(get_document());
+    if (!text.empty()) {
+        para->append_run(text);
+    }
+    append_child(para);
+    return para;
 }
 
 std::shared_ptr<class Table> HeaderFooter::append_table(int rows, int cols) {
-    // TODO: Implement table creation
-    return nullptr;
+    auto table = std::make_shared<Table>(get_document(), rows, cols);
+    append_child(table);
+    return table;
 }
 
 std::vector<std::shared_ptr<class Paragraph>> HeaderFooter::get_paragraphs() const {
-    // TODO: Implement
-    return {};
+    return get_children_of_type<Paragraph>();
 }
 
 std::vector<std::shared_ptr<class Table>> HeaderFooter::get_tables() const {
-    // TODO: Implement
-    return {};
+    return get_children_of_type<Table>();
 }
 
 std::shared_ptr<Section> HeaderFooter::get_parent_section() const {
-    // TODO: Implement
+    Section* sect = get_ancestor<Section>();
+    if (sect) {
+        return std::static_pointer_cast<Section>(sect->shared_from_this());
+    }
     return nullptr;
 }
 
 void HeaderFooter::ensure_minimum() {
-    // TODO: Implement
+    auto paras = get_paragraphs();
+    if (paras.empty()) {
+        append_paragraph();
+    }
 }
 
 } // namespace cdocx

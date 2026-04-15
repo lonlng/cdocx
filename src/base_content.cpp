@@ -24,6 +24,114 @@ Run::Run(Document* doc, const std::string& text) : text_(text) {
     set_document(doc);
 }
 
+Run::Run(const Run& other)
+    : Inline(other),
+      text_(other.text_),
+      parent_xml_(other.parent_xml_),
+      current_xml_(other.current_xml_) {
+    for (auto child = other.preserved_children_.first_child(); child; child = child.next_sibling()) {
+        preserved_children_.append_copy(child);
+    }
+}
+
+Run& Run::operator=(const Run& other) {
+    if (this != &other) {
+        Inline::operator=(other);
+        text_ = other.text_;
+        parent_xml_ = other.parent_xml_;
+        current_xml_ = other.current_xml_;
+        preserved_children_.reset();
+        for (auto child = other.preserved_children_.first_child(); child; child = child.next_sibling()) {
+            preserved_children_.append_copy(child);
+        }
+    }
+    return *this;
+}
+
+Run& Run::set_properties(const TextProperties& props) {
+    props.applyTo(*this);
+    return *this;
+}
+
+Run& Run::set_underline_style(TextProperties::UnderlineStyle style, const std::string& color) {
+    // Stub: map to basic underline for now
+    switch (style) {
+        case TextProperties::UnderlineStyle::None:
+            set_underline(UnderlineType::None);
+            break;
+        case TextProperties::UnderlineStyle::Single:
+        case TextProperties::UnderlineStyle::Words:
+            set_underline(UnderlineType::Single);
+            break;
+        case TextProperties::UnderlineStyle::Double:
+            set_underline(UnderlineType::Double);
+            break;
+        default:
+            set_underline(UnderlineType::Single);
+            break;
+    }
+    if (!color.empty() && color != "auto") {
+        font_.color = Color(color);
+    }
+    return *this;
+}
+
+Run& Run::set_spacing(TextProperties::SpacingType type, int value) {
+    // Stub implementation
+    (void)type;
+    (void)value;
+    return *this;
+}
+
+Run& Run::set_position(TextProperties::PositionType type, int value) {
+    (void)value;
+    switch (type) {
+        case TextProperties::PositionType::Raised:
+            set_superscript();
+            break;
+        case TextProperties::PositionType::Lowered:
+            set_subscript();
+            break;
+        default:
+            font_.script_type = ScriptType::Normal;
+            break;
+    }
+    return *this;
+}
+
+Run& Run::set_scale(int percent) {
+    (void)percent;
+    return *this;
+}
+
+Run& Run::set_strike(TextProperties::StrikeStyle style) {
+    set_strikethrough(style != TextProperties::StrikeStyle::None);
+    return *this;
+}
+
+Run& Run::set_highlight(TextProperties::Highlight color) {
+    switch (color) {
+        case TextProperties::Highlight::Yellow: font_.highlight = HighlightColor::Yellow; break;
+        case TextProperties::Highlight::Green: font_.highlight = HighlightColor::Green; break;
+        case TextProperties::Highlight::Cyan: font_.highlight = HighlightColor::Turquoise; break;
+        case TextProperties::Highlight::Magenta: font_.highlight = HighlightColor::Pink; break;
+        case TextProperties::Highlight::Blue: font_.highlight = HighlightColor::Blue; break;
+        case TextProperties::Highlight::Red: font_.highlight = HighlightColor::Red; break;
+        case TextProperties::Highlight::Black: font_.highlight = HighlightColor::Black; break;
+        case TextProperties::Highlight::White: font_.highlight = HighlightColor::White; break;
+        case TextProperties::Highlight::DarkRed: font_.highlight = HighlightColor::DarkRed; break;
+        case TextProperties::Highlight::DarkGreen: font_.highlight = HighlightColor::BrightGreen; break;
+        case TextProperties::Highlight::DarkBlue: font_.highlight = HighlightColor::DarkBlue; break;
+        case TextProperties::Highlight::DarkYellow: font_.highlight = HighlightColor::DarkYellow; break;
+        case TextProperties::Highlight::DarkCyan: font_.highlight = HighlightColor::Teal; break;
+        case TextProperties::Highlight::DarkMagenta: font_.highlight = HighlightColor::Violet; break;
+        case TextProperties::Highlight::DarkGray: font_.highlight = HighlightColor::Gray50; break;
+        case TextProperties::Highlight::LightGray: font_.highlight = HighlightColor::Gray25; break;
+        default: font_.highlight = HighlightColor::None; break;
+    }
+    return *this;
+}
+
 void Run::accept(DocumentVisitor* visitor) {
     if (visitor) {
         visitor->visit_run(*this);
@@ -33,7 +141,28 @@ void Run::accept(DocumentVisitor* visitor) {
 std::shared_ptr<Node> Run::clone(bool deep) const {
     auto cloned = std::make_shared<Run>(get_document(), text_);
     cloned->font_ = font_;
+    if (preserved_children_.first_child()) {
+        for (auto child = preserved_children_.first_child(); child; child = child.next_sibling()) {
+            cloned->preserved_children_.append_copy(child);
+        }
+    }
     return cloned;
+}
+
+void Run::preserve_child(pugi::xml_node child) {
+    if (child) {
+        preserved_children_.append_copy(child);
+    }
+}
+
+void Run::serialize_preserved_children(pugi::xml_node run_xml) const {
+    for (auto child = preserved_children_.first_child(); child; child = child.next_sibling()) {
+        run_xml.append_copy(child);
+    }
+}
+
+bool Run::has_preserved_children() const {
+    return preserved_children_.first_child() != nullptr;
 }
 
 // ============================================================================
@@ -71,34 +200,96 @@ bool Run::set_text_xml(const std::string& text) const {
     return current_xml_.child("w:t").text().set(text.c_str());
 }
 
+namespace {
+    pugi::xml_node EnsureRPr(pugi::xml_node current_xml) {
+        auto rPr = current_xml.child("w:rPr");
+        if (!rPr) {
+            // Insert after any w:rPr element? Just prepend before w:t or other children
+            rPr = current_xml.prepend_child("w:rPr");
+        }
+        return rPr;
+    }
+}  // namespace
+
 bool Run::set_color_xml(const std::string& color_hex) {
-    // TODO: Implement
-    return false;
+    if (!current_xml_) return false;
+    auto rPr = EnsureRPr(current_xml_);
+    if (color_hex.empty() || color_hex == "auto") {
+        rPr.remove_child("w:color");
+        return true;
+    }
+    auto color = rPr.child("w:color");
+    if (!color) color = rPr.append_child("w:color");
+    color.append_attribute("w:val").set_value(color_hex.c_str());
+    return true;
 }
 
 bool Run::set_font_size_xml(int size) {
-    // TODO: Implement
-    return false;
+    if (!current_xml_) return false;
+    auto rPr = EnsureRPr(current_xml_);
+    if (size <= 0) {
+        rPr.remove_child("w:sz");
+        rPr.remove_child("w:szCs");
+        return true;
+    }
+    auto sz = rPr.child("w:sz");
+    if (!sz) sz = rPr.append_child("w:sz");
+    sz.append_attribute("w:val").set_value(size);
+    auto szCs = rPr.child("w:szCs");
+    if (!szCs) szCs = rPr.append_child("w:szCs");
+    szCs.append_attribute("w:val").set_value(size);
+    return true;
 }
 
 bool Run::set_font_name_xml(const std::string& font_name) {
-    // TODO: Implement
-    return false;
+    if (!current_xml_) return false;
+    auto rPr = EnsureRPr(current_xml_);
+    if (font_name.empty()) {
+        rPr.remove_child("w:rFonts");
+        return true;
+    }
+    auto fonts = rPr.child("w:rFonts");
+    if (!fonts) fonts = rPr.append_child("w:rFonts");
+    fonts.append_attribute("w:ascii").set_value(font_name.c_str());
+    fonts.append_attribute("w:hAnsi").set_value(font_name.c_str());
+    fonts.append_attribute("w:cs").set_value(font_name.c_str());
+    fonts.append_attribute("w:eastAsia").set_value(font_name.c_str());
+    return true;
 }
 
 bool Run::set_bold_xml(bool bold) {
-    // TODO: Implement
-    return false;
+    if (!current_xml_) return false;
+    auto rPr = EnsureRPr(current_xml_);
+    if (bold) {
+        if (!rPr.child("w:b")) rPr.append_child("w:b");
+    } else {
+        rPr.remove_child("w:b");
+    }
+    return true;
 }
 
 bool Run::set_italic_xml(bool italic) {
-    // TODO: Implement
-    return false;
+    if (!current_xml_) return false;
+    auto rPr = EnsureRPr(current_xml_);
+    if (italic) {
+        if (!rPr.child("w:i")) rPr.append_child("w:i");
+    } else {
+        rPr.remove_child("w:i");
+    }
+    return true;
 }
 
 bool Run::set_underline_xml(bool underline) {
-    // TODO: Implement
-    return false;
+    if (!current_xml_) return false;
+    auto rPr = EnsureRPr(current_xml_);
+    if (underline) {
+        auto u = rPr.child("w:u");
+        if (!u) u = rPr.append_child("w:u");
+        u.append_attribute("w:val").set_value("single");
+    } else {
+        rPr.remove_child("w:u");
+    }
+    return true;
 }
 
 void Run::set_properties_xml(const TextProperties& props) {
@@ -111,34 +302,139 @@ TextProperties Run::get_properties_xml() const {
 }
 
 bool Run::set_highlight_xml(TextProperties::Highlight color) {
-    // TODO: Implement
-    return false;
+    if (!current_xml_) return false;
+    auto rPr = EnsureRPr(current_xml_);
+    if (color == TextProperties::Highlight::None) {
+        rPr.remove_child("w:highlight");
+        return true;
+    }
+    const char* val = "yellow";
+    switch (color) {
+        case TextProperties::Highlight::Black:       val = "black"; break;
+        case TextProperties::Highlight::Blue:        val = "blue"; break;
+        case TextProperties::Highlight::Cyan:        val = "cyan"; break;
+        case TextProperties::Highlight::Green:       val = "green"; break;
+        case TextProperties::Highlight::Magenta:     val = "magenta"; break;
+        case TextProperties::Highlight::Red:         val = "red"; break;
+        case TextProperties::Highlight::Yellow:      val = "yellow"; break;
+        case TextProperties::Highlight::White:       val = "white"; break;
+        case TextProperties::Highlight::DarkBlue:    val = "darkBlue"; break;
+        case TextProperties::Highlight::DarkCyan:    val = "darkCyan"; break;
+        case TextProperties::Highlight::DarkGreen:   val = "darkGreen"; break;
+        case TextProperties::Highlight::DarkMagenta: val = "darkMagenta"; break;
+        case TextProperties::Highlight::DarkRed:     val = "darkRed"; break;
+        case TextProperties::Highlight::DarkYellow:  val = "darkYellow"; break;
+        case TextProperties::Highlight::DarkGray:    val = "darkGray"; break;
+        case TextProperties::Highlight::LightGray:   val = "lightGray"; break;
+        default: break;
+    }
+    auto hl = rPr.child("w:highlight");
+    if (!hl) hl = rPr.append_child("w:highlight");
+    hl.append_attribute("w:val").set_value(val);
+    return true;
 }
 
-bool Run::set_underline_style_xml(TextProperties::UnderlineStyle style, 
+bool Run::set_underline_style_xml(TextProperties::UnderlineStyle style,
                                    const std::string& color) {
-    // TODO: Implement
-    return false;
+    if (!current_xml_) return false;
+    auto rPr = EnsureRPr(current_xml_);
+    if (style == TextProperties::UnderlineStyle::None) {
+        rPr.remove_child("w:u");
+        return true;
+    }
+    const char* val = "single";
+    switch (style) {
+        case TextProperties::UnderlineStyle::Words:       val = "words"; break;
+        case TextProperties::UnderlineStyle::Single:      val = "single"; break;
+        case TextProperties::UnderlineStyle::Double:      val = "double"; break;
+        case TextProperties::UnderlineStyle::Thick:       val = "thick"; break;
+        case TextProperties::UnderlineStyle::Dotted:      val = "dotted"; break;
+        case TextProperties::UnderlineStyle::DottedHeavy: val = "dottedHeavy"; break;
+        case TextProperties::UnderlineStyle::Dash:        val = "dash"; break;
+        case TextProperties::UnderlineStyle::DashedHeavy: val = "dashedHeavy"; break;
+        case TextProperties::UnderlineStyle::DashLong:    val = "dashLong"; break;
+        case TextProperties::UnderlineStyle::DashLongHeavy: val = "dashLongHeavy"; break;
+        case TextProperties::UnderlineStyle::DotDash:     val = "dotDash"; break;
+        case TextProperties::UnderlineStyle::DashDotHeavy: val = "dashDotHeavy"; break;
+        case TextProperties::UnderlineStyle::DotDotDash:  val = "dotDotDash"; break;
+        case TextProperties::UnderlineStyle::DashDotDotHeavy: val = "dashDotDotHeavy"; break;
+        case TextProperties::UnderlineStyle::Wave:        val = "wave"; break;
+        case TextProperties::UnderlineStyle::WavyDouble:  val = "wavyDouble"; break;
+        case TextProperties::UnderlineStyle::WavyHeavy:   val = "wavyHeavy"; break;
+        default: break;
+    }
+    auto u = rPr.child("w:u");
+    if (!u) u = rPr.append_child("w:u");
+    u.append_attribute("w:val").set_value(val);
+    if (!color.empty() && color != "auto") {
+        u.append_attribute("w:color").set_value(color.c_str());
+    }
+    return true;
 }
 
 bool Run::set_strike_xml(TextProperties::StrikeStyle style) {
-    // TODO: Implement
-    return false;
+    if (!current_xml_) return false;
+    auto rPr = EnsureRPr(current_xml_);
+    rPr.remove_child("w:strike");
+    rPr.remove_child("w:dstrike");
+    if (style == TextProperties::StrikeStyle::Single) {
+        rPr.append_child("w:strike");
+    } else if (style == TextProperties::StrikeStyle::Double) {
+        rPr.append_child("w:dstrike");
+    }
+    return true;
 }
 
 bool Run::set_scale_xml(int percent) {
-    // TODO: Implement
-    return false;
+    if (!current_xml_) return false;
+    auto rPr = EnsureRPr(current_xml_);
+    if (percent <= 0 || percent == 100) {
+        rPr.remove_child("w:w");
+        return true;
+    }
+    auto w = rPr.child("w:w");
+    if (!w) w = rPr.append_child("w:w");
+    w.append_attribute("w:val").set_value(percent);
+    return true;
 }
 
 bool Run::set_spacing_xml(TextProperties::SpacingType type, int value) {
-    // TODO: Implement
-    return false;
+    if (!current_xml_) return false;
+    auto rPr = EnsureRPr(current_xml_);
+    if (type == TextProperties::SpacingType::Normal || value == 0) {
+        rPr.remove_child("w:spacing");
+        return true;
+    }
+    auto sp = rPr.child("w:spacing");
+    if (!sp) sp = rPr.append_child("w:spacing");
+    int val = (type == TextProperties::SpacingType::Expanded) ? value : -value;
+    sp.append_attribute("w:val").set_value(val);
+    return true;
 }
 
 bool Run::set_position_xml(TextProperties::PositionType type, int value) {
-    // TODO: Implement
-    return false;
+    if (!current_xml_) return false;
+    auto rPr = EnsureRPr(current_xml_);
+    if (type == TextProperties::PositionType::Normal) {
+        rPr.remove_child("w:vertAlign");
+        rPr.remove_child("w:position");
+        return true;
+    }
+    const char* valign = (type == TextProperties::PositionType::Raised)
+                             ? "superscript"
+                             : "subscript";
+    auto va = rPr.child("w:vertAlign");
+    if (!va) va = rPr.append_child("w:vertAlign");
+    va.append_attribute("w:val").set_value(valign);
+    if (value != 0) {
+        auto pos = rPr.child("w:position");
+        if (!pos) pos = rPr.append_child("w:position");
+        int val = (type == TextProperties::PositionType::Raised) ? value : -value;
+        pos.append_attribute("w:val").set_value(val);
+    } else {
+        rPr.remove_child("w:position");
+    }
+    return true;
 }
 
 // ============================================================================
@@ -330,33 +626,61 @@ Hyperlink::Hyperlink(Document* doc) {
 }
 
 void Hyperlink::set_address(const std::string& url) {
-    // TODO: Implement
+    address_ = url;
+    bookmark_name_.clear();
 }
 
 void Hyperlink::set_bookmark_name(const std::string& name) {
-    // TODO: Implement
+    bookmark_name_ = name;
+    address_.clear();
 }
 
 void Hyperlink::set_tooltip(const std::string& tooltip) {
-    // TODO: Implement
+    tooltip_ = tooltip;
 }
 
 void Hyperlink::set_screen_tip(const std::string& tip) {
-    // TODO: Implement
+    screen_tip_ = tip;
 }
 
 std::string Hyperlink::get_address() const {
-    // TODO: Implement
-    return "";
+    return address_;
 }
 
 std::string Hyperlink::get_bookmark_name() const {
-    // TODO: Implement
-    return "";
+    return bookmark_name_;
+}
+
+std::string Hyperlink::get_tooltip() const {
+    return tooltip_;
+}
+
+std::string Hyperlink::get_screen_tip() const {
+    return screen_tip_;
+}
+
+std::shared_ptr<Node> Hyperlink::clone(bool deep) const {
+    auto cloned = std::make_shared<Hyperlink>(get_document());
+    cloned->set_field_code(get_field_code());
+    cloned->set_result(get_result());
+    cloned->set_locked(is_locked());
+    cloned->set_dirty(is_dirty());
+    cloned->address_ = address_;
+    cloned->bookmark_name_ = bookmark_name_;
+    cloned->tooltip_ = tooltip_;
+    cloned->screen_tip_ = screen_tip_;
+    cloned->get_font() = get_font();
+    return cloned;
+}
+
+void Hyperlink::accept(DocumentVisitor* visitor) {
+    if (visitor) {
+        visitor->visit_field_start(*this);
+    }
 }
 
 void Hyperlink::update() {
-    // TODO: Implement
+    // Subclasses can override for dynamic updates
 }
 
 } // namespace cdocx

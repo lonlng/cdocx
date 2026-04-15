@@ -80,6 +80,7 @@ class DocumentProperties;
 class SectionCollection;
 class ParagraphCollection;
 class TableCollection;
+class StyleCollection;
 
 // ============================================================================
 // Document Package Tree Types (Physical structure)
@@ -298,6 +299,7 @@ public:
     std::shared_ptr<Section> get_first_section() const;
     std::shared_ptr<Section> get_last_section() const;
     std::shared_ptr<Section> append_section();
+    std::shared_ptr<Section> add_section() { return append_section(); }
     std::shared_ptr<Section> insert_section(int index);
     void remove_section(std::shared_ptr<Section> section);
     size_t get_section_count() const;
@@ -323,6 +325,10 @@ public:
     NumberingId add_outline_list_definition();
     NumberingManager* get_numbering_manager() { return numbering_manager_.get(); }
     const NumberingDefinition* get_numbering_definition(NumberingId id) const;
+
+    // Styles
+    StyleCollection& styles();
+    const StyleCollection& styles() const;
     
     // XML Parts API (physical structure access)
     pugi::xml_document* get_xml_part(const std::string& part_path);
@@ -386,11 +392,17 @@ public:
     DocxTree& get_physical_tree() { return tree_; }
     const DocxTree& get_physical_tree() const { return tree_; }
     
-    // Internal: Sync DOM to physical tree (called before save)
+    // Sync DOM to physical tree (called before save)
     void sync_to_physical_tree();
     
-    // Internal: Sync physical tree to DOM (called after load)
+    // Sync physical tree to DOM (called after load)
     void sync_from_physical_tree();
+    
+    /**
+     * @brief Synchronize between DOM and XML representations
+     * @param dom_to_xml true = DOM→XML, false = XML→DOM
+     */
+    void sync_dom_and_xml(bool dom_to_xml = true);
     
 protected:
     // Physical document state
@@ -420,6 +432,9 @@ protected:
     
     // Numbering
     std::unique_ptr<NumberingManager> numbering_manager_;
+
+    // Styles
+    std::unique_ptr<StyleCollection> styles_;
     
     // Properties
     DocumentProperties builtin_properties_;
@@ -452,19 +467,21 @@ protected:
     void parse_relationships(const std::string& rels_path);
     void load_all_relationships();
     void remove_relationship(const std::string& rels_path, const std::string& rel_id);
-    std::string find_relationship_id(const std::string& rels_path, 
-                                     const std::string& target) const;
     void update_relationships_xml(const std::string& rels_path);
-    void add_content_type_override(const std::string& part_name, 
+    void add_content_type_override(const std::string& part_name,
                                    const std::string& content_type);
     void update_content_types_xml();
-    
+
 public:
     // Relationship management (public for Section and other internal classes)
-    std::string add_relationship(const std::string& rels_path, 
-                                 const std::string& type, 
-                                 const std::string& target, 
+    std::string find_relationship_id(const std::string& rels_path,
+                                     const std::string& target) const;
+    std::string add_relationship(const std::string& rels_path,
+                                 const std::string& type,
+                                 const std::string& target,
                                  const std::string& target_mode = "");
+    std::string get_relationship_target(const std::string& rels_path,
+                                        const std::string& rel_id) const;
     
     // Save operations
     bool save_to_zip(const std::string& output_path);
@@ -487,6 +504,8 @@ public:
     // Sync helpers
     void sync_sections_to_physical();
     void sync_sections_from_physical();
+    void sync_styles_to_physical();
+    void sync_styles_from_physical();
     std::shared_ptr<Body> parse_body_from_xml(pugi::xml_node body_node);
     std::shared_ptr<Paragraph> parse_paragraph_from_xml(pugi::xml_node para_node);
     std::shared_ptr<Table> parse_table_from_xml(pugi::xml_node table_node);

@@ -85,4 +85,4 @@ cmake --build build --target tidy-fix
 ## References
 
 - [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html)
-- [docs/CODE_QUALITY.md](./docs/CODE_QUALITY.md) - Detailed tool configuration
+- [CODING_STANDARDS.md](../CODING_STANDARDS.md) - 中文版编码规范

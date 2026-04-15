@@ -26,7 +26,8 @@ public:
     Color() = default;
     Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = 255)
         : r(red), g(green), b(blue), a(alpha) {}
-    
+    Color(const std::string& hex);
+
     // Static factory methods
     static Color from_hex(const std::string& hex);
     static Color from_rgb(uint8_t r, uint8_t g, uint8_t b) { 
@@ -373,6 +374,7 @@ public:
     
     // Style
     std::string style_name;
+    StyleIdentifier style_identifier = StyleIdentifier::TableNormal;
     
     // ------------------------------------------------------------------------
     // Convenience methods

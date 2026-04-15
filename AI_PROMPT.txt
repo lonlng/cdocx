@@ -16,14 +16,14 @@ Before submitting code:
   clang-format -i src/*.cpp include/*.h include/**/*.h
   cmake --build build --target tidy
 
-See docs/CODE_QUALITY.md for detailed usage.
+See CODING_STANDARDS.md and STYLE.md for coding standards.
 
 ---------------------------------------------------------------------------
 PROJECT OVERVIEW
 ---------------------------------------------------------------------------
 - Language: C++17 (C99 for zip component)
 - Library: CDocx - Microsoft Word DOCX manipulation library
-- Version: 0.5.0
+- Version: 0.7.0
 - Namespace: cdocx
 - Build System: CMake 3.14+
 - License: MIT
@@ -121,7 +121,7 @@ File header:
    * @author lonlng
    * @copyright MIT License
    * @date 2026
-   * @version 0.5.0
+   * @version 0.7.0
    */
 
 Classes:
@@ -140,7 +140,7 @@ Functions/Methods:
    * @param param_name Description
    * @return Description of return value
    * @note Important note
-   * @since 0.5.0
+   * @since 0.7.0
    */
   ReturnType MyMethod(ParamType param_name);
 
@@ -325,7 +325,7 @@ Run all checks:
   ./scripts/code-quality.sh all      # Linux/macOS
   scripts\code-quality.bat all       # Windows
 
-See docs/CODE_QUALITY.md for full documentation.
+See STYLE.md and 编码规范.md for coding standards.
 
 ---------------------------------------------------------------------------
 BUILD COMMANDS REFERENCE

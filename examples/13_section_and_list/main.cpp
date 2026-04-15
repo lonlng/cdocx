@@ -21,20 +21,20 @@ int main() {
         doc.create_empty();
         
         // Get the default section and set page properties
-        auto* sect1 = doc.get_first_section();
+        auto sect1 = doc.get_first_section();
         if (sect1) {
             std::cout << "  - Found default section" << std::endl;
             
             // Set A4 portrait
-            sect1->prop.pageSize.width = 12240;
-            sect1->prop.pageSize.height = 15840;
-            sect1->prop.orientation = cdocx::SectionProperties::Orientation::Portrait;
+            sect1->get_properties().pageSize.width = 12240;
+            sect1->get_properties().pageSize.height = 15840;
+            sect1->get_properties().orientation = cdocx::SectionProperties::Orientation::Portrait;
             
             // Set margins (1 inch)
-            sect1->prop.pageMargins.top = 1440;
-            sect1->prop.pageMargins.right = 1440;
-            sect1->prop.pageMargins.bottom = 1440;
-            sect1->prop.pageMargins.left = 1440;
+            sect1->get_properties().pageMargins.top = 1440;
+            sect1->get_properties().pageMargins.right = 1440;
+            sect1->get_properties().pageMargins.bottom = 1440;
+            sect1->get_properties().pageMargins.left = 1440;
             
             std::cout << "  - Section configured with A4 portrait" << std::endl;
             
@@ -46,14 +46,14 @@ int main() {
         }
         
         // Add a new section
-        auto* sect2 = doc.add_section();
+        auto sect2 = doc.add_section();
         if (sect2) {
             std::cout << "  - Added new section (total: " << doc.get_section_count() << ")" << std::endl;
             
             // Set landscape
-            sect2->prop.orientation = cdocx::SectionProperties::Orientation::Landscape;
-            sect2->prop.pageSize.width = 15840;
-            sect2->prop.pageSize.height = 12240;
+            sect2->get_properties().orientation = cdocx::SectionProperties::Orientation::Landscape;
+            sect2->get_properties().pageSize.width = 15840;
+            sect2->get_properties().pageSize.height = 12240;
             
             sect2->add_paragraph("Second Section - Landscape");
             std::cout << "  - Second section set to landscape" << std::endl;
@@ -75,22 +75,22 @@ int main() {
         std::cout << "  - Created bulleted list definition (ID: " << bullet_list << ")" << std::endl;
         
         // Add list items using paragraphs and apply numbering
-        auto& para = doc2.paragraphs();
+        auto para = doc2.paragraphs();
         
         para.add_run("Project Goals:", cdocx::bold);
         para.next();  // Move to next paragraph
         
-        auto& p1 = para.insert_paragraph_after("Define project scope");
+        auto p1 = para.insert_paragraph_after("Define project scope");
         p1.set_numbering(bullet_list, cdocx::NumberingLevel::Level1);
         
-        auto& p2 = p1.insert_paragraph_after("Create timeline");
+        auto p2 = p1.insert_paragraph_after("Create timeline");
         p2.set_numbering(bullet_list, cdocx::NumberingLevel::Level1);
         
-        auto& p3 = p2.insert_paragraph_after("Assign team members");
+        auto p3 = p2.insert_paragraph_after("Assign team members");
         p3.set_numbering(bullet_list, cdocx::NumberingLevel::Level1);
         
         // Add nested item
-        auto& p4 = p3.insert_paragraph_after("Developers");
+        auto p4 = p3.insert_paragraph_after("Developers");
         p4.set_numbering(bullet_list, cdocx::NumberingLevel::Level2);
         
         std::cout << "  - Added 4 list items (3 level 1, 1 level 2)" << std::endl;
@@ -116,19 +116,19 @@ int main() {
         std::cout << "  - Created letter list (ID: " << letter_list << ")" << std::endl;
         
         // Add decimal list items
-        auto& para3 = doc3.paragraphs();
+        auto para3 = doc3.paragraphs();
         para3.add_run("Installation Steps:", cdocx::bold);
         
-        auto& d1 = para3.insert_paragraph_after("Download the software");
+        auto d1 = para3.insert_paragraph_after("Download the software");
         d1.set_numbering(decimal_list, cdocx::NumberingLevel::Level1);
         
-        auto& d2 = d1.insert_paragraph_after("Run the installer");
+        auto d2 = d1.insert_paragraph_after("Run the installer");
         d2.set_numbering(decimal_list, cdocx::NumberingLevel::Level1);
         
-        auto& d3 = d2.insert_paragraph_after("Configure settings");
+        auto d3 = d2.insert_paragraph_after("Configure settings");
         d3.set_numbering(decimal_list, cdocx::NumberingLevel::Level1);
         
-        auto& d4 = d3.insert_paragraph_after("Complete setup");
+        auto d4 = d3.insert_paragraph_after("Complete setup");
         d4.set_numbering(decimal_list, cdocx::NumberingLevel::Level1);
         
         std::cout << "  - Added 4 decimal numbered items" << std::endl;
@@ -154,28 +154,28 @@ int main() {
         }
         
         // Create outline structure
-        auto& para4 = doc4.paragraphs();
+        auto para4 = doc4.paragraphs();
         para4.add_run("Document Outline:", cdocx::bold);
         
-        auto& o1 = para4.insert_paragraph_after("Introduction");
+        auto o1 = para4.insert_paragraph_after("Introduction");
         o1.set_numbering(outline_list, cdocx::NumberingLevel::Level1);
         
-        auto& o2 = o1.insert_paragraph_after("Background");
+        auto o2 = o1.insert_paragraph_after("Background");
         o2.set_numbering(outline_list, cdocx::NumberingLevel::Level2);
         
-        auto& o3 = o2.insert_paragraph_after("Objectives");
+        auto o3 = o2.insert_paragraph_after("Objectives");
         o3.set_numbering(outline_list, cdocx::NumberingLevel::Level2);
         
-        auto& o4 = o3.insert_paragraph_after("Methodology");
+        auto o4 = o3.insert_paragraph_after("Methodology");
         o4.set_numbering(outline_list, cdocx::NumberingLevel::Level1);
         
-        auto& o5 = o4.insert_paragraph_after("Data Collection");
+        auto o5 = o4.insert_paragraph_after("Data Collection");
         o5.set_numbering(outline_list, cdocx::NumberingLevel::Level2);
         
-        auto& o6 = o5.insert_paragraph_after("Analysis");
+        auto o6 = o5.insert_paragraph_after("Analysis");
         o6.set_numbering(outline_list, cdocx::NumberingLevel::Level3);
         
-        auto& o7 = o6.insert_paragraph_after("Results");
+        auto o7 = o6.insert_paragraph_after("Results");
         o7.set_numbering(outline_list, cdocx::NumberingLevel::Level1);
         
         std::cout << "  - Created 3-level outline structure" << std::endl;
@@ -194,19 +194,19 @@ int main() {
         auto chinese_list = doc5.add_chinese_numbered_list_definition();
         std::cout << "  - Created Chinese numbered list (ID: " << chinese_list << ")" << std::endl;
         
-        auto& para5 = doc5.paragraphs();
+        auto para5 = doc5.paragraphs();
         para5.add_run("工作计划:", cdocx::bold);
         
-        auto& c1 = para5.insert_paragraph_after("需求分析");
+        auto c1 = para5.insert_paragraph_after("需求分析");
         c1.set_numbering(chinese_list, cdocx::NumberingLevel::Level1);
         
-        auto& c2 = c1.insert_paragraph_after("系统设计");
+        auto c2 = c1.insert_paragraph_after("系统设计");
         c2.set_numbering(chinese_list, cdocx::NumberingLevel::Level1);
         
-        auto& c3 = c2.insert_paragraph_after("开发实现");
+        auto c3 = c2.insert_paragraph_after("开发实现");
         c3.set_numbering(chinese_list, cdocx::NumberingLevel::Level1);
         
-        auto& c4 = c3.insert_paragraph_after("测试验收");
+        auto c4 = c3.insert_paragraph_after("测试验收");
         c4.set_numbering(chinese_list, cdocx::NumberingLevel::Level1);
         
         std::cout << "  - Added 4 Chinese numbered items" << std::endl;
@@ -224,26 +224,26 @@ int main() {
         
         auto multi_list = doc6.add_numbered_list_definition();
         
-        auto& para6 = doc6.paragraphs();
+        auto para6 = doc6.paragraphs();
         para6.add_run("Multi-level List Demo:", cdocx::bold);
         
         // Create list and manipulate levels
-        auto& l1 = para6.insert_paragraph_after("Main Topic 1");
+        auto l1 = para6.insert_paragraph_after("Main Topic 1");
         l1.set_numbering(multi_list, cdocx::NumberingLevel::Level1);
         
-        auto& l2 = l1.insert_paragraph_after("Sub Topic 1.1");
+        auto l2 = l1.insert_paragraph_after("Sub Topic 1.1");
         l2.set_numbering(multi_list, cdocx::NumberingLevel::Level2);
         
-        auto& l3 = l2.insert_paragraph_after("Sub Topic 1.2");
+        auto l3 = l2.insert_paragraph_after("Sub Topic 1.2");
         l3.set_numbering(multi_list, cdocx::NumberingLevel::Level2);
         
-        auto& l4 = l3.insert_paragraph_after("Back to Main Topic 2");
+        auto l4 = l3.insert_paragraph_after("Back to Main Topic 2");
         l4.set_numbering(multi_list, cdocx::NumberingLevel::Level1);
         
-        auto& l5 = l4.insert_paragraph_after("Sub Topic 2.1");
+        auto l5 = l4.insert_paragraph_after("Sub Topic 2.1");
         l5.set_numbering(multi_list, cdocx::NumberingLevel::Level2);
         
-        auto& l6 = l5.insert_paragraph_after("Detail 2.1.1");
+        auto l6 = l5.insert_paragraph_after("Detail 2.1.1");
         l6.set_numbering(multi_list, cdocx::NumberingLevel::Level3);
         
         std::cout << "  - Created list with level manipulation" << std::endl;

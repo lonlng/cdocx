@@ -12,9 +12,13 @@
 
 #include <cdocx/document.h>
 #include <cdocx/section.h>
+#include <cdocx/body.h>
+#include <cstring>
 #include <cdocx/paragraph.h>
 #include <cdocx/table.h>
+#include <cdocx/base.h>
 #include <cdocx/advanced.h>
+#include <cdocx/style.h>
 #include <detail/impl.h>
 
 #include <algorithm>
@@ -34,32 +38,41 @@ namespace cdocx {
 // Constructor / Destructor
 // ============================================================================
 
-Document::Document() 
+Document::Document()
     : filepath_(""), is_open_(false), zip_handle_(nullptr), zip_dirty_(false),
-      sections_dirty_(true), next_header_number_(1), next_footer_number_(1), 
+      sections_dirty_(true), next_header_number_(1), next_footer_number_(1),
       next_bookmark_id_(1) {
     // Initialize numbering manager
     init_numbering_manager();
+    // Initialize styles collection
+    styles_ = std::make_unique<StyleCollection>(this);
 }
 
-Document::Document(const std::string& filepath) 
+Document::Document(const std::string& filepath)
     : filepath_(filepath), is_open_(false), zip_handle_(nullptr), zip_dirty_(false),
-      sections_dirty_(true), next_header_number_(1), next_footer_number_(1), 
+      sections_dirty_(true), next_header_number_(1), next_footer_number_(1),
       next_bookmark_id_(1) {
     // Initialize numbering manager
     init_numbering_manager();
+    // Initialize styles collection
+    styles_ = std::make_unique<StyleCollection>(this);
 }
 
 Document::~Document() {
     close();
 }
 
-Document::Document(Document&& other) noexcept 
+Document::Document(Document&& other) noexcept
     : CompositeNode(std::move(other)),
       filepath_(std::move(other.filepath_)),
       is_open_(other.is_open_),
       load_config_(std::move(other.load_config_)),
       tree_(std::move(other.tree_)),
+      xml_parts_cache_(std::move(other.xml_parts_cache_)),
+      media_files_cache_(std::move(other.media_files_cache_)),
+      relationships_(std::move(other.relationships_)),
+      modified_parts_(std::move(other.modified_parts_)),
+      content_types_(std::move(other.content_types_)),
       zip_handle_(other.zip_handle_),
       zip_dirty_(other.zip_dirty_),
       last_load_stats_(std::move(other.last_load_stats_)),
@@ -67,18 +80,14 @@ Document::Document(Document&& other) noexcept
       sections_cache_(std::move(other.sections_cache_)),
       sections_dirty_(other.sections_dirty_),
       numbering_manager_(std::move(other.numbering_manager_)),
+      styles_(std::move(other.styles_)),
       builtin_properties_(std::move(other.builtin_properties_)),
       custom_properties_(std::move(other.custom_properties_)),
       next_header_number_(other.next_header_number_),
       next_footer_number_(other.next_footer_number_),
       next_bookmark_id_(other.next_bookmark_id_),
       default_section_properties_(std::move(other.default_section_properties_)),
-      impl_(std::move(other.impl_)),
-      xml_parts_cache_(std::move(other.xml_parts_cache_)),
-      media_files_cache_(std::move(other.media_files_cache_)),
-      relationships_(std::move(other.relationships_)),
-      modified_parts_(std::move(other.modified_parts_)),
-      content_types_(std::move(other.content_types_)) {
+      impl_(std::move(other.impl_)) {
     other.is_open_ = false;
     other.zip_handle_ = nullptr;
     other.sections_dirty_ = true;
@@ -103,6 +112,7 @@ Document& Document::operator=(Document&& other) noexcept {
         sections_cache_ = std::move(other.sections_cache_);
         sections_dirty_ = other.sections_dirty_;
         numbering_manager_ = std::move(other.numbering_manager_);
+        styles_ = std::move(other.styles_);
         builtin_properties_ = std::move(other.builtin_properties_);
         custom_properties_ = std::move(other.custom_properties_);
         next_header_number_ = other.next_header_number_;
@@ -141,8 +151,9 @@ std::shared_ptr<Node> Document::clone(bool deep) const {
     
     if (deep) {
         for (const auto& section : get_sections()) {
-            cloned->append_section();
-            // TODO: Clone section content
+            if (auto section_clone = std::dynamic_pointer_cast<Section>(section->clone(deep))) {
+                cloned->append_child(section_clone);
+            }
         }
     }
     
@@ -229,8 +240,9 @@ LoadResult Document::open_with_config(const std::string& filepath, const LoadCon
     // Sync DOM from physical tree
     if (is_open_) {
         sync_from_physical_tree();
+        sync_styles_from_physical();
     }
-    
+
     return result;
 }
 
@@ -246,7 +258,10 @@ void Document::close() {
     modified_parts_.clear();
     content_types_.clear();
     sections_cache_.clear();
-    
+    if (styles_) {
+        styles_->clear();
+    }
+
     is_open_ = false;
     sections_dirty_ = true;
 }
@@ -265,7 +280,10 @@ void Document::save(const std::string& filepath) {
     
     // Sync DOM to physical tree
     sync_to_physical_tree();
-    
+
+    // Save styles to physical tree
+    sync_styles_to_physical();
+
     // Save numbering definitions (create/update numbering.xml)
     save_numbering();
     
@@ -307,6 +325,9 @@ bool Document::create_empty(const std::string& filepath) {
     
     is_open_ = true;
     sections_dirty_ = true;
+    
+    // Sync XML to DOM so get_first_section() etc work immediately
+    sync_from_physical_tree();
     
     return true;
 }
@@ -590,6 +611,21 @@ pugi::xml_document* Document::get_content_types() {
 
 pugi::xml_document* Document::get_styles() {
     return get_xml_part("word/styles.xml");
+}
+
+StyleCollection& Document::styles() {
+    if (!styles_) {
+        styles_ = std::make_unique<StyleCollection>(this);
+    }
+    return *styles_;
+}
+
+const StyleCollection& Document::styles() const {
+    if (!styles_) {
+        const_cast<Document*>(this)->styles_ = std::make_unique<StyleCollection>(
+            const_cast<Document*>(this));
+    }
+    return *styles_;
 }
 
 pugi::xml_document* Document::get_settings() {
@@ -909,87 +945,8 @@ int Document::generate_unique_bookmark_id() {
 }
 
 // ============================================================================
-// Sync Methods
+// Sync Methods (implemented in document_sync.cpp)
 // ============================================================================
-
-void Document::sync_to_physical_tree() {
-    // Sync sections to physical tree
-    sync_sections_to_physical();
-}
-
-void Document::sync_from_physical_tree() {
-    // Sync physical tree to DOM
-    sync_sections_from_physical();
-}
-
-void Document::sync_sections_to_physical() {
-    // TODO: Implement section sync to physical tree
-}
-
-void Document::sync_sections_from_physical() {
-    // TODO: Implement section sync from physical tree
-}
-
-std::shared_ptr<Body> Document::parse_body_from_xml(pugi::xml_node body_node) {
-    if (!body_node) return nullptr;
-    
-    auto body = std::make_shared<Body>(this);
-    
-    // Parse paragraphs
-    for (auto para_node = body_node.child("w:p"); para_node; 
-         para_node = para_node.next_sibling("w:p")) {
-        if (auto para = parse_paragraph_from_xml(para_node)) {
-            body->append_child(para);
-        }
-    }
-    
-    // Parse tables
-    for (auto table_node = body_node.child("w:tbl"); table_node; 
-         table_node = table_node.next_sibling("w:tbl")) {
-        if (auto table = parse_table_from_xml(table_node)) {
-            body->append_child(table);
-        }
-    }
-    
-    return body;
-}
-
-std::shared_ptr<Paragraph> Document::parse_paragraph_from_xml(pugi::xml_node para_node) {
-    if (!para_node) return nullptr;
-    
-    auto para = std::make_shared<Paragraph>(this);
-    
-    // Parse runs
-    for (auto run_node = para_node.child("w:r"); run_node; 
-         run_node = run_node.next_sibling("w:r")) {
-        if (auto run = parse_run_from_xml(run_node)) {
-            para->append_child(run);
-        }
-    }
-    
-    return para;
-}
-
-std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node) {
-    if (!table_node) return nullptr;
-    
-    // TODO: Implement table parsing
-    return std::make_shared<Table>(this);
-}
-
-std::shared_ptr<Run> Document::parse_run_from_xml(pugi::xml_node run_node) {
-    if (!run_node) return nullptr;
-    
-    auto run = std::make_shared<Run>(this);
-    
-    // Get text content
-    auto text_node = run_node.child("w:t");
-    if (text_node) {
-        run->set_text(text_node.text().get());
-    }
-    
-    return run;
-}
 
 // ============================================================================
 // Internal ZIP Operations
@@ -1073,7 +1030,7 @@ bool Document::load_tree_from_zip() {
         void* buf = nullptr;
         size_t bufsize = 0;
         
-        if (zip_entry_read(zip_handle_, &buf, &bufsize) != 0) {
+        if (zip_entry_read(zip_handle_, &buf, &bufsize) < 0) {
             zip_entry_close(zip_handle_);
             continue;
         }
@@ -1163,7 +1120,7 @@ LoadResult Document::load_tree_with_result() {
         void* buf = nullptr;
         size_t bufsize = 0;
         
-        if (zip_entry_read(zip_handle_, &buf, &bufsize) != 0) {
+        if (zip_entry_read(zip_handle_, &buf, &bufsize) < 0) {
             result.errors.emplace_back(LoadErrorType::ZipEntryReadFailed, entry_name, 
                                        "Failed to read entry");
             zip_entry_close(zip_handle_);
@@ -1358,14 +1315,27 @@ void Document::remove_relationship(const std::string& rels_path, const std::stri
     modified_parts_.insert(rels_path);
 }
 
-std::string Document::find_relationship_id(const std::string& rels_path, 
+std::string Document::find_relationship_id(const std::string& rels_path,
                                            const std::string& target) const {
     auto it = relationships_.find(rels_path);
     if (it == relationships_.end()) return "";
-    
+
     for (const auto& rel : it->second) {
         if (rel.target == target) {
             return rel.id;
+        }
+    }
+    return "";
+}
+
+std::string Document::get_relationship_target(const std::string& rels_path,
+                                              const std::string& rel_id) const {
+    auto it = relationships_.find(rels_path);
+    if (it == relationships_.end()) return "";
+
+    for (const auto& rel : it->second) {
+        if (rel.id == rel_id) {
+            return rel.target;
         }
     }
     return "";
@@ -1649,7 +1619,39 @@ bool Document::create_empty_document() {
         pgMar.append_attribute("w:bottom").set_value("1440");
         pgMar.append_attribute("w:left").set_value("1440");
     }
-    
+
+    // Create word/styles.xml with default Normal style
+    {
+        auto& doc = create_xml_part("word/styles.xml");
+        auto root = doc.append_child("w:styles");
+        root.append_attribute("xmlns:w").set_value(
+            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+
+        auto style = root.append_child("w:style");
+        style.append_attribute("w:type").set_value("paragraph");
+        style.append_attribute("w:default").set_value("1");
+        style.append_attribute("w:styleId").set_value("Normal");
+
+        auto name = style.append_child("w:name");
+        name.append_attribute("w:val").set_value("Normal");
+    }
+
+    // Register styles.xml content type
+    add_content_type_override("/word/styles.xml",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml");
+
+    // Initialize default styles in DOM
+    if (styles_) {
+        styles_->clear();
+        auto normal = std::make_shared<Style>(this, StyleType::Paragraph);
+        normal->set_name("Normal");
+        normal->set_style_id("Normal");
+        normal->set_style_identifier(StyleIdentifier::Normal);
+        normal->set_is_built_in(true);
+        normal->set_is_default(true);
+        styles_->add(normal);
+    }
+
     return true;
 }
 
@@ -1670,7 +1672,19 @@ void Document::load_numbering() {
 void Document::save_numbering() {
     if (!numbering_manager_) return;
     
-    // TODO: Implement saving numbering to XML
+    pugi::xml_document* doc = nullptr;
+    if (has_xml_part("word/numbering.xml")) {
+        doc = get_numbering_xml();
+        if (doc) doc->reset();
+    } else {
+        doc = &create_xml_part("word/numbering.xml");
+        add_content_type_override("/word/numbering.xml",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml");
+    }
+    
+    if (!doc) return;
+    auto root = doc->append_child("w:numbering");
+    numbering_manager_->save_to_xml(root);
 }
 
 // ============================================================================

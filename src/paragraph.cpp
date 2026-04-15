@@ -1,6 +1,7 @@
 #include <cdocx/paragraph.h>
 #include <cdocx/document.h>
 #include <cdocx/format_context.h>
+#include <cstring>
 
 namespace cdocx {
 
@@ -31,8 +32,47 @@ void Paragraph::accept(DocumentVisitor* visitor) {
 }
 
 std::shared_ptr<Node> Paragraph::clone(bool deep) const {
-    // TODO: Implement proper cloning
-    return nullptr;
+    auto cloned = std::make_shared<Paragraph>(get_document());
+    cloned->set_paragraph_format(format_);
+    cloned->get_list_format() = list_format_;
+    if (deep) {
+        for (const auto& child : get_children()) {
+            if (auto child_clone = child->clone(deep)) {
+                cloned->append_child(child_clone);
+            }
+        }
+    }
+    return cloned;
+}
+
+// ============================================================================
+// Bookmark Operations (DOM API)
+// ============================================================================
+
+static int generate_bookmark_id() {
+    static int next_id = 1;
+    return next_id++;
+}
+
+std::shared_ptr<BookmarkStart> Paragraph::append_bookmark_start(const std::string& name) {
+    auto bookmark = std::make_shared<BookmarkStart>(get_document());
+    bookmark->set_name(name);
+    bookmark->set_id(generate_bookmark_id());
+    append_child(bookmark);
+    return bookmark;
+}
+
+std::shared_ptr<BookmarkEnd> Paragraph::append_bookmark_end(int id) {
+    auto bookmark = std::make_shared<BookmarkEnd>(get_document());
+    bookmark->set_id(id);
+    append_child(bookmark);
+    return bookmark;
+}
+
+std::shared_ptr<Field> Paragraph::append_field(FieldType type) {
+    auto field = std::make_shared<Field>(get_document(), type);
+    append_child(field);
+    return field;
 }
 
 // ============================================================================
@@ -62,6 +102,27 @@ std::shared_ptr<Run> Paragraph::get_last_run() const {
 RunCollection Paragraph::get_runs() const {
     auto runs = get_children_of_type<Run>();
     return RunCollection(runs);
+}
+
+void Paragraph::set_text(const std::string& text) {
+    remove_all_children();
+    append_run(text);
+}
+
+void Paragraph::append_text(const std::string& text) {
+    if (auto last_run = get_last_run()) {
+        last_run->append_text(text);
+    } else {
+        append_run(text);
+    }
+}
+
+void Paragraph::prepend_text(const std::string& text) {
+    if (auto first_run = get_first_run()) {
+        first_run->prepend_text(text);
+    } else {
+        append_run(text);
+    }
 }
 
 // ============================================================================
@@ -649,4 +710,42 @@ bool Paragraph::decrease_list_level() {
     }
     return false;
 }
+
+Paragraph& Paragraph::set_properties(const ParagraphProperties& props) {
+    props.applyTo(*this);
+    return *this;
+}
+
+Paragraph& Paragraph::set_outline_level(cdocx::ParagraphProperties::OutlineLevel level) {
+    using OL = cdocx::ParagraphProperties::OutlineLevel;
+    switch (level) {
+        case OL::Level1: format_.outline_level = OutlineLevel::Level1; break;
+        case OL::Level2: format_.outline_level = OutlineLevel::Level2; break;
+        case OL::Level3: format_.outline_level = OutlineLevel::Level3; break;
+        case OL::Level4: format_.outline_level = OutlineLevel::Level4; break;
+        case OL::Level5: format_.outline_level = OutlineLevel::Level5; break;
+        case OL::Level6: format_.outline_level = OutlineLevel::Level6; break;
+        case OL::Level7: format_.outline_level = OutlineLevel::Level7; break;
+        case OL::Level8: format_.outline_level = OutlineLevel::Level8; break;
+        case OL::Level9: format_.outline_level = OutlineLevel::Level9; break;
+        default: format_.outline_level = OutlineLevel::BodyText; break;
+    }
+    return *this;
+}
+
+Paragraph& Paragraph::set_keep_next(bool value) {
+    format_.keep_with_next = value;
+    return *this;
+}
+
+Paragraph& Paragraph::set_keep_lines(bool value) {
+    format_.keep_together = value;
+    return *this;
+}
+
+Paragraph& Paragraph::set_page_break_before(bool value) {
+    format_.page_break_before = value;
+    return *this;
+}
+
 }

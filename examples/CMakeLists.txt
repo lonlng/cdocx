@@ -28,7 +28,6 @@ set(CDOCX_EXAMPLES
 
 if(ENABLE_ADVANCED_FEATURES)
     list(APPEND CDOCX_EXAMPLES 10_advanced_crud)
-    list(APPEND CDOCX_EXAMPLES 10_optimized_loading)
 endif()
 
 # v0.3.0: Bookmark replacement and caption generation examples
@@ -36,7 +35,23 @@ list(APPEND CDOCX_EXAMPLES 11_bookmark_replacement)
 list(APPEND CDOCX_EXAMPLES 12_caption_generation)
 
 # v0.5.0: Section and list support examples
+list(APPEND CDOCX_EXAMPLES 13_enhanced_properties)
 list(APPEND CDOCX_EXAMPLES 13_section_and_list)
+
+# v0.7.0: Table merge/split example
+list(APPEND CDOCX_EXAMPLES 14_table_merge)
+
+# v0.7.0: Document search and replace example
+list(APPEND CDOCX_EXAMPLES 15_document_search)
+
+# v0.7.0: DocumentBuilder example
+list(APPEND CDOCX_EXAMPLES 16_document_builder)
+
+# v0.7.0: StyleCollection example
+list(APPEND CDOCX_EXAMPLES 17_style_collection)
+
+# DOM sync validation
+list(APPEND CDOCX_EXAMPLES test_dom_sync)
 
 # Process each example
 foreach(example ${CDOCX_EXAMPLES})

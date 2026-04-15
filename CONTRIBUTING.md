@@ -51,11 +51,11 @@ The project includes a `.clang-format` file with our style configuration.
 
 ### Naming Conventions
 
-- **Classes**: PascalCase (`Document`, `Paragraph`)
-- **Methods**: snake_case (`get_text()`, `set_bold()`)
-- **Member variables**: trailing underscore (`parent_`, `current_`)
-- **Constants**: UPPER_CASE or kCamelCase
-- **Namespaces**: lowercase (`cdocx`)
+- **Classes**: `CamelCase` (`Document`, `Paragraph`)
+- **Methods**: `CamelCase` (`GetText()`, `SetBold()`, `IsOpen()`)
+- **Member variables**: `snake_case_` (`parent_`, `current_`)
+- **Constants**: `kCamelCase` (`kMaxSize`, `kDefaultValue`)
+- **Namespaces**: `snake_case` (`cdocx`)
 
 ### Documentation
 

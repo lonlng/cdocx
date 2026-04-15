@@ -41,29 +41,70 @@ bool Node::is_descendant_of(const Node* ancestor) const {
 }
 
 std::shared_ptr<Node> Node::get_previous_node_in_document() const {
-    // TODO: Implement pre-order traversal
     if (prev_sibling_) {
-        return prev_sibling_;
+        // Pre-order: previous sibling's deepest last descendant
+        auto current = prev_sibling_;
+        while (current->is_composite()) {
+            auto composite = std::dynamic_pointer_cast<CompositeNode>(current);
+            if (!composite || !composite->has_children()) break;
+            current = composite->get_last_child();
+        }
+        return current;
+    }
+    // No previous sibling: return parent
+    if (parent_) {
+        return static_cast<Node*>(parent_)->shared_from_this();
     }
     return nullptr;
 }
 
 std::shared_ptr<Node> Node::get_next_node_in_document() const {
-    // TODO: Implement pre-order traversal
+    // Pre-order: first child, then next sibling, then ancestor's next sibling
+    if (is_composite()) {
+        auto composite = dynamic_cast<const CompositeNode*>(this);
+        if (composite && composite->has_children()) {
+            return composite->get_first_child();
+        }
+    }
     if (next_sibling_) {
         return next_sibling_;
+    }
+    auto current = parent_;
+    while (current) {
+        if (current->get_next_sibling()) {
+            return current->get_next_sibling();
+        }
+        current = current->get_parent();
     }
     return nullptr;
 }
 
 std::shared_ptr<Node> Node::get_previous_logical() const {
-    // TODO: Implement logical previous
-    return get_previous_sibling();
+    if (prev_sibling_) {
+        return prev_sibling_;
+    }
+    auto current = parent_;
+    while (current) {
+        if (current->get_previous_sibling()) {
+            return current->get_previous_sibling();
+        }
+        current = current->get_parent();
+    }
+    return nullptr;
 }
 
 std::shared_ptr<Node> Node::get_next_logical() const {
-    // TODO: Implement logical next
-    return get_next_sibling();
+    if (next_sibling_) {
+        return next_sibling_;
+    }
+    auto current = parent_;
+    while (current) {
+        if (current->get_next_sibling()) {
+            return current->get_next_sibling();
+        }
+        current = current->get_parent();
+    }
+    return nullptr;
 }
 
 // ============================================================================

@@ -94,16 +94,7 @@ public:
     
     // Get ancestor of specific type
     template<typename T>
-    T* get_ancestor() const {
-        Node* current = parent_;
-        while (current) {
-            if (auto typed = dynamic_cast<T*>(current)) {
-                return typed;
-            }
-            current = current->get_parent();
-        }
-        return nullptr;
-    }
+    T* get_ancestor() const;
     
     // Get previous node in document order (pre-order traversal)
     std::shared_ptr<Node> get_previous_node_in_document() const;
@@ -285,6 +276,19 @@ public:
     // Get text from all nodes
     std::string get_text() const;
 };
+
+// Out-of-class definition of Node::get_ancestor (requires CompositeNode to be complete)
+template<typename T>
+T* Node::get_ancestor() const {
+    Node* current = parent_;
+    while (current) {
+        if (auto typed = dynamic_cast<T*>(current)) {
+            return typed;
+        }
+        current = current->get_parent();
+    }
+    return nullptr;
+}
 
 // ============================================================================
 // DocumentVisitor Class - Visitor pattern for traversing document

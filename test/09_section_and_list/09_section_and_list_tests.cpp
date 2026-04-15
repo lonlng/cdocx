@@ -20,7 +20,7 @@ TEST(SectionAndListTest, GetFirstSection) {
     Document doc("test_section.docx");
     ASSERT_TRUE(doc.create_empty());
 
-    auto* sect = doc.get_first_section();
+    auto sect = doc.get_first_section();
     EXPECT_NE(sect, nullptr);
 
     doc.save();
@@ -43,16 +43,16 @@ TEST(SectionAndListTest, SectionProperties) {
     Document doc("test_section.docx");
     ASSERT_TRUE(doc.create_empty());
 
-    auto* sect = doc.get_first_section();
+    auto sect = doc.get_first_section();
     ASSERT_NE(sect, nullptr);
 
     // Set properties
-    sect->prop.orientation = SectionProperties::Orientation::Landscape;
-    sect->prop.pageSize.width = 15840;
-    sect->prop.pageSize.height = 12240;
+    sect->get_properties().orientation = SectionProperties::Orientation::Landscape;
+    sect->get_properties().pageSize.width = 15840;
+    sect->get_properties().pageSize.height = 12240;
 
-    EXPECT_EQ(sect->prop.orientation, SectionProperties::Orientation::Landscape);
-    EXPECT_EQ(sect->prop.pageSize.width, 15840);
+    EXPECT_EQ(sect->get_properties().orientation, SectionProperties::Orientation::Landscape);
+    EXPECT_EQ(sect->get_properties().pageSize.width, 15840);
 
     doc.save();
     EXPECT_TRUE(fs::exists("test_section.docx"));
@@ -64,7 +64,7 @@ TEST(SectionAndListTest, AddSection) {
     ASSERT_TRUE(doc.create_empty());
 
     size_t initial_count = doc.get_section_count();
-    auto* new_sect = doc.add_section();
+    auto new_sect = doc.add_section();
 
     EXPECT_NE(new_sect, nullptr);
     EXPECT_EQ(doc.get_section_count(), initial_count + 1);
@@ -85,7 +85,7 @@ TEST(SectionAndListTest, AddBulletedListDefinition) {
     auto id = doc.add_bulleted_list_definition();
     EXPECT_GT(id, 0);
 
-    auto* def = doc.get_numbering_definition(id);
+    auto def = doc.get_numbering_definition(id);
     EXPECT_NE(def, nullptr);
     EXPECT_GE(def->abstractId, 0);
 
@@ -140,7 +140,7 @@ TEST(SectionAndListTest, ApplyNumberingToParagraph) {
 
     auto list_id = doc.add_bulleted_list_definition();
 
-    auto* sect = doc.get_first_section();
+    auto sect = doc.get_first_section();
     ASSERT_NE(sect, nullptr);
 
     auto* para = sect->add_paragraph("Test item");
@@ -169,7 +169,7 @@ TEST(SectionAndListTest, RemoveNumbering) {
 
     auto list_id = doc.add_bulleted_list_definition();
 
-    auto* sect = doc.get_first_section();
+    auto sect = doc.get_first_section();
     ASSERT_NE(sect, nullptr);
 
     auto* para = sect->add_paragraph("Test item 2");
@@ -192,7 +192,7 @@ TEST(SectionAndListTest, ChangeListLevel) {
 
     auto list_id = doc.add_bulleted_list_definition();
 
-    auto* sect = doc.get_first_section();
+    auto sect = doc.get_first_section();
     ASSERT_NE(sect, nullptr);
 
     auto* para = sect->add_paragraph("Nested item");
@@ -223,7 +223,7 @@ TEST(SectionAndListTest, NumberingXmlSerialization) {
     auto outline_id = doc.add_outline_list_definition();
 
     // Apply to paragraphs
-    auto* sect = doc.get_first_section();
+    auto sect = doc.get_first_section();
     ASSERT_NE(sect, nullptr);
 
     auto* p1 = sect->add_paragraph("Bullet item");
@@ -242,13 +242,13 @@ TEST(SectionAndListTest, NumberingXmlSerialization) {
     doc2.open();
 
     if (doc2.is_open()) {
-        auto* numbering = doc2.get_numbering();
+        auto numbering = doc2.get_numbering_xml();
         EXPECT_NE(numbering, nullptr);
 
         // Check if numbering.xml contains abstractNum elements
         if (numbering) {
             auto root = numbering->root();
-            EXPECT_NE(root.child("w:abstractNum"), nullptr);
+            EXPECT_NE(root.child("w:abstractNum"), pugi::xml_node());
         }
     }
 
@@ -265,11 +265,11 @@ TEST(SectionAndListTest, SectionLoadingFromXml) {
         Document doc("test_section_load.docx");
         ASSERT_TRUE(doc.create_empty());
 
-        auto* sect = doc.get_first_section();
+        auto sect = doc.get_first_section();
         ASSERT_NE(sect, nullptr);
 
-        sect->prop.orientation = SectionProperties::Orientation::Landscape;
-        sect->prop.pageMargins.left = 2000;
+        sect->get_properties().orientation = SectionProperties::Orientation::Landscape;
+        sect->get_properties().pageMargins.left = 2000;
 
         doc.save();
     }
@@ -280,9 +280,9 @@ TEST(SectionAndListTest, SectionLoadingFromXml) {
         doc.open();
 
         if (doc.is_open()) {
-            auto* sect = doc.get_first_section();
+            auto sect = doc.get_first_section();
             if (sect) {
-                EXPECT_EQ(sect->prop.orientation, SectionProperties::Orientation::Landscape);
+                EXPECT_EQ(sect->get_properties().orientation, SectionProperties::Orientation::Landscape);
             }
         }
     }

@@ -329,7 +329,7 @@ bool DocumentImpl::load_tree_parallel(LoadStatistics& stats) {
             // Read data
             void* data = nullptr;
             size_t size = 0;
-            if (zip_entry_read(zip_handle_, &data, &size) != 0 || !data) {
+            if (zip_entry_read(zip_handle_, &data, &size) < 0 || !data) {
                 zip_entry_close(zip_handle_);
                 errors++;
                 return;
@@ -384,7 +384,7 @@ bool DocumentImpl::load_tree_parallel(LoadStatistics& stats) {
                 
                 void* data = nullptr;
                 size_t size = 0;
-                if (zip_entry_read(local_zip, &data, &size) != 0 || !data) {
+                if (zip_entry_read(local_zip, &data, &size) < 0 || !data) {
                     zip_entry_close(local_zip);
                     zip_close(local_zip);
                     errors++;

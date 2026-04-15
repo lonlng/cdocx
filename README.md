@@ -4,18 +4,17 @@
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://isocpp.org/)
 [![CMake](https://img.shields.io/badge/CMake-3.14+-green.svg)](https://cmake.org/)
 
-**CDocx** is a modern C++17 library for creating, reading, and writing Microsoft Office Word (.docx) files. It provides a clean, iterator-based API with comprehensive document manipulation capabilities.
+**CDocx** is a C++17 library for creating, reading, and writing Microsoft Office Word (.docx) files. It provides a stable legacy iterator-based API and is transitioning toward a DOM-style architecture.
 
 ## Features
 
 - **📄 Complete Document Operations**: Read, write, create DOCX files with full structure preservation
 - **🔄 Template System**: Placeholder replacement with customizable patterns (`{{key}}`)
 - **📑 Document Insertion**: Merge documents at specific positions
-- **📐 Section Support**: Page setup, margins, orientation (v0.5.0+)
-- **📋 List/Numbering**: Bulleted, numbered, and Chinese numbering lists (v0.5.0+)
-- **🧩 Node Hierarchy**: Unified document model with Visitor pattern (v0.6.0+)
-- **🎨 Rich Formatting**: Paragraph and character formatting with colors, borders, shading (v0.6.0+)
-- **🔖 Bookmark Management**: Replace bookmarks with text or images
+- **📐 Section Support**: Page setup, margins, orientation
+- **📋 List/Numbering**: Bulleted, numbered, and Chinese numbering lists
+- **✏️ Text Formatting**: Run and paragraph formatting (bold, italic, color, alignment, spacing)
+- **🔖 Bookmark Management**: Replace same-paragraph bookmarks with text or images
 - **🖼️ Media Management**: Add, delete, replace images
 - **🌳 XML Parts API**: Direct access to all DOCX internal components
 - **⚡ Modern C++17**: Iterator-based API with range-based for loop support
@@ -31,18 +30,13 @@
 
 ### Build
 
-**Linux/macOS:**
 ```bash
 git clone https://github.com/lonlng/CDocx.git
 cd CDocx
-./scripts/build-linux.sh Release
-```
-
-**Windows:**
-```cmd
-git clone https://github.com/lonlng/CDocx.git
-cd CDocx
-scripts\build-windows.bat Release x64
+mkdir build && cd build
+cmake .. -DBUILD_EXAMPLES=ON -DBUILD_TESTING=ON
+cmake --build . --parallel
+ctest --output-on-failure
 ```
 
 ### Example Usage
@@ -56,7 +50,7 @@ int main() {
     cdocx::Document doc("input.docx");
     doc.open();
     
-    // Iterate through paragraphs
+    // Iterate through paragraphs (legacy API)
     for (auto& p : doc.paragraphs()) {
         for (auto& r : p.runs()) {
             std::cout << r.get_text() << std::endl;
@@ -99,7 +93,7 @@ int main() {
 }
 ```
 
-### Using Sections (v0.5.0+)
+### Using Sections
 
 ```cpp
 #include <cdocx.h>
@@ -111,10 +105,10 @@ int main() {
     // Configure section
     Section* section = doc.get_first_section();
     section->properties().orientation = SectionProperties::Orientation::Landscape;
-    section->properties().pageSize.width = 15840;   // A4 landscape width
+    section->properties().pageSize.width = 15840;
     section->properties().pageSize.height = 12240;
     
-    // Add content to section
+    // Add content
     section->add_paragraph("Landscape content", cdocx::bold);
     
     doc.save();
@@ -122,7 +116,7 @@ int main() {
 }
 ```
 
-### Using Lists (v0.5.0+)
+### Using Lists
 
 ```cpp
 #include <cdocx.h>
@@ -133,7 +127,6 @@ int main() {
     
     // Create list definitions
     NumberingId bullet = doc.add_bulleted_list_definition();
-    NumberingId number = doc.add_numbered_list_definition(NumberStyle::Decimal);
     
     // Add list items
     auto& p1 = doc.paragraphs();
@@ -149,7 +142,7 @@ int main() {
 }
 ```
 
-### Using Format Attributes (v0.6.0+)
+### Using Color
 
 ```cpp
 #include <cdocx.h>
@@ -158,63 +151,15 @@ int main() {
     cdocx::Document doc("output.docx");
     doc.create_empty();
     
-    // Configure paragraph format
-    ParagraphFormat format;
-    format.set_alignment(ParagraphAlignment::Center);
-    format.set_line_spacing(360, LineSpacingRule::Auto);  // 1.5x spacing
-    format.set_space_before(12);      // 12 points before
-    format.set_first_line_indent(24); // 24 points indent
-    
-    // Set border and shading
-    Border border(BorderType::Single, Color(0, 0, 0), 4);
-    format.borders().set_all(border);
-    format.shading().set_solid_fill(Color(240, 240, 240));
-    
-    // Apply to paragraph
     auto& para = doc.paragraphs();
-    para.set_format(format);
+    auto* run = para.add_run("Red text");
+    run->set_color(cdocx::Color(255, 0, 0));
     
-    // Configure font
-    Font font;
-    font.set_name("Arial");
-    font.set_size(14);
-    font.set_bold(true);
-    font.set_color(Color(255, 0, 0));
-    
-    auto* run = para.add_run("Formatted text");
-    run->set_font(font);
+    // Hex color
+    auto* run2 = para.add_run(" Blue text");
+    run2->set_color(cdocx::Color::from_hex("0000FF"));
     
     doc.save();
-    return 0;
-}
-```
-
-### Using Visitor Pattern (v0.6.0+)
-
-```cpp
-#include <cdocx.h>
-#include <iostream>
-
-class TextExtractor : public cdocx::DocumentVisitor {
-public:
-    VisitorAction visit_run(cdocx::Run& run) override {
-        std::cout << run.get_text();
-        return VisitorAction::Continue;
-    }
-    
-    VisitorAction visit_paragraph_end(cdocx::Paragraph&) override {
-        std::cout << std::endl;
-        return VisitorAction::Continue;
-    }
-};
-
-int main() {
-    cdocx::Document doc("input.docx");
-    doc.open();
-    
-    TextExtractor extractor;
-    doc.accept(&extractor);
-    
     return 0;
 }
 ```
@@ -235,7 +180,7 @@ include(FetchContent)
 FetchContent_Declare(
     cdocx
     GIT_REPOSITORY https://github.com/lonlng/CDocx.git
-    GIT_TAG v0.6.0
+    GIT_TAG v0.7.0
 )
 FetchContent_MakeAvailable(cdocx)
 target_link_libraries(your_target PRIVATE cdocx::cdocx)
@@ -253,15 +198,26 @@ cdocx/
 │   ├── cdocx.h              # Main public API header
 │   └── cdocx/               # Modular headers
 │       ├── document.h       # Document class
-│       ├── base.h           # Paragraph, Run, Table
+│       ├── node.h           # Node hierarchy (in transition)
+│       ├── body.h           # Body class
+│       ├── paragraph.h      # Paragraph class
+│       ├── base.h           # Run, legacy iterators
+│       ├── table.h          # Table, Row, Cell
+│       ├── section.h        # Section support
+│       ├── numbering.h      # List/Numbering
 │       ├── template.h       # Template replacement
-│       ├── section.h        # Section support (v0.5.0+)
-│       ├── numbering.h      # List/Numbering (v0.5.0+)
-│       ├── node.h           # Node hierarchy (v0.6.0+)
-│       └── format.h         # Format attributes (v0.6.0+)
+│       ├── inserter.h       # Document insertion
+│       ├── advanced.h       # Bookmark, Builder, Search
+│       ├── bookmark_replacer.h # Bookmark replacement
+│       ├── caption_generator.h # Caption generation
+│       ├── format.h         # Format attributes
+│       ├── properties.h     # Property structures
+│       ├── enums.h          # Enumerations
+│       ├── constants.h      # Constants
+│       └── iterator.h       # Iterator support
 ├── src/                     # Implementation files
 ├── test/                    # Test suite (Google Test)
-├── examples/                # Example programs (14 examples)
+├── examples/                # Example programs
 └── scripts/                 # Build scripts
 ```
 
@@ -287,11 +243,11 @@ cdocx/
 
 ## Version History
 
-- **v0.6.0** - Node hierarchy with Visitor pattern, Format attributes (Font, Color, Border, etc.)
+- **v0.7.0** - DOM architecture transition (in progress): `Node`/`CompositeNode` hierarchy introduced, basic DOM-XML sync, `Color` implementation
 - **v0.5.0** - Section support, List/Numbering system
-- **v0.4.0** - Bookmark replacement, Caption generation
+- **v0.4.0** - Bookmark replacement (same-paragraph), Caption generation
 - **v0.3.0** - Template system, Document insertion, XML Parts API
-- **v0.2.0** - Media management, DocumentBuilder, Search/Replace
+- **v0.2.0** - Media management, Cursor-based DocumentBuilder
 - **v0.1.0** - Initial release with core document operations
 
 ## Dependencies

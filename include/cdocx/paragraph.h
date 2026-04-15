@@ -150,7 +150,14 @@ public:
     bool set_list_level(NumberingLevel level);
     bool increase_list_level();
     bool decrease_list_level();
-    
+
+    // Enhanced properties (v0.4.0+)
+    Paragraph& set_properties(const ParagraphProperties& props);
+    Paragraph& set_outline_level(cdocx::ParagraphProperties::OutlineLevel level);
+    Paragraph& set_keep_next(bool value);
+    Paragraph& set_keep_lines(bool value);
+    Paragraph& set_page_break_before(bool value);
+
 private:
     ParagraphFormat format_;
     ListFormat list_format_;

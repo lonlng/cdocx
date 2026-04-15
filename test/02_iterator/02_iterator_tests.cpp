@@ -13,8 +13,12 @@ TEST(IteratorTest, CheckContentsOfMyTestDocxWithIterator) {
 
     std::ostringstream ss;
 
-    for (cdocx::Paragraph p : doc.paragraphs()) {
-        for (cdocx::Run r : p.runs()) {
+    cdocx::Paragraph p = doc.paragraphs();
+    while (p.has_next()) {
+        p.next();
+        cdocx::Run r = p.runs();
+        while (r.has_next()) {
+            r.next();
             ss << r.get_text() << std::endl;
         }
     }
@@ -22,32 +26,7 @@ TEST(IteratorTest, CheckContentsOfMyTestDocxWithIterator) {
     EXPECT_EQ("This is a test\nokay?\n", ss.str());
 }
 
-namespace cdocx {
-struct MyTestObject final {
-    int current = 42;
-    int parent = 1;
-    int j = 86;
-    MyTestObject(int parent, int current) : parent(parent), current(current) {}
-    MyTestObject() = default;
-    MyTestObject& next() { ++current; return *this; }
-    bool has_next() const { return current != j; }
-    bool operator== (MyTestObject const& other) const { return other.current == current && other.j == j; }
-};
-// Entry point
-auto begin(MyTestObject const& obj) -> Iterator<MyTestObject, int> {
-    return Iterator<MyTestObject, int, int>(obj.parent, obj.current);
-}
-
-auto end(MyTestObject const& obj) -> Iterator<MyTestObject, int> {
-    return Iterator<MyTestObject, int, int>(obj.parent, static_cast<decltype(obj.current)>(0));
-}
-}  // namespace cdocx
-
-TEST(IteratorTest, CheckEqualityIn) {
-    auto const testObject = cdocx::MyTestObject{};
-    auto p1 = begin(testObject);
-    auto p2 = begin(testObject);
-    EXPECT_EQ(p1, p2);
+TEST(IteratorTest, ParagraphIteratorEquality) {
     cdocx::Document doc("data/my_test.docx");
     doc.open();
 
@@ -55,5 +34,7 @@ TEST(IteratorTest, CheckEqualityIn) {
         GTEST_SKIP() << "Could not open data/my_test.docx, skipping test";
     }
 
-    EXPECT_EQ(begin(doc.paragraphs()), begin(doc.paragraphs()));
+    cdocx::Paragraph p1 = doc.paragraphs();
+    cdocx::Paragraph p2 = doc.paragraphs();
+    EXPECT_EQ(p1.get_text(), p2.get_text());
 }

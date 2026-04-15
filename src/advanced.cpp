@@ -15,6 +15,7 @@
 #include <cdocx/paragraph.h>
 #include <algorithm>
 #include <cctype>
+#include <filesystem>
 #include <fstream>
 #include <map>
 #include <unordered_map>
@@ -736,18 +737,193 @@ std::string Range::get_text() const {
 }
 
 bool Range::replace(const std::string& old_text, const std::string& new_text) {
-    // TODO: Implement range text replacement
+    if (old_text.empty()) {
+        return false;
+    }
+
+    // Fallback for DOM paragraphs without XML node binding
+    if (!is_valid() && doc_) {
+        auto paragraphs = doc_->get_paragraphs();
+        for (auto& para : paragraphs) {
+            if (!para) continue;
+            std::string para_text = para->get_text();
+            size_t pos = para_text.find(old_text);
+            if (pos != std::string::npos) {
+                para_text.replace(pos, old_text.size(), new_text);
+                para->set_text(para_text);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    pugi::xml_node current = start_para_;
+    while (current) {
+        // Collect text from all runs in this paragraph
+        std::string para_text;
+        for (pugi::xml_node run = current.child("w:r"); run; run = run.next_sibling("w:r")) {
+            pugi::xml_node t = run.child("w:t");
+            if (t) {
+                para_text += t.text().get();
+            }
+        }
+
+        size_t pos = para_text.find(old_text);
+        if (pos != std::string::npos) {
+            para_text.replace(pos, old_text.size(), new_text);
+
+            // Clear all runs and set first run to new text
+            pugi::xml_node first_run;
+            pugi::xml_node run = current.child("w:r");
+            while (run) {
+                pugi::xml_node next = run.next_sibling("w:r");
+                if (!first_run) {
+                    first_run = run;
+                    // Clear existing text nodes
+                    for (pugi::xml_node t = run.child("w:t"); t; t = t.next_sibling("w:t")) {
+                        run.remove_child(t);
+                    }
+                    pugi::xml_node new_t = run.append_child("w:t");
+                    if (!para_text.empty() && (std::isspace(para_text.front()) || std::isspace(para_text.back()))) {
+                        new_t.append_attribute("xml:space").set_value("preserve");
+                    }
+                    new_t.text().set(para_text.c_str());
+                } else {
+                    current.remove_child(run);
+                }
+                run = next;
+            }
+
+            // If no run existed, create one
+            if (!first_run) {
+                pugi::xml_node new_run = current.append_child("w:r");
+                pugi::xml_node new_t = new_run.append_child("w:t");
+                if (!para_text.empty() && (std::isspace(para_text.front()) || std::isspace(para_text.back()))) {
+                    new_t.append_attribute("xml:space").set_value("preserve");
+                }
+                new_t.text().set(para_text.c_str());
+            }
+
+            return true;
+        }
+
+        if (current == end_para_) {
+            break;
+        }
+        current = current.next_sibling();
+    }
     return false;
 }
 
 int Range::replace_all(const std::string& old_text, const std::string& new_text) {
-    // TODO: Implement range text replacement
-    return 0;
+    if (old_text.empty()) {
+        return 0;
+    }
+
+    // Fallback for DOM paragraphs without XML node binding
+    if (!is_valid() && doc_) {
+        int total = 0;
+        auto paragraphs = doc_->get_paragraphs();
+        for (auto& para : paragraphs) {
+            if (!para) continue;
+            std::string para_text = para->get_text();
+            int count = 0;
+            size_t pos = 0;
+            while ((pos = para_text.find(old_text, pos)) != std::string::npos) {
+                para_text.replace(pos, old_text.size(), new_text);
+                pos += new_text.size();
+                ++count;
+            }
+            if (count > 0) {
+                para->set_text(para_text);
+                total += count;
+            }
+        }
+        return total;
+    }
+
+    int total = 0;
+    pugi::xml_node current = start_para_;
+    while (current) {
+        // Collect text from all runs in this paragraph
+        std::string para_text;
+        for (pugi::xml_node run = current.child("w:r"); run; run = run.next_sibling("w:r")) {
+            pugi::xml_node t = run.child("w:t");
+            if (t) {
+                para_text += t.text().get();
+            }
+        }
+
+        int count = 0;
+        size_t pos = 0;
+        while ((pos = para_text.find(old_text, pos)) != std::string::npos) {
+            para_text.replace(pos, old_text.size(), new_text);
+            pos += new_text.size();
+            ++count;
+        }
+
+        if (count > 0) {
+            ++total;
+            // Clear all runs and set first run to new text
+            pugi::xml_node first_run;
+            pugi::xml_node run = current.child("w:r");
+            while (run) {
+                pugi::xml_node next = run.next_sibling("w:r");
+                if (!first_run) {
+                    first_run = run;
+                    for (pugi::xml_node t = run.child("w:t"); t; t = t.next_sibling("w:t")) {
+                        run.remove_child(t);
+                    }
+                    pugi::xml_node new_t = run.append_child("w:t");
+                    if (!para_text.empty() && (std::isspace(para_text.front()) || std::isspace(para_text.back()))) {
+                        new_t.append_attribute("xml:space").set_value("preserve");
+                    }
+                    new_t.text().set(para_text.c_str());
+                } else {
+                    current.remove_child(run);
+                }
+                run = next;
+            }
+
+            if (!first_run) {
+                pugi::xml_node new_run = current.append_child("w:r");
+                pugi::xml_node new_t = new_run.append_child("w:t");
+                if (!para_text.empty() && (std::isspace(para_text.front()) || std::isspace(para_text.back()))) {
+                    new_t.append_attribute("xml:space").set_value("preserve");
+                }
+                new_t.text().set(para_text.c_str());
+            }
+        }
+
+        if (current == end_para_) {
+            break;
+        }
+        current = current.next_sibling();
+    }
+    return total;
 }
 
 bool Range::delete_content() {
-    // TODO: Implement range content deletion
-    return false;
+    if (!is_valid()) {
+        return false;
+    }
+
+    pugi::xml_node current = start_para_;
+    while (current) {
+        // Remove all run elements
+        pugi::xml_node run = current.child("w:r");
+        while (run) {
+            pugi::xml_node next = run.next_sibling("w:r");
+            current.remove_child(run);
+            run = next;
+        }
+
+        if (current == end_para_) {
+            break;
+        }
+        current = current.next_sibling();
+    }
+    return true;
 }
 
 bool Range::is_valid() const {
@@ -821,11 +997,17 @@ std::string TableOperations::get_cell_text(const TableCell& cell) {
 // ============================================================================
 
 DocumentBuilder::DocumentBuilder(Document* doc) : doc_(doc) {}
+DocumentBuilder::~DocumentBuilder() = default;
 
 void DocumentBuilder::ensure_paragraph() {
     if (!current_paragraph_) {
         pugi::xml_node body = get_body();
-        current_paragraph_ = body.append_child("w:p");
+        pugi::xml_node sectPr = body.child("w:sectPr");
+        if (sectPr) {
+            current_paragraph_ = body.insert_child_before("w:p", sectPr);
+        } else {
+            current_paragraph_ = body.append_child("w:p");
+        }
     }
 }
 
@@ -951,9 +1133,14 @@ void DocumentBuilder::writeln() {
 
 Paragraph* DocumentBuilder::insert_paragraph() {
     pugi::xml_node body = get_body();
-    current_paragraph_ = body.append_child("w:p");
+    pugi::xml_node sectPr = body.child("w:sectPr");
+    if (sectPr) {
+        current_paragraph_ = body.insert_child_before("w:p", sectPr);
+    } else {
+        current_paragraph_ = body.append_child("w:p");
+    }
     current_node_ = current_paragraph_;
-    
+
     // Return pointer to a new Paragraph object
     // Note: This creates a memory management issue - needs proper handling
     static Paragraph* para = nullptr;
@@ -965,7 +1152,12 @@ Paragraph* DocumentBuilder::insert_paragraph() {
 
 void DocumentBuilder::insert_break() {
     pugi::xml_node body = get_body();
-    current_paragraph_ = body.append_child("w:p");
+    pugi::xml_node sectPr = body.child("w:sectPr");
+    if (sectPr) {
+        current_paragraph_ = body.insert_child_before("w:p", sectPr);
+    } else {
+        current_paragraph_ = body.append_child("w:p");
+    }
     current_node_ = current_paragraph_;
 }
 
@@ -986,7 +1178,12 @@ void DocumentBuilder::clear_formatting() {
 // Table Building
 void DocumentBuilder::start_table() {
     pugi::xml_node body = get_body();
-    current_table_ = body.append_child("w:tbl");
+    pugi::xml_node sectPr = body.child("w:sectPr");
+    if (sectPr) {
+        current_table_ = body.insert_child_before("w:tbl", sectPr);
+    } else {
+        current_table_ = body.append_child("w:tbl");
+    }
     in_table_ = true;
     
     // Add table properties
@@ -1034,10 +1231,33 @@ void DocumentBuilder::end_row() {
 // Hyperlink
 void DocumentBuilder::insert_hyperlink(const std::string& text, const std::string& url) {
     ensure_paragraph();
-    
-    // TODO: Properly implement hyperlinks with relationships
-    // For now, just insert text
-    write(text);
+
+    if (!doc_ || url.empty()) {
+        write(text);
+        return;
+    }
+
+    // Create relationship for the hyperlink
+    std::string rel_id = doc_->find_relationship_id(
+        "word/_rels/document.xml.rels", url);
+    if (rel_id.empty()) {
+        rel_id = doc_->add_relationship(
+            "word/_rels/document.xml.rels",
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink",
+            url,
+            "External");
+    }
+
+    // Create hyperlink element
+    pugi::xml_node hyperlink = current_paragraph_.append_child("w:hyperlink");
+    hyperlink.append_attribute("r:id").set_value(rel_id.c_str());
+
+    // Create run with text and apply current formatting
+    pugi::xml_node run = hyperlink.append_child("w:r");
+    apply_formatting(run);
+
+    pugi::xml_node t = run.append_child("w:t");
+    t.text().set(text.c_str());
 }
 
 // Bookmark
@@ -1084,43 +1304,233 @@ void DocumentBuilder::end_bookmark(const std::string& name) {
 
 // Image
 bool DocumentBuilder::insert_image(const std::string& image_path, double width, double height) {
-    // TODO: Implement image insertion with relationships
-    return false;
+    if (!doc_) {
+        return false;
+    }
+
+    namespace fs = std::filesystem;
+    if (!fs::exists(image_path)) {
+        return false;
+    }
+
+    // Detect image size if not provided
+    ImageSize size;
+    if (width <= 0 || height <= 0) {
+        if (!detect_image_size(image_path, size)) {
+            return false;
+        }
+    } else {
+        size = ImageSize(width, height);
+    }
+
+    // Add media and get relationship
+    std::string rel_id = doc_->add_media_with_rel(image_path, nullptr);
+    if (rel_id.empty()) {
+        return false;
+    }
+
+    ensure_paragraph();
+
+    // Create run with drawing
+    pugi::xml_node run = current_paragraph_.append_child("w:r");
+    pugi::xml_node drawing = run.append_child("w:drawing");
+
+    // Use inline image (simple, in-line with text)
+    pugi::xml_node inline_node = drawing.append_child("wp:inline");
+    inline_node.append_attribute("distT").set_value(0);
+    inline_node.append_attribute("distB").set_value(0);
+    inline_node.append_attribute("distL").set_value(0);
+    inline_node.append_attribute("distR").set_value(0);
+
+    pugi::xml_node extent = inline_node.append_child("wp:extent");
+    extent.append_attribute("cx").set_value(size.width_emu());
+    extent.append_attribute("cy").set_value(size.height_emu());
+
+    pugi::xml_node docPr = inline_node.append_child("wp:docPr");
+    static int image_id_counter = 1;
+    docPr.append_attribute("id").set_value(image_id_counter++);
+    docPr.append_attribute("name").set_value("Picture");
+
+    pugi::xml_node graphic = inline_node.append_child("a:graphic");
+    graphic.append_attribute("xmlns:a").set_value(
+        "http://schemas.openxmlformats.org/drawingml/2006/main");
+
+    pugi::xml_node graphic_data = graphic.append_child("a:graphicData");
+    graphic_data.append_attribute("uri").set_value(
+        "http://schemas.openxmlformats.org/drawingml/2006/picture");
+
+    pugi::xml_node pic = graphic_data.append_child("pic:pic");
+    pic.append_attribute("xmlns:pic").set_value(
+        "http://schemas.openxmlformats.org/drawingml/2006/picture");
+
+    pugi::xml_node nvPicPr = pic.append_child("pic:nvPicPr");
+    pugi::xml_node cnvPr = nvPicPr.append_child("pic:cNvPr");
+    cnvPr.append_attribute("id").set_value(0);
+    cnvPr.append_attribute("name").set_value(image_path.c_str());
+    pugi::xml_node cnvPicPr = nvPicPr.append_child("pic:cNvPicPr");
+
+    pugi::xml_node blipFill = pic.append_child("pic:blipFill");
+    pugi::xml_node blip = blipFill.append_child("a:blip");
+    blip.append_attribute("r:embed").set_value(rel_id.c_str());
+    pugi::xml_node stretch = blipFill.append_child("a:stretch");
+    stretch.append_child("a:fillRect");
+
+    pugi::xml_node spPr = pic.append_child("pic:spPr");
+    pugi::xml_node xfrm = spPr.append_child("a:xfrm");
+    pugi::xml_node ext = xfrm.append_child("a:ext");
+    ext.append_attribute("cx").set_value(size.width_emu());
+    ext.append_attribute("cy").set_value(size.height_emu());
+    pugi::xml_node prstGeom = spPr.append_child("a:prstGeom");
+    prstGeom.append_attribute("prst").set_value("rect");
+    prstGeom.append_child("a:avLst");
+
+    return true;
 }
 
 // ============================================================================
 // DocumentSearch Implementation
 // ============================================================================
 
+static int count_occurrences(const std::string& text, const std::string& pattern) {
+    if (pattern.empty() || text.empty() || pattern.size() > text.size()) {
+        return 0;
+    }
+    int count = 0;
+    size_t pos = 0;
+    while ((pos = text.find(pattern, pos)) != std::string::npos) {
+        ++count;
+        pos += pattern.size();
+    }
+    return count;
+}
+
+static std::string replace_all_in_string(std::string text, const std::string& old_text, const std::string& new_text) {
+    if (old_text.empty()) {
+        return text;
+    }
+    size_t pos = 0;
+    while ((pos = text.find(old_text, pos)) != std::string::npos) {
+        text.replace(pos, old_text.size(), new_text);
+        pos += new_text.size();
+    }
+    return text;
+}
+
 std::optional<Range> DocumentSearch::find(Document& doc, const std::string& text) {
-    // TODO: Implement search
+    if (text.empty()) {
+        return std::nullopt;
+    }
+
+    auto paragraphs = doc.get_paragraphs();
+    for (auto& para : paragraphs) {
+        if (!para) continue;
+        std::string para_text = para->get_text();
+        if (para_text.find(text) != std::string::npos) {
+            return Range(&doc, para->get_current_node(), para->get_current_node());
+        }
+    }
     return std::nullopt;
 }
 
 std::vector<Range> DocumentSearch::find_all(Document& doc, const std::string& text) {
-    // TODO: Implement find all
-    return {};
+    std::vector<Range> results;
+    if (text.empty()) {
+        return results;
+    }
+
+    auto paragraphs = doc.get_paragraphs();
+    for (auto& para : paragraphs) {
+        if (!para) continue;
+        std::string para_text = para->get_text();
+        if (para_text.find(text) != std::string::npos) {
+            results.emplace_back(&doc, para->get_current_node(), para->get_current_node());
+        }
+    }
+    return results;
 }
 
 bool DocumentSearch::replace(Document& doc, const std::string& old_text, const std::string& new_text) {
-    // TODO: Implement replace
+    if (old_text.empty()) {
+        return false;
+    }
+
+    auto paragraphs = doc.get_paragraphs();
+    for (auto& para : paragraphs) {
+        if (!para) continue;
+        std::string para_text = para->get_text();
+        size_t pos = para_text.find(old_text);
+        if (pos != std::string::npos) {
+            para_text.replace(pos, old_text.size(), new_text);
+            para->set_text(para_text);
+            return true;
+        }
+    }
     return false;
 }
 
 int DocumentSearch::replace_all(Document& doc, const std::string& old_text, const std::string& new_text) {
-    // TODO: Implement replace all
-    return 0;
+    if (old_text.empty()) {
+        return 0;
+    }
+
+    int total = 0;
+    auto paragraphs = doc.get_paragraphs();
+    for (auto& para : paragraphs) {
+        if (!para) continue;
+        std::string para_text = para->get_text();
+        int count = count_occurrences(para_text, old_text);
+        if (count > 0) {
+            para->set_text(replace_all_in_string(para_text, old_text, new_text));
+            total += count;
+        }
+    }
+    return total;
 }
 
 bool DocumentSearch::replace_with_formatting(Document& doc, const std::string& old_text,
                                              const std::string& new_text, formatting_flag flag) {
-    // TODO: Implement replace with formatting
+    if (old_text.empty()) {
+        return false;
+    }
+
+    auto paragraphs = doc.get_paragraphs();
+    for (auto& para : paragraphs) {
+        if (!para) continue;
+        std::string para_text = para->get_text();
+        size_t pos = para_text.find(old_text);
+        if (pos != std::string::npos) {
+            para_text.replace(pos, old_text.size(), new_text);
+            para->set_text(para_text);
+            if (auto run = para->get_first_run()) {
+                if (flag & bold) run->set_bold(true);
+                if (flag & italic) run->set_italic(true);
+                if (flag & underline) run->set_underline(UnderlineType::Single);
+            }
+            return true;
+        }
+    }
     return false;
 }
 
 int DocumentSearch::find_and_process(Document& doc, const std::string& pattern, SearchCallback callback) {
-    // TODO: Implement find and process
-    return 0;
+    if (pattern.empty() || !callback) {
+        return 0;
+    }
+
+    int count = 0;
+    auto paragraphs = doc.get_paragraphs();
+    for (auto& para : paragraphs) {
+        if (!para) continue;
+        std::string para_text = para->get_text();
+        if (para_text.find(pattern) != std::string::npos) {
+            Range range(&doc, para->get_current_node(), para->get_current_node());
+            ++count;
+            if (!callback(para_text, range)) {
+                break;
+            }
+        }
+    }
+    return count;
 }
 
 // ============================================================================

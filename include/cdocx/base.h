@@ -92,7 +92,9 @@ public:
     Run();
     explicit Run(Document* doc);
     Run(Document* doc, const std::string& text);
-    
+    Run(const Run& other);
+    Run& operator=(const Run& other);
+
     // Node overrides
     NodeType node_type() const override { return NodeType::Run; }
     void accept(DocumentVisitor* visitor) override;
@@ -112,10 +114,20 @@ public:
     Run& set_font_size(double size) { font_.size = size; return *this; }
     Run& set_font_name(const std::string& name) { font_.name = name; return *this; }
     Run& set_color(const Color& color) { font_.color = color; return *this; }
+    Run& set_color(const std::string& color_hex) { font_.color = Color(color_hex); return *this; }
     Run& set_highlight(HighlightColor color) { font_.highlight = color; return *this; }
+    Run& set_highlight(TextProperties::Highlight color);
     Run& set_superscript() { font_.script_type = ScriptType::Superscript; return *this; }
     Run& set_subscript() { font_.script_type = ScriptType::Subscript; return *this; }
-    
+
+    // Enhanced properties (v0.4.0+)
+    Run& set_properties(const TextProperties& props);
+    Run& set_underline_style(TextProperties::UnderlineStyle style, const std::string& color = "auto");
+    Run& set_spacing(TextProperties::SpacingType type, int value);
+    Run& set_position(TextProperties::PositionType type, int value);
+    Run& set_scale(int percent);
+    Run& set_strike(TextProperties::StrikeStyle style);
+
     // Legacy API support (for backward compatibility)
     Run& set_bold2(bool value) { return set_bold(value); }
     Run& set_italic2(bool value) { return set_italic(value); }
@@ -164,8 +176,15 @@ public:
     bool set_spacing_xml(TextProperties::SpacingType type, int value);
     bool set_position_xml(TextProperties::PositionType type, int value);
     
+public:
+    // Preserve unknown XML children (e.g., w:drawing) through DOM roundtrips
+    void preserve_child(pugi::xml_node child);
+    void serialize_preserved_children(pugi::xml_node run_xml) const;
+    bool has_preserved_children() const;
+
 private:
     std::string text_;
+    pugi::xml_document preserved_children_;
 };
 
 
@@ -344,17 +363,28 @@ class Hyperlink : public Field {
 public:
     Hyperlink();
     explicit Hyperlink(Document* doc);
-    
+
     void set_address(const std::string& url);
     void set_bookmark_name(const std::string& name);
     void set_tooltip(const std::string& tooltip);
     void set_screen_tip(const std::string& tip);
-    
+
     std::string get_address() const;
     std::string get_bookmark_name() const;
-    
+    std::string get_tooltip() const;
+    std::string get_screen_tip() const;
+
     // Node overrides
+    NodeType node_type() const override { return cdocx::NodeType::Hyperlink; }
+    std::shared_ptr<Node> clone(bool deep = true) const override;
+    void accept(DocumentVisitor* visitor) override;
     void update() override;
+
+private:
+    std::string address_;
+    std::string bookmark_name_;
+    std::string tooltip_;
+    std::string screen_tip_;
 };
 
 } // namespace cdocx

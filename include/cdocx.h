@@ -1,7 +1,7 @@
 /**
  * @file cdocx.h
  * @brief CDocx v2.0 - Main aggregated header
- * @version 2.0.0
+ * @version 0.7.0
  * 
  * CDocx is a modern C++17 library for creating, reading, and writing
  * Microsoft Office Word (.docx) files.
@@ -24,10 +24,10 @@
 #pragma once
 
 // Version information
-#define CDOCX_VERSION_MAJOR 2
-#define CDOCX_VERSION_MINOR 0
+#define CDOCX_VERSION_MAJOR 0
+#define CDOCX_VERSION_MINOR 7
 #define CDOCX_VERSION_PATCH 0
-#define CDOCX_VERSION "2.0.0"
+#define CDOCX_VERSION "0.7.0"
 
 // ============================================================================
 // Core Headers
@@ -41,7 +41,13 @@
 #include "cdocx/paragraph.h"
 #include "cdocx/table.h"
 #include "cdocx/section.h"
+#include "cdocx/style.h"
 #include "cdocx/base.h"
+#include "cdocx/template.h"
+#include "cdocx/inserter.h"
+#include "cdocx/advanced.h"
+#include "cdocx/table_builder.h"
+#include "cdocx/caption_generator.h"
 
 // ============================================================================
 // Convenience / Aggregated Header
@@ -129,13 +135,13 @@ public:
     
     /**
      * @brief Get the library version string
-     * @return Version string (e.g., "2.0.0")
+     * @return Version string (e.g., "0.7.0")
      */
     static std::string version();
     
     /**
      * @brief Get the full library version string
-     * @return Full version string (e.g., "CDocx v2.0.0")
+     * @return Full version string (e.g., "CDocx v0.7.0")
      */
     static std::string version_string();
 };

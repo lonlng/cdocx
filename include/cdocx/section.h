@@ -36,6 +36,8 @@
 #include <cdocx/enums.h>
 #include <cdocx/properties.h>
 #include <cdocx/body.h>
+#include <cdocx/paragraph.h>
+#include <cdocx/table.h>
 #include <cdocx/constants.h>
 
 #include <pugixml.hpp>
@@ -120,6 +122,17 @@ public:
     // Apply/load properties (for XML serialization)
     void apply_properties();
     void load_properties();
+    
+    // Set the underlying sectPr XML node (used during sync from physical)
+    void set_sectPr_node(pugi::xml_node node) { sectPr_node_ = node; }
+    
+    // Add header/footer references (used during sync from physical)
+    void add_header_ref(const HeaderFooterRef& ref);
+    void add_footer_ref(const HeaderFooterRef& ref);
+    
+    // Get raw header/footer references (used during serialization)
+    const std::vector<HeaderFooterRef>& get_header_refs() const { return header_refs_; }
+    const std::vector<HeaderFooterRef>& get_footer_refs() const { return footer_refs_; }
     
 private:
     SectionProperties properties_;

@@ -25,9 +25,9 @@ TEST(TextFormattingTest, RunSetColorSetsFontColorCorrectly) {
 
     auto p = doc.paragraphs().insert_paragraph_after("Test: ");
     auto r = p.add_run("Red Text");
-    EXPECT_EQ(r.set_color("FF0000"), true);
-    EXPECT_EQ(r.set_color("0070C0"), true);
-    EXPECT_EQ(r.set_color("00B050"), true);
+    r.set_color("FF0000");
+    r.set_color("0070C0");
+    r.set_color("00B050");
 
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
@@ -45,10 +45,10 @@ TEST(TextFormattingTest, RunSetFontSizeSetsFontSizeCorrectly) {
 
     auto p = doc.paragraphs().insert_paragraph_after("Test: ");
     auto r = p.add_run("Sized Text");
-    EXPECT_EQ(r.set_font_size(20), true);   // 10pt
-    EXPECT_EQ(r.set_font_size(24), true);   // 12pt
-    EXPECT_EQ(r.set_font_size(48), true);   // 24pt
-    EXPECT_EQ(r.set_font_size(72), true);   // 36pt
+    r.set_font_size(20);   // 10pt
+    r.set_font_size(24);   // 12pt
+    r.set_font_size(48);   // 24pt
+    r.set_font_size(72);   // 36pt
 
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
@@ -67,13 +67,13 @@ TEST(TextFormattingTest, RunSetFontNameSetsFontCorrectly) {
     auto p = doc.paragraphs().insert_paragraph_after("Test: ");
 
     auto r1 = p.add_run("Arial");
-    EXPECT_EQ(r1.set_font_name("Arial"), true);
+    r1.set_font_name("Arial");
 
     auto r2 = p.add_run("Times");
-    EXPECT_EQ(r2.set_font_name("Times New Roman"), true);
+    r2.set_font_name("Times New Roman");
 
     auto r3 = p.add_run("Verdana");
-    EXPECT_EQ(r3.set_font_name("Verdana"), true);
+    r3.set_font_name("Verdana");
 
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
@@ -91,8 +91,8 @@ TEST(TextFormattingTest, RunSetBoldTogglesBoldFormatting) {
 
     auto p = doc.paragraphs().insert_paragraph_after("Test: ");
     auto r = p.add_run("Text");
-    EXPECT_EQ(r.set_bold(true), true);
-    EXPECT_EQ(r.set_bold(false), true);
+    r.set_bold(true);
+    r.set_bold(false);
 
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
@@ -110,8 +110,8 @@ TEST(TextFormattingTest, RunSetItalicTogglesItalicFormatting) {
 
     auto p = doc.paragraphs().insert_paragraph_after("Test: ");
     auto r = p.add_run("Text");
-    EXPECT_EQ(r.set_italic(true), true);
-    EXPECT_EQ(r.set_italic(false), true);
+    r.set_italic(true);
+    r.set_italic(false);
 
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
@@ -129,8 +129,10 @@ TEST(TextFormattingTest, RunSetUnderlineTogglesUnderlineFormatting) {
 
     auto p = doc.paragraphs().insert_paragraph_after("Test: ");
     auto r = p.add_run("Text");
-    EXPECT_EQ(r.set_underline(true), true);
-    EXPECT_EQ(r.set_underline(false), true);
+    r.set_underline(cdocx::UnderlineType::Single);
+    EXPECT_TRUE(r.get_font().underline == cdocx::UnderlineType::Single);
+    r.set_underline(cdocx::UnderlineType::None);
+    EXPECT_TRUE(r.get_font().underline == cdocx::UnderlineType::None);
 
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
@@ -148,11 +150,11 @@ TEST(TextFormattingTest, RunCombinedFormatting) {
 
     auto p = doc.paragraphs().insert_paragraph_after("Test: ");
     auto r = p.add_run("Formatted");
-    EXPECT_TRUE(r.set_bold(true));
-    EXPECT_TRUE(r.set_italic(true));
-    EXPECT_TRUE(r.set_color("FF0000"));
-    EXPECT_TRUE(r.set_font_size(48));
-    EXPECT_TRUE(r.set_font_name("Arial"));
+    r.set_bold(true);
+    r.set_italic(true);
+    r.set_color("FF0000");
+    r.set_font_size(48);
+    r.set_font_name("Arial");
 
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
@@ -169,16 +171,16 @@ TEST(TextFormattingTest, ParagraphSetAlignmentSetsAlignmentCorrectly) {
     ASSERT_TRUE(doc.create_empty(test_file));
 
     auto p1 = doc.paragraphs().insert_paragraph_after("Left");
-    EXPECT_EQ(p1.set_alignment("left"), true);
+    EXPECT_TRUE(p1.set_alignment("left"));
 
     auto p2 = doc.paragraphs().insert_paragraph_after("Center");
-    EXPECT_EQ(p2.set_alignment("center"), true);
+    EXPECT_TRUE(p2.set_alignment("center"));
 
     auto p3 = doc.paragraphs().insert_paragraph_after("Right");
-    EXPECT_EQ(p3.set_alignment("right"), true);
+    EXPECT_TRUE(p3.set_alignment("right"));
 
     auto p4 = doc.paragraphs().insert_paragraph_after("Justified");
-    EXPECT_EQ(p4.set_alignment("both"), true);
+    EXPECT_TRUE(p4.set_alignment("both"));
 
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
@@ -195,13 +197,13 @@ TEST(TextFormattingTest, ParagraphSetStyleSetsStyleCorrectly) {
     ASSERT_TRUE(doc.create_empty(test_file));
 
     auto p1 = doc.paragraphs().insert_paragraph_after("Heading 1");
-    EXPECT_EQ(p1.set_style("1"), true);
+    EXPECT_TRUE(p1.set_style("1"));
 
     auto p2 = doc.paragraphs().insert_paragraph_after("Heading 2");
-    EXPECT_EQ(p2.set_style("2"), true);
+    EXPECT_TRUE(p2.set_style("2"));
 
     auto p3 = doc.paragraphs().insert_paragraph_after("Normal");
-    EXPECT_EQ(p3.set_style("Normal"), true);
+    EXPECT_TRUE(p3.set_style("Normal"));
 
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
@@ -218,13 +220,13 @@ TEST(TextFormattingTest, ParagraphSetLineSpacingSetsLineSpacingCorrectly) {
     ASSERT_TRUE(doc.create_empty(test_file));
 
     auto p1 = doc.paragraphs().insert_paragraph_after("Single spacing");
-    EXPECT_EQ(p1.set_line_spacing(240), true);
+    EXPECT_TRUE(p1.set_line_spacing(240));
 
     auto p2 = doc.paragraphs().insert_paragraph_after("1.5 spacing");
-    EXPECT_EQ(p2.set_line_spacing(360), true);
+    EXPECT_TRUE(p2.set_line_spacing(360));
 
     auto p3 = doc.paragraphs().insert_paragraph_after("Double spacing");
-    EXPECT_EQ(p3.set_line_spacing(480), true);
+    EXPECT_TRUE(p3.set_line_spacing(480));
 
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
@@ -241,14 +243,14 @@ TEST(TextFormattingTest, ParagraphSetSpacingBeforeAfterSetsSpacingCorrectly) {
     ASSERT_TRUE(doc.create_empty(test_file));
 
     auto p1 = doc.paragraphs().insert_paragraph_after("Before spacing");
-    EXPECT_EQ(p1.set_spacing_before(200), true);
+    EXPECT_TRUE(p1.set_spacing_before(200));
 
     auto p2 = doc.paragraphs().insert_paragraph_after("After spacing");
-    EXPECT_EQ(p2.set_spacing_after(200), true);
+    EXPECT_TRUE(p2.set_spacing_after(200));
 
     auto p3 = doc.paragraphs().insert_paragraph_after("Both spacing");
-    EXPECT_EQ(p3.set_spacing_before(100), true);
-    EXPECT_EQ(p3.set_spacing_after(100), true);
+    EXPECT_TRUE(p3.set_spacing_before(100));
+    EXPECT_TRUE(p3.set_spacing_after(100));
 
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
@@ -265,19 +267,19 @@ TEST(TextFormattingTest, ParagraphSetIndentSetsIndentationCorrectly) {
     ASSERT_TRUE(doc.create_empty(test_file));
 
     auto p1 = doc.paragraphs().insert_paragraph_after("Left indent");
-    EXPECT_EQ(p1.set_indent(720, -1, -1), true);
+    EXPECT_TRUE(p1.set_indent(720, -1, -1));
 
     auto p2 = doc.paragraphs().insert_paragraph_after("Right indent");
-    EXPECT_EQ(p2.set_indent(-1, 720, -1), true);
+    EXPECT_TRUE(p2.set_indent(-1, 720, -1));
 
     auto p3 = doc.paragraphs().insert_paragraph_after("First line indent");
-    EXPECT_EQ(p3.set_indent(-1, -1, 720), true);
+    EXPECT_TRUE(p3.set_indent(-1, -1, 720));
 
     auto p4 = doc.paragraphs().insert_paragraph_after("Hanging indent");
-    EXPECT_EQ(p4.set_indent(-1, -1, -720), true);
+    EXPECT_TRUE(p4.set_indent(-1, -1, -720));
 
     auto p5 = doc.paragraphs().insert_paragraph_after("Combined indent");
-    EXPECT_EQ(p5.set_indent(360, 360, 720), true);
+    EXPECT_TRUE(p5.set_indent(360, 360, 720));
 
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));

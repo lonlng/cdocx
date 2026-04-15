@@ -27,7 +27,7 @@ cmake_minimum_required(VERSION 3.14...3.28)
 # Project Definition
 # ----------------------------------------------------------------------------
 project(cdocx
-    VERSION 0.5.0
+    VERSION 0.7.0
     DESCRIPTION "C++17 library for Microsoft Word DOCX files (Google C++ Style)"
     HOMEPAGE_URL "https://github.com/lonlng/cdocx"
     LANGUAGES CXX C

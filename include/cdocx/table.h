@@ -82,6 +82,9 @@ public:
     
     // Parent row access
     std::shared_ptr<class Row> get_parent_row() const;
+
+    // Parent table access
+    std::shared_ptr<class Table> get_parent_table() const;
     
     // Column index
     int get_column_index() const;
@@ -320,7 +323,11 @@ public:
     
     // Cell access (convenience)
     std::shared_ptr<Cell> get_cell(int row, int col) const;
-    
+
+    // Column operations
+    void insert_column(int index);
+    void delete_column(int index);
+
     // Dimensions
     int get_row_count() const;
     int get_column_count() const;

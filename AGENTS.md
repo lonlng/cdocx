@@ -2,14 +2,14 @@
 
 ## Project Overview
 
-CDocx is a modern C++17 library for creating, reading, and writing Microsoft Office Word (.docx) files. It provides an iterator-based API with comprehensive document manipulation capabilities.
+CDocx is a C++17 library for creating, reading, and writing Microsoft Office Word (.docx) files. It currently provides a stable legacy iterator-based API and is transitioning toward a DOM-style architecture.
 
 **Key Facts:**
 - **Language**: C++17 (C99 for zip library component)
 - **License**: MIT
 - **Build System**: CMake (minimum version 3.14)
 - **Namespace**: `cdocx`
-- **Version**: 0.6.0
+- **Version**: 0.7.0 (transition release)
 - **Dependencies** (auto-fetched via CMake FetchContent):
   - [pugixml](https://gitee.com/lonlng/pugixml) (v1.15) - XML parsing
   - [zip](https://gitee.com/lonlng/zip) (v0.3.6) - ZIP archive handling
@@ -22,70 +22,80 @@ CDocx is a modern C++17 library for creating, reading, and writing Microsoft Off
 ```
 cdocx/
 ├── CMakeLists.txt              # Main CMake configuration
-├── .clang-format               # Code formatting rules (LLVM style, 4-space indent)
+├── .clang-format               # Code formatting rules
 ├── .clang-tidy                 # Static analysis configuration
 ├── README.md                   # User-facing documentation
-├── AGENTS.md                   # This file - complete technical reference
+├── AGENTS.md                   # This file
 ├── LICENSE                     # MIT License
 ├── CONTRIBUTING.md             # Contribution guidelines
 ├── SECURITY.md                 # Security policy
 │
 ├── cmake/
 │   └── modules/
-│       └── CDocxHelpers.cmake  # CMake helper functions
+│       └── CDocxHelpers.cmake  # CMake helper functions for examples/tests
 │
 ├── include/                    # Public API headers
 │   ├── cdocx.h                 # Main aggregated header
 │   └── cdocx/                  # Modular headers
-│       ├── fwd.h               # Forward declarations
-│       ├── constants.h         # Formatting flags
-│       ├── iterator.h          # Iterator helpers
-│       ├── base.h              # Run, Paragraph, Table classes
-│       ├── document.h          # Document class
+│       ├── document.h          # Document class (DOM root)
+│       ├── node.h              # Node/CompositeNode hierarchy
+│       ├── body.h              # Body class
+│       ├── paragraph.h         # Paragraph class
+│       ├── table.h             # Table, Row, Cell
+│       ├── section.h           # Section support
+│       ├── numbering.h         # List/Numbering
 │       ├── template.h          # Template replacement
 │       ├── inserter.h          # Document insertion
-│       ├── advanced.h          # Bookmark, DocumentBuilder, Search
-│       ├── bookmark_replacer.h # Bookmark replacement API
-│       ├── caption_generator.h # Figure caption generation
-│       ├── format_context.h    # Text formatting context
+│       ├── advanced.h          # Bookmark, Builder, Search, TableOperations
+│       ├── bookmark_replacer.h # Bookmark replacement
+│       ├── caption_generator.h # Caption generation
+│       ├── format.h            # Format attributes
+│       ├── format_context.h    # Format context
 │       ├── properties.h        # Property structures
-│       ├── section.h           # Section support (v0.5.0)
-│       ├── numbering.h         # List/Numbering system (v0.5.0)
-│       ├── node.h              # Node hierarchy (v0.6.0)
-│       └── format.h            # Format attributes (v0.6.0)
-│
-├── src/                        # Implementation files
-│   ├── base_content.cpp
-│   ├── document.cpp
-│   ├── template.cpp
-│   ├── inserter.cpp
-│   ├── tree.cpp
-│   ├── impl.cpp
-│   ├── advanced.cpp
-│   ├── bookmark_replacer.cpp
-│   ├── caption_generator.cpp
-│   ├── format_context.cpp
-│   ├── properties.cpp
-│   ├── section.cpp
-│   ├── numbering.cpp
-│   ├── node.cpp                # Node implementation (v0.6.0)
-│   └── format.cpp              # Format implementation (v0.6.0)
+│       ├── enums.h             # Enumerations
+│       ├── constants.h         # Constants
+│       ├── fwd.h               # Forward declarations
+│       ├── iterator.h          # Iterator support
+│       └── base.h              # Legacy iterators
 │
 ├── include/detail/
 │   └── impl.h                  # Private implementation (PIMPL)
 │
-├── test/                       # Test suite (Google Test)
-│   ├── 01_basic/               # Basic functionality tests
-│   ├── 02_iterator/            # Iterator tests
-│   ├── 03_template/            # Template tests
-│   ├── 04_xml_parts/           # XML Parts API tests
-│   ├── 05_complete_structure/  # Complete structure tests
-│   ├── 06_create_empty/        # Empty document creation
-│   ├── 07_text_formatting/     # Text formatting tests
-│   ├── 08_bookmark_replacement/# Bookmark replacement tests
-│   └── 09_section_and_list/    # Section and list tests
+├── src/                        # Implementation files
+│   ├── advanced.cpp
+│   ├── base_content.cpp
+│   ├── body.cpp
+│   ├── bookmark_replacer.cpp
+│   ├── caption_generator.cpp
+│   ├── document.cpp
+│   ├── document_sync.cpp       # DOM-XML sync
+│   ├── format.cpp              # Color implementation only
+│   ├── format_context.cpp
+│   ├── impl.cpp
+│   ├── inserter.cpp
+│   ├── node.cpp                # Basic tree ops
+│   ├── numbering.cpp
+│   ├── paragraph.cpp
+│   ├── properties.cpp
+│   ├── section.cpp
+│   ├── table.cpp
+│   ├── table_builder.cpp
+│   ├── template.cpp
+│   └── tree.cpp
 │
-├── examples/                   # Example programs (14 examples)
+├── test/                       # Test suite (Google Test)
+│   ├── 01_basic/
+│   ├── 02_iterator/
+│   ├── 03_template/
+│   ├── 04_xml_parts/
+│   ├── 05_complete_structure/
+│   ├── 06_create_empty/
+│   ├── 07_text_formatting/
+│   ├── 08_bookmark_replacement/
+│   ├── 09_section_and_list/
+│   └── CMakeLists.txt
+│
+├── examples/                   # Example programs
 │   ├── 01_basic_read/
 │   ├── 02_basic_create/
 │   ├── 03_template_basic/
@@ -95,17 +105,140 @@ cdocx/
 │   ├── 07_media_management/
 │   ├── 08_create_empty/
 │   ├── 09_text_formatting/
-│   ├── 10_advanced_crud/
+│   ├── 10_edit_document/
+│   ├── 10_advanced_crud/       # Needs ENABLE_ADVANCED_FEATURES=ON
 │   ├── 11_bookmark_replacement/
 │   ├── 12_caption_generation/
+│   ├── 13_enhanced_properties/
 │   ├── 13_section_and_list/
-│   └── 14_node_hierarchy/      # v0.6.0 example
+│   └── CMakeLists.txt
 │
-└── scripts/                    # Build scripts
-    ├── build-linux.sh
-    ├── build-windows.bat
-    └── code-quality.sh
+├── scripts/
+│   ├── README.md
+│   ├── code-quality.bat        # Windows code quality script
+│   ├── code-quality.sh         # Linux/macOS code quality script
+│   └── install.sh
+│
+├── docs/                       # Architecture docs and roadmaps
+│   ├── 文档索引.md
+│   ├── 架构设计.md
+│   ├── API示例.md
+│   ├── 增强路线图.md
+│   └── 项目进度报告.md
+│
+└── .github/
+    ├── workflows/
+    │   ├── cmake.yml           # CI: Build and test on Linux/Windows/macOS
+    │   ├── code-quality.yml    # CI: clang-format and cppcheck
+    │   └── docs.yml            # CI: Doxygen docs to GitHub Pages
+    ├── ISSUE_TEMPLATE/
+    ├── FUNDING.yml
+    ├── PULL_REQUEST_TEMPLATE.md
+    └── dependabot.yml
 ```
+
+---
+
+## Build and Test Commands
+
+### Quick Build
+
+```bash
+mkdir build && cd build
+cmake .. -DBUILD_EXAMPLES=ON -DBUILD_TESTING=ON
+cmake --build . --parallel
+ctest --output-on-failure
+```
+
+### Build Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `BUILD_SHARED_LIBS` | OFF | Build shared instead of static library |
+| `BUILD_EXAMPLES` | ON | Build example programs |
+| `BUILD_TESTING` | ON | Build tests |
+| `BUILD_DOCS` | OFF | Build Doxygen docs |
+| `ENABLE_COVERAGE` | OFF | Code coverage (GCC/Clang Debug only) |
+| `ENABLE_WERROR` | OFF | Warnings as errors |
+| `USE_SYSTEM_GTEST` | OFF | Use system Google Test instead of fetching |
+
+### Test Commands
+
+```bash
+# Run all tests
+ctest --output-on-failure
+
+# Run via custom targets
+cmake --build build --target test_all      # All tests
+cmake --build build --target test_core     # Core tests only
+cmake --build build --target test_quick    # Quick smoke tests
+cmake --build build --target test_advanced # Advanced feature tests
+```
+
+### Code Quality Commands
+
+```bash
+# Format all code
+cmake --build build --target format
+
+# Check formatting (CI)
+cmake --build build --target format-check
+
+# Run clang-tidy
+cmake --build build --target tidy
+
+# Auto-fix clang-tidy issues
+cmake --build build --target tidy-fix
+
+# Run all quality checks
+cmake --build build --target code-quality
+
+# Or use scripts
+./scripts/code-quality.sh all       # Linux/macOS
+scripts\code-quality.bat all       # Windows
+```
+
+---
+
+## Code Style Guidelines
+
+This project uses a **customized Google C++ Style Guide**.
+
+### Customizations from Google Style
+
+| Aspect | Google Standard | Our Customization |
+|--------|-----------------|-------------------|
+| Indentation | 2 spaces | **4 spaces** |
+| Column limit | 80 chars | **100 chars** |
+| Header guards | `#ifndef` | **`#pragma once`** (allowed) |
+
+### Naming Conventions
+
+| Type | Convention | Example |
+|------|------------|---------|
+| Types | `CamelCase` | `Document`, `Paragraph`, `SectionProperties` |
+| Functions/Methods | `CamelCase` | `Open()`, `GetText()`, `IsOpen()` |
+| Variables | `snake_case` | `file_path`, `paragraph_count` |
+| Member variables | `snake_case_` | `impl_`, `filepath_` |
+| Constants | `kCamelCase` | `kMaxSize`, `kDefaultValue`, `kBold` |
+| Macros | `UPPER_CASE` | `CDOCX_API`, `DISALLOW_COPY_AND_ASSIGN` |
+| Files | `snake_case` | `document.h`, `base_content.cpp` |
+| Namespaces | `snake_case` | `cdocx` |
+
+### Formatting Rules
+
+- **Indentation**: 4 spaces (no tabs)
+- **Line length**: 100 characters
+- **Braces**: K&R style (opening brace on same line)
+- **Header guards**: `#pragma once`
+- **Pointer alignment**: Left (`int* ptr`)
+- **Include sorting**: Enabled, with specific priority groups (C system, C++ std, third-party, project)
+
+### Tools
+
+- **Formatter**: `clang-format` with `.clang-format`
+- **Linter**: `clang-tidy` with `.clang-tidy`
+- **Additional static analysis**: `cppcheck` (used in CI)
 
 ---
 
@@ -113,97 +246,126 @@ cdocx/
 
 ### Core Design Principles
 
-1. **Complete Structure Support**: Loads entire DOCX package into memory including all XML parts, media files, and relationships
-2. **Tree-Based Storage**: Internal tree structure mirrors ZIP file organization with O(1) path lookup
-3. **PIMPL Pattern**: Implementation details hidden to ensure ABI stability
-4. **Iterator-Based API**: Modern C++17 iterator pattern supporting range-based for loops
-5. **Zero External Dependencies**: All dependencies fetched automatically via CMake FetchContent
+1. **Complete Structure Support**: Loads entire DOCX package into memory
+2. **Tree-Based Storage**: Internal `DocxTree` mirrors ZIP file organization
+3. **Dual API Design**: Legacy iterator API coexists with emerging DOM API
+4. **PIMPL Pattern**: Implementation details hidden for ABI stability
+5. **Zero External Dependencies**: All deps fetched via CMake FetchContent
 
-### Internal Tree Structure
+### DOM Architecture (In Transition)
+
+The library is transitioning to a DOM architecture where major classes inherit from `Node` or `CompositeNode`, but several critical methods remain unimplemented.
 
 ```cpp
-// Internal node types (in detail/impl.h)
-enum class DocxNodeType {
-    Root,       // Root node (represents the package)
-    Directory,  // Directory/folder
-    XmlFile,    // XML file (parsed into pugi::xml_document)
-    MediaFile,  // Media file (binary data)
-    BinaryFile  // Other binary files
-};
-
-// Tree node structure
-struct DocxTreeNode {
-    std::string name;
-    std::string full_path;
-    DocxNodeType type;
-    std::shared_ptr<pugi::xml_document> xml_doc;
-    FileDataStorage file_storage;
-    std::string content_type;
-    bool is_modified = false;
-    bool is_new = false;
-    bool is_deleted = false;
-};
+// Target hierarchy (partially implemented)
+Node (abstract)
+├── CompositeNode
+│   ├── Document      (contains Sections)
+│   ├── Section       (contains Body, HeaderFooter refs)
+│   ├── Body          (contains Paragraphs, Tables)
+│   ├── Paragraph     (contains Runs)
+│   ├── Table         (contains Rows)
+│   ├── Row           (contains Cells)
+│   └── Cell          (contains Paragraphs)
+└── Leaf nodes
+    ├── Run           (fully supported)
+    └── SpecialChar   (basic support)
 ```
 
-### DOCX Package Structure
+**Implementation status (as of code audit):**
+- `clone()` is **implemented** on all major DOM nodes (`Document`, `Section`, `Body`, `Paragraph`, `Table`, `Row`, `Cell`, `HeaderFooter`, `Run`, `BookmarkStart/End`, `Hyperlink`, `Field`, `SpecialChar`) with full deep-copy support for children
+- Document-order traversal (`get_previous_node_in_document`, `get_next_node_in_document`, `get_previous_logical`, `get_next_logical`) is **implemented** in `node.cpp`
+- DOM-to-XML serialization handles **bookmarks, hyperlinks, and fields** (both serialization and deserialization); basic field round-tripping works
+- `HeaderFooter` DOM content methods (`append_paragraph`, `append_table`, `get_paragraphs`) are **implemented**
+- Known gaps: fluent `DocumentBuilder`, and `CDocx` factory class remain unimplemented; `DocumentSearch` is now implemented
 
-```
-document.docx
-├── [Content_Types].xml          # Content type definitions
-├── _rels/.rels                  # Package relationships
-├── docProps/
-│   ├── app.xml                  # Extended properties
-│   ├── core.xml                 # Core properties
-│   └── custom.xml               # Custom properties
-└── word/
-    ├── _rels/document.xml.rels  # Document relationships
-    ├── document.xml             # Main document content
-    ├── styles.xml               # Style definitions
-    ├── settings.xml             # Document settings
-    ├── fontTable.xml            # Font table
-    ├── numbering.xml            # Numbering definitions
-    ├── footnotes.xml            # Footnotes
-    ├── endnotes.xml             # Endnotes
-    ├── footer1.xml              # Footer (multiple)
-    ├── header1.xml              # Header (multiple)
-    ├── theme/theme1.xml         # Theme definitions
-    └── media/                   # Images and media
-```
+### Physical Structure
+
+The `DocxTree` and `DocxTreeNode` classes represent the ZIP package structure. Every XML part, media file, and relationship is loaded into this tree and synchronized with the DOM layer on demand.
+
+---
+
+## Feature Tiers and API Paths
+
+CDocx provides **three API paths** to the same underlying DOCX package:
+
+1. **DOM API** (recommended): Work with `Node`/`CompositeNode` objects. No XML knowledge required.
+2. **XML Parts API** (power user): Direct `pugi::xml_document*` access to any Open XML part.
+3. **Legacy Iterator API** (compatibility): Cursor-style iteration over raw XML nodes (`has_next()`/`next()`).
+
+### Tier 1 — Basic Features (Complete)
+
+| Feature | API | Status |
+|---------|-----|--------|
+| Open / create / save DOCX | `Document::open`, `save`, `create_empty` | Complete |
+| DOM tree manipulation | `Node` / `CompositeNode` hierarchy | Complete |
+| Paragraph / Run / Table / Cell CRUD | `append_paragraph`, `append_run`, `append_table`, etc. | Complete |
+| Basic formatting (bold, italic, color, font, alignment) | `Run::set_bold`, `set_color`, `ParagraphFormat` | Complete |
+| Special characters (tab, break, page break) | `SpecialChar` | Complete |
+| Sections, headers/footers, page setup | `Section`, `HeaderFooter`, `PageSetup` | Complete |
+| Lists and numbering | `add_bulleted_list_definition`, `NumberingManager` | Complete |
+
+### Tier 2 — Intermediate Features (Mostly Complete)
+
+| Feature | API | Status |
+|---------|-----|--------|
+| Template placeholder replacement | `Template` | Complete |
+| Bookmark text / image replacement | `BookmarkReplacer` | Partial (same-paragraph only) |
+| Document insertion / merging | `DocumentInserter` | Complete |
+| Media management (images) | `Document::add_media`, `replace_media`, `export_media` | Complete |
+| Table fluent building | `TableBuilder` | Complete |
+| DOM ↔ XML synchronization | `document_sync.cpp` (auto on save) | Complete (Run, Para, Table, Section, Bookmark, Hyperlink, Field) |
+| Node deep copy and document-order traversal | `Node::clone`, `get_next_node_in_document` | Complete |
+
+### Tier 3 — Advanced Features (Stubbed / Roadmap)
+
+| Feature | API | Status |
+|---------|-----|--------|
+| Table merge/split | `Table::merge_cells`, `split_cell` | **Implemented** |
+| Document-wide search/replace | `DocumentSearch`, `Range::replace` | **Implemented** (paragraph-level; `Range` has DOM fallback) |
+| DocumentBuilder bookmarks, images, hyperlinks | `DocumentBuilder` | **Partial / stubs** |
+| Style manager | `StyleCollection` | Not implemented |
+| Complex fields (page numbers, dates) | `Field` DOM class | Basic structure works; advanced types stubbed |
+| Footnote / endnote DOM wrappers | — | Not implemented |
+| Export to PDF / HTML / Markdown | — | Roadmap (v0.8.0+) |
+
+### Recommended API Selection
+
+- **Creating or editing document content** → DOM API (`Paragraph::append_run`, `Body::append_table`, etc.)
+- **Replacing placeholders in existing documents** → `Template` or `BookmarkReplacer`
+- **Merging documents** → `DocumentInserter`
+- **Modifying styles, settings, or raw XML** → XML Parts API (`doc.get_styles()`, `doc.get_settings()`)
+- **Legacy code maintenance only** → Iterator API (`doc.paragraphs()`, `para.runs()`)
 
 ---
 
 ## Core Components
 
 ### 1. Document Class (`cdocx::Document`)
-Entry point for all DOCX operations with complete structure support.
+Entry point for all DOCX operations.
 
 ```cpp
-// Construction and file operations
+// File operations
 cdocx::Document doc("file.docx");
-doc.open();                           // Open the document
-doc.save();                           // Save changes
-doc.save("new_name.docx");            // Save with new name
-bool is_open = doc.is_open();         // Check status
+doc.open();
+doc.save("new_name.docx");
 
-// Access content
-auto& paragraphs = doc.paragraphs();  // Get paragraphs iterator
-auto& tables = doc.tables();          // Get tables iterator
+// DOM API: Section access
+auto sections = doc.get_sections();
+auto first_section = doc.get_first_section();
+auto new_section = doc.append_section();
 
-// Section support (v0.5.0)
-Section* section = doc.add_section();
-Section* first = doc.get_first_section();
-auto sections = doc.sections();
+// Legacy API: iterators
+auto& para_iter = doc.paragraphs();
+auto& table_iter = doc.tables();
 
-// List/Numbering (v0.5.0)
+// List/Numbering
 NumberingId bullet = doc.add_bulleted_list_definition();
 NumberingId number = doc.add_numbered_list_definition(NumberStyle::Decimal);
-NumberingId chinese = doc.add_chinese_numbered_list_definition();
 
 // XML Parts API
 pugi::xml_document* styles = doc.get_styles();
-pugi::xml_document* numbering = doc.get_numbering();
-pugi::xml_document* header1 = doc.get_header(1);
-pugi::xml_document* footer1 = doc.get_footer(1);
+pugi::xml_document* numbering = doc.get_numbering_xml();
 
 // Media management
 doc.add_media("image.jpg");
@@ -212,499 +374,256 @@ doc.export_media("image.jpg", "output/path.jpg");
 ```
 
 ### 2. Paragraph Class (`cdocx::Paragraph`)
-Represents document paragraphs with run-based text storage.
 
 ```cpp
-// Text manipulation
-std::string text = para.get_text();
+// DOM API
+std::shared_ptr<Run> run = para.append_run("Hello");
+run->set_bold(true);
 
-// Add formatted runs
-Run* run = para.add_run("Hello", cdocx::bold | cdocx::italic);
-
-// List support (v0.5.0)
-para.set_numbering(bullet_list_id, 0);  // Level 0
-para.remove_numbering();
-
-// Iteration
-for (auto& r : para.runs()) {
-    std::cout << r.get_text() << std::endl;
-}
+// Legacy API
+Run& r = para.add_run("Hello", cdocx::bold | cdocx::italic);
+bool ok = para.set_numbering(bullet_list_id, NumberingLevel::Level1);
 ```
 
 ### 3. Run Class (`cdocx::Run`)
-Represents formatted text segments.
 
 ```cpp
-// Text access
 std::string text = run.get_text();
 run.set_text("new text");
-
-// Formatting flags supported:
-// bold, italic, underline, strikethrough, 
-// superscript, subscript, smallcaps, shadow
+Font font;
+font.set_bold(true);
+run.set_font(font);
 ```
 
-### 4. Table Classes (`cdocx::Table`, `cdocx::TableRow`, `cdocx::TableCell`)
-Full table manipulation with hierarchical structure.
+### 4. Table Classes (`cdocx::Table`, `cdocx::Row`, `cdocx::Cell`)
+Basic table manipulation works. **Cell merging/splitting are declared but not implemented.**
 
 ```cpp
-// Hierarchical: Table → Row → Cell → Paragraph
-for (auto& row : table.rows()) {
-    for (auto& cell : row.cells()) {
-        for (auto& p : cell.paragraphs()) {
-            // Process cell content
-        }
+auto table = std::make_shared<Table>(doc, 3, 4);
+body->append_child(table);
+
+for (auto& row : table->get_rows()) {
+    for (auto& cell : row->get_cells()) {
+        cell->set_text("A1");
     }
 }
+
+// Merge cells
+auto merged = table->merge_cells(0, 0, 0, 1);
+table->split_cell(merged, 1, 2);
 ```
 
-### 5. Section Class (`cdocx::Section`) (v0.5.0)
-Document section management with page setup.
+### 5. Section Class (`cdocx::Section`)
 
 ```cpp
-// Section properties
-SectionProperties prop;
-prop.orientation = SectionProperties::Orientation::Landscape;
-prop.pageSize.width = 15840;    // twips
-prop.pageSize.height = 12240;
-prop.pageMargins.top = 1440;    // 1 inch
-prop.pageMargins.bottom = 1440;
-prop.pageMargins.left = 1440;
-prop.pageMargins.right = 1440;
-
-// Add content
-Section* sect = doc.get_first_section();
-Paragraph* para = sect->add_paragraph("Text", cdocx::bold);
-Table* table = sect->add_table(3, 4);
+auto section = doc.append_section();
+section->get_properties().orientation = PageOrientation::Landscape;
+auto body = section->get_body();
+body->append_paragraph("Landscape content");
 ```
 
-### 6. Node Hierarchy (v0.6.0)
-Unified node base class with visitor pattern support.
+### 6. Format Attributes
+**`Color` is fully implemented.** `Font`, `ParagraphFormat`, `Border`, `Shading` are header-only struct declarations without a `.cpp` implementation. They work as data containers.
 
 ```cpp
-// Node types
-enum class NodeType {
-    Document, Section, Body, HeaderFooter,
-    Paragraph, Table, TableRow, TableCell,
-    Run, BookmarkStart, BookmarkEnd,
-    FieldStart, FieldSeparator, FieldEnd,
-    Shape, Comment, Footnote, Endnote
-};
-
-// Base Node class
-class Node : public std::enable_shared_from_this<Node> {
-public:
-    virtual NodeType node_type() const = 0;
-    virtual bool is_composite() const = 0;
-    virtual VisitorAction accept(DocumentVisitor* visitor) = 0;
-    
-    // Navigation
-    CompositeNode* parent_node() const;
-    Node* previous_sibling() const;
-    Node* next_sibling() const;
-    
-    // Content
-    virtual std::string get_text() const = 0;
-    virtual std::shared_ptr<Node> clone(bool deep = true) const = 0;
-};
-
-// Visitor pattern
-class DocumentVisitor {
-public:
-    virtual VisitorAction visit_document_start(Document& doc);
-    virtual VisitorAction visit_paragraph_start(Paragraph& para);
-    virtual VisitorAction visit_run(Run& run);
-    // ... more visit methods
-};
-```
-
-### 7. Format Attributes (v0.6.0)
-Comprehensive formatting system.
-
-```cpp
-// Color
+// Color (fully implemented)
 Color red(255, 0, 0);
 Color blue = Color::from_hex("0000FF");
-std::string hex = red.to_hex();  // "FF0000"
 
-// Paragraph Format
-ParagraphFormat format;
-format.set_alignment(ParagraphAlignment::Center);
-format.set_line_spacing(360, LineSpacingRule::Auto);  // 1.5x
-format.set_space_before(12);      // 12 points
-format.set_first_line_indent(24); // 24 points
-
-// Border and Shading
-Border border(BorderType::Single, Color(0, 0, 0), 4);
-format.borders().set_all(border);
-format.shading().set_solid_fill(Color(240, 240, 240));
-
-// Font
+// Font / ParagraphFormat (header-only structs)
 Font font;
 font.set_name("Arial");
-font.set_name_far_east("微软雅黑");
 font.set_size(14);
 font.set_bold(true);
-font.set_underline(UnderlineStyle::Single);
-font.set_color(Color(255, 0, 0));
-
-// Tab stops
-TabStopCollection tabs;
-tabs.add(1.0 * 72, TabStop::Alignment::Left);
-tabs.add(2.5 * 72, TabStop::Alignment::Center, TabStop::Leader::Dots);
 ```
 
-### 8. Template Class (`cdocx::Template`)
-Template-based document generation with placeholder replacement.
+### 7. Template Class (`cdocx::Template`)
+Placeholder replacement with custom patterns.
 
 ```cpp
-// Basic usage
 cdocx::Template tmpl(&doc);
 tmpl.set("name", "John Doe");
-tmpl.set("date", "2024-01-15");
 tmpl.replace_all();
-
-// Custom pattern
-cdocx::Template tmpl(&doc, "<%", "%>");  // Use <%key%> pattern
-
-// Image placeholders
-tmpl.set_image("logo", "path/to/logo.png");
 ```
 
-### 9. DocumentInserter Class (`cdocx::DocumentInserter`)
-Insert content from one document into another.
-
-```cpp
-cdocx::DocumentInserter inserter(&target_doc);
-inserter.insert_document(&source_doc);  // Insert at end
-inserter.insert_document(&source_doc, InsertPosition::Beginning);
-```
-
-### 10. BookmarkReplacer Class (`cdocx::BookmarkReplacer`)
-High-level API for bookmark-based replacement.
+### 8. BookmarkReplacer Class
+Bookmark-based replacement. **Same-paragraph bookmarks work reliably.**
 
 ```cpp
 cdocx::BookmarkReplacer replacer(&doc);
 replacer.replace_text("bookmark_name", "replacement text");
-replacer.replace_with_image("image_bookmark", "path/to/image.png", 
-                           ImageAlignment::Center);
 ```
 
----
+### 9. DocumentBuilder (`advanced.h`)
+The actual implementation is a **cursor-based builder** with working:
+- Cursor movement (`move_to_document_start`, `move_to_paragraph`)
+- Text insertion (`write`, `writeln`, `insert_paragraph`)
+- Formatting setters (`set_bold`, `set_font_size`, `set_color`)
+- Basic table building (`start_table`, `insert_row`, `insert_cell`)
+- Bookmark creation (`start_bookmark`, `end_bookmark`)
 
-## Build System
+**Stubs:** `insert_hyperlink`, `insert_image`, `move_to_bookmark`, `move_to_cell`
 
-### Build Options
+**Not implemented:** The fluent metadata chain API (`with_title`, `with_author`, `with_subject`, `with_keywords`, `with_page_size`, `with_margins`, `with_orientation`) is declared in `advanced.h` but has no definitions in `advanced.cpp`.
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `BUILD_SHARED_LIBS` | OFF | Build shared instead of static library |
-| `BUILD_EXAMPLES` | ON | Build example programs |
-| `BUILD_TESTING` | ON | Build test suite |
-| `BUILD_DOCS` | OFF | Build documentation with Doxygen |
-| `ENABLE_COVERAGE` | OFF | Enable code coverage (GCC/Clang) |
-| `ENABLE_WERROR` | OFF | Treat warnings as errors |
-| `USE_SYSTEM_GTEST` | OFF | Use system Google Test |
+### 10. DocumentSearch (`advanced.h`)
+**Status: Implemented.** `find`, `find_all`, `replace`, `replace_all`, `replace_with_formatting`, and `find_and_process` are functional. The implementation operates at the paragraph level using the DOM. `Range` has a DOM fallback for paragraphs that do not have an XML node binding (common for pure DOM-created paragraphs).
 
-### Build Commands
+### 11. TableOperations (`advanced.h`)
+**Status: ALL methods are unimplemented stubs.** (`insert_row`, `delete_row`, `merge_cells_horizontal`, etc.)  
+**Note:** `Table::merge_cells` and `Table::split_cell` on the DOM `Table` class ARE implemented. `TableOperations` is a separate planned utility wrapper.
 
-**Windows (Visual Studio):**
-```cmd
-mkdir build && cd build
-cmake .. -G "Visual Studio 17 2022" -A x64
-cmake --build . --config Release --parallel
-ctest -C Release --output-on-failure
-```
-
-**Windows (MinGW):**
-```cmd
-mkdir build && cd build
-cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
-cmake --build . --parallel
-```
-
-**Linux/macOS:**
-```bash
-mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . --parallel
-ctest --output-on-failure
-```
-
-**Using Build Scripts:**
-```bash
-# Linux/macOS
-./scripts/build-linux.sh Release
-
-# Windows (Visual Studio Developer Command Prompt)
-scripts\build-windows.bat Release x64
-```
-
-### CMake Integration
-
-```cmake
-# Method 1: After installation
-find_package(cdocx REQUIRED)
-target_link_libraries(your_target PRIVATE cdocx::cdocx)
-
-# Method 2: As subdirectory
-add_subdirectory(path/to/cdocx)
-target_link_libraries(your_target PRIVATE cdocx::cdocx)
-
-# Method 3: FetchContent
-include(FetchContent)
-FetchContent_Declare(
-    cdocx
-    GIT_REPOSITORY https://github.com/lonlng/CDocx.git
-    GIT_TAG v0.6.0
-)
-FetchContent_MakeAvailable(cdocx)
-target_link_libraries(your_target PRIVATE cdocx::cdocx)
-```
+### 12. CDocx Factory Class (`cdocx.h`)
+**Status: Declared but NOT implemented.** `create_document`, `load_document`, `paragraph()`, `table()` have no `.cpp` implementation.
 
 ---
 
 ## Testing
 
-### Test Structure
-Tests organized in numbered directories under `test/`:
-- `01_basic/` - Basic functionality tests
-- `02_iterator/` - Iterator tests
-- `03_template/` - Template system tests
-- `04_xml_parts/` - XML Parts API tests
-- `05_complete_structure/` - Complete structure tests
-- `06_create_empty/` - Empty document creation
-- `07_text_formatting/` - Text formatting tests
-- `08_bookmark_replacement/` - Bookmark replacement tests
-- `09_section_and_list/` - Section and list tests
+Test framework: **Google Test**, integrated with **CTest**.
 
-### Running Tests
+### Test Suites
 
-```bash
-# Run all tests
-ctest
+| Suite | Focus | Data Files | Timeout |
+|-------|-------|------------|---------|
+| `01_basic` | Basic functionality | `my_test.docx` | 30s |
+| `02_iterator` | Iterator tests | `my_test.docx` | 30s |
+| `03_template` | Template system | `template.docx`, `main.docx` | 45s |
+| `04_xml_parts` | XML Parts API | `my_test.docx` | 30s |
+| `05_complete_structure` | Round-trip load/save | `template.docx` | 45s |
+| `06_create_empty` | Empty document creation | - | 30s |
+| `07_text_formatting` | Formatting tests | - | 30s |
+| `08_bookmark_replacement` | Bookmark replacement | - | 60s |
+| `09_section_and_list` | Sections and numbering | - | 60s |
+| `10_dom_sync` | DOM-XML synchronization | - | 60s |
 
-# Run with verbose output
-ctest -V
+### Test Labels
 
-# Run specific categories
-ctest -L core           # Core functionality
-ctest -L template       # Template system
-ctest -L advanced       # Advanced features
+Tests are tagged with CTest labels: `core`, `basic`, `iterator`, `advanced`, `template`, `xml`, `formatting`, `section`, `list`, `numbering`.
 
-# Using CMake targets
-cmake --build . --target test_all
-cmake --build . --target test_core
-cmake --build . --target test_quick
-```
+### Test Helper Macros
+
+The `test/CMakeLists.txt` defines `add_test_suite()` macro that auto-discovers tests. Tests can be either:
+- A single `<suite_name>_tests.cpp` file in the suite directory, or
+- A `CMakeLists.txt` in the suite directory for multi-file tests
+
+Data files are expected in `<suite>/data/` and copied to the build directory automatically.
 
 ---
 
-## Code Style Guidelines
+## CI/CD
 
-### Formatting
-- **Tool**: clang-format with LLVM base style
-- **Indent**: 4 spaces
-- **Line width**: 100 characters
-- **Command**: `clang-format -i src/*.cpp include/*.h include/**/*.h`
+GitHub Actions workflows in `.github/workflows/`:
 
-### Naming Conventions
+### `cmake.yml`
+Builds and tests on every push/PR to `main`/`master`/`develop`:
+- **Linux** (ubuntu-latest): GCC and Clang, both Debug and Release
+- **Windows** (windows-latest): MSVC 2022, x64, both Debug and Release
+- **macOS** (macos-latest): Apple Clang, both Debug and Release
 
-| Element | Convention | Examples |
-|---------|------------|----------|
-| Classes | PascalCase | `Document`, `Paragraph` |
-| Methods | CamelCase | `GetText()`, `SetText()` |
-| Constants | kCamelCase | `kMaxBufferSize` |
-| Namespace | lowercase | `cdocx` |
-| Private members | trailing underscore | `filepath_`, `impl_` |
+### `code-quality.yml`
+Runs on every push/PR:
+- **clang-format**: Checks formatting with `--dry-run --Werror`
+- **cppcheck**: Static analysis with `--enable=all --error-exitcode=1`
 
-### Header Files
-All public headers use `#pragma once`:
+### `docs.yml`
+Builds Doxygen documentation on pushes to `main`/`master` that touch `include/`, `src/`, `Doxyfile`, or the workflow itself. Deploys HTML output to GitHub Pages.
 
-```cpp
-/**
- * @file filename.h
- * @brief Brief description
- * @details Detailed description
- * @author lonlng
- * @copyright MIT License
- * @date 2026
- * @version 0.6.0
- */
+---
 
-#pragma once
+## Security Considerations
 
-// Includes here
-```
-
-### Code Quality Tools
-
-```bash
-# Format all code
-cmake --build build --target format
-
-# Check formatting
-cmake --build build --target format-check
-
-# Static analysis
-cmake --build build --target tidy
-
-# Run all quality checks
-./scripts/code-quality.sh all
-```
+- The library parses user-provided DOCX (ZIP + XML) files. Input validation is performed during ZIP loading and XML parsing.
+- `LoadConfig` supports partial loads with `allow_partial_load` and `skip_corrupted_files` for robustness.
+- On Windows, `NOMINMAX` and `WIN32_LEAN_AND_MEAN` are defined to minimize Windows.h surface area.
+- `_CRT_SECURE_NO_WARNINGS` is defined for portability with C-style file operations in the `zip` dependency.
+- No network operations are performed by the library itself.
 
 ---
 
 ## API Quick Reference
 
-### Text Formatting Flags
+### Legacy Iterator (Fully Working)
 
 ```cpp
-namespace cdocx {
-    formatting_flag none = 0;
-    formatting_flag bold = 1 << 0;
-    formatting_flag italic = 1 << 1;
-    formatting_flag underline = 1 << 2;
-    formatting_flag strikethrough = 1 << 3;
-    formatting_flag superscript = 1 << 4;
-    formatting_flag subscript = 1 << 5;
-    formatting_flag smallcaps = 1 << 6;
-    formatting_flag shadow = 1 << 7;
-}
-
-// Combine flags
-p.add_run("bold italic", cdocx::bold | cdocx::italic);
-```
-
-### Iterator Pattern
-
-```cpp
-// Traditional iteration
 for (auto p = doc.paragraphs(); p.has_next(); p.next()) {
     for (auto r = p.runs(); r.has_next(); r.next()) {
         std::string text = r.get_text();
     }
 }
+```
 
-// Range-based for (C++11)
-for (auto& p : doc.paragraphs()) {
-    for (auto& r : p.runs()) {
-        std::cout << r.get_text() << std::endl;
-    }
-}
+### DOM Pattern (Partial - In Transition)
+
+```cpp
+auto doc = std::make_shared<cdocx::Document>();
+doc->create_empty("output.docx");
+auto section = doc->append_section();
+auto body = section->get_body();
+auto para = body->append_paragraph("Hello, World!");
+para->append_run(" Bold text")->set_bold(true);
+doc->save();
 ```
 
 ---
 
 ## Version History
 
-### v0.6.0 (Current)
-- **Node Hierarchy**: Unified Node base class with DocumentVisitor pattern
-- **Format Attributes**: Comprehensive formatting system (ParagraphFormat, Font, Color, Border, etc.)
-- **Enhanced Architecture**: Better separation of concerns with format attribute classes
+### v0.7.0 (Current - Transition)
+- DOM class hierarchy introduced (`Node`/`CompositeNode`)
+- `document_sync.cpp` handles DOM-XML serialization (paragraphs, tables, sections, bookmarks, fields, hyperlinks)
+- `Color` fully implemented; other format classes are header-only structs
+- **Known gaps**: `CDocx` factory unimplemented; `DocumentBuilder::insert_hyperlink`/`insert_image` stubs; `TableOperations` utility class not implemented; `Table::auto_fit` stub
 
 ### v0.5.0
-- **Section Support**: Document section management with page setup
-- **List/Numbering System**: Bulleted, numbered, Chinese numbering support
-- **Outline Lists**: Multi-level outline format support
+- Section support (fully working)
+- List/Numbering system (fully working)
 
 ### v0.4.0
-- **Bookmark Replacement**: High-level API with format preservation
-- **Caption Generation**: Automatic figure caption generation
-- **Enhanced Properties**: Document property structures
+- Bookmark replacement (same-paragraph works)
+- Caption generation
 
 ### v0.3.0
-- **Template System**: Placeholder replacement with custom patterns
-- **Document Insertion**: Merge documents at specific positions
-- **XML Parts API**: Direct access to all DOCX internal components
+- Template system
+- Document insertion
+- XML Parts API
 
 ### v0.2.0
-- **Media Management**: Add, delete, replace images
-- **DocumentBuilder**: Fluent document construction API
-- **Search and Replace**: Find and replace functionality
+- Media management
+- Cursor-based DocumentBuilder
+- `DocumentSearch` declared (stubs)
 
 ### v0.1.0
-- **Core Document Operations**: Read, write, edit DOCX files
-- **Paragraph and Run**: Basic text manipulation
-- **Table Support**: Basic table creation and manipulation
-- **Iterator-Based API**: Modern C++17 iterator pattern
+- Core DOCX operations
+- Iterator-based API
 
 ---
 
-## Roadmap
+## Feature Implementation Status
 
-### Current Features (v0.6.0)
-- ✅ Complete document operations (open, create, save DOCX)
-- ✅ Paragraph and Run manipulation with formatting
-- ✅ Table creation and manipulation
-- ✅ Template-based placeholder replacement
-- ✅ Document insertion/merging
-- ✅ Media file management (images)
-- ✅ XML Parts API access
-- ✅ Bookmark management with format preservation
-- ✅ Image insertion with alignment
-- ✅ Figure caption generation
-- ✅ DocumentBuilder for fluent construction
-- ✅ Find and replace
-- ✅ Section support (page setup, margins, orientation)
-- ✅ List/Numbering system (bulleted, numbered, Chinese)
-- ✅ Node hierarchy with Visitor pattern
-- ✅ Format attributes (ParagraphFormat, Font, Color, Border, Shading, TabStop)
-
-### Planned Features
-
-**Phase 2: Export Formats**
-- PDF export (libharu)
-- HTML export
-- Image rendering (PNG/JPG)
-
-**Phase 3: Advanced Features**
-- Field support (page numbers, TOC, hyperlinks)
-- Comments/annotations
-- Footnotes and endnotes
-- Styles system enhancement
-
-**Phase 4: Professional Features**
-- Enhanced mail merge
-- Document comparison
-- Chart support
-- Formula (OMML) support
-
----
-
-## Security Considerations
-
-- Input validation on file paths and image formats
-- ZIP extraction limits prevent zip bomb attacks
-- XML parsing uses pugixml's secure defaults
-- File size validation via `validate_image_size()`
-
-## Platform Support
-
-| Platform | Compiler | Status |
-|----------|----------|--------|
-| Linux | GCC 7+ | ✅ Fully Supported |
-| Linux | Clang 5+ | ✅ Fully Supported |
-| Windows | MSVC 2017+ | ✅ Fully Supported |
-| Windows | MinGW-w64 | ✅ Supported |
-| macOS | Xcode 10+ | ✅ Supported |
-
----
-
-## Contributing
-
-1. Discuss changes via issue or email before starting
-2. Make focused PRs that handle one specific topic
-3. Follow code style (run clang-format)
-4. Add tests for new functionality
-5. Update documentation
+| Feature | Status | Notes |
+|---------|--------|-------|
+| DOCX open/save/create | Complete | Fully tested |
+| Legacy iterator API | Complete | |
+| Run/Paragraph formatting | Complete | |
+| Template replacement | Complete | |
+| Document insertion | Complete | |
+| Media management | Complete | |
+| XML Parts API | Complete | |
+| Section support | Complete | |
+| List/Numbering | Complete | |
+| Bookmark replacement | Partial | Same-paragraph only |
+| DOM node hierarchy | Mostly Complete | `clone()`, traversal, and basic ops work on all major nodes |
+| DOM-XML sync | Mostly Complete | Bookmarks/hyperlinks/fields supported for both serialization and deserialization |
+| Table merge/split | Complete | `merge_cells` and `split_cell` implemented with XML round-trip |
+| DocumentSearch | Implemented | `find`, `replace`, `replace_all`, `replace_with_formatting`, `find_and_process` |
+| DocumentBuilder | Partial | Cursor-based API works; fluent metadata chain missing |
+| CDocx factory class | Not implemented | Declared only |
 
 ---
 
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
-
----
 
 *This file is intended for AI coding agents. For user documentation, see [README.md](README.md).*

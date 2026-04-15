@@ -28,7 +28,7 @@ macro(add_test_suite name data_files labels timeout)
     else()
         set(test_cpp ${name}_tests.cpp)
         if(EXISTS ${test_dir}/${test_cpp})
-            add_cdocx_test(${name}_tests ${test_cpp}
+            add_cdocx_test(${name}_tests ${test_dir}/${test_cpp}
                 DATA ${data_files}
                 LABELS ${labels}
                 TIMEOUT ${timeout}
@@ -44,11 +44,16 @@ add_test_suite(01_basic "my_test.docx" "core;basic" 30)
 add_test_suite(02_iterator "my_test.docx" "core;iterator;cpp11" 30)
 add_test_suite(03_template "template.docx;main.docx" "advanced;template;insertion" 45)
 add_test_suite(04_xml_parts "my_test.docx" "advanced;xml;parts" 30)
-add_test_suite(05_complete_structure "complex.docx" "advanced;structure" 45)
+add_test_suite(05_complete_structure "template.docx" "advanced;structure" 45)
 add_test_suite(06_create_empty "" "core;create" 30)
-add_test_suite(07_text_formatting "formatted.docx" "formatting;styles" 30)
+add_test_suite(07_text_formatting "" "formatting;styles" 30)
 add_test_suite(08_bookmark_replacement "" "advanced;bookmark;replacement" 60)
 add_test_suite(09_section_and_list "" "core;section;list;numbering" 60)
+add_test_suite(10_dom_sync "" "core;dom;sync" 60)
+add_test_suite(11_table_merge "" "core;table;merge" 60)
+add_test_suite(12_document_search "" "core;search;replace" 60)
+add_test_suite(13_document_builder "" "advanced;builder;hyperlink;image" 60)
+add_test_suite(14_style_collection "" "advanced;styles;dom" 60)
 
 # ----------------------------------------------------------------------------
 # Test Execution Targets
@@ -114,5 +119,7 @@ message(STATUS "  - 04_xml_parts")
 message(STATUS "  - 05_complete_structure")
 message(STATUS "  - 06_create_empty")
 message(STATUS "  - 07_text_formatting")
+message(STATUS "  - 08_bookmark_replacement")
 message(STATUS "  - 09_section_and_list")
+message(STATUS "  - 10_dom_sync")
 message(STATUS "")
