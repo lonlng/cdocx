@@ -1,0 +1,69 @@
+// CDocx VS Code Dev Container Configuration
+// Debian 13 (Trixie) environment for Linux-native C++ development with Claude Code CLI
+{
+    "name": "CDocx (Debian 13 + Claude Code)",
+    "image": "registry.cn-hangzhou.aliyuncs.com/dockerdev2026/debian13-dev:2.0",
+    "hostRequirements": {
+        "cpus": 4,
+        "memory": "8gb",
+        "storage": "32gb"
+    },
+    "runArgs": [
+        "--privileged"
+    ],
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/dev/cdocx,type=bind,consistency=cached",
+    "workspaceFolder": "/home/dev/cdocx",
+    "containerEnv": {
+        "EDITOR": "vim",
+        "GIT_EDITOR": "vim",
+        "CCACHE_DIR": "/home/dev/.ccache"
+    },
+    "mounts": [
+        "source=cdocx-ccache,target=/home/dev/.ccache,type=volume",
+        "source=/dev/shm,target=/dev/shm,type=bind"
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cpptools-extension-pack",
+                "ms-vscode.cmake-tools",
+                "github.vscode-github-actions",
+                "ms-vscode.hexeditor",
+                "twxs.cmake"
+            ],
+            "settings": {
+                "cmake.buildDirectory": "${workspaceFolder}/build",
+                "cmake.generator": "Ninja",
+                "cmake.configureOnOpen": true,
+                "cmake.parallelJobs": 0,
+                "cmake.options.statusBarVisibility": "visible",
+                "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
+                "C_Cpp.default.compilerPath": "/usr/bin/g++",
+                "C_Cpp.formatting": "clangFormat",
+                "C_Cpp.clang_format_path": "/usr/bin/clang-format",
+                "C_Cpp.default.cppStandard": "c++17",
+                "editor.formatOnSave": true,
+                "editor.formatOnSaveMode": "file",
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "/bin/bash",
+                        "icon": "terminal-bash"
+                    }
+                },
+                "search.exclude": {
+                    "**/build": true,
+                    "**/.cache": true
+                },
+                "files.exclude": {
+                    "**/build": false
+                }
+            }
+        }
+    },
+    "postCreateCommand": "git config --global --add safe.directory /home/dev/cdocx && mkdir -p build && cmake -S . -B build -G Ninja -DBUILD_EXAMPLES=ON -DBUILD_TESTING=ON",
+    "postStartCommand": "echo '--- CDocx DevContainer ---' && cmake --version && ninja --version && ccache --version | head -n 1 && claude --version && echo '--------------------------'",
+    "remoteUser": "dev",
+    "shutdownAction": "stopContainer"
+}
