@@ -13,8 +13,11 @@
 #include <cdocx/advanced.h>
 #include <cdocx/document.h>
 #include <cdocx/paragraph.h>
+#include <cdocx/section.h>
+#include <cdocx/footnote.h>
 #include <algorithm>
 #include <cctype>
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <map>
@@ -551,25 +554,24 @@ void BookmarkCollection::collect_bookmarks() const {
     if (collected_) {
         return;
     }
-    
+
     bookmarks_.clear();
-    
+
     // Scan document.xml for bookmarks
     pugi::xml_document* doc_xml = doc_->get_document_xml();
     if (!doc_xml) {
         collected_ = true;
         return;
     }
-    
-    // Find all bookmarkStart and bookmarkEnd elements
+
+    // Find all bookmarkStart and bookmarkEnd elements recursively
     // Use ID-based matching for accurate pairing
     std::map<std::string, pugi::xml_node> starts;  // id -> node
     std::map<std::string, std::string> id_to_name; // id -> name
     std::map<std::string, pugi::xml_node> ends;    // id -> node
-    
-    for (pugi::xml_node para = doc_xml->child("w:document").child("w:body").child("w:p");
-         para; para = para.next_sibling("w:p")) {
-        for (pugi::xml_node child = para.first_child(); child; child = child.next_sibling()) {
+
+    auto collect_from_node = [&](auto& self, pugi::xml_node node) -> void {
+        for (pugi::xml_node child = node.first_child(); child; child = child.next_sibling()) {
             std::string name = child.name();
             if (name == "w:bookmarkStart") {
                 std::string id = child.attribute("w:id").value();
@@ -584,14 +586,18 @@ void BookmarkCollection::collect_bookmarks() const {
                     ends[id] = child;
                 }
             }
+            self(self, child);
         }
-    }
-    
+    };
+
+    pugi::xml_node body = doc_xml->child("w:document").child("w:body");
+    collect_from_node(collect_from_node, body);
+
     // Create Bookmark objects by matching IDs
     for (const auto& pair : starts) {
         const std::string& id = pair.first;
         const pugi::xml_node& start_node = pair.second;
-        
+
         // Find corresponding end by ID
         auto end_it = ends.find(id);
         if (end_it != ends.end()) {
@@ -600,9 +606,9 @@ void BookmarkCollection::collect_bookmarks() const {
         }
         // Else: orphaned bookmark start (no matching end), skip it
     }
-    
+
     // Note: orphaned bookmark ends (no matching start) are ignored
-    
+
     collected_ = true;
 }
 
@@ -670,8 +676,34 @@ void BookmarkCollection::clear() {
 }
 
 Bookmark BookmarkCollection::add(const std::string& name, Paragraph& para) {
-    // TODO: Implement bookmark creation
-    // Insert bookmarkStart and bookmarkEnd at paragraph
+    if (!doc_ || name.empty()) {
+        return Bookmark();
+    }
+
+    // If bookmark already exists, return it
+    auto existing = get(name);
+    if (existing) {
+        return *existing;
+    }
+
+    int id = doc_->generate_unique_bookmark_id();
+
+    auto start = std::make_shared<BookmarkStart>(name, id);
+    auto end = std::make_shared<BookmarkEnd>(id);
+
+    para.append_child(start);
+    para.append_child(end);
+
+    // Sync to physical so collect_bookmarks() can find the new nodes
+    doc_->sync_to_physical_tree();
+
+    // Invalidate cache so next access picks up the new bookmark
+    collected_ = false;
+
+    auto result = get(name);
+    if (result) {
+        return *result;
+    }
     return Bookmark();
 }
 
@@ -943,64 +975,75 @@ void Range::collapse(bool to_start) {
 // ============================================================================
 
 bool TableOperations::insert_row(Table& table, size_t index) {
-    // TODO: Implement row insertion
-    return false;
+    return table.insert_row(static_cast<int>(index)) != nullptr;
 }
 
 bool TableOperations::append_row(Table& table) {
-    // TODO: Implement row append
-    return false;
+    return table.append_row() != nullptr;
 }
 
 bool TableOperations::delete_row(Table& table, size_t index) {
-    // TODO: Implement row deletion
-    return false;
+    table.remove_row(static_cast<int>(index));
+    return true;
 }
 
-bool TableOperations::insert_cell(TableRow& row, size_t index) {
-    // TODO: Implement cell insertion
-    return false;
+bool TableOperations::insert_cell(Row& row, size_t index) {
+    return row.insert_cell(static_cast<int>(index)) != nullptr;
 }
 
-bool TableOperations::delete_cell(TableRow& row, size_t index) {
-    // TODO: Implement cell deletion
+bool TableOperations::delete_cell(Row& row, size_t index) {
+    auto cell = row.get_cell(static_cast<int>(index));
+    if (cell) {
+        row.remove_child(cell);
+        return true;
+    }
     return false;
 }
 
 size_t TableOperations::get_row_count(const Table& table) {
-    // TODO: Implement row counting
-    return 0;
+    return static_cast<size_t>(table.get_row_count());
 }
 
 size_t TableOperations::get_column_count(const Table& table) {
-    // TODO: Implement column counting
-    return 0;
+    return static_cast<size_t>(table.get_column_count());
 }
 
-bool TableOperations::merge_cells_horizontal(TableRow& row, size_t start, size_t end) {
-    // TODO: Implement cell merging
-    return false;
+bool TableOperations::merge_cells_horizontal(Row& row, size_t start, size_t end) {
+    auto table = row.get_parent_table();
+    if (!table) return false;
+    int row_index = row.get_row_index();
+    if (row_index < 0) return false;
+    auto result = table->merge_cells(row_index, static_cast<int>(start),
+                                     row_index, static_cast<int>(end));
+    return result != nullptr;
 }
 
-bool TableOperations::set_cell_text(TableCell& cell, const std::string& text) {
-    // TODO: Implement cell text setting
-    return false;
+bool TableOperations::set_cell_text(Cell& cell, const std::string& text) {
+    cell.set_text(text);
+    return true;
 }
 
-std::string TableOperations::get_cell_text(const TableCell& cell) {
-    // TODO: Implement cell text getting
-    return "";
+std::string TableOperations::get_cell_text(const Cell& cell) {
+    return cell.get_text();
 }
 
 // ============================================================================
 // DocumentBuilder Implementation
 // ============================================================================
 
-DocumentBuilder::DocumentBuilder(Document* doc) : doc_(doc) {}
+DocumentBuilder::DocumentBuilder(Document* doc) : doc_(doc) {
+    target_xml_doc_ = doc ? doc->get_document_xml() : nullptr;
+}
+
+DocumentBuilder::DocumentBuilder(std::shared_ptr<Document> doc)
+    : doc_sptr(doc), doc_(doc.get()) {
+    target_xml_doc_ = doc_ ? doc_->get_document_xml() : nullptr;
+}
+
 DocumentBuilder::~DocumentBuilder() = default;
 
 void DocumentBuilder::ensure_paragraph() {
-    if (!current_paragraph_) {
+    if (!current_paragraph_ || std::strcmp(current_paragraph_.name(), "w:p") != 0) {
         pugi::xml_node body = get_body();
         pugi::xml_node sectPr = body.child("w:sectPr");
         if (sectPr) {
@@ -1008,15 +1051,26 @@ void DocumentBuilder::ensure_paragraph() {
         } else {
             current_paragraph_ = body.append_child("w:p");
         }
+        current_node_ = current_paragraph_;
+        if (doc_) doc_->mark_xml_paragraph_dirty(current_paragraph_);
     }
 }
 
 pugi::xml_node DocumentBuilder::get_body() {
-    pugi::xml_document* doc_xml = doc_->get_document_xml();
+    pugi::xml_document* doc_xml = target_xml_doc_ ? target_xml_doc_ : doc_->get_document_xml();
     if (!doc_xml) {
         return pugi::xml_node();
     }
-    return doc_xml->child("w:document").child("w:body");
+    pugi::xml_node root = doc_xml->first_child();
+    if (!root) return pugi::xml_node();
+    // document.xml has w:document -> w:body, header/footer XML has w:hdr/w:ftr directly
+    if (std::strcmp(root.name(), "w:document") == 0) {
+        return root.child("w:body");
+    }
+    if (std::strcmp(root.name(), "w:hdr") == 0 || std::strcmp(root.name(), "w:ftr") == 0) {
+        return root;
+    }
+    return pugi::xml_node();
 }
 
 void DocumentBuilder::apply_formatting(pugi::xml_node run) {
@@ -1077,58 +1131,270 @@ void DocumentBuilder::apply_formatting(pugi::xml_node run) {
 }
 
 // Navigation
-void DocumentBuilder::move_to_document_start() {
+DocumentBuilder& DocumentBuilder::move_to_document_start() {
     pugi::xml_node body = get_body();
     current_paragraph_ = body.child("w:p");
     current_node_ = current_paragraph_;
+    return *this;
 }
 
-void DocumentBuilder::move_to_document_end() {
+DocumentBuilder& DocumentBuilder::move_to_document_end() {
     pugi::xml_node body = get_body();
-    current_paragraph_ = body.last_child();
+    // Find the last w:p node, not just any last child
+    pugi::xml_node last_para;
+    for (pugi::xml_node para = body.child("w:p"); para; para = para.next_sibling("w:p")) {
+        last_para = para;
+    }
+    current_paragraph_ = last_para;
     current_node_ = current_paragraph_;
+    return *this;
 }
 
-void DocumentBuilder::move_to_paragraph(size_t index) {
+DocumentBuilder& DocumentBuilder::move_to_paragraph(size_t index) {
+    move_to_paragraph(index, 0);
+    return *this;
+}
+
+DocumentBuilder& DocumentBuilder::move_to_paragraph(size_t paragraph_index, size_t character_index) {
     pugi::xml_node body = get_body();
     size_t count = 0;
-    
+
     for (pugi::xml_node para = body.child("w:p"); para; para = para.next_sibling("w:p")) {
-        if (count == index) {
+        if (count == paragraph_index) {
             current_paragraph_ = para;
+            // Find run containing the character index
+            size_t char_count = 0;
+            for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
+                pugi::xml_node t = run.child("w:t");
+                if (t) {
+                    size_t text_len = std::strlen(t.text().get());
+                    if (char_count + text_len >= character_index) {
+                        current_node_ = run;
+                        return *this;
+                    }
+                    char_count += text_len;
+                }
+            }
             current_node_ = para;
-            return;
+            return *this;
         }
         count++;
     }
+    return *this;
 }
 
-void DocumentBuilder::move_to_bookmark(const std::string& name) {
-    // TODO: Implement bookmark navigation
+DocumentBuilder& DocumentBuilder::move_to_section(size_t index) {
+    auto sections = doc_->get_sections();
+    if (index >= sections.get_count()) return *this;
+
+    auto body = sections[index]->get_body();
+    if (!body) return *this;
+
+    pugi::xml_document* doc_xml = doc_->get_document_xml();
+    if (!doc_xml) return *this;
+
+    pugi::xml_node xml_body = doc_xml->child("w:document").child("w:body");
+    size_t sect_count = 0;
+    for (pugi::xml_node para = xml_body.child("w:p"); para; para = para.next_sibling("w:p")) {
+        if (sect_count == index) {
+            current_paragraph_ = para;
+            current_node_ = para;
+            target_xml_doc_ = doc_xml;
+            return *this;
+        }
+        // Check if this paragraph ends a section
+        if (para.child("w:sectPr")) {
+            sect_count++;
+            if (sect_count == index) {
+                pugi::xml_node next = para.next_sibling();
+                if (next && std::strcmp(next.name(), "w:p") == 0) {
+                    current_paragraph_ = next;
+                    current_node_ = next;
+                } else {
+                    current_paragraph_ = para;
+                    current_node_ = para;
+                }
+                target_xml_doc_ = doc_xml;
+                return *this;
+            }
+        }
+    }
+    // If no section breaks found, just move to first paragraph
+    if (index == 0) {
+        current_paragraph_ = xml_body.child("w:p");
+        current_node_ = current_paragraph_;
+        target_xml_doc_ = doc_xml;
+    }
+    return *this;
 }
 
-void DocumentBuilder::move_to_cell(size_t table_index, size_t row_index, size_t cell_index) {
-    // TODO: Implement cell navigation
+DocumentBuilder& DocumentBuilder::move_to_bookmark(const std::string& name) {
+    pugi::xml_document* doc_xml = doc_->get_document_xml();
+    if (!doc_xml) return *this;
+
+    for (pugi::xml_node para = doc_xml->child("w:document").child("w:body").child("w:p");
+         para; para = para.next_sibling("w:p")) {
+        for (pugi::xml_node bm = para.child("w:bookmarkStart"); bm;
+             bm = bm.next_sibling("w:bookmarkStart")) {
+            pugi::xml_attribute name_attr = bm.attribute("w:name");
+            if (name_attr && name_attr.value() == name) {
+                target_xml_doc_ = doc_xml;
+                current_paragraph_ = para;
+                current_node_ = bm;
+                return *this;
+            }
+        }
+        // Also search inside runs
+        for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
+            for (pugi::xml_node bm = run.child("w:bookmarkStart"); bm;
+                 bm = bm.next_sibling("w:bookmarkStart")) {
+                pugi::xml_attribute name_attr = bm.attribute("w:name");
+                if (name_attr && name_attr.value() == name) {
+                    target_xml_doc_ = doc_xml;
+                    current_paragraph_ = para;
+                    current_node_ = run;
+                    return *this;
+                }
+            }
+        }
+    }
+    return *this;
+}
+
+bool DocumentBuilder::move_to_merge_field(const std::string& field_name) {
+    pugi::xml_document* doc_xml = doc_->get_document_xml();
+    if (!doc_xml) return false;
+
+    std::string target_code = "MERGEFIELD " + field_name;
+
+    for (pugi::xml_node para = doc_xml->child("w:document").child("w:body").child("w:p");
+         para; para = para.next_sibling("w:p")) {
+        for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
+            pugi::xml_node fldChar = run.child("w:fldChar");
+            if (fldChar && std::strcmp(fldChar.attribute("w:fldCharType").value(), "begin") == 0) {
+                // Found start of a field, look for instrText in following runs
+                for (pugi::xml_node instr_run = run.next_sibling("w:r"); instr_run;
+                     instr_run = instr_run.next_sibling("w:r")) {
+                    pugi::xml_node instrText = instr_run.child("w:instrText");
+                    if (instrText) {
+                        std::string code = instrText.text().get();
+                        // Trim leading space if present
+                        size_t start = 0;
+                        while (start < code.size() && std::isspace(code[start])) start++;
+                        std::string trimmed = code.substr(start);
+                        if (trimmed.find(target_code) == 0) {
+                            target_xml_doc_ = doc_xml;
+                            current_paragraph_ = para;
+                            current_node_ = run;
+                            return true;
+                        }
+                    }
+                    pugi::xml_node end_fldChar = instr_run.child("w:fldChar");
+                    if (end_fldChar && std::strcmp(end_fldChar.attribute("w:fldCharType").value(), "separate") == 0) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+DocumentBuilder& DocumentBuilder::move_to_cell(size_t table_index, size_t row_index, size_t cell_index) {
+    pugi::xml_document* doc_xml = doc_->get_document_xml();
+    if (!doc_xml) return *this;
+
+    pugi::xml_node body = doc_xml->child("w:document").child("w:body");
+    size_t t_idx = 0;
+    for (pugi::xml_node tbl = body.child("w:tbl"); tbl; tbl = tbl.next_sibling("w:tbl")) {
+        if (t_idx == table_index) {
+            size_t r_idx = 0;
+            for (pugi::xml_node tr = tbl.child("w:tr"); tr; tr = tr.next_sibling("w:tr")) {
+                if (r_idx == row_index) {
+                    size_t c_idx = 0;
+                    for (pugi::xml_node tc = tr.child("w:tc"); tc; tc = tc.next_sibling("w:tc")) {
+                        if (c_idx == cell_index) {
+                            target_xml_doc_ = doc_xml;
+                            current_table_ = tbl;
+                            current_row_ = tr;
+                            current_cell_ = tc;
+                            current_paragraph_ = tc.child("w:p");
+                            if (!current_paragraph_) {
+                                current_paragraph_ = tc.append_child("w:p");
+                            }
+                            current_node_ = current_paragraph_;
+                            in_table_ = true;
+                            return *this;
+                        }
+                        ++c_idx;
+                    }
+                }
+                ++r_idx;
+            }
+        }
+        ++t_idx;
+    }
+    return *this;
+}
+
+DocumentBuilder& DocumentBuilder::move_to_header_footer(HeaderFooterType type) {
+    auto sect = doc_->get_first_section();
+    if (!sect) return *this;
+
+    std::shared_ptr<HeaderFooter> hf;
+    if (sect->has_header(type)) {
+        hf = sect->get_header(type);
+    } else {
+        hf = sect->add_header(type);
+    }
+    if (!hf) return *this;
+
+    // Find the header XML document via relationship
+    auto header_names = doc_->get_header_names();
+    for (size_t i = 0; i < header_names.size(); ++i) {
+        // This is a simplified match; in practice we'd match by relationship
+        pugi::xml_document* header_doc = doc_->get_header(static_cast<int>(i));
+        if (header_doc) {
+            target_xml_doc_ = header_doc;
+            pugi::xml_node hdr = header_doc->child("w:hdr");
+            current_paragraph_ = hdr.child("w:p");
+            if (!current_paragraph_) {
+                current_paragraph_ = hdr.append_child("w:p");
+            }
+            current_node_ = current_paragraph_;
+            current_table_ = pugi::xml_node();
+            current_row_ = pugi::xml_node();
+            current_cell_ = pugi::xml_node();
+            in_table_ = false;
+            return *this;
+        }
+    }
+    return *this;
 }
 
 // Text Insertion
-void DocumentBuilder::write(const std::string& text) {
+DocumentBuilder& DocumentBuilder::write(const std::string& text) {
     ensure_paragraph();
-    
+
     pugi::xml_node run = current_paragraph_.append_child("w:r");
     apply_formatting(run);
-    
+
     pugi::xml_node t = run.append_child("w:t");
     t.text().set(text.c_str());
+
+    if (doc_) doc_->mark_xml_paragraph_dirty(current_paragraph_);
+    return *this;
 }
 
-void DocumentBuilder::writeln(const std::string& text) {
+DocumentBuilder& DocumentBuilder::writeln(const std::string& text) {
     write(text);
-    insert_break();
+    insert_break(BreakType::ParagraphBreak);
+    return *this;
 }
 
-void DocumentBuilder::writeln() {
-    insert_break();
+DocumentBuilder& DocumentBuilder::writeln() {
+    insert_break(BreakType::ParagraphBreak);
+    return *this;
 }
 
 Paragraph* DocumentBuilder::insert_paragraph() {
@@ -1150,33 +1416,347 @@ Paragraph* DocumentBuilder::insert_paragraph() {
     return para;
 }
 
-void DocumentBuilder::insert_break() {
-    pugi::xml_node body = get_body();
-    pugi::xml_node sectPr = body.child("w:sectPr");
-    if (sectPr) {
-        current_paragraph_ = body.insert_child_before("w:p", sectPr);
-    } else {
-        current_paragraph_ = body.append_child("w:p");
+DocumentBuilder& DocumentBuilder::insert_break() {
+    insert_break(BreakType::PageBreak);
+    return *this;
+}
+
+DocumentBuilder& DocumentBuilder::insert_break(BreakType break_type) {
+    switch (break_type) {
+        case BreakType::ParagraphBreak: {
+            pugi::xml_node body = get_body();
+            pugi::xml_node sectPr = body.child("w:sectPr");
+            if (sectPr) {
+                current_paragraph_ = body.insert_child_before("w:p", sectPr);
+            } else {
+                current_paragraph_ = body.append_child("w:p");
+            }
+            current_node_ = current_paragraph_;
+            break;
+        }
+        case BreakType::PageBreak:
+        case BreakType::ColumnBreak:
+        case BreakType::SectionBreakNextPage:
+        case BreakType::SectionBreakContinuous:
+        case BreakType::SectionBreakEvenPage:
+        case BreakType::SectionBreakOddPage: {
+            ensure_paragraph();
+            pugi::xml_node run = current_paragraph_.append_child("w:r");
+            pugi::xml_node br = run.append_child("w:br");
+            if (break_type == BreakType::PageBreak) {
+                br.append_attribute("w:type").set_value("page");
+            } else if (break_type == BreakType::ColumnBreak) {
+                br.append_attribute("w:type").set_value("column");
+            } else {
+                const char* type_val = nullptr;
+                switch (break_type) {
+                    case BreakType::SectionBreakNextPage:     type_val = "nextPage"; break;
+                    case BreakType::SectionBreakContinuous:   type_val = "continuous"; break;
+                    case BreakType::SectionBreakEvenPage:     type_val = "evenPage"; break;
+                    case BreakType::SectionBreakOddPage:      type_val = "oddPage"; break;
+                    default: break;
+                }
+                if (type_val) {
+                    br.append_attribute("w:type").set_value(type_val);
+                }
+            }
+            break;
+        }
+        case BreakType::LineBreak: {
+            ensure_paragraph();
+            pugi::xml_node run = current_paragraph_.append_child("w:r");
+            run.append_child("w:br");
+            break;
+        }
     }
-    current_node_ = current_paragraph_;
+    if (doc_) doc_->mark_xml_paragraph_dirty(current_paragraph_);
+    return *this;
+}
+
+std::shared_ptr<Footnote> DocumentBuilder::insert_footnote(FootnoteType type, const std::string& text) {
+    return insert_footnote(type, text, "");
+}
+
+std::shared_ptr<Footnote> DocumentBuilder::insert_footnote(FootnoteType type, const std::string& text,
+                                                               const std::string& reference_mark) {
+    ensure_paragraph();
+
+    int id = doc_->get_next_comment_id();  // Reuse comment ID counter for footnotes
+
+    auto footnote = std::make_shared<Footnote>(doc_, type);
+    footnote->set_id(id);
+    if (!reference_mark.empty()) {
+        footnote->set_reference_mark(reference_mark);
+    }
+    if (!text.empty()) {
+        footnote->set_text(text);
+    }
+
+    // Insert footnote reference in current paragraph
+    pugi::xml_node run = current_paragraph_.append_child("w:r");
+    pugi::xml_node ref = run.append_child("w:footnoteReference");
+    ref.append_attribute("w:id").set_value(id);
+    if (!reference_mark.empty()) {
+        ref.append_attribute("w:customMarkFollows").set_value("1");
+        pugi::xml_node mark_run = current_paragraph_.append_child("w:r");
+        pugi::xml_node mark_t = mark_run.append_child("w:t");
+        mark_t.text().set(reference_mark.c_str());
+    }
+
+    // Ensure footnotes/endnotes XML exists
+    const char* xml_path = (type == FootnoteType::Endnote) ? "word/endnotes.xml" : "word/footnotes.xml";
+    const char* rel_type = (type == FootnoteType::Endnote)
+        ? "http://schemas.openxmlformats.org/officeDocument/2006/relationships/endnotes"
+        : "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footnotes";
+    const char* content_type = (type == FootnoteType::Endnote)
+        ? "application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml"
+        : "application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml";
+
+    pugi::xml_document* notes_xml = doc_->get_xml_part(xml_path);
+    if (!notes_xml) {
+        notes_xml = &doc_->create_xml_part(xml_path);
+        auto root = notes_xml->prepend_child(type == FootnoteType::Endnote ? "w:endnotes" : "w:footnotes");
+        root.append_attribute("xmlns:w")
+            .set_value("http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+        root.append_attribute("xmlns:r")
+            .set_value("http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+    }
+
+    // Add separator notes if not present
+    auto root = notes_xml->child(type == FootnoteType::Endnote ? "w:endnotes" : "w:footnotes");
+    if (root) {
+        // Check if separator exists
+        bool has_sep = false;
+        for (auto child = root.child(type == FootnoteType::Endnote ? "w:endnote" : "w:footnote");
+             child; child = child.next_sibling(type == FootnoteType::Endnote ? "w:endnote" : "w:footnote")) {
+            int note_id = child.attribute("w:id").as_int();
+            if (note_id == -1) {
+                has_sep = true;
+                break;
+            }
+        }
+        if (!has_sep) {
+            auto sep = root.prepend_child(type == FootnoteType::Endnote ? "w:endnote" : "w:footnote");
+            sep.append_attribute("w:id").set_value(-1);
+            sep.append_attribute("w:type").set_value("separator");
+            auto sep_para = sep.append_child("w:p");
+            auto sep_run = sep_para.append_child("w:r");
+            sep_run.append_child("w:separator");
+
+            auto cont_sep = root.prepend_child(type == FootnoteType::Endnote ? "w:endnote" : "w:footnote");
+            cont_sep.append_attribute("w:id").set_value(0);
+            cont_sep.append_attribute("w:type").set_value("continuationSeparator");
+            auto cont_para = cont_sep.append_child("w:p");
+            auto cont_run = cont_para.append_child("w:r");
+            cont_run.append_child("w:continuationSeparator");
+        }
+    }
+
+    // Add the footnote content
+    auto note_xml = root.append_child(type == FootnoteType::Endnote ? "w:endnote" : "w:footnote");
+    note_xml.append_attribute("w:id").set_value(id);
+    if (!reference_mark.empty()) {
+        note_xml.append_attribute("w:customMarkFollows").set_value("1");
+    }
+
+    for (const auto& child : footnote->get_children()) {
+        if (child->node_type() == NodeType::Paragraph) {
+            auto para_xml = note_xml.append_child("w:p");
+            auto* para = dynamic_cast<Paragraph*>(child.get());
+            if (para) {
+                for (const auto& run_child : para->get_children()) {
+                    if (run_child->node_type() == NodeType::Run) {
+                        auto run_xml = para_xml.append_child("w:r");
+                        auto* run = dynamic_cast<Run*>(run_child.get());
+                        if (run) {
+                            auto t = run_xml.append_child("w:t");
+                            t.text().set(run->get_text().c_str());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    doc_->add_relationship("word/_rels/document.xml.rels", rel_type,
+                            type == FootnoteType::Endnote ? "endnotes.xml" : "footnotes.xml");
+    doc_->add_content_type_override(std::string("/") + xml_path, content_type);
+    doc_->mark_modified(xml_path);
+    if (doc_) doc_->mark_xml_paragraph_dirty(current_paragraph_);
+
+    return footnote;
+}
+
+namespace {
+
+std::string field_type_to_code(FieldType type) {
+    switch (type) {
+        case FieldType::Page:       return "PAGE";
+        case FieldType::NumPages:   return "NUMPAGES";
+        case FieldType::Date:       return "DATE";
+        case FieldType::Time:       return "TIME";
+        case FieldType::CreateDate: return "CREATEDATE";
+        case FieldType::SaveDate:   return "SAVEDATE";
+        case FieldType::Author:     return "AUTHOR";
+        case FieldType::Title:      return "TITLE";
+        case FieldType::Subject:    return "SUBJECT";
+        case FieldType::Keywords:   return "KEYWORDS";
+        case FieldType::FileName:   return "FILENAME";
+        case FieldType::FileSize:   return "FILESIZE";
+        case FieldType::NumWords:   return "NUMWORDS";
+        case FieldType::NumChars:   return "NUMCHARS";
+        case FieldType::Ref:        return "REF";
+        case FieldType::PageRef:    return "PAGEREF";
+        case FieldType::Formula:    return "=";
+        default:                    return "";
+    }
+}
+
+std::string field_type_to_result(FieldType type) {
+    switch (type) {
+        case FieldType::Page:       return "1";
+        case FieldType::NumPages:   return "1";
+        case FieldType::Date:       return "";
+        case FieldType::Time:       return "";
+        case FieldType::CreateDate: return "";
+        case FieldType::SaveDate:   return "";
+        case FieldType::Author:     return "";
+        case FieldType::Title:      return "";
+        case FieldType::Subject:    return "";
+        case FieldType::Keywords:   return "";
+        case FieldType::FileName:   return "";
+        case FieldType::FileSize:   return "0";
+        case FieldType::NumWords:   return "0";
+        case FieldType::NumChars:   return "0";
+        default:                    return "";
+    }
+}
+
+} // anonymous namespace
+
+std::shared_ptr<Field> DocumentBuilder::insert_field(FieldType field_type, bool /*update_field*/) {
+    std::string code = field_type_to_code(field_type);
+    if (code.empty()) {
+        code = "PAGE";
+    }
+    return insert_field(code, field_type_to_result(field_type));
+}
+
+std::shared_ptr<Field> DocumentBuilder::insert_field(const std::string& field_code) {
+    return insert_field(field_code, "");
+}
+
+std::shared_ptr<Field> DocumentBuilder::insert_field(const std::string& field_code,
+                                                      const std::string& field_value) {
+    ensure_paragraph();
+
+    auto field = std::make_shared<Field>(doc_, FieldType::Unknown);
+    field->set_field_code(field_code);
+    field->set_result(field_value);
+
+    pugi::xml_node run_start = current_paragraph_.append_child("w:r");
+    pugi::xml_node fldChar_start = run_start.append_child("w:fldChar");
+    fldChar_start.append_attribute("w:fldCharType").set_value("begin");
+
+    if (!field_code.empty()) {
+        pugi::xml_node run_instr = current_paragraph_.append_child("w:r");
+        pugi::xml_node instrText = run_instr.append_child("w:instrText");
+        instrText.append_attribute("xml:space").set_value("preserve");
+        instrText.text().set((" " + field_code + " \\* MERGEFORMAT").c_str());
+    }
+
+    pugi::xml_node run_sep = current_paragraph_.append_child("w:r");
+    pugi::xml_node fldChar_sep = run_sep.append_child("w:fldChar");
+    fldChar_sep.append_attribute("w:fldCharType").set_value("separate");
+
+    if (!field_value.empty()) {
+        pugi::xml_node run_result = current_paragraph_.append_child("w:r");
+        pugi::xml_node t = run_result.append_child("w:t");
+        t.text().set(field_value.c_str());
+    }
+
+    pugi::xml_node run_end = current_paragraph_.append_child("w:r");
+    pugi::xml_node fldChar_end = run_end.append_child("w:fldChar");
+    fldChar_end.append_attribute("w:fldCharType").set_value("end");
+
+    if (doc_) doc_->mark_xml_paragraph_dirty(current_paragraph_);
+    return field;
+}
+
+std::shared_ptr<Field> DocumentBuilder::insert_page_number() {
+    return insert_field(FieldType::Page);
+}
+
+std::shared_ptr<Field> DocumentBuilder::insert_num_pages() {
+    return insert_field(FieldType::NumPages);
+}
+
+std::shared_ptr<Field> DocumentBuilder::insert_date() {
+    return insert_field(FieldType::Date);
+}
+
+std::shared_ptr<Field> DocumentBuilder::insert_time() {
+    return insert_field(FieldType::Time);
+}
+
+std::shared_ptr<Field> DocumentBuilder::insert_merge_field(const std::string& field_name) {
+    return insert_field("MERGEFIELD " + field_name);
+}
+
+std::shared_ptr<Field> DocumentBuilder::insert_table_of_contents(const std::string& switches) {
+    ensure_paragraph();
+
+    std::string toc_code = "TOC";
+    if (!switches.empty()) {
+        toc_code += " " + switches;
+    }
+
+    auto field = std::make_shared<Field>(doc_, FieldType::Unknown);
+    field->set_field_code(toc_code);
+    field->set_result("\nClick here to update table of contents.\n");
+
+    pugi::xml_node run_start = current_paragraph_.append_child("w:r");
+    pugi::xml_node fldChar_start = run_start.append_child("w:fldChar");
+    fldChar_start.append_attribute("w:fldCharType").set_value("begin");
+
+    pugi::xml_node run_instr = current_paragraph_.append_child("w:r");
+    pugi::xml_node instrText = run_instr.append_child("w:instrText");
+    instrText.append_attribute("xml:space").set_value("preserve");
+    instrText.text().set((" " + toc_code + " \\h").c_str());
+
+    pugi::xml_node run_sep = current_paragraph_.append_child("w:r");
+    pugi::xml_node fldChar_sep = run_sep.append_child("w:fldChar");
+    fldChar_sep.append_attribute("w:fldCharType").set_value("separate");
+
+    pugi::xml_node run_result = current_paragraph_.append_child("w:r");
+    pugi::xml_node t = run_result.append_child("w:t");
+    t.text().set(field->get_result().c_str());
+
+    pugi::xml_node run_end = current_paragraph_.append_child("w:r");
+    pugi::xml_node fldChar_end = run_end.append_child("w:fldChar");
+    fldChar_end.append_attribute("w:fldCharType").set_value("end");
+
+    if (doc_) doc_->mark_xml_paragraph_dirty(current_paragraph_);
+    return field;
 }
 
 // Formatting
-void DocumentBuilder::set_bold(bool value) { format_.bold = value; }
-void DocumentBuilder::set_italic(bool value) { format_.italic = value; }
-void DocumentBuilder::set_underline(bool value) { format_.underline = value; }
-void DocumentBuilder::set_strikethrough(bool value) { format_.strikethrough = value; }
-void DocumentBuilder::set_font_name(const std::string& name) { format_.font_name = name; }
-void DocumentBuilder::set_font_size(int size) { format_.font_size = size; }
-void DocumentBuilder::set_color(const std::string& color_hex) { format_.color = color_hex; }
-void DocumentBuilder::set_alignment(const std::string& alignment) { format_.alignment = alignment; }
+DocumentBuilder& DocumentBuilder::set_bold(bool value) { format_.bold = value; return *this; }
+DocumentBuilder& DocumentBuilder::set_italic(bool value) { format_.italic = value; return *this; }
+DocumentBuilder& DocumentBuilder::set_underline(bool value) { format_.underline = value; return *this; }
+DocumentBuilder& DocumentBuilder::set_strikethrough(bool value) { format_.strikethrough = value; return *this; }
+DocumentBuilder& DocumentBuilder::set_font_name(const std::string& name) { format_.font_name = name; return *this; }
+DocumentBuilder& DocumentBuilder::set_font_size(int size) { format_.font_size = size; return *this; }
+DocumentBuilder& DocumentBuilder::set_color(const std::string& color_hex) { format_.color = color_hex; return *this; }
+DocumentBuilder& DocumentBuilder::set_alignment(const std::string& alignment) { format_.alignment = alignment; return *this; }
 
-void DocumentBuilder::clear_formatting() {
+DocumentBuilder& DocumentBuilder::clear_formatting() {
     format_ = FormattingState();
+    return *this;
 }
 
 // Table Building
-void DocumentBuilder::start_table() {
+DocumentBuilder& DocumentBuilder::start_table() {
     pugi::xml_node body = get_body();
     pugi::xml_node sectPr = body.child("w:sectPr");
     if (sectPr) {
@@ -1185,56 +1765,61 @@ void DocumentBuilder::start_table() {
         current_table_ = body.append_child("w:tbl");
     }
     in_table_ = true;
-    
+
     // Add table properties
     pugi::xml_node tblPr = current_table_.append_child("w:tblPr");
     pugi::xml_node tblW = tblPr.append_child("w:tblW");
     tblW.append_attribute("w:w").set_value("5000");
     tblW.append_attribute("w:type").set_value("pct");
+    return *this;
 }
 
-void DocumentBuilder::end_table() {
+DocumentBuilder& DocumentBuilder::end_table() {
     in_table_ = false;
     current_table_ = pugi::xml_node();
     current_row_ = pugi::xml_node();
     current_cell_ = pugi::xml_node();
+    return *this;
 }
 
-void DocumentBuilder::insert_row() {
+DocumentBuilder& DocumentBuilder::insert_row() {
     if (!in_table_) {
-        return;
+        return *this;
     }
     current_row_ = current_table_.append_child("w:tr");
+    return *this;
 }
 
-void DocumentBuilder::insert_cell() {
+DocumentBuilder& DocumentBuilder::insert_cell() {
     if (!in_table_ || !current_row_) {
-        return;
+        return *this;
     }
     current_cell_ = current_row_.append_child("w:tc");
-    
+
     // Add cell properties
     pugi::xml_node tcPr = current_cell_.append_child("w:tcPr");
     pugi::xml_node tcW = tcPr.append_child("w:tcW");
     tcW.append_attribute("w:w").set_value("0");
     tcW.append_attribute("w:type").set_value("auto");
-    
+
     // Add empty paragraph
     current_paragraph_ = current_cell_.append_child("w:p");
+    return *this;
 }
 
-void DocumentBuilder::end_row() {
+DocumentBuilder& DocumentBuilder::end_row() {
     current_row_ = pugi::xml_node();
     current_cell_ = pugi::xml_node();
+    return *this;
 }
 
 // Hyperlink
-void DocumentBuilder::insert_hyperlink(const std::string& text, const std::string& url) {
+DocumentBuilder& DocumentBuilder::insert_hyperlink(const std::string& text, const std::string& url) {
     ensure_paragraph();
 
     if (!doc_ || url.empty()) {
         write(text);
-        return;
+        return *this;
     }
 
     // Create relationship for the hyperlink
@@ -1258,48 +1843,52 @@ void DocumentBuilder::insert_hyperlink(const std::string& text, const std::strin
 
     pugi::xml_node t = run.append_child("w:t");
     t.text().set(text.c_str());
+    if (doc_) doc_->mark_xml_paragraph_dirty(current_paragraph_);
+    return *this;
 }
 
 // Bookmark
-void DocumentBuilder::start_bookmark(const std::string& name) {
+DocumentBuilder& DocumentBuilder::start_bookmark(const std::string& name) {
     if (!doc_) {
-        return;
+        return *this;
     }
-    
+
     ensure_paragraph();
-    
+
     // Generate unique bookmark ID
     int bookmark_id = doc_->generate_unique_bookmark_id();
-    
+
     // Store bookmark ID for later matching with end_bookmark
     bookmark_stack_[name] = bookmark_id;
-    
+
     // Create bookmarkStart element
     pugi::xml_node bookmark_start = current_paragraph_.append_child("w:bookmarkStart");
     bookmark_start.append_attribute("w:id").set_value(bookmark_id);
     bookmark_start.append_attribute("w:name").set_value(name.c_str());
+    return *this;
 }
 
-void DocumentBuilder::end_bookmark(const std::string& name) {
+DocumentBuilder& DocumentBuilder::end_bookmark(const std::string& name) {
     if (!doc_) {
-        return;
+        return *this;
     }
-    
+
     ensure_paragraph();
-    
+
     // Find the bookmark ID from the stack
     auto it = bookmark_stack_.find(name);
     if (it == bookmark_stack_.end()) {
         // No matching start_bookmark called
-        return;
+        return *this;
     }
-    
+
     int bookmark_id = it->second;
     bookmark_stack_.erase(it);
-    
+
     // Create bookmarkEnd element
     pugi::xml_node bookmark_end = current_paragraph_.append_child("w:bookmarkEnd");
     bookmark_end.append_attribute("w:id").set_value(bookmark_id);
+    return *this;
 }
 
 // Image
@@ -1384,7 +1973,249 @@ bool DocumentBuilder::insert_image(const std::string& image_path, double width, 
     prstGeom.append_attribute("prst").set_value("rect");
     prstGeom.append_child("a:avLst");
 
+    if (doc_) doc_->mark_xml_paragraph_dirty(current_paragraph_);
     return true;
+}
+
+// Form Fields
+static const char* text_form_field_type_to_string(TextFormFieldType type) {
+    switch (type) {
+        case TextFormFieldType::Number:       return "number";
+        case TextFormFieldType::Date:         return "date";
+        case TextFormFieldType::CurrentDate:  return "currentDate";
+        case TextFormFieldType::CurrentTime:  return "currentTime";
+        case TextFormFieldType::Calculated:   return "calculated";
+        default:                              return "regular";
+    }
+}
+
+static void append_ffdata_text_input(pugi::xml_node fld_char,
+                                      const FormField& field) {
+    auto ff_data = fld_char.append_child("w:ffData");
+    if (!field.get_name().empty()) {
+        ff_data.append_child("w:name").append_attribute("w:val").set_value(
+            field.get_name().c_str());
+    }
+    ff_data.append_child("w:enabled").append_attribute("w:val").set_value(
+        field.get_enabled() ? "1" : "0");
+    ff_data.append_child("w:calcOnExit").append_attribute("w:val").set_value(
+        field.get_calculate_on_exit() ? "1" : "0");
+
+    if (!field.get_status_text().empty()) {
+        ff_data.append_child("w:statusText").append_attribute("w:val").set_value(
+            field.get_status_text().c_str());
+    }
+    if (!field.get_help_text().empty()) {
+        ff_data.append_child("w:helpText").append_attribute("w:val").set_value(
+            field.get_help_text().c_str());
+    }
+    if (!field.get_entry_macro().empty()) {
+        ff_data.append_child("w:entryMacro").append_attribute("w:val").set_value(
+            field.get_entry_macro().c_str());
+    }
+    if (!field.get_exit_macro().empty()) {
+        ff_data.append_child("w:exitMacro").append_attribute("w:val").set_value(
+            field.get_exit_macro().c_str());
+    }
+
+    auto text_input = ff_data.append_child("w:textInput");
+    text_input.append_child("w:type").append_attribute("w:val").set_value(
+        text_form_field_type_to_string(field.get_text_input_type()));
+    if (!field.get_text_input_default().empty()) {
+        text_input.append_child("w:default").append_attribute("w:val").set_value(
+            field.get_text_input_default().c_str());
+    }
+    if (field.get_max_length() > 0) {
+        text_input.append_child("w:maxLength").append_attribute("w:val").set_value(
+            field.get_max_length());
+    }
+    if (!field.get_text_input_format().empty()) {
+        text_input.append_child("w:format").append_attribute("w:val").set_value(
+            field.get_text_input_format().c_str());
+    }
+}
+
+static void append_ffdata_check_box(pugi::xml_node fld_char,
+                                     const FormField& field) {
+    auto ff_data = fld_char.append_child("w:ffData");
+    if (!field.get_name().empty()) {
+        ff_data.append_child("w:name").append_attribute("w:val").set_value(
+            field.get_name().c_str());
+    }
+    ff_data.append_child("w:enabled").append_attribute("w:val").set_value(
+        field.get_enabled() ? "1" : "0");
+    ff_data.append_child("w:calcOnExit").append_attribute("w:val").set_value(
+        field.get_calculate_on_exit() ? "1" : "0");
+
+    auto check_box = ff_data.append_child("w:checkBox");
+    if (field.get_is_check_box_exact_size() && field.get_check_box_size() > 0) {
+        auto size = check_box.append_child("w:size");
+        size.append_attribute("w:val").set_value(
+            static_cast<int>(field.get_check_box_size() * 2)); // half-points
+    } else {
+        check_box.append_child("w:sizeAuto");
+    }
+    check_box.append_child("w:default").append_attribute("w:val").set_value(
+        field.get_default_value() ? "1" : "0");
+    check_box.append_child("w:checked").append_attribute("w:val").set_value(
+        field.get_checked() ? "1" : "0");
+}
+
+static void append_ffdata_drop_down(pugi::xml_node fld_char,
+                                     const FormField& field) {
+    auto ff_data = fld_char.append_child("w:ffData");
+    if (!field.get_name().empty()) {
+        ff_data.append_child("w:name").append_attribute("w:val").set_value(
+            field.get_name().c_str());
+    }
+    ff_data.append_child("w:enabled").append_attribute("w:val").set_value(
+        field.get_enabled() ? "1" : "0");
+    ff_data.append_child("w:calcOnExit").append_attribute("w:val").set_value(
+        field.get_calculate_on_exit() ? "1" : "0");
+
+    auto dd_list = ff_data.append_child("w:ddList");
+    for (const auto& item : field.get_drop_down_items()) {
+        dd_list.append_child("w:listEntry").append_attribute("w:val").set_value(
+            item.c_str());
+    }
+    if (field.get_drop_down_selected_index() >= 0) {
+        dd_list.append_child("w:default").append_attribute("w:val").set_value(
+            field.get_drop_down_selected_index());
+    }
+}
+
+std::shared_ptr<FormField> DocumentBuilder::insert_form_field_impl(
+    const std::shared_ptr<FormField>& field) {
+    if (!doc_) return field;
+
+    ensure_paragraph();
+    pugi::xml_node para = current_paragraph_;
+
+    int bookmark_id = 0;
+    if (!field->get_name().empty()) {
+        bookmark_id = doc_->generate_unique_bookmark_id();
+        // Create bookmark start
+        pugi::xml_node bm_start = para.append_child("w:bookmarkStart");
+        bm_start.append_attribute("w:id").set_value(bookmark_id);
+        bm_start.append_attribute("w:name").set_value(field->get_name().c_str());
+    }
+
+    // Begin fldChar with ffData
+    pugi::xml_node begin_run = para.append_child("w:r");
+    pugi::xml_node fld_char = begin_run.append_child("w:fldChar");
+    fld_char.append_attribute("w:fldCharType").set_value("begin");
+
+    switch (field->get_form_field_type()) {
+        case FormFieldType::TextInput:
+            append_ffdata_text_input(fld_char, *field);
+            break;
+        case FormFieldType::CheckBox:
+            append_ffdata_check_box(fld_char, *field);
+            break;
+        case FormFieldType::ComboBox:
+            append_ffdata_drop_down(fld_char, *field);
+            break;
+    }
+
+    // Instruction text
+    pugi::xml_node instr_run = para.append_child("w:r");
+    pugi::xml_node instr_text = instr_run.append_child("w:instrText");
+    const char* instr = "FORMTEXT";
+    if (field->get_form_field_type() == FormFieldType::CheckBox) {
+        instr = "FORMCHECKBOX";
+    } else if (field->get_form_field_type() == FormFieldType::ComboBox) {
+        instr = "FORMDROPDOWN";
+    }
+    instr_text.text().set(instr);
+
+    // Separate
+    pugi::xml_node sep_run = para.append_child("w:r");
+    sep_run.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("separate");
+
+    // Result
+    std::string result = field->get_result();
+    if (result.empty()) {
+        if (field->get_form_field_type() == FormFieldType::CheckBox) {
+            result = field->get_checked() ? "\u2611" : "\u2610"; // ballot box symbols
+        } else if (field->get_form_field_type() == FormFieldType::ComboBox) {
+            const auto& items = field->get_drop_down_items();
+            int idx = field->get_drop_down_selected_index();
+            if (idx >= 0 && idx < static_cast<int>(items.size())) {
+                result = items[idx];
+            }
+        }
+    }
+    if (!result.empty()) {
+        pugi::xml_node res_run = para.append_child("w:r");
+        pugi::xml_node text_node = res_run.append_child("w:t");
+        text_node.text().set(result.c_str());
+    }
+
+    // End
+    pugi::xml_node end_run = para.append_child("w:r");
+    end_run.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("end");
+
+    if (bookmark_id != 0) {
+        pugi::xml_node bm_end = para.append_child("w:bookmarkEnd");
+        bm_end.append_attribute("w:id").set_value(bookmark_id);
+    }
+
+    if (doc_) doc_->mark_xml_paragraph_dirty(current_paragraph_);
+    return field;
+}
+
+std::shared_ptr<FormField> DocumentBuilder::insert_text_input(
+    const std::string& name,
+    TextFormFieldType type,
+    const std::string& format,
+    const std::string& field_value,
+    int max_length) {
+    auto field = std::make_shared<FormField>(doc_, FormFieldType::TextInput);
+    field->set_name(name);
+    field->set_text_input_type(type);
+    field->set_text_input_format(format);
+    field->set_result(field_value);
+    field->set_text_input_default(field_value);
+    field->set_max_length(max_length);
+    return insert_form_field_impl(field);
+}
+
+std::shared_ptr<FormField> DocumentBuilder::insert_check_box(
+    const std::string& name,
+    bool checked_value,
+    int size) {
+    return insert_check_box(name, checked_value, checked_value, size);
+}
+
+std::shared_ptr<FormField> DocumentBuilder::insert_check_box(
+    const std::string& name,
+    bool default_value,
+    bool checked_value,
+    int size) {
+    auto field = std::make_shared<FormField>(doc_, FormFieldType::CheckBox);
+    field->set_name(name);
+    field->set_default_value(default_value);
+    field->set_checked(checked_value);
+    field->set_result(checked_value ? "\u2611" : "\u2610");
+    if (size > 0) {
+        field->set_is_check_box_exact_size(true);
+        field->set_check_box_size(size);
+    }
+    return insert_form_field_impl(field);
+}
+
+std::shared_ptr<FormField> DocumentBuilder::insert_combo_box(
+    const std::string& name,
+    const std::vector<std::string>& items,
+    int selected_index) {
+    auto field = std::make_shared<FormField>(doc_, FormFieldType::ComboBox);
+    field->set_name(name);
+    field->set_drop_down_items(items);
+    field->set_drop_down_selected_index(selected_index);
+    if (selected_index >= 0 && selected_index < static_cast<int>(items.size())) {
+        field->set_result(items[selected_index]);
+    }
+    return insert_form_field_impl(field);
 }
 
 // ============================================================================
@@ -1512,7 +2343,7 @@ bool DocumentSearch::replace_with_formatting(Document& doc, const std::string& o
     return false;
 }
 
-int DocumentSearch::find_and_process(Document& doc, const std::string& pattern, SearchCallback callback) {
+int DocumentSearch::find_and_process(Document& doc, const std::string& pattern, const SearchCallback& callback) {
     if (pattern.empty() || !callback) {
         return 0;
     }

@@ -217,7 +217,7 @@ bool BookmarkReplacer::replace_with_image_from_memory(const std::string& bookmar
 // Advanced Features
 // ============================================================================
 
-bool BookmarkReplacer::replace_if(const std::string& bookmark_name, ReplaceCallback callback) {
+bool BookmarkReplacer::replace_if(const std::string& bookmark_name, const ReplaceCallback& callback) {
     auto bm = get_bookmark(bookmark_name);
     if (!bm) {
         stats_.fail_count++;

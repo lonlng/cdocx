@@ -19,107 +19,106 @@
 # ============================================================================
 
 ---
-Checks: >
-  -*,
-  
+Checks:
   # ==========================================================================
   # Google C++ Style Guide (Primary)
   # ==========================================================================
-  google-*,
-  -google-readability-todo,
-  -google-runtime-int,
-  -google-build-namespaces,    # Allow using directives in cc files
-  
+  - '-*'
+  - 'google-*'
+  - '-google-readability-todo'
+  - '-google-runtime-int'
+  - '-google-build-namespaces'    # Allow using directives in cc files
+
   # ==========================================================================
   # Modern C++ (C++11/14/17 improvements)
   # ==========================================================================
-  modernize-*,
-  -modernize-avoid-c-arrays,
-  -modernize-use-trailing-return-type,
-  -modernize-use-nodiscard,
-  -modernize-concat-nested-namespaces,
-  
+  - 'modernize-*'
+  - '-modernize-avoid-c-arrays'
+  - '-modernize-use-trailing-return-type'
+  - '-modernize-use-nodiscard'
+  - '-modernize-concat-nested-namespaces'
+
   # ==========================================================================
   # C++ Core Guidelines
   # ==========================================================================
-  cppcoreguidelines-*,
-  -cppcoreguidelines-avoid-magic-numbers,
-  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
-  -cppcoreguidelines-pro-bounds-constant-array-index,
-  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
-  -cppcoreguidelines-owning-memory,
-  -cppcoreguidelines-avoid-c-arrays,
-  -cppcoreguidelines-special-member-functions,
-  -cppcoreguidelines-explicit-virtual-functions,
-  -cppcoreguidelines-non-private-member-variables-in-classes,
-  
+  - 'cppcoreguidelines-*'
+  - '-cppcoreguidelines-avoid-magic-numbers'
+  - '-cppcoreguidelines-pro-bounds-array-to-pointer-decay'
+  - '-cppcoreguidelines-pro-bounds-constant-array-index'
+  - '-cppcoreguidelines-pro-bounds-pointer-arithmetic'
+  - '-cppcoreguidelines-owning-memory'
+  - '-cppcoreguidelines-avoid-c-arrays'
+  - '-cppcoreguidelines-special-member-functions'
+  - '-cppcoreguidelines-explicit-virtual-functions'
+  - '-cppcoreguidelines-non-private-member-variables-in-classes'
+
   # ==========================================================================
   # Performance optimizations
   # ==========================================================================
-  performance-*,
-  -performance-avoid-endl,
-  
+  - 'performance-*'
+  - '-performance-avoid-endl'
+
   # ==========================================================================
   # Readability
   # ==========================================================================
-  readability-*,
-  -readability-identifier-length,
-  -readability-named-parameter,
-  -readability-magic-numbers,
-  -readability-braces-around-statements,
-  -readability-uppercase-literal-suffix,
-  -readability-else-after-return,
-  -readability-implicit-bool-conversion,
-  -readability-simplify-boolean-expr,
-  -readability-container-data-pointer,
-  -readability-convert-member-functions-to-static,
-  -readability-redundant-access-specifiers,
-  -readability-function-cognitive-complexity,
-  
+  - 'readability-*'
+  - '-readability-identifier-length'
+  - '-readability-named-parameter'
+  - '-readability-magic-numbers'
+  - '-readability-braces-around-statements'
+  - '-readability-uppercase-literal-suffix'
+  - '-readability-else-after-return'
+  - '-readability-implicit-bool-conversion'
+  - '-readability-simplify-boolean-expr'
+  - '-readability-container-data-pointer'
+  - '-readability-convert-member-functions-to-static'
+  - '-readability-redundant-access-specifiers'
+  - '-readability-function-cognitive-complexity'
+
   # ==========================================================================
   # Bug prevention
   # ==========================================================================
-  bugprone-*,
-  -bugprone-easily-swappable-parameters,
-  -bugprone-exception-escape,
-  -bugprone-lambda-function-name,
-  -bugprone-unchecked-optional-access,
-  
+  - 'bugprone-*'
+  - '-bugprone-easily-swappable-parameters'
+  - '-bugprone-exception-escape'
+  - '-bugprone-lambda-function-name'
+  - '-bugprone-unchecked-optional-access'
+
   # ==========================================================================
   # Security (CERT guidelines)
   # ==========================================================================
-  cert-*,
-  -cert-err58-cpp,
-  -cert-msc32-c,
-  -cert-msc51-cpp,
-  
+  - 'cert-*'
+  - '-cert-err58-cpp'
+  - '-cert-msc32-c'
+  - '-cert-msc51-cpp'
+
   # ==========================================================================
   # Clang static analyzer
   # ==========================================================================
-  clang-analyzer-*,
-  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
-  
+  - 'clang-analyzer-*'
+  - '-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling'
+
   # ==========================================================================
   # Miscellaneous
   # ==========================================================================
-  misc-*,
-  -misc-include-cleaner,
-  -misc-non-private-member-variables-in-classes,
-  -misc-no-recursion,
-  -misc-use-anonymous-namespace,
-  
+  - 'misc-*'
+  - '-misc-include-cleaner'
+  - '-misc-non-private-member-variables-in-classes'
+  - '-misc-no-recursion'
+  - '-misc-use-anonymous-namespace'
+
   # ==========================================================================
   # Portability
   # ==========================================================================
-  portability-*,
-  
+  - 'portability-*'
+
   # ==========================================================================
   # Disabled: Not applicable
   # ==========================================================================
-  -abseil-*,
-  -fuchsia-*,
-  -llvm-header-guard,          # We use #pragma once
-  -llvm-include-order,         # clang-format handles this
+  - '-abseil-*'
+  - '-fuchsia-*'
+  - '-llvm-header-guard'          # We use #pragma once
+  - '-llvm-include-order'         # clang-format handles this
 
 # ============================================================================
 # Check-specific configuration (Google Style with customizations)
@@ -249,7 +248,6 @@ ExcludeHeaderFilterRegex: 'thirdparty/.*|build/.*|_deps/.*'
 # ============================================================================
 # Analysis settings
 # ============================================================================
-AnalyzeTemporaryDtors: true
 FormatStyle: file
 User: cdocx
 SystemHeaders: false

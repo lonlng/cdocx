@@ -99,7 +99,12 @@ public:
     NodeType node_type() const override { return NodeType::Run; }
     void accept(DocumentVisitor* visitor) override;
     std::shared_ptr<Node> clone(bool deep = true) const override;
-    std::string get_text() const override { return text_; }
+    std::string get_text() const override {
+        if (current_xml_) {
+            return get_text_xml();
+        }
+        return text_;
+    }
     
     // Text content
     void set_text(const std::string& text) { text_ = text; }
@@ -246,8 +251,8 @@ public:
     const_iterator begin() const { return runs_.begin(); }
     const_iterator end() const { return runs_.end(); }
     
-    void add(std::shared_ptr<Run> run);
-    void remove(std::shared_ptr<Run> run);
+    void add(const std::shared_ptr<Run>& run);
+    void remove(const std::shared_ptr<Run>& run);
     void remove_at(int index);
     void clear();
     

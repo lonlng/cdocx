@@ -47,7 +47,16 @@
 #include "cdocx/inserter.h"
 #include "cdocx/advanced.h"
 #include "cdocx/table_builder.h"
+#include "cdocx/paragraph_builder.h"
+#include "cdocx/convert_util.h"
+#include "cdocx/control_char.h"
+#include "cdocx/file_format_util.h"
 #include "cdocx/caption_generator.h"
+#include "cdocx/watermark.h"
+#include "cdocx/comment.h"
+#include "cdocx/footnote.h"
+#include "cdocx/formfield.h"
+#include "cdocx/mail_merge.h"
 
 // ============================================================================
 // Convenience / Aggregated Header

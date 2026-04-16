@@ -163,7 +163,7 @@ LoadResult DocumentImpl::load_tree_with_result() {
             
             // Open entry by index
             if (zip_entry_openbyindex(zip_handle_, i) != 0) {
-                std::cerr << "Failed to open entry at index " << i << std::endl;
+                std::cerr << "Failed to open entry at index " << i << '\n';
                 if (!load_config_.skip_corrupted_files) {
                     result.errors.emplace_back(LoadErrorType::ZipEntryReadFailed, "",
                                                "Failed to open entry at index " + std::to_string(i));
@@ -424,7 +424,7 @@ void DocumentImpl::build_caches_from_tree() {
     media_files_cache_.clear();
     
     // Iterate all files in tree
-    tree_.iterate_files([this](std::shared_ptr<DocxTreeNode> node) {
+    tree_.iterate_files([this](const std::shared_ptr<DocxTreeNode>& node) {
         if (node->type == DocxNodeType::XmlFile) {
             xml_parts_cache_[node->full_path] = node;
         } else if (node->type == DocxNodeType::MediaFile) {
@@ -470,7 +470,7 @@ void DocumentImpl::load_all_relationships() {
     }
     
     // Discover other relationship files
-    tree_.iterate_files([this](std::shared_ptr<DocxTreeNode> node) {
+    tree_.iterate_files([this](const std::shared_ptr<DocxTreeNode>& node) {
         if (node->full_path.find("_rels/") != std::string::npos &&
             node->full_path.find(".rels") != std::string::npos) {
             if (relationships_.find(node->full_path) == relationships_.end()) {
@@ -672,7 +672,7 @@ bool DocumentImpl::save_tree_to_zip(::zip_t* zip) {
     
     // Iterate all files in tree
     bool success = true;
-    tree_.iterate_files([this, zip, &success](std::shared_ptr<DocxTreeNode> node) {
+    tree_.iterate_files([this, zip, &success](const std::shared_ptr<DocxTreeNode>& node) {
         if (!success || node->is_deleted) {
             return;
         }
@@ -683,7 +683,7 @@ bool DocumentImpl::save_tree_to_zip(::zip_t* zip) {
     return success;
 }
 
-bool DocumentImpl::write_tree_node(::zip_t* zip, std::shared_ptr<DocxTreeNode> node) {
+bool DocumentImpl::write_tree_node(::zip_t* zip, const std::shared_ptr<DocxTreeNode>& node) {
     if (!zip || !node || node->is_deleted) {
         return false;
     }

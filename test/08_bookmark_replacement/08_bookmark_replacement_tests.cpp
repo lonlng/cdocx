@@ -437,4 +437,192 @@ TEST(BookmarkReplacerIntegrationTest, FullBookmarkWorkflowWithDocumentCreationAn
     if (fs::exists(test_file)) fs::remove(test_file);
 }
 
+// ============================================================================
+// Document::get_bookmarks() Tests
+// ============================================================================
+
+TEST(DocumentBookmarksTest, GetBookmarksEmptyDocument) {
+    const std::string test_file = "test_doc_bookmarks_empty.docx";
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    cdocx::Document doc;
+    ASSERT_TRUE(doc.create_empty(test_file));
+
+    auto bookmarks = doc.get_bookmarks();
+    EXPECT_EQ(bookmarks.count(), 0u);
+    EXPECT_TRUE(bookmarks.get_names().empty());
+    EXPECT_FALSE(bookmarks.contains("AnyBookmark"));
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+}
+
+TEST(DocumentBookmarksTest, GetBookmarksFromDomCreatedBookmarks) {
+    const std::string test_file = "test_doc_bookmarks_dom.docx";
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        cdocx::Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+
+        auto section = doc.get_first_section();
+        auto body = section->get_body();
+        auto para = body->get_first_paragraph();
+
+        auto bm_start = std::make_shared<cdocx::BookmarkStart>("TestBookmark", 1);
+        auto bm_end = std::make_shared<cdocx::BookmarkEnd>(1);
+        para->append_child(bm_start);
+        para->append_run("Bookmarked text");
+        para->append_child(bm_end);
+
+        doc.save();
+    }
+
+    {
+        cdocx::Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto bookmarks = doc.get_bookmarks();
+        EXPECT_EQ(bookmarks.count(), 1u);
+        EXPECT_TRUE(bookmarks.contains("TestBookmark"));
+
+        auto names = bookmarks.get_names();
+        ASSERT_EQ(names.size(), 1u);
+        EXPECT_EQ(names[0], "TestBookmark");
+
+        auto bm = bookmarks.get("TestBookmark");
+        ASSERT_TRUE(bm.has_value());
+        EXPECT_EQ(bm->get_name(), "TestBookmark");
+    }
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+}
+
+TEST(DocumentBookmarksTest, GetBookmarksMultipleBookmarks) {
+    const std::string test_file = "test_doc_bookmarks_multi.docx";
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        cdocx::Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+
+        auto section = doc.get_first_section();
+        auto body = section->get_body();
+        auto para1 = body->append_paragraph("First paragraph");
+        auto para2 = body->append_paragraph("Second paragraph");
+
+        auto bm1_start = std::make_shared<cdocx::BookmarkStart>("BookmarkA", 1);
+        auto bm1_end = std::make_shared<cdocx::BookmarkEnd>(1);
+        para1->append_child(bm1_start);
+        para1->append_child(bm1_end);
+
+        auto bm2_start = std::make_shared<cdocx::BookmarkStart>("BookmarkB", 2);
+        auto bm2_end = std::make_shared<cdocx::BookmarkEnd>(2);
+        para2->append_child(bm2_start);
+        para2->append_child(bm2_end);
+
+        doc.save();
+    }
+
+    {
+        cdocx::Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto bookmarks = doc.get_bookmarks();
+        EXPECT_EQ(bookmarks.count(), 2u);
+        EXPECT_TRUE(bookmarks.contains("BookmarkA"));
+        EXPECT_TRUE(bookmarks.contains("BookmarkB"));
+
+        auto bm_a = bookmarks.get("BookmarkA");
+        auto bm_b = bookmarks.get("BookmarkB");
+        ASSERT_TRUE(bm_a.has_value());
+        ASSERT_TRUE(bm_b.has_value());
+
+        // Index-based access
+        auto bm0 = bookmarks.get(0);
+        auto bm1 = bookmarks.get(1);
+        EXPECT_TRUE(bm0.get_name() == "BookmarkA" || bm0.get_name() == "BookmarkB");
+        EXPECT_TRUE(bm1.get_name() == "BookmarkA" || bm1.get_name() == "BookmarkB");
+    }
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+}
+
+TEST(DocumentBookmarksTest, BookmarkCollectionAddCreatesBookmark) {
+    const std::string test_file = "test_bookmark_collection_add.docx";
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        cdocx::Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+
+        auto body = doc.get_first_section()->get_body();
+        body->append_paragraph("Target paragraph");
+
+        // get_bookmarks() syncs DOM/XML and rebuilds the DOM tree.
+        // Re-fetch the entire node chain afterwards.
+        auto bookmarks = doc.get_bookmarks();
+        EXPECT_EQ(bookmarks.count(), 0u);
+
+        auto fresh_para = doc.get_first_section()->get_body()->get_last_paragraph();
+        ASSERT_NE(fresh_para, nullptr);
+
+        auto bm = bookmarks.add("NewBookmark", *fresh_para);
+        EXPECT_EQ(bm.get_name(), "NewBookmark");
+
+        // Re-fetch collection to verify persistence
+        auto bookmarks2 = doc.get_bookmarks();
+        EXPECT_EQ(bookmarks2.count(), 1u);
+        EXPECT_TRUE(bookmarks2.contains("NewBookmark"));
+
+        doc.save();
+    }
+
+    {
+        cdocx::Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto bookmarks = doc.get_bookmarks();
+        EXPECT_EQ(bookmarks.count(), 1u);
+        EXPECT_TRUE(bookmarks.contains("NewBookmark"));
+    }
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+}
+
+TEST(DocumentBookmarksTest, BookmarkCollectionAddDuplicateReturnsExisting) {
+    const std::string test_file = "test_bookmark_add_dup.docx";
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    cdocx::Document doc;
+    ASSERT_TRUE(doc.create_empty(test_file));
+
+    doc.get_first_section()->get_body()->append_paragraph("Paragraph");
+
+    // get_bookmarks() syncs DOM/XML and rebuilds the DOM tree.
+    // Re-fetch the entire node chain afterwards.
+    auto bookmarks = doc.get_bookmarks();
+    EXPECT_EQ(bookmarks.count(), 0u);
+
+    auto fresh_para = doc.get_first_section()->get_body()->get_last_paragraph();
+    ASSERT_NE(fresh_para, nullptr);
+
+    auto bm1 = bookmarks.add("DupBookmark", *fresh_para);
+    EXPECT_EQ(bm1.get_name(), "DupBookmark");
+
+    // Adding a duplicate name should return the existing bookmark
+    auto bm2 = bookmarks.add("DupBookmark", *fresh_para);
+    EXPECT_EQ(bm2.get_name(), "DupBookmark");
+    EXPECT_EQ(bookmarks.count(), 1u);
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+}
+
 /** @} */

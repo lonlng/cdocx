@@ -283,7 +283,7 @@ bool DocxTree::remove_node(const std::string& path) {
 
 void DocxTree::iterate_files(std::function<void(std::shared_ptr<DocxTreeNode>)> callback) const {
     std::function<void(std::shared_ptr<DocxTreeNode>)> traverse;
-    traverse = [&traverse, &callback](std::shared_ptr<DocxTreeNode> node) {
+    traverse = [&traverse, &callback](const std::shared_ptr<DocxTreeNode>& node) {
         if (!node || node->is_deleted) return;
         
         if (node->is_file()) {
@@ -300,7 +300,7 @@ void DocxTree::iterate_files(std::function<void(std::shared_ptr<DocxTreeNode>)> 
 
 void DocxTree::iterate_all(std::function<void(std::shared_ptr<DocxTreeNode>)> callback) const {
     std::function<void(std::shared_ptr<DocxTreeNode>)> traverse;
-    traverse = [&traverse, &callback](std::shared_ptr<DocxTreeNode> node) {
+    traverse = [&traverse, &callback](const std::shared_ptr<DocxTreeNode>& node) {
         if (!node || node->is_deleted) return;
         
         callback(node);
@@ -315,7 +315,7 @@ void DocxTree::iterate_all(std::function<void(std::shared_ptr<DocxTreeNode>)> ca
 
 std::vector<std::shared_ptr<DocxTreeNode>> DocxTree::get_all_xml_files() const {
     std::vector<std::shared_ptr<DocxTreeNode>> result;
-    iterate_files([&result](std::shared_ptr<DocxTreeNode> node) {
+    iterate_files([&result](const std::shared_ptr<DocxTreeNode>& node) {
         if (node->type == DocxNodeType::XmlFile) {
             result.push_back(node);
         }
@@ -325,7 +325,7 @@ std::vector<std::shared_ptr<DocxTreeNode>> DocxTree::get_all_xml_files() const {
 
 std::vector<std::shared_ptr<DocxTreeNode>> DocxTree::get_all_media_files() const {
     std::vector<std::shared_ptr<DocxTreeNode>> result;
-    iterate_files([&result](std::shared_ptr<DocxTreeNode> node) {
+    iterate_files([&result](const std::shared_ptr<DocxTreeNode>& node) {
         if (node->type == DocxNodeType::MediaFile) {
             result.push_back(node);
         }
@@ -337,7 +337,7 @@ void DocxTree::rebuild_path_map() {
     std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
     path_map_.clear();
     
-    iterate_all([this](std::shared_ptr<DocxTreeNode> node) {
+    iterate_all([this](const std::shared_ptr<DocxTreeNode>& node) {
         if (!node->full_path.empty()) {
             path_map_[node->full_path] = node;
         }

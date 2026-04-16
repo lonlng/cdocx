@@ -367,4 +367,123 @@ TEST(TextFormattingTest, FullDocumentWithAllFormattingFeatures) {
     if (fs::exists(test_file)) fs::remove(test_file);
 }
 
+TEST(TextFormattingTest, DropCapRoundTrip) {
+    const std::string test_file = "test_dropcap.docx";
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        cdocx::Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+
+        auto sect = doc.get_first_section();
+        ASSERT_NE(sect, nullptr);
+
+        auto para = sect->append_paragraph("Drop cap paragraph");
+        ASSERT_NE(para, nullptr);
+
+        para->get_paragraph_format().drop_cap_position = cdocx::DropCapPosition::Normal;
+        para->get_paragraph_format().lines_to_drop = 3;
+
+        doc.save();
+    }
+
+    {
+        cdocx::Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto sect = doc.get_first_section();
+        ASSERT_NE(sect, nullptr);
+
+        auto body = sect->get_body();
+        ASSERT_NE(body, nullptr);
+
+        auto children = body->get_children();
+        ASSERT_FALSE(children.empty());
+
+        auto para = std::dynamic_pointer_cast<cdocx::Paragraph>(children.back());
+        ASSERT_NE(para, nullptr);
+
+        EXPECT_EQ(para->get_paragraph_format().drop_cap_position, cdocx::DropCapPosition::Normal);
+        EXPECT_EQ(para->get_paragraph_format().lines_to_drop, 3);
+    }
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+}
+
+TEST(TextFormattingTest, DropCapMarginRoundTrip) {
+    const std::string test_file = "test_dropcap_margin.docx";
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        cdocx::Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+
+        auto sect = doc.get_first_section();
+        ASSERT_NE(sect, nullptr);
+
+        auto para = sect->append_paragraph("Margin drop cap paragraph");
+        ASSERT_NE(para, nullptr);
+
+        para->get_paragraph_format().drop_cap_position = cdocx::DropCapPosition::Margin;
+        para->get_paragraph_format().lines_to_drop = 4;
+
+        doc.save();
+    }
+
+    {
+        cdocx::Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto sect = doc.get_first_section();
+        ASSERT_NE(sect, nullptr);
+
+        auto body = sect->get_body();
+        ASSERT_NE(body, nullptr);
+
+        auto children = body->get_children();
+        ASSERT_FALSE(children.empty());
+
+        auto para = std::dynamic_pointer_cast<cdocx::Paragraph>(children.back());
+        ASSERT_NE(para, nullptr);
+
+        EXPECT_EQ(para->get_paragraph_format().drop_cap_position, cdocx::DropCapPosition::Margin);
+        EXPECT_EQ(para->get_paragraph_format().lines_to_drop, 4);
+    }
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+}
+
+TEST(TextFormattingTest, DropCapNoneNotSerialized) {
+    const std::string test_file = "test_dropcap_none.docx";
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        cdocx::Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+
+        auto sect = doc.get_first_section();
+        auto para = sect->append_paragraph("No drop cap");
+        para->get_paragraph_format().drop_cap_position = cdocx::DropCapPosition::None;
+        para->get_paragraph_format().lines_to_drop = 1;
+
+        doc.save();
+    }
+
+    {
+        cdocx::Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto para = doc.get_first_section()->get_body()->get_children().back();
+        auto p = std::dynamic_pointer_cast<cdocx::Paragraph>(para);
+        ASSERT_NE(p, nullptr);
+
+        EXPECT_EQ(p->get_paragraph_format().drop_cap_position, cdocx::DropCapPosition::None);
+    }
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+}
+
 /** @} */

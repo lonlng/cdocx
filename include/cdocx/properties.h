@@ -12,8 +12,10 @@
 #pragma once
 
 #include <cdocx/fwd.h>
+#include <cdocx/enums.h>
 #include <optional>
 #include <map>
+#include <vector>
 #include <ctime>
 #include <string>
 
@@ -228,6 +230,74 @@ struct TextProperties {
 };
 
 // ============================================================================
+// Tab Stop
+// ============================================================================
+
+/**
+ * @struct TabStop
+ * @brief Represents a single custom tab stop
+ * @details A tab stop specifies a position where a tab stop exists.
+ *          Can also be used to clear inherited tab stops by setting
+ *          alignment to TabAlignment::Clear.
+ */
+struct TabStop {
+    double position = 0;              ///< Position in points
+    TabAlignment alignment = TabAlignment::Left;
+    TabLeader leader = TabLeader::None;
+
+    TabStop() = default;
+    explicit TabStop(double pos) : position(pos) {}
+    TabStop(double pos, TabAlignment align, TabLeader lead = TabLeader::None)
+        : position(pos), alignment(align), leader(lead) {}
+
+    bool operator==(const TabStop& other) const {
+        return position == other.position &&
+               alignment == other.alignment &&
+               leader == other.leader;
+    }
+    bool operator!=(const TabStop& other) const {
+        return !(*this == other);
+    }
+};
+
+/**
+ * @class TabStopCollection
+ * @brief Collection of TabStop objects
+ * @details Represents custom tabs for a paragraph or style.
+ */
+class TabStopCollection {
+public:
+    TabStopCollection() = default;
+
+    void add(const TabStop& tab_stop);
+    void add(double position, TabAlignment alignment, TabLeader leader = TabLeader::None);
+
+    void remove(double position);
+    void remove_at(size_t index);
+    void clear();
+
+    size_t count() const { return tab_stops_.size(); }
+    bool empty() const { return tab_stops_.empty(); }
+
+    const TabStop& at(size_t index) const { return tab_stops_.at(index); }
+    TabStop& at(size_t index) { return tab_stops_.at(index); }
+
+    const TabStop* get(double position) const;
+    bool contains(double position) const;
+
+    std::vector<TabStop>::const_iterator begin() const { return tab_stops_.begin(); }
+    std::vector<TabStop>::const_iterator end() const { return tab_stops_.end(); }
+    std::vector<TabStop>::iterator begin() { return tab_stops_.begin(); }
+    std::vector<TabStop>::iterator end() { return tab_stops_.end(); }
+
+    void applyTo(pugi::xml_node para_node) const;
+    static TabStopCollection extractFrom(pugi::xml_node para_node);
+
+private:
+    std::vector<TabStop> tab_stops_;
+};
+
+// ============================================================================
 // Paragraph Properties
 // ============================================================================
 
@@ -378,7 +448,12 @@ struct ParagraphProperties {
         std::optional<Border> right;
     };
     std::optional<Borders> borders;
-    
+
+    // ------------------------------------------------------------------------
+    // Tab Stops
+    // ------------------------------------------------------------------------
+    std::optional<TabStopCollection> tab_stops;
+
     // ------------------------------------------------------------------------
     // Methods
     // ------------------------------------------------------------------------

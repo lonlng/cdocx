@@ -51,6 +51,7 @@
 
 #include <cdocx/fwd.h>
 #include <cdocx/base.h>
+#include <cdocx/formfield.h>
 #include <cdocx/constants.h>
 #include <functional>
 #include <map>
@@ -66,6 +67,7 @@ class Range;
 class DocumentSearch;
 class BookmarkReplacer;
 class CaptionGenerator;
+class Footnote;
 
 // ============================================================================
 // Bookmark Format Structure (v0.3.0)
@@ -149,7 +151,7 @@ struct BookmarkFormat {
  * @brief Image alignment options for inserted images
  * @since 0.3.0
  */
-enum class ImageAlignment {
+enum class ImageAlignment : std::uint8_t {
     Left,    ///< Left-aligned (using anchor positioning)
     Center,  ///< Center-aligned (using inline positioning)
     Right    ///< Right-aligned (using anchor positioning)
@@ -650,7 +652,7 @@ public:
      * @param[in] index Cell index (0-based)
      * @return true if successful
      */
-    static bool insert_cell(TableRow& row, size_t index);
+    static bool insert_cell(Row& row, size_t index);
 
     /**
      * @brief Delete a cell at specified position
@@ -658,7 +660,7 @@ public:
      * @param[in] index Cell index (0-based)
      * @return true if successful
      */
-    static bool delete_cell(TableRow& row, size_t index);
+    static bool delete_cell(Row& row, size_t index);
 
     /**
      * @brief Get row count
@@ -681,7 +683,7 @@ public:
      * @param[in] end End cell index (inclusive)
      * @return true if successful
      */
-    static bool merge_cells_horizontal(TableRow& row, size_t start, size_t end);
+    static bool merge_cells_horizontal(Row& row, size_t start, size_t end);
 
     /**
      * @brief Set cell text
@@ -689,14 +691,14 @@ public:
      * @param[in] text New text content
      * @return true if successful
      */
-    static bool set_cell_text(TableCell& cell, const std::string& text);
+    static bool set_cell_text(Cell& cell, const std::string& text);
 
     /**
      * @brief Get cell text
      * @param[in] cell Target cell
      * @return Cell text content
      */
-    static std::string get_cell_text(const TableCell& cell);
+    static std::string get_cell_text(const Cell& cell);
 };
 
 // ============================================================================
@@ -782,7 +784,8 @@ private:
     std::shared_ptr<Document> doc_sptr;
 
 private:
-    Document* doc_;                    ///< Target document
+    Document* doc_ = nullptr;          ///< Target document
+    pugi::xml_document* target_xml_doc_ = nullptr; ///< Active XML document (document.xml or header/footer)
     pugi::xml_node current_node_;      ///< Current position node
     pugi::xml_node current_paragraph_; ///< Current paragraph node
 
@@ -812,6 +815,13 @@ private:
     std::map<std::string, int> bookmark_stack_;
 
     /**
+     * @brief Internal helper to insert a form field at current position
+     * @param[in] field The form field to insert
+     * @return The inserted form field
+     */
+    std::shared_ptr<FormField> insert_form_field_impl(const std::shared_ptr<FormField>& field);
+
+    /**
      * @brief Ensure current paragraph exists
      * @details Creates a paragraph if none exists at current position
      */
@@ -836,27 +846,53 @@ public:
      */
     explicit DocumentBuilder(Document* doc);
 
+    /**
+     * @brief Construct builder owning a document
+     * @param[in] doc Shared pointer to target document
+     */
+    explicit DocumentBuilder(std::shared_ptr<Document> doc);
+
     // ========================================================================
     // Navigation
     // ========================================================================
 
     /** @brief Move cursor to document start */
-    void move_to_document_start();
+    DocumentBuilder& move_to_document_start();
 
     /** @brief Move cursor to document end */
-    void move_to_document_end();
+    DocumentBuilder& move_to_document_end();
+
+    /**
+     * @brief Move to specific section
+     * @param[in] index Section index (0-based)
+     */
+    DocumentBuilder& move_to_section(size_t index);
 
     /**
      * @brief Move to specific paragraph
      * @param[in] index Paragraph index (0-based)
      */
-    void move_to_paragraph(size_t index);
+    DocumentBuilder& move_to_paragraph(size_t index);
+
+    /**
+     * @brief Move to specific paragraph and character position
+     * @param[in] paragraph_index Paragraph index (0-based)
+     * @param[in] character_index Character index within paragraph (0-based)
+     */
+    DocumentBuilder& move_to_paragraph(size_t paragraph_index, size_t character_index);
 
     /**
      * @brief Move to bookmark
      * @param[in] name Bookmark name
      */
-    void move_to_bookmark(const std::string& name);
+    DocumentBuilder& move_to_bookmark(const std::string& name);
+
+    /**
+     * @brief Move to merge field
+     * @param[in] field_name Merge field name
+     * @return true if field was found
+     */
+    bool move_to_merge_field(const std::string& field_name);
 
     /**
      * @brief Move to specific cell
@@ -864,7 +900,7 @@ public:
      * @param[in] row_index Row index (0-based)
      * @param[in] cell_index Cell index (0-based)
      */
-    void move_to_cell(size_t table_index, size_t row_index, size_t cell_index);
+    DocumentBuilder& move_to_cell(size_t table_index, size_t row_index, size_t cell_index);
 
     // ========================================================================
     // Text Insertion
@@ -874,16 +910,16 @@ public:
      * @brief Write text at current position
      * @param[in] text Text to write
      */
-    void write(const std::string& text);
+    DocumentBuilder& write(const std::string& text);
 
     /**
      * @brief Write text with newline
      * @param[in] text Text to write
      */
-    void writeln(const std::string& text);
+    DocumentBuilder& writeln(const std::string& text);
 
     /** @brief Write empty paragraph */
-    void writeln();
+    DocumentBuilder& writeln();
 
     // ========================================================================
     // Paragraph Operations
@@ -896,57 +932,127 @@ public:
     Paragraph* insert_paragraph();
 
     /** @brief Insert page break */
-    void insert_break();
+    DocumentBuilder& insert_break();
+
+    /** @brief Insert break of specific type */
+    DocumentBuilder& insert_break(BreakType break_type);
+
+    /** @brief Move cursor to header/footer */
+    DocumentBuilder& move_to_header_footer(HeaderFooterType type);
+
+    /**
+     * @brief Insert footnote or endnote
+     * @param[in] type Footnote or endnote
+     * @param[in] text Note text
+     * @return The inserted footnote node
+     */
+    std::shared_ptr<Footnote> insert_footnote(FootnoteType type, const std::string& text);
+
+    /**
+     * @brief Insert footnote or endnote with custom reference mark
+     * @param[in] type Footnote or endnote
+     * @param[in] text Note text
+     * @param[in] reference_mark Custom reference mark
+     * @return The inserted footnote node
+     */
+    std::shared_ptr<Footnote> insert_footnote(FootnoteType type, const std::string& text,
+                                               const std::string& reference_mark);
+
+    /**
+     * @brief Insert field by type
+     * @param[in] field_type Type of field to insert
+     * @param[in] update_field Whether to update the field immediately
+     * @return The inserted field node
+     */
+    std::shared_ptr<Field> insert_field(FieldType field_type, bool update_field = false);
+
+    /**
+     * @brief Insert field by code
+     * @param[in] field_code Field code (e.g., "PAGE", "DATE")
+     * @return The inserted field node
+     */
+    std::shared_ptr<Field> insert_field(const std::string& field_code);
+
+    /**
+     * @brief Insert field by code with preset value
+     * @param[in] field_code Field code
+     * @param[in] field_value Preset field result
+     * @return The inserted field node
+     */
+    std::shared_ptr<Field> insert_field(const std::string& field_code,
+                                        const std::string& field_value);
+
+    /** @brief Insert page number field */
+    std::shared_ptr<Field> insert_page_number();
+
+    /** @brief Insert number of pages field */
+    std::shared_ptr<Field> insert_num_pages();
+
+    /** @brief Insert date field */
+    std::shared_ptr<Field> insert_date();
+
+    /** @brief Insert time field */
+    std::shared_ptr<Field> insert_time();
+
+    /** @brief Insert merge field */
+    std::shared_ptr<Field> insert_merge_field(const std::string& field_name);
+
+    /**
+     * @brief Insert table of contents field
+     * @param[in] switches TOC switches (e.g., "\\o \"1-3\" \\h \\z \\u")
+     * @return The inserted TOC field
+     */
+    std::shared_ptr<Field> insert_table_of_contents(const std::string& switches);
 
     // ========================================================================
     // Formatting
     // ========================================================================
 
     /** @param[in] value true to enable bold */
-    void set_bold(bool value);
-    
+    DocumentBuilder& set_bold(bool value);
+
     /** @param[in] value true to enable italic */
-    void set_italic(bool value);
-    
+    DocumentBuilder& set_italic(bool value);
+
     /** @param[in] value true to enable underline */
-    void set_underline(bool value);
-    
+    DocumentBuilder& set_underline(bool value);
+
     /** @param[in] value true to enable strikethrough */
-    void set_strikethrough(bool value);
-    
+    DocumentBuilder& set_strikethrough(bool value);
+
     /** @param[in] name Font family name */
-    void set_font_name(const std::string& name);
-    
+    DocumentBuilder& set_font_name(const std::string& name);
+
     /** @param[in] size Font size in points */
-    void set_font_size(int size);
-    
+    DocumentBuilder& set_font_size(int size);
+
     /** @param[in] color_hex Hex color code (e.g., "FF0000") */
-    void set_color(const std::string& color_hex);
-    
+    DocumentBuilder& set_color(const std::string& color_hex);
+
     /** @param[in] alignment "left", "center", "right", or "justify" */
-    void set_alignment(const std::string& alignment);
-    
+    DocumentBuilder& set_alignment(const std::string& alignment);
+
     /** @brief Clear all formatting */
-    void clear_formatting();
+    DocumentBuilder& clear_formatting();
 
     // ========================================================================
     // Table Building
     // ========================================================================
 
     /** @brief Start a new table */
-    void start_table();
-    
+    DocumentBuilder& start_table();
+
     /** @brief End current table */
-    void end_table();
-    
+    DocumentBuilder& end_table();
+
     /** @brief Insert a new row in current table */
-    void insert_row();
-    
+    DocumentBuilder& insert_row();
+
     /** @brief Insert a cell in current row */
-    void insert_cell();
-    
+    DocumentBuilder& insert_cell();
+
     /** @brief End current row */
-    void end_row();
+    DocumentBuilder& end_row();
 
     // ========================================================================
     // Hyperlink
@@ -957,7 +1063,7 @@ public:
      * @param[in] text Display text
      * @param[in] url Target URL
      */
-    void insert_hyperlink(const std::string& text, const std::string& url);
+    DocumentBuilder& insert_hyperlink(const std::string& text, const std::string& url);
 
     // ========================================================================
     // Bookmark
@@ -967,13 +1073,71 @@ public:
      * @brief Start a bookmark range
      * @param[in] name Bookmark name
      */
-    void start_bookmark(const std::string& name);
+    DocumentBuilder& start_bookmark(const std::string& name);
 
     /**
      * @brief End a bookmark range
      * @param[in] name Bookmark name (must match start_bookmark)
      */
-    void end_bookmark(const std::string& name);
+    DocumentBuilder& end_bookmark(const std::string& name);
+
+    // ========================================================================
+    // Form Fields
+    // ========================================================================
+
+    /**
+     * @brief Insert a text input form field
+     * @param[in] name Field name
+     * @param[in] type Text form field type
+     * @param[in] format Format string
+     * @param[in] field_value Display value
+     * @param[in] max_length Maximum length (0 = unlimited)
+     * @return The inserted form field
+     */
+    std::shared_ptr<FormField> insert_text_input(
+        const std::string& name,
+        TextFormFieldType type = TextFormFieldType::Regular,
+        const std::string& format = "",
+        const std::string& field_value = "",
+        int max_length = 0);
+
+    /**
+     * @brief Insert a checkbox form field
+     * @param[in] name Field name
+     * @param[in] checked_value Checked state
+     * @param[in] size Size in points (0 = auto)
+     * @return The inserted form field
+     */
+    std::shared_ptr<FormField> insert_check_box(
+        const std::string& name,
+        bool checked_value,
+        int size = 0);
+
+    /**
+     * @brief Insert a checkbox form field with default value
+     * @param[in] name Field name
+     * @param[in] default_value Default checked state
+     * @param[in] checked_value Current checked state
+     * @param[in] size Size in points (0 = auto)
+     * @return The inserted form field
+     */
+    std::shared_ptr<FormField> insert_check_box(
+        const std::string& name,
+        bool default_value,
+        bool checked_value,
+        int size);
+
+    /**
+     * @brief Insert a combobox form field
+     * @param[in] name Field name
+     * @param[in] items Dropdown items
+     * @param[in] selected_index Selected item index
+     * @return The inserted form field
+     */
+    std::shared_ptr<FormField> insert_combo_box(
+        const std::string& name,
+        const std::vector<std::string>& items,
+        int selected_index = 0);
 
     // ========================================================================
     // Image
@@ -1078,7 +1242,7 @@ public:
      * @param[in] callback Function to call for each match
      * @return Number of matches processed
      */
-    static int find_and_process(Document& doc, const std::string& pattern, SearchCallback callback);
+    static int find_and_process(Document& doc, const std::string& pattern, const SearchCallback& callback);
 };
 
 // ============================================================================

@@ -274,7 +274,7 @@ public:
      * @param[in] callback Function to determine replacement
      * @return true if callback returned true and replacement succeeded
      */
-    bool replace_if(const std::string& bookmark_name, ReplaceCallback callback);
+    bool replace_if(const std::string& bookmark_name, const ReplaceCallback& callback);
 
     /**
      * @brief Replace text and remove bookmark markers

@@ -57,6 +57,9 @@ TEST(DomSyncTest, LogicalNavigation) {
     auto body = sect->get_body();
     ASSERT_NE(body, nullptr);
 
+    // Remove the default empty paragraph so we control the content
+    body->remove_all_children();
+
     auto para1 = body->append_paragraph("First");
     auto para2 = body->append_paragraph("Second");
     auto para3 = body->append_paragraph("Third");
@@ -88,7 +91,8 @@ TEST(DomSyncTest, FieldRoundTrip) {
         auto body = sect->get_body();
         ASSERT_NE(body, nullptr);
 
-        auto para = body->append_paragraph();
+        auto para = body->get_first_paragraph();
+        ASSERT_NE(para, nullptr);
         auto field = para->append_field(FieldType::Page);
         field->set_field_code(" PAGE ");
         field->set_result("1");
@@ -141,7 +145,8 @@ TEST(DomSyncTest, HyperlinkRoundTrip) {
         auto body = sect->get_body();
         ASSERT_NE(body, nullptr);
 
-        auto para = body->append_paragraph();
+        auto para = body->get_first_paragraph();
+        ASSERT_NE(para, nullptr);
         auto link = std::make_shared<Hyperlink>(&doc);
         link->set_address("https://example.com");
         link->set_tooltip("Example tooltip");
@@ -195,7 +200,8 @@ TEST(DomSyncTest, HyperlinkBookmarkRoundTrip) {
         auto body = sect->get_body();
         ASSERT_NE(body, nullptr);
 
-        auto para = body->append_paragraph();
+        auto para = body->get_first_paragraph();
+        ASSERT_NE(para, nullptr);
         auto link = std::make_shared<Hyperlink>(&doc);
         link->set_bookmark_name("_Toc1");
         link->set_result("Go to TOC");

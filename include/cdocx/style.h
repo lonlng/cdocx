@@ -137,8 +137,8 @@ public:
     }
 
     std::shared_ptr<Style> add(StyleType type, const std::string& name);
-    void add(std::shared_ptr<Style> style);
-    void remove(std::shared_ptr<Style> style);
+    void add(const std::shared_ptr<Style>& style);
+    void remove(const std::shared_ptr<Style>& style);
     void remove_at(int index);
     void clear();
 

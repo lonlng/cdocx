@@ -73,6 +73,8 @@ class Table;
 class Template;
 class Bookmark;
 class BookmarkCollection;
+class Comment;
+class CommentCollection;
 class Range;
 class DocumentBuilder;
 class DocumentSearch;
@@ -81,12 +83,13 @@ class SectionCollection;
 class ParagraphCollection;
 class TableCollection;
 class StyleCollection;
+class Watermark;
 
 // ============================================================================
 // Document Package Tree Types (Physical structure)
 // ============================================================================
 
-enum class DocxNodeType {
+enum class DocxNodeType : std::uint8_t {
     Root,           ///< Root node representing the package
     Directory,      ///< Directory/folder node
     XmlFile,        ///< XML file with parsed content
@@ -205,13 +208,21 @@ struct LoadConfig {
     }
 };
 
-enum class LoadErrorType {
+enum class LoadErrorType : std::uint8_t {
     None, ZipOpenFailed, ZipEntryReadFailed, XmlParseFailed,
     InvalidStructure, CorruptedFile, MemoryAllocation, IoError, Timeout, Unknown
 };
 
-enum class DocumentIntegrity {
+enum class DocumentIntegrity : std::uint8_t {
     Complete, Partial, Critical, Corrupted
+};
+
+enum class ProtectionType : std::uint8_t {
+    NoProtection = 0,
+    AllowOnlyRevisions,
+    AllowOnlyComments,
+    AllowOnlyFormFields,
+    ReadOnly
 };
 
 struct LoadError {
@@ -301,18 +312,30 @@ public:
     std::shared_ptr<Section> append_section();
     std::shared_ptr<Section> add_section() { return append_section(); }
     std::shared_ptr<Section> insert_section(int index);
-    void remove_section(std::shared_ptr<Section> section);
+    void remove_section(const std::shared_ptr<Section>& section);
     size_t get_section_count() const;
     std::shared_ptr<Section> get_section(size_t index) const;
-    
+
+    // Get the section immediately before the given section
+    std::shared_ptr<Section> get_previous_section(const Section* section) const;
+
     // Convenience: Get all paragraphs across all sections
     ParagraphCollection get_paragraphs() const;
-    
+
     // Legacy API: Get paragraph iterator (backward compatibility)
     Paragraph paragraphs();
-    
+
     // Convenience: Get all tables across all sections
     TableCollection get_tables() const;
+
+    // Ensure document has at least one section with one paragraph
+    void ensure_minimum();
+
+    /**
+     * @brief Get a Range representing the entire document
+     * @return Range covering all content
+     */
+    Range get_range();
     
     // Section properties
     void set_default_section_properties(const SectionProperties& props);
@@ -339,7 +362,8 @@ public:
     pugi::xml_document& create_xml_part(const std::string& part_path);
     void remove_xml_part(const std::string& part_path);
     void mark_modified(const std::string& part_path);
-    
+    void mark_xml_paragraph_dirty(pugi::xml_node para) { dirty_xml_paragraphs_.insert(para); }
+
     // Convenience XML accessors
     pugi::xml_document* get_document_xml();
     pugi::xml_document* get_core_properties();
@@ -376,14 +400,34 @@ public:
     // Bookmark management
     BookmarkCollection get_bookmarks();
     int generate_unique_bookmark_id();
-    
+
+    // Comment management
+    std::shared_ptr<Comment> add_comment(const std::string& author, const std::string& text);
+    std::shared_ptr<Comment> get_comment(int id) const;
+    CommentCollection get_comments() const;
+    bool remove_comment(int id);
+    void clear_comments();
+    int get_next_comment_id();
+
     // Header/Footer management (used by Section)
     int get_next_header_number();
     int get_next_footer_number();
     
     // Document properties
-    DocumentProperties& get_builtin_document_properties() { return builtin_properties_; };
-    DocumentProperties& get_custom_document_properties() { return custom_properties_; };
+    DocumentProperties& get_builtin_document_properties() { return builtin_properties_; }
+    DocumentProperties& get_custom_document_properties() { return custom_properties_; }
+
+    // Default tab stop (in points)
+    double get_default_tab_stop() const;
+    void set_default_tab_stop(double points);
+
+    // Watermark
+    Watermark watermark();
+
+    // Document protection
+    void protect(ProtectionType type, const std::string& password = "");
+    void unprotect();
+    bool is_protected() const;
     
     // Statistics
     LoadResult get_last_load_result() const { return last_load_result_; }
@@ -394,10 +438,13 @@ public:
     
     // Sync DOM to physical tree (called before save)
     void sync_to_physical_tree();
-    
+
     // Sync physical tree to DOM (called after load)
     void sync_from_physical_tree();
-    
+
+    // Merge physical tree into existing DOM sections (preserves DOM-only content)
+    void merge_sections_from_physical();
+
     /**
      * @brief Synchronize between DOM and XML representations
      * @param dom_to_xml true = DOM→XML, false = XML→DOM
@@ -429,6 +476,9 @@ protected:
     // DOM state (Document contains Sections as children)
     mutable std::vector<std::shared_ptr<Section>> sections_cache_;
     mutable bool sections_dirty_ = true;
+
+    // XML paragraphs modified by DocumentBuilder or legacy API
+    std::set<pugi::xml_node> dirty_xml_paragraphs_;
     
     // Numbering
     std::unique_ptr<NumberingManager> numbering_manager_;
@@ -444,7 +494,14 @@ protected:
     int next_header_number_ = 1;
     int next_footer_number_ = 1;
     int next_bookmark_id_ = 1;
-    
+    int next_comment_id_ = 0;
+
+    friend class CommentCollection;
+
+    // Comments cache
+    mutable std::vector<std::shared_ptr<Comment>> comments_cache_;
+    mutable bool comments_dirty_ = true;
+
     // Section properties
     SectionProperties default_section_properties_;
     
@@ -468,8 +525,6 @@ protected:
     void load_all_relationships();
     void remove_relationship(const std::string& rels_path, const std::string& rel_id);
     void update_relationships_xml(const std::string& rels_path);
-    void add_content_type_override(const std::string& part_name,
-                                   const std::string& content_type);
     void update_content_types_xml();
 
 public:
@@ -482,11 +537,13 @@ public:
                                  const std::string& target_mode = "");
     std::string get_relationship_target(const std::string& rels_path,
                                         const std::string& rel_id) const;
+    void add_content_type_override(const std::string& part_name,
+                                   const std::string& content_type);
     
     // Save operations
     bool save_to_zip(const std::string& output_path);
     bool save_tree_to_zip(::zip_t* zip);
-    bool write_tree_node(::zip_t* zip, std::shared_ptr<DocxTreeNode> node);
+    bool write_tree_node(::zip_t* zip, const std::shared_ptr<DocxTreeNode>& node);
     
     // Media helpers
     std::string get_mime_type(const std::string& filename) const;
@@ -506,6 +563,12 @@ public:
     void sync_sections_from_physical();
     void sync_styles_to_physical();
     void sync_styles_from_physical();
+    void sync_comments_to_physical();
+    void sync_comments_from_physical();
+    void sync_builtin_properties_to_physical();
+    void sync_builtin_properties_from_physical();
+    void sync_custom_properties_to_physical();
+    void sync_custom_properties_from_physical();
     std::shared_ptr<Body> parse_body_from_xml(pugi::xml_node body_node);
     std::shared_ptr<Paragraph> parse_paragraph_from_xml(pugi::xml_node para_node);
     std::shared_ptr<Table> parse_table_from_xml(pugi::xml_node table_node);

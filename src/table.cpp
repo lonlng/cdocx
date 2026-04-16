@@ -95,7 +95,7 @@ std::shared_ptr<Table> Cell::get_parent_table() const {
     return row->get_parent_table();
 }
 
-void Cell::merge_with(std::shared_ptr<Cell> other) {
+void Cell::merge_with(const std::shared_ptr<Cell>& other) {
     if (!other || other.get() == this) return;
     auto table = get_parent_table();
     if (!table) return;
@@ -377,7 +377,7 @@ std::shared_ptr<Row> Table::insert_row(int index) {
     return row;
 }
 
-void Table::remove_row(std::shared_ptr<Row> row) {
+void Table::remove_row(const std::shared_ptr<Row>& row) {
     remove_child(row);
 }
 
@@ -520,8 +520,8 @@ std::string Table::get_style_name() const {
     return format_.style_name;
 }
 
-std::shared_ptr<Cell> Table::merge_cells(std::shared_ptr<Cell> start_cell,
-                                          std::shared_ptr<Cell> end_cell) {
+std::shared_ptr<Cell> Table::merge_cells(const std::shared_ptr<Cell>& start_cell,
+                                          const std::shared_ptr<Cell>& end_cell) {
     if (!start_cell || !end_cell || start_cell.get() == end_cell.get()) {
         return start_cell;
     }
@@ -626,7 +626,7 @@ std::shared_ptr<Cell> Table::merge_cells(int start_row, int start_col,
     return result;
 }
 
-void Table::split_cell(std::shared_ptr<Cell> cell, int row_count, int col_count) {
+void Table::split_cell(const std::shared_ptr<Cell>& cell, int row_count, int col_count) {
     if (!cell || row_count < 1 || col_count < 1) return;
     if (row_count == 1 && col_count == 1) return;
 

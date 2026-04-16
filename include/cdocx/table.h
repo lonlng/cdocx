@@ -72,7 +72,7 @@ public:
     void set_text(const std::string& text);
     
     // Merge operations
-    void merge_with(std::shared_ptr<Cell> other);
+    void merge_with(const std::shared_ptr<Cell>& other);
     bool is_merged() const;
     bool is_first_merged_cell() const;
     bool is_vertical_merge_start() const;
@@ -317,7 +317,7 @@ public:
     std::shared_ptr<Row> insert_row(int index, const std::vector<std::string>& cell_texts);
     
     // Row removal
-    void remove_row(std::shared_ptr<Row> row);
+    void remove_row(const std::shared_ptr<Row>& row);
     void remove_row(int index);
     void remove_all_rows();
     
@@ -344,13 +344,13 @@ public:
     void ensure_minimum();
     
     // Merge cells
-    std::shared_ptr<Cell> merge_cells(std::shared_ptr<Cell> start_cell, 
-                                       std::shared_ptr<Cell> end_cell);
+    std::shared_ptr<Cell> merge_cells(const std::shared_ptr<Cell>& start_cell,
+                                       const std::shared_ptr<Cell>& end_cell);
     std::shared_ptr<Cell> merge_cells(int start_row, int start_col,
                                        int end_row, int end_col);
     
     // Split cell
-    void split_cell(std::shared_ptr<Cell> cell, int row_count, int col_count);
+    void split_cell(const std::shared_ptr<Cell>& cell, int row_count, int col_count);
     
     // Convert to text (with optional separator)
     std::string to_text(const std::string& separator = "\t", 

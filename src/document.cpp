@@ -19,6 +19,8 @@
 #include <cdocx/base.h>
 #include <cdocx/advanced.h>
 #include <cdocx/style.h>
+#include <cdocx/watermark.h>
+#include <cdocx/comment.h>
 #include <detail/impl.h>
 
 #include <algorithm>
@@ -75,7 +77,7 @@ Document::Document(Document&& other) noexcept
       content_types_(std::move(other.content_types_)),
       zip_handle_(other.zip_handle_),
       zip_dirty_(other.zip_dirty_),
-      last_load_stats_(std::move(other.last_load_stats_)),
+      last_load_stats_(other.last_load_stats_),
       last_load_result_(std::move(other.last_load_result_)),
       sections_cache_(std::move(other.sections_cache_)),
       sections_dirty_(other.sections_dirty_),
@@ -86,7 +88,7 @@ Document::Document(Document&& other) noexcept
       next_header_number_(other.next_header_number_),
       next_footer_number_(other.next_footer_number_),
       next_bookmark_id_(other.next_bookmark_id_),
-      default_section_properties_(std::move(other.default_section_properties_)),
+      default_section_properties_(other.default_section_properties_),
       impl_(std::move(other.impl_)) {
     other.is_open_ = false;
     other.zip_handle_ = nullptr;
@@ -107,7 +109,7 @@ Document& Document::operator=(Document&& other) noexcept {
         modified_parts_ = std::move(other.modified_parts_);
         content_types_ = std::move(other.content_types_);
 
-        last_load_stats_ = std::move(other.last_load_stats_);
+        last_load_stats_ = other.last_load_stats_;
         last_load_result_ = std::move(other.last_load_result_);
         sections_cache_ = std::move(other.sections_cache_);
         sections_dirty_ = other.sections_dirty_;
@@ -118,7 +120,7 @@ Document& Document::operator=(Document&& other) noexcept {
         next_header_number_ = other.next_header_number_;
         next_footer_number_ = other.next_footer_number_;
         next_bookmark_id_ = other.next_bookmark_id_;
-        default_section_properties_ = std::move(other.default_section_properties_);
+        default_section_properties_ = other.default_section_properties_;
         impl_ = std::move(other.impl_);
         
         other.is_open_ = false;
@@ -184,7 +186,7 @@ void Document::open(const std::string& filepath,
     
     // Set up load configuration with progress callback
     LoadConfig config;
-    config.progress_callback = callback;
+    config.progress_callback = std::move(callback);
     load_config_ = config;
     
     // Use the new load with result
@@ -301,13 +303,112 @@ void Document::save(const std::string& filepath) {
     }
     
     // Clear modification flags after successful save
-    tree_.iterate_all([](std::shared_ptr<DocxTreeNode> node) {
+    tree_.iterate_all([](const std::shared_ptr<DocxTreeNode>& node) {
         node->is_modified = false;
         node->is_new = false;
     });
     modified_parts_.clear();
     
     zip_dirty_ = true;
+}
+
+void Document::protect(ProtectionType type, const std::string& password) {
+    pugi::xml_document* settings = get_settings();
+    if (!settings) return;
+
+    pugi::xml_node root = settings->child("w:settings");
+    if (!root) return;
+
+    // Remove existing protection
+    root.remove_child("w:documentProtection");
+
+    auto docProt = root.append_child("w:documentProtection");
+
+    const char* edit_val = nullptr;
+    switch (type) {
+        case ProtectionType::AllowOnlyRevisions:  edit_val = "trackedChanges"; break;
+        case ProtectionType::AllowOnlyComments:   edit_val = "comments"; break;
+        case ProtectionType::AllowOnlyFormFields: edit_val = "forms"; break;
+        case ProtectionType::ReadOnly:            edit_val = "readOnly"; break;
+        default:                                  edit_val = "none"; break;
+    }
+
+    if (edit_val) {
+        docProt.append_attribute("w:edit").set_value(edit_val);
+    }
+    docProt.append_attribute("w:enforcement").set_value("1");
+
+    if (!password.empty()) {
+        // Word uses a specific password hashing algorithm.
+        // For simplicity, we store a placeholder indicating password protection.
+        // A production implementation would compute the proper SHA-1 hash with salt.
+        docProt.append_attribute("w:cryptProviderType").set_value("rsaFull");
+        docProt.append_attribute("w:cryptAlgorithmClass").set_value("hash");
+        docProt.append_attribute("w:cryptAlgorithmType").set_value("typeAny");
+        docProt.append_attribute("w:cryptAlgorithmSid").set_value("14");
+        docProt.append_attribute("w:cryptSpinCount").set_value("100000");
+        docProt.append_attribute("w:hash").set_value("");
+        docProt.append_attribute("w:salt").set_value("");
+    }
+
+    mark_modified("word/settings.xml");
+}
+
+void Document::unprotect() {
+    pugi::xml_document* settings = get_settings();
+    if (!settings) return;
+
+    pugi::xml_node root = settings->child("w:settings");
+    if (!root) return;
+
+    root.remove_child("w:documentProtection");
+    mark_modified("word/settings.xml");
+}
+
+bool Document::is_protected() const {
+    pugi::xml_document* settings = const_cast<Document*>(this)->get_settings();
+    if (!settings) return false;
+
+    pugi::xml_node root = settings->child("w:settings");
+    if (!root) return false;
+
+    pugi::xml_node docProt = root.child("w:documentProtection");
+    if (!docProt) return false;
+
+    pugi::xml_attribute enforcement = docProt.attribute("w:enforcement");
+    return enforcement && std::strcmp(enforcement.value(), "1") == 0;
+}
+
+Watermark Document::watermark() {
+    return Watermark(this);
+}
+
+double Document::get_default_tab_stop() const {
+    pugi::xml_document* settings = const_cast<Document*>(this)->get_settings();
+    if (!settings) return 36.0;  // Word default: 0.5 inch = 36 points
+
+    pugi::xml_node root = settings->child("w:settings");
+    if (!root) return 36.0;
+
+    pugi::xml_node defaultTabStop = root.child("w:defaultTabStop");
+    if (!defaultTabStop) return 36.0;
+
+    int twips = defaultTabStop.attribute("w:val").as_int(720);
+    return twips / 20.0;  // twips to points
+}
+
+void Document::set_default_tab_stop(double points) {
+    pugi::xml_document* settings = get_settings();
+    if (!settings) return;
+
+    pugi::xml_node root = settings->child("w:settings");
+    if (!root) return;
+
+    root.remove_child("w:defaultTabStop");
+    auto dts = root.append_child("w:defaultTabStop");
+    dts.append_attribute("w:val").set_value(static_cast<int>(points * 20));  // points to twips
+
+    mark_modified("word/settings.xml");
 }
 
 bool Document::create_empty(const std::string& filepath) {
@@ -394,7 +495,7 @@ std::shared_ptr<Section> Document::insert_section(int index) {
     return section;
 }
 
-void Document::remove_section(std::shared_ptr<Section> section) {
+void Document::remove_section(const std::shared_ptr<Section>& section) {
     if (!section) return;
     
     remove_child(section);
@@ -408,6 +509,20 @@ size_t Document::get_section_count() const {
 std::shared_ptr<Section> Document::get_section(size_t index) const {
     auto sections = get_sections();
     return sections.get_item(static_cast<int>(index));
+}
+
+std::shared_ptr<Section> Document::get_previous_section(const Section* section) const {
+    if (!section) return nullptr;
+    auto sections = get_sections();
+    for (size_t i = 0; i < sections.get_count(); ++i) {
+        if (sections.get_item(static_cast<int>(i)).get() == section) {
+            if (i > 0) {
+                return sections.get_item(static_cast<int>(i - 1));
+            }
+            break;
+        }
+    }
+    return nullptr;
 }
 
 ParagraphCollection Document::get_paragraphs() const {
@@ -457,15 +572,49 @@ Paragraph Document::paragraphs() {
 
 TableCollection Document::get_tables() const {
     std::vector<std::shared_ptr<Table>> all_tables;
-    
+
     for (const auto& section : get_sections()) {
         if (auto body = section->get_body()) {
             auto tables = body->get_tables();
             all_tables.insert(all_tables.end(), tables.begin(), tables.end());
         }
     }
-    
+
     return TableCollection(all_tables);
+}
+
+void Document::ensure_minimum() {
+    if (get_section_count() == 0) {
+        append_section();
+    }
+
+    auto sections = get_sections();
+    for (auto& section : sections) {
+        auto body = section->get_body();
+        if (body) {
+            body->ensure_minimum();
+        }
+    }
+}
+
+Range Document::get_range() {
+    pugi::xml_document* doc_xml = get_document_xml();
+    if (!doc_xml) {
+        return Range();
+    }
+
+    pugi::xml_node body = doc_xml->child("w:document").child("w:body");
+    pugi::xml_node first_para = body.child("w:p");
+    pugi::xml_node last_para;
+    for (pugi::xml_node para = first_para; para; para = para.next_sibling("w:p")) {
+        last_para = para;
+    }
+
+    if (!first_para) {
+        return Range();
+    }
+
+    return Range(this, first_para, last_para);
 }
 
 void Document::set_default_section_properties(const SectionProperties& props) {
@@ -542,7 +691,7 @@ bool Document::has_xml_part(const std::string& part_path) const {
 
 std::vector<std::string> Document::get_all_part_names() const {
     std::vector<std::string> names;
-    tree_.iterate_files([&names](std::shared_ptr<DocxTreeNode> node) {
+    tree_.iterate_files([&names](const std::shared_ptr<DocxTreeNode>& node) {
         if (node->type == DocxNodeType::XmlFile) {
             names.push_back(node->full_path);
         }
@@ -552,7 +701,7 @@ std::vector<std::string> Document::get_all_part_names() const {
 
 size_t Document::get_part_count() const {
     size_t count = 0;
-    tree_.iterate_files([&count](std::shared_ptr<DocxTreeNode> node) {
+    tree_.iterate_files([&count](const std::shared_ptr<DocxTreeNode>& node) {
         if (node->type == DocxNodeType::XmlFile) {
             count++;
         }
@@ -668,7 +817,7 @@ pugi::xml_document* Document::get_footer(int index) {
 
 std::vector<std::string> Document::get_header_names() const {
     std::vector<std::string> names;
-    tree_.iterate_files([&names](std::shared_ptr<DocxTreeNode> node) {
+    tree_.iterate_files([&names](const std::shared_ptr<DocxTreeNode>& node) {
         if (node->full_path.find("word/header") != std::string::npos &&
             node->full_path.find(".xml") != std::string::npos) {
             names.push_back(node->full_path);
@@ -679,7 +828,7 @@ std::vector<std::string> Document::get_header_names() const {
 
 std::vector<std::string> Document::get_footer_names() const {
     std::vector<std::string> names;
-    tree_.iterate_files([&names](std::shared_ptr<DocxTreeNode> node) {
+    tree_.iterate_files([&names](const std::shared_ptr<DocxTreeNode>& node) {
         if (node->full_path.find("word/footer") != std::string::npos &&
             node->full_path.find(".xml") != std::string::npos) {
             names.push_back(node->full_path);
@@ -870,7 +1019,7 @@ bool Document::has_media(const std::string& image_name) const {
 
 std::vector<std::string> Document::list_media() const {
     std::vector<std::string> result;
-    tree_.iterate_files([&result](std::shared_ptr<DocxTreeNode> node) {
+    tree_.iterate_files([&result](const std::shared_ptr<DocxTreeNode>& node) {
         if (node->type == DocxNodeType::MediaFile && !node->is_deleted) {
             std::string name = node->full_path;
             if (name.substr(0, 11) == "word/media/") {
@@ -936,12 +1085,79 @@ std::string Document::add_media_with_rel(const std::string& image_path,
 // ============================================================================
 
 BookmarkCollection Document::get_bookmarks() {
-    // TODO: Implement bookmark collection
-    return BookmarkCollection();
+    sync_to_physical_tree();
+    sync_from_physical_tree();
+    return BookmarkCollection(this);
 }
 
 int Document::generate_unique_bookmark_id() {
     return next_bookmark_id_++;
+}
+
+// ============================================================================
+// Comment Management
+// ============================================================================
+
+std::shared_ptr<Comment> Document::add_comment(const std::string& author, const std::string& text) {
+    auto comment = std::make_shared<Comment>(this, author, text);
+    comment->set_id(get_next_comment_id());
+    comments_cache_.push_back(comment);
+    comments_dirty_ = false;
+
+    // Ensure comments.xml exists
+    pugi::xml_document* comments_xml = get_xml_part("word/comments.xml");
+    if (!comments_xml) {
+        comments_xml = &create_xml_part("word/comments.xml");
+        auto root = comments_xml->append_child("w:comments");
+        root.append_attribute("xmlns:w").set_value("http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+        root.append_attribute("xmlns:w14").set_value("http://schemas.microsoft.com/office/word/2010/wordml");
+        root.append_attribute("xmlns:w15").set_value("http://schemas.microsoft.com/office/word/2012/wordml");
+    }
+
+    // Add content type override if needed
+    add_content_type_override("/word/comments.xml",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml");
+
+    // Add relationship if needed
+    add_relationship("word/_rels/document.xml.rels",
+        "http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments",
+        "comments.xml");
+
+    mark_modified("word/comments.xml");
+    return comment;
+}
+
+std::shared_ptr<Comment> Document::get_comment(int id) const {
+    for (const auto& comment : comments_cache_) {
+        if (comment->get_id() == id) {
+            return comment;
+        }
+    }
+    return nullptr;
+}
+
+CommentCollection Document::get_comments() const {
+    return CommentCollection(const_cast<Document*>(this));
+}
+
+bool Document::remove_comment(int id) {
+    auto it = std::remove_if(comments_cache_.begin(), comments_cache_.end(),
+        [id](const std::shared_ptr<Comment>& c) { return c->get_id() == id; });
+    if (it != comments_cache_.end()) {
+        comments_cache_.erase(it, comments_cache_.end());
+        mark_modified("word/comments.xml");
+        return true;
+    }
+    return false;
+}
+
+void Document::clear_comments() {
+    comments_cache_.clear();
+    mark_modified("word/comments.xml");
+}
+
+int Document::get_next_comment_id() {
+    return next_comment_id_++;
 }
 
 // ============================================================================
@@ -1198,7 +1414,7 @@ void Document::build_caches_from_tree() {
     xml_parts_cache_.clear();
     media_files_cache_.clear();
     
-    tree_.iterate_files([this](std::shared_ptr<DocxTreeNode> node) {
+    tree_.iterate_files([this](const std::shared_ptr<DocxTreeNode>& node) {
         if (node->type == DocxNodeType::XmlFile) {
             xml_parts_cache_[node->full_path] = node;
         } else if (node->type == DocxNodeType::MediaFile) {
@@ -1444,7 +1660,7 @@ bool Document::save_tree_to_zip(zip_t* zip) {
     if (!zip) return false;
     
     // First pass: create directories
-    tree_.iterate_all([zip](std::shared_ptr<DocxTreeNode> node) {
+    tree_.iterate_all([zip](const std::shared_ptr<DocxTreeNode>& node) {
         if (node->is_directory() && !node->name.empty()) {
             zip_entry_open(zip, (node->full_path + "/").c_str());
             zip_entry_close(zip);
@@ -1452,7 +1668,7 @@ bool Document::save_tree_to_zip(zip_t* zip) {
     });
     
     // Second pass: write files
-    tree_.iterate_files([this, zip](std::shared_ptr<DocxTreeNode> node) {
+    tree_.iterate_files([this, zip](const std::shared_ptr<DocxTreeNode>& node) {
         if (node->is_deleted) return;
         
         zip_entry_open(zip, node->full_path.c_str());
@@ -1472,7 +1688,7 @@ bool Document::save_tree_to_zip(zip_t* zip) {
     return true;
 }
 
-bool Document::write_tree_node(zip_t* zip, std::shared_ptr<DocxTreeNode> node) {
+bool Document::write_tree_node(zip_t* zip, const std::shared_ptr<DocxTreeNode>& node) {
     // This method is now integrated into save_tree_to_zip
     return true;
 }
@@ -1533,7 +1749,10 @@ std::string Document::generate_unique_image_name(const std::string& base_name) {
     int counter = 1;
     
     while (has_media(name)) {
-        name = stem + "_" + std::to_string(counter) + ext;
+        name = stem;
+        name += "_";
+        name += std::to_string(counter);
+        name += ext;
         counter++;
     }
     
@@ -1575,22 +1794,50 @@ bool Document::create_empty_document() {
         auto root = doc.append_child("Relationships");
         root.append_attribute("xmlns").set_value(
             "http://schemas.openxmlformats.org/package/2006/relationships");
-        
-        auto rel = root.append_child("Relationship");
-        rel.append_attribute("Id").set_value("rId1");
-        rel.append_attribute("Type").set_value(
+
+        auto rel1 = root.append_child("Relationship");
+        rel1.append_attribute("Id").set_value("rId1");
+        rel1.append_attribute("Type").set_value(
             "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument");
-        rel.append_attribute("Target").set_value("word/document.xml");
+        rel1.append_attribute("Target").set_value("word/document.xml");
+
+        auto rel2 = root.append_child("Relationship");
+        rel2.append_attribute("Id").set_value("rId2");
+        rel2.append_attribute("Type").set_value(
+            "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties");
+        rel2.append_attribute("Target").set_value("docProps/core.xml");
+
+        auto rel3 = root.append_child("Relationship");
+        rel3.append_attribute("Id").set_value("rId3");
+        rel3.append_attribute("Type").set_value(
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties");
+        rel3.append_attribute("Target").set_value("docProps/app.xml");
     }
-    
+
     // Create word/_rels/document.xml.rels
     {
         auto& doc = create_xml_part("word/_rels/document.xml.rels");
         auto root = doc.append_child("Relationships");
         root.append_attribute("xmlns").set_value(
             "http://schemas.openxmlformats.org/package/2006/relationships");
+
+        auto add_rel = [&root](const char* id, const char* type, const char* target) {
+            auto rel = root.append_child("Relationship");
+            rel.append_attribute("Id").set_value(id);
+            rel.append_attribute("Type").set_value(type);
+            rel.append_attribute("Target").set_value(target);
+        };
+
+        add_rel("rId1", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
+                "styles.xml");
+        add_rel("rId2", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings",
+                "settings.xml");
+        add_rel("rId3", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable",
+                "fontTable.xml");
+        add_rel("rId4", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
+                "theme/theme1.xml");
     }
-    
+
     // Create word/document.xml
     {
         auto& doc = create_xml_part("word/document.xml");
@@ -1599,20 +1846,20 @@ bool Document::create_empty_document() {
             "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
         root.append_attribute("xmlns:r").set_value(
             "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-        
+
         auto body = root.append_child("w:body");
-        
+
         // Add empty paragraph
         auto para = body.append_child("w:p");
         auto run = para.append_child("w:r");
         run.append_child("w:t");
-        
+
         // Add section properties
         auto sectPr = body.append_child("w:sectPr");
         auto pgSz = sectPr.append_child("w:pgSz");
         pgSz.append_attribute("w:w").set_value("12240");
         pgSz.append_attribute("w:h").set_value("15840");
-        
+
         auto pgMar = sectPr.append_child("w:pgMar");
         pgMar.append_attribute("w:top").set_value("1440");
         pgMar.append_attribute("w:right").set_value("1440");
@@ -1636,9 +1883,108 @@ bool Document::create_empty_document() {
         name.append_attribute("w:val").set_value("Normal");
     }
 
-    // Register styles.xml content type
+    // Create word/settings.xml
+    {
+        auto& doc = create_xml_part("word/settings.xml");
+        auto root = doc.append_child("w:settings");
+        root.append_attribute("xmlns:w").set_value(
+            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+        root.append_child("w:zoom").append_attribute("w:percent").set_value("100");
+        root.append_child("w:defaultTabStop").append_attribute("w:val").set_value("720");
+        root.append_child("w:characterSpacingControl").append_attribute("w:val").set_value("doNotCompress");
+        root.append_child("w:compat");
+        root.append_child("w:docVars");
+    }
+
+    // Create word/fontTable.xml
+    {
+        auto& doc = create_xml_part("word/fontTable.xml");
+        auto root = doc.append_child("w:fonts");
+        root.append_attribute("xmlns:w").set_value(
+            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+        auto font = root.append_child("w:font");
+        font.append_attribute("w:name").set_value("Calibri");
+        font.append_child("w:panose1").append_attribute("w:val").set_value("020F0502020204030204");
+        font.append_child("w:charset").append_attribute("w:val").set_value("00");
+        font.append_child("w:family").append_attribute("w:val").set_value("swiss");
+        font.append_child("w:pitch").append_attribute("w:val").set_value("variable");
+    }
+
+    // Create word/theme/theme1.xml
+    {
+        auto& doc = create_xml_part("word/theme/theme1.xml");
+        auto root = doc.append_child("a:theme");
+        root.append_attribute("xmlns:a").set_value(
+            "http://schemas.openxmlformats.org/drawingml/2006/main");
+        root.append_attribute("name").set_value("Office Theme");
+        auto theme_elem = root.append_child("a:themeElements");
+        auto clr_scheme = theme_elem.append_child("a:clrScheme");
+        clr_scheme.append_attribute("name").set_value("Office");
+        auto font_scheme = theme_elem.append_child("a:fontScheme");
+        font_scheme.append_attribute("name").set_value("Office");
+        auto fmt_scheme = theme_elem.append_child("a:fmtScheme");
+        fmt_scheme.append_attribute("name").set_value("Office");
+    }
+
+    // Create docProps/core.xml
+    {
+        auto& doc = create_xml_part("docProps/core.xml");
+        auto root = doc.append_child("cp:coreProperties");
+        root.append_attribute("xmlns:cp").set_value(
+            "http://schemas.openxmlformats.org/package/2006/metadata/core-properties");
+        root.append_attribute("xmlns:dc").set_value("http://purl.org/dc/elements/1.1/");
+        root.append_attribute("xmlns:dcterms").set_value("http://purl.org/dc/terms/");
+        root.append_attribute("xmlns:dcmitype").set_value("http://purl.org/dc/dcmitype/");
+        root.append_attribute("xmlns:xsi").set_value("http://www.w3.org/2001/XMLSchema-instance");
+        root.append_child("dc:title");
+        root.append_child("dc:subject");
+        root.append_child("dc:creator");
+        root.append_child("cp:keywords");
+        root.append_child("dc:description");
+        root.append_child("cp:lastModifiedBy");
+        root.append_child("cp:revision").append_child(pugi::node_pcdata).set_value("1");
+        root.append_child("dcterms:created").append_attribute("xsi:type").set_value(
+            "dcterms:W3CDTF");
+        root.append_child("dcterms:modified").append_attribute("xsi:type").set_value(
+            "dcterms:W3CDTF");
+    }
+
+    // Create docProps/app.xml
+    {
+        auto& doc = create_xml_part("docProps/app.xml");
+        auto root = doc.append_child("Properties");
+        root.append_attribute("xmlns").set_value(
+            "http://schemas.openxmlformats.org/officeDocument/2006/extended-properties");
+        root.append_attribute("xmlns:vt").set_value(
+            "http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes");
+        root.append_child("Template").append_child(pugi::node_pcdata).set_value("Normal.dotm");
+        root.append_child("TotalTime").append_child(pugi::node_pcdata).set_value("0");
+        root.append_child("Pages").append_child(pugi::node_pcdata).set_value("1");
+        root.append_child("Words").append_child(pugi::node_pcdata).set_value("0");
+        root.append_child("Characters").append_child(pugi::node_pcdata).set_value("0");
+        root.append_child("Application").append_child(pugi::node_pcdata).set_value("Microsoft Office Word");
+        root.append_child("DocSecurity").append_child(pugi::node_pcdata).set_value("0");
+        root.append_child("Lines").append_child(pugi::node_pcdata).set_value("1");
+        root.append_child("Paragraphs").append_child(pugi::node_pcdata).set_value("1");
+        root.append_child("Company");
+        root.append_child("AppVersion").append_child(pugi::node_pcdata).set_value("16.0000");
+    }
+
+    // Register content types for all parts
     add_content_type_override("/word/styles.xml",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml");
+    add_content_type_override("/word/settings.xml",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml");
+    add_content_type_override("/word/fontTable.xml",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml");
+    add_content_type_override("/word/theme/theme1.xml",
+        "application/vnd.openxmlformats-officedocument.theme+xml");
+    add_content_type_override("/docProps/core.xml",
+        "application/vnd.openxmlformats-package.core-properties+xml");
+    add_content_type_override("/docProps/app.xml",
+        "application/vnd.openxmlformats-officedocument.extended-properties+xml");
+    add_content_type_override("/word/document.xml",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml");
 
     // Initialize default styles in DOM
     if (styles_) {

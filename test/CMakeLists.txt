@@ -54,6 +54,8 @@ add_test_suite(11_table_merge "" "core;table;merge" 60)
 add_test_suite(12_document_search "" "core;search;replace" 60)
 add_test_suite(13_document_builder "" "advanced;builder;hyperlink;image" 60)
 add_test_suite(14_style_collection "" "advanced;styles;dom" 60)
+add_test_suite(15_mail_merge "" "advanced;mail_merge" 60)
+add_test_suite(16_comment_collection "" "advanced;comments;dom" 60)
 
 # ----------------------------------------------------------------------------
 # Test Execution Targets

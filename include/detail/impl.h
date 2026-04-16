@@ -52,8 +52,8 @@ class Template;
 class DocumentInserter;
 struct LoadConfig;
 struct LoadResult;
-enum class LoadErrorType;
-enum class DocumentIntegrity;
+enum class LoadErrorType : std::uint8_t;
+enum class DocumentIntegrity : std::uint8_t;
 
 // ============================================================================
 // Storage Type (kept for API compatibility)
@@ -65,7 +65,7 @@ enum class DocumentIntegrity;
  * @internal
  * @note Simplified - all data is now stored in memory
  */
-enum class StorageType {
+enum class StorageType : std::uint8_t {
     Memory = 0      ///< In memory (vector<uint8_t>)
 };
 
@@ -275,7 +275,7 @@ public:
     // Save operations
     bool save_to_zip(const std::string& output_path);
     bool save_tree_to_zip(::zip_t* zip);
-    bool write_tree_node(::zip_t* zip, std::shared_ptr<DocxTreeNode> node);
+    bool write_tree_node(::zip_t* zip, const std::shared_ptr<DocxTreeNode>& node);
     bool write_xml_part(zip_t* zip, const std::string& part_path);
     bool write_media_files(zip_t* zip);
     bool write_zip_entries(zip_t* zip);

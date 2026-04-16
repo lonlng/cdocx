@@ -36,6 +36,13 @@ class SpecialChar;
 class Field;
 class BookmarkStart;
 class BookmarkEnd;
+class Comment;
+class CommentRangeStart;
+class CommentRangeEnd;
+class Footnote;
+class FootnoteReference;
+class EndnoteReference;
+class FormField;
 class DocumentVisitor;
 class NodeCollection;
 
@@ -47,8 +54,8 @@ class Node : public std::enable_shared_from_this<Node> {
 protected:
     Document* document_ = nullptr;
     CompositeNode* parent_ = nullptr;
-    std::shared_ptr<Node> next_sibling_;
-    std::shared_ptr<Node> prev_sibling_;
+    std::weak_ptr<Node> next_sibling_;
+    std::weak_ptr<Node> prev_sibling_;
     bool is_deleted_ = false;
     int custom_id_ = 0;  // For user-defined identification
 
@@ -69,11 +76,11 @@ public:
     CompositeNode* get_parent() const { return parent_; }
     void set_parent(CompositeNode* parent) { parent_ = parent; }
     
-    std::shared_ptr<Node> get_next_sibling() const { return next_sibling_; }
-    std::shared_ptr<Node> get_previous_sibling() const { return prev_sibling_; }
-    
-    void set_next_sibling(std::shared_ptr<Node> node) { next_sibling_ = node; }
-    void set_previous_sibling(std::shared_ptr<Node> node) { prev_sibling_ = node; }
+    std::shared_ptr<Node> get_next_sibling() const { return next_sibling_.lock(); }
+    std::shared_ptr<Node> get_previous_sibling() const { return prev_sibling_.lock(); }
+
+    void set_next_sibling(const std::shared_ptr<Node>& node) { next_sibling_ = node; }
+    void set_previous_sibling(const std::shared_ptr<Node>& node) { prev_sibling_ = node; }
     
     // Custom node ID (not saved to file)
     int get_custom_id() const { return custom_id_; }
@@ -139,11 +146,11 @@ public:
     std::shared_ptr<Node> append_child(std::shared_ptr<Node> child);
     std::shared_ptr<Node> prepend_child(std::shared_ptr<Node> child);
     std::shared_ptr<Node> insert_child(int index, std::shared_ptr<Node> child);
-    std::shared_ptr<Node> insert_before(std::shared_ptr<Node> new_node, 
-                                         std::shared_ptr<Node> ref_node);
-    std::shared_ptr<Node> insert_after(std::shared_ptr<Node> new_node, 
-                                        std::shared_ptr<Node> ref_node);
-    void remove_child(std::shared_ptr<Node> child);
+    std::shared_ptr<Node> insert_before(const std::shared_ptr<Node>& new_node,
+                                         const std::shared_ptr<Node>& ref_node);
+    std::shared_ptr<Node> insert_after(const std::shared_ptr<Node>& new_node,
+                                        const std::shared_ptr<Node>& ref_node);
+    void remove_child(const std::shared_ptr<Node>& child);
     void remove_child(int index);
     void remove_all_children();
     
@@ -263,12 +270,12 @@ public:
     // Searching
     std::shared_ptr<Node> find(const std::string& text) const;
     std::vector<std::shared_ptr<Node>> find_all(const std::string& text) const;
-    std::shared_ptr<Node> find_if(std::function<bool(const Node&)> predicate) const;
-    NodeCollection find_all_if(std::function<bool(const Node&)> predicate) const;
-    
+    std::shared_ptr<Node> find_if(const std::function<bool(const Node&)>& predicate) const;
+    NodeCollection find_all_if(const std::function<bool(const Node&)>& predicate) const;
+
     // Modification
-    void add(std::shared_ptr<Node> node);
-    void remove(std::shared_ptr<Node> node);
+    void add(const std::shared_ptr<Node>& node);
+    void remove(const std::shared_ptr<Node>& node);
     void remove_at(size_t index);
     void clear();
     void insert(size_t index, std::shared_ptr<Node> node);
@@ -390,11 +397,45 @@ public:
     }
     
     // Bookmark
-    virtual VisitorAction visit_bookmark_start(BookmarkStart& bookmark) { 
-        return VisitorAction::Continue; 
+    virtual VisitorAction visit_bookmark_start(BookmarkStart& bookmark) {
+        return VisitorAction::Continue;
     }
-    virtual VisitorAction visit_bookmark_end(BookmarkEnd& bookmark) { 
-        return VisitorAction::Continue; 
+    virtual VisitorAction visit_bookmark_end(BookmarkEnd& bookmark) {
+        return VisitorAction::Continue;
+    }
+
+    // Comment
+    virtual VisitorAction visit_comment(Comment& comment) {
+        return VisitorAction::Continue;
+    }
+    virtual VisitorAction visit_comment_range_start(CommentRangeStart& comment) {
+        return VisitorAction::Continue;
+    }
+    virtual VisitorAction visit_comment_range_end(CommentRangeEnd& comment) {
+        return VisitorAction::Continue;
+    }
+
+    // Footnote
+    virtual VisitorAction visit_footnote_start(Footnote& footnote) {
+        return VisitorAction::Continue;
+    }
+    virtual VisitorAction visit_footnote_end(Footnote& footnote) {
+        return VisitorAction::Continue;
+    }
+
+    // FormField
+    virtual VisitorAction visit_form_field(FormField& form_field) {
+        return VisitorAction::Continue;
+    }
+
+    // FootnoteReference
+    virtual VisitorAction visit_footnote_reference(FootnoteReference& ref) {
+        return VisitorAction::Continue;
+    }
+
+    // EndnoteReference
+    virtual VisitorAction visit_endnote_reference(EndnoteReference& ref) {
+        return VisitorAction::Continue;
     }
 };
 

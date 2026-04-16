@@ -410,3 +410,111 @@ TEST(TableAutoFitTest, AutoFitRoundTrip) {
     doc2.close();
     fs::remove("test_autofit_rt.docx");
 }
+
+// ============================================================================
+// TableOperations Tests
+// ============================================================================
+
+TEST(TableOperationsTest, InsertRow) {
+    Document doc("test_ops_insert_row.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto body = doc.get_first_section()->get_body();
+    auto table = body->append_table(2, 2);
+    table->get_cell(0, 0)->set_text("R0C0");
+    table->get_cell(1, 0)->set_text("R1C0");
+
+    EXPECT_TRUE(TableOperations::insert_row(*table, 1));
+    EXPECT_EQ(TableOperations::get_row_count(*table), 3u);
+    EXPECT_EQ(table->get_cell(0, 0)->get_text(), "R0C0");
+    EXPECT_EQ(table->get_cell(2, 0)->get_text(), "R1C0");
+
+    doc.save();
+    fs::remove("test_ops_insert_row.docx");
+}
+
+TEST(TableOperationsTest, AppendRow) {
+    Document doc("test_ops_append_row.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto body = doc.get_first_section()->get_body();
+    auto table = body->append_table(1, 2);
+
+    EXPECT_TRUE(TableOperations::append_row(*table));
+    EXPECT_EQ(TableOperations::get_row_count(*table), 2u);
+    EXPECT_EQ(TableOperations::get_column_count(*table), 2u);
+
+    doc.save();
+    fs::remove("test_ops_append_row.docx");
+}
+
+TEST(TableOperationsTest, DeleteRow) {
+    Document doc("test_ops_delete_row.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto body = doc.get_first_section()->get_body();
+    auto table = body->append_table(3, 2);
+    table->get_cell(0, 0)->set_text("A");
+    table->get_cell(1, 0)->set_text("B");
+    table->get_cell(2, 0)->set_text("C");
+
+    EXPECT_TRUE(TableOperations::delete_row(*table, 1));
+    EXPECT_EQ(TableOperations::get_row_count(*table), 2u);
+    EXPECT_EQ(table->get_cell(0, 0)->get_text(), "A");
+    EXPECT_EQ(table->get_cell(1, 0)->get_text(), "C");
+
+    doc.save();
+    fs::remove("test_ops_delete_row.docx");
+}
+
+TEST(TableOperationsTest, InsertAndDeleteCell) {
+    Document doc("test_ops_cell.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto body = doc.get_first_section()->get_body();
+    auto table = body->append_table(1, 2);
+    auto row = table->get_row(0);
+    ASSERT_NE(row, nullptr);
+
+    EXPECT_TRUE(TableOperations::insert_cell(*row, 1));
+    EXPECT_EQ(row->get_cells().get_count(), 3u);
+
+    EXPECT_TRUE(TableOperations::delete_cell(*row, 0));
+    EXPECT_EQ(row->get_cells().get_count(), 2u);
+
+    doc.save();
+    fs::remove("test_ops_cell.docx");
+}
+
+TEST(TableOperationsTest, MergeCellsHorizontal) {
+    Document doc("test_ops_merge_h.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto body = doc.get_first_section()->get_body();
+    auto table = body->append_table(1, 3);
+    auto row = table->get_row(0);
+    ASSERT_NE(row, nullptr);
+
+    EXPECT_TRUE(TableOperations::merge_cells_horizontal(*row, 0, 1));
+    EXPECT_EQ(table->get_column_count(), 3);
+    EXPECT_EQ(table->get_cell(0, 0)->get_horizontal_merge_span(), 2);
+
+    doc.save();
+    fs::remove("test_ops_merge_h.docx");
+}
+
+TEST(TableOperationsTest, SetAndGetCellText) {
+    Document doc("test_ops_cell_text.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto body = doc.get_first_section()->get_body();
+    auto table = body->append_table(1, 1);
+    auto cell = table->get_cell(0, 0);
+    ASSERT_NE(cell, nullptr);
+
+    EXPECT_TRUE(TableOperations::set_cell_text(*cell, "Hello TableOperations"));
+    EXPECT_EQ(TableOperations::get_cell_text(*cell), "Hello TableOperations");
+
+    doc.save();
+    fs::remove("test_ops_cell_text.docx");
+}

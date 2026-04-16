@@ -441,13 +441,13 @@ bool Run::set_position_xml(TextProperties::PositionType type, int value) {
 // RunCollection Implementation
 // ============================================================================
 
-void RunCollection::add(std::shared_ptr<Run> run) {
+void RunCollection::add(const std::shared_ptr<Run>& run) {
     if (run) {
         runs_.push_back(run);
     }
 }
 
-void RunCollection::remove(std::shared_ptr<Run> run) {
+void RunCollection::remove(const std::shared_ptr<Run>& run) {
     if (!run) return;
     for (auto it = runs_.begin(); it != runs_.end(); ++it) {
         if (*it == run) {

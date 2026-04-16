@@ -50,6 +50,12 @@ list(APPEND CDOCX_EXAMPLES 16_document_builder)
 # v0.7.0: StyleCollection example
 list(APPEND CDOCX_EXAMPLES 17_style_collection)
 
+# v0.7.0: New features alignment example
+list(APPEND CDOCX_EXAMPLES 18_new_features)
+
+# v0.7.0: MailMerge example
+list(APPEND CDOCX_EXAMPLES 19_mail_merge)
+
 # DOM sync validation
 list(APPEND CDOCX_EXAMPLES test_dom_sync)
 

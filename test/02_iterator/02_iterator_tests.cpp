@@ -13,12 +13,8 @@ TEST(IteratorTest, CheckContentsOfMyTestDocxWithIterator) {
 
     std::ostringstream ss;
 
-    cdocx::Paragraph p = doc.paragraphs();
-    while (p.has_next()) {
-        p.next();
-        cdocx::Run r = p.runs();
-        while (r.has_next()) {
-            r.next();
+    for (cdocx::Paragraph p = doc.paragraphs(); p.has_next(); p.next()) {
+        for (cdocx::Run r = p.runs(); r.has_next(); r.next()) {
             ss << r.get_text() << std::endl;
         }
     }

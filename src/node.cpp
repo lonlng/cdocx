@@ -41,9 +41,10 @@ bool Node::is_descendant_of(const Node* ancestor) const {
 }
 
 std::shared_ptr<Node> Node::get_previous_node_in_document() const {
-    if (prev_sibling_) {
+    auto prev = prev_sibling_.lock();
+    if (prev) {
         // Pre-order: previous sibling's deepest last descendant
-        auto current = prev_sibling_;
+        auto current = prev;
         while (current->is_composite()) {
             auto composite = std::dynamic_pointer_cast<CompositeNode>(current);
             if (!composite || !composite->has_children()) break;
@@ -66,8 +67,9 @@ std::shared_ptr<Node> Node::get_next_node_in_document() const {
             return composite->get_first_child();
         }
     }
-    if (next_sibling_) {
-        return next_sibling_;
+    auto next = next_sibling_.lock();
+    if (next) {
+        return next;
     }
     auto current = parent_;
     while (current) {
@@ -80,31 +82,11 @@ std::shared_ptr<Node> Node::get_next_node_in_document() const {
 }
 
 std::shared_ptr<Node> Node::get_previous_logical() const {
-    if (prev_sibling_) {
-        return prev_sibling_;
-    }
-    auto current = parent_;
-    while (current) {
-        if (current->get_previous_sibling()) {
-            return current->get_previous_sibling();
-        }
-        current = current->get_parent();
-    }
-    return nullptr;
+    return prev_sibling_.lock();
 }
 
 std::shared_ptr<Node> Node::get_next_logical() const {
-    if (next_sibling_) {
-        return next_sibling_;
-    }
-    auto current = parent_;
-    while (current) {
-        if (current->get_next_sibling()) {
-            return current->get_next_sibling();
-        }
-        current = current->get_parent();
-    }
-    return nullptr;
+    return next_sibling_.lock();
 }
 
 // ============================================================================
@@ -165,8 +147,8 @@ std::shared_ptr<Node> CompositeNode::insert_child(int index, std::shared_ptr<Nod
     return child;
 }
 
-std::shared_ptr<Node> CompositeNode::insert_before(std::shared_ptr<Node> new_node, 
-                                                    std::shared_ptr<Node> ref_node) {
+std::shared_ptr<Node> CompositeNode::insert_before(const std::shared_ptr<Node>& new_node,
+                                                    const std::shared_ptr<Node>& ref_node) {
     if (!new_node || !ref_node) return nullptr;
     
     for (size_t i = 0; i < children_.size(); ++i) {
@@ -177,8 +159,8 @@ std::shared_ptr<Node> CompositeNode::insert_before(std::shared_ptr<Node> new_nod
     return nullptr;
 }
 
-std::shared_ptr<Node> CompositeNode::insert_after(std::shared_ptr<Node> new_node, 
-                                                   std::shared_ptr<Node> ref_node) {
+std::shared_ptr<Node> CompositeNode::insert_after(const std::shared_ptr<Node>& new_node,
+                                                   const std::shared_ptr<Node>& ref_node) {
     if (!new_node || !ref_node) return nullptr;
     
     for (size_t i = 0; i < children_.size(); ++i) {
@@ -189,7 +171,7 @@ std::shared_ptr<Node> CompositeNode::insert_after(std::shared_ptr<Node> new_node
     return nullptr;
 }
 
-void CompositeNode::remove_child(std::shared_ptr<Node> child) {
+void CompositeNode::remove_child(const std::shared_ptr<Node>& child) {
     if (!child) return;
     
     for (auto it = children_.begin(); it != children_.end(); ++it) {
@@ -282,7 +264,7 @@ std::vector<std::shared_ptr<Node>> NodeCollection::find_all(const std::string& t
     return result;
 }
 
-std::shared_ptr<Node> NodeCollection::find_if(std::function<bool(const Node&)> predicate) const {
+std::shared_ptr<Node> NodeCollection::find_if(const std::function<bool(const Node&)>& predicate) const {
     for (const auto& node : nodes_) {
         if (predicate(*node)) {
             return node;
@@ -291,7 +273,7 @@ std::shared_ptr<Node> NodeCollection::find_if(std::function<bool(const Node&)> p
     return nullptr;
 }
 
-NodeCollection NodeCollection::find_all_if(std::function<bool(const Node&)> predicate) const {
+NodeCollection NodeCollection::find_all_if(const std::function<bool(const Node&)>& predicate) const {
     std::vector<std::shared_ptr<Node>> result;
     for (const auto& node : nodes_) {
         if (predicate(*node)) {
@@ -301,13 +283,13 @@ NodeCollection NodeCollection::find_all_if(std::function<bool(const Node&)> pred
     return NodeCollection(result);
 }
 
-void NodeCollection::add(std::shared_ptr<Node> node) {
+void NodeCollection::add(const std::shared_ptr<Node>& node) {
     if (node) {
         nodes_.push_back(node);
     }
 }
 
-void NodeCollection::remove(std::shared_ptr<Node> node) {
+void NodeCollection::remove(const std::shared_ptr<Node>& node) {
     if (!node) return;
     for (auto it = nodes_.begin(); it != nodes_.end(); ++it) {
         if (*it == node) {

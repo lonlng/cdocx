@@ -48,13 +48,13 @@ std::shared_ptr<Style> StyleCollection::add(StyleType type, const std::string& n
     return style;
 }
 
-void StyleCollection::add(std::shared_ptr<Style> style) {
+void StyleCollection::add(const std::shared_ptr<Style>& style) {
     if (!style) return;
     style->set_document(document_);
     styles_.push_back(style);
 }
 
-void StyleCollection::remove(std::shared_ptr<Style> style) {
+void StyleCollection::remove(const std::shared_ptr<Style>& style) {
     if (!style) return;
     styles_.erase(std::remove(styles_.begin(), styles_.end(), style), styles_.end());
 }

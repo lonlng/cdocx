@@ -9,6 +9,7 @@
 #include <cdocx/format_context.h>
 #include <cdocx/paragraph.h>
 
+#include <algorithm>
 #include <cstring>
 
 namespace cdocx {
@@ -415,6 +416,11 @@ void ParagraphProperties::applyTo(pugi::xml_node para_node) const {
         addBorder("w:bottom", borders->bottom);
         addBorder("w:right", borders->right);
     }
+
+    // Tab stops
+    if (tab_stops) {
+        tab_stops->applyTo(para_node);
+    }
 }
 
 ParagraphProperties ParagraphProperties::extractFrom(const Paragraph& para) {
@@ -457,8 +463,162 @@ ParagraphProperties ParagraphProperties::extractFrom(pugi::xml_node para_node) {
             props.outlineLevel = static_cast<OutlineLevel>(level);
         }
     }
-    
+
+    // Extract tab stops
+    props.tab_stops = TabStopCollection::extractFrom(para_node);
+
     return props;
+}
+
+// ============================================================================
+// TabStopCollection Implementation
+// ============================================================================
+
+namespace {
+
+const char* tab_alignment_to_string(TabAlignment alignment) {
+    switch (alignment) {
+        case TabAlignment::Center:    return "center";
+        case TabAlignment::Right:     return "right";
+        case TabAlignment::Decimal:   return "decimal";
+        case TabAlignment::Bar:       return "bar";
+        case TabAlignment::List:      return "list";
+        case TabAlignment::Clear:     return "clear";
+        default:                      return "left";
+    }
+}
+
+TabAlignment string_to_tab_alignment(const char* str) {
+    if (std::strcmp(str, "center") == 0)   return TabAlignment::Center;
+    if (std::strcmp(str, "right") == 0)    return TabAlignment::Right;
+    if (std::strcmp(str, "decimal") == 0)  return TabAlignment::Decimal;
+    if (std::strcmp(str, "bar") == 0)      return TabAlignment::Bar;
+    if (std::strcmp(str, "list") == 0)     return TabAlignment::List;
+    if (std::strcmp(str, "clear") == 0)    return TabAlignment::Clear;
+    return TabAlignment::Left;
+}
+
+const char* tab_leader_to_string(TabLeader leader) {
+    switch (leader) {
+        case TabLeader::Dots:       return "dot";
+        case TabLeader::Dashes:     return "hyphen";
+        case TabLeader::Line:       return "underscore";
+        case TabLeader::Heavy:      return "heavy";
+        case TabLeader::MiddleDot:  return "middleDot";
+        default:                    return "none";
+    }
+}
+
+TabLeader string_to_tab_leader(const char* str) {
+    if (std::strcmp(str, "dot") == 0)         return TabLeader::Dots;
+    if (std::strcmp(str, "hyphen") == 0)      return TabLeader::Dashes;
+    if (std::strcmp(str, "underscore") == 0)  return TabLeader::Line;
+    if (std::strcmp(str, "heavy") == 0)       return TabLeader::Heavy;
+    if (std::strcmp(str, "middleDot") == 0)   return TabLeader::MiddleDot;
+    return TabLeader::None;
+}
+
+} // anonymous namespace
+
+void TabStopCollection::add(const TabStop& tab_stop) {
+    // Replace existing tab stop at the same position
+    for (auto& ts : tab_stops_) {
+        if (ts.position == tab_stop.position) {
+            ts = tab_stop;
+            return;
+        }
+    }
+    tab_stops_.push_back(tab_stop);
+}
+
+void TabStopCollection::add(double position, TabAlignment alignment, TabLeader leader) {
+    add(TabStop(position, alignment, leader));
+}
+
+void TabStopCollection::remove(double position) {
+    tab_stops_.erase(
+        std::remove_if(tab_stops_.begin(), tab_stops_.end(),
+            [position](const TabStop& ts) { return ts.position == position; }),
+        tab_stops_.end());
+}
+
+void TabStopCollection::remove_at(size_t index) {
+    if (index < tab_stops_.size()) {
+        tab_stops_.erase(tab_stops_.begin() + index);
+    }
+}
+
+void TabStopCollection::clear() {
+    tab_stops_.clear();
+}
+
+const TabStop* TabStopCollection::get(double position) const {
+    for (const auto& ts : tab_stops_) {
+        if (ts.position == position) {
+            return &ts;
+        }
+    }
+    return nullptr;
+}
+
+bool TabStopCollection::contains(double position) const {
+    return get(position) != nullptr;
+}
+
+void TabStopCollection::applyTo(pugi::xml_node para_node) const {
+    if (!para_node || tab_stops_.empty()) {
+        return;
+    }
+
+    pugi::xml_node pPr = para_node.child("w:pPr");
+    if (!pPr) {
+        pPr = para_node.prepend_child("w:pPr");
+    }
+
+    // Remove existing tabs element
+    pPr.remove_child("w:tabs");
+
+    pugi::xml_node tabs = pPr.append_child("w:tabs");
+    for (const auto& ts : tab_stops_) {
+        pugi::xml_node tab = tabs.append_child("w:tab");
+        tab.append_attribute("w:val").set_value(tab_alignment_to_string(ts.alignment));
+        tab.append_attribute("w:pos").set_value(static_cast<int>(ts.position * 20)); // points to twips
+        if (ts.leader != TabLeader::None) {
+            tab.append_attribute("w:leader").set_value(tab_leader_to_string(ts.leader));
+        }
+    }
+}
+
+TabStopCollection TabStopCollection::extractFrom(pugi::xml_node para_node) {
+    TabStopCollection collection;
+    if (!para_node) {
+        return collection;
+    }
+
+    pugi::xml_node pPr = para_node.child("w:pPr");
+    if (!pPr) {
+        return collection;
+    }
+
+    pugi::xml_node tabs = pPr.child("w:tabs");
+    if (!tabs) {
+        return collection;
+    }
+
+    for (pugi::xml_node tab = tabs.child("w:tab"); tab; tab = tab.next_sibling("w:tab")) {
+        TabStop ts;
+        ts.alignment = string_to_tab_alignment(tab.attribute("w:val").value());
+        ts.position = tab.attribute("w:pos").as_int() / 20.0; // twips to points
+
+        pugi::xml_attribute leader_attr = tab.attribute("w:leader");
+        if (leader_attr) {
+            ts.leader = string_to_tab_leader(leader_attr.value());
+        }
+
+        collection.add(ts);
+    }
+
+    return collection;
 }
 
 // ============================================================================

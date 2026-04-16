@@ -247,7 +247,7 @@ TEST(SectionAndListTest, NumberingXmlSerialization) {
 
         // Check if numbering.xml contains abstractNum elements
         if (numbering) {
-            auto root = numbering->root();
+            auto root = numbering->child("w:numbering");
             EXPECT_NE(root.child("w:abstractNum"), pugi::xml_node());
         }
     }
@@ -288,4 +288,98 @@ TEST(SectionAndListTest, SectionLoadingFromXml) {
     }
 
     fs::remove("test_section_load.docx");
+}
+
+// ============================================================================
+// HeaderFooter Link-to-Previous Tests
+// ============================================================================
+
+TEST(SectionAndListTest, HeaderFooterLinkToPrevious) {
+    Document doc("test_hf_link.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto sect1 = doc.get_first_section();
+    ASSERT_NE(sect1, nullptr);
+
+    auto header1 = sect1->add_header();
+    ASSERT_NE(header1, nullptr);
+    header1->append_paragraph("Header 1");
+
+    auto footer1 = sect1->add_footer();
+    ASSERT_NE(footer1, nullptr);
+    footer1->append_paragraph("Footer 1");
+
+    auto sect2 = doc.add_section();
+    ASSERT_NE(sect2, nullptr);
+
+    // Initially second section should not have explicit header/footer
+    EXPECT_FALSE(sect2->has_header());
+    EXPECT_FALSE(sect2->has_footer());
+
+    // Link to previous
+    sect2->link_to_previous(true);
+
+    EXPECT_TRUE(sect2->is_linked_to_previous(HeaderFooterType::Default));
+    EXPECT_TRUE(sect2->has_header());
+    EXPECT_TRUE(sect2->has_footer());
+
+    // Unlink
+    sect2->link_to_previous(false);
+
+    EXPECT_FALSE(sect2->is_linked_to_previous(HeaderFooterType::Default));
+    EXPECT_TRUE(sect2->has_header());
+    EXPECT_TRUE(sect2->has_footer());
+
+    // Save and reload
+    doc.sync_to_physical_tree();
+    doc.save();
+
+    Document doc2("test_hf_link.docx");
+    doc2.open();
+    ASSERT_TRUE(doc2.is_open());
+
+    ASSERT_GE(doc2.get_section_count(), 2u);
+    auto s2 = doc2.get_section(1);
+    ASSERT_NE(s2, nullptr);
+
+    EXPECT_TRUE(s2->has_header());
+    EXPECT_TRUE(s2->has_footer());
+
+    doc2.close();
+    fs::remove("test_hf_link.docx");
+}
+
+TEST(SectionAndListTest, HeaderFooterLinkToPreviousByType) {
+    Document doc("test_hf_link_type.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto sect1 = doc.get_first_section();
+    auto h1 = sect1->add_header(HeaderFooterType::Default);
+    h1->append_paragraph("Default header");
+
+    auto sect2 = doc.add_section();
+
+    // Link only default header
+    sect2->link_to_previous(HeaderFooterType::Default, true);
+    EXPECT_TRUE(sect2->is_linked_to_previous(HeaderFooterType::Default, true));
+    EXPECT_FALSE(sect2->is_linked_to_previous(HeaderFooterType::Default, false));
+
+    // Unlink only default header
+    sect2->link_to_previous(HeaderFooterType::Default, false);
+    EXPECT_FALSE(sect2->is_linked_to_previous(HeaderFooterType::Default, true));
+    EXPECT_TRUE(sect2->has_header(HeaderFooterType::Default));
+
+    doc.sync_to_physical_tree();
+    doc.save();
+
+    Document doc2("test_hf_link_type.docx");
+    doc2.open();
+    ASSERT_TRUE(doc2.is_open());
+
+    auto s2 = doc2.get_section(1);
+    ASSERT_NE(s2, nullptr);
+    EXPECT_TRUE(s2->has_header(HeaderFooterType::Default));
+
+    doc2.close();
+    fs::remove("test_hf_link_type.docx");
 }

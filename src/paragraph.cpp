@@ -748,4 +748,17 @@ Paragraph& Paragraph::set_page_break_before(bool value) {
     return *this;
 }
 
+std::string ParagraphCollection::get_text() const {
+    std::string result;
+    for (const auto& para : paragraphs_) {
+        if (para) {
+            if (!result.empty()) {
+                result += "\n";
+            }
+            result += para->get_text();
+        }
+    }
+    return result;
+}
+
 }

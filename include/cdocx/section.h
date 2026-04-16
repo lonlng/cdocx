@@ -87,7 +87,7 @@ public:
     
     // Body (main content)
     std::shared_ptr<Body> get_body() const;
-    void set_body(std::shared_ptr<Body> body);
+    void set_body(const std::shared_ptr<Body>& body);
     std::shared_ptr<Body> ensure_body();
     
     // Convenience: Access body content directly
@@ -111,7 +111,13 @@ public:
     // Get all headers/footers
     std::vector<std::shared_ptr<HeaderFooter>> get_all_headers() const;
     std::vector<std::shared_ptr<HeaderFooter>> get_all_footers() const;
-    
+
+    // Link to previous section's headers/footers (Aspose-aligned API)
+    void link_to_previous(bool is_link_to_previous);
+    void link_to_previous(HeaderFooterType type, bool is_link_to_previous);
+    bool is_linked_to_previous(HeaderFooterType type, bool is_header) const;
+    bool is_linked_to_previous(HeaderFooterType type) const;
+
     // Check if this is the first section
     bool is_first_section() const { return is_first_section_; }
     void set_first_section(bool is_first) { is_first_section_ = is_first; }
@@ -144,8 +150,8 @@ private:
     std::vector<HeaderFooterRef> footer_refs_;
     
     // Cached HeaderFooter nodes
-    mutable std::vector<std::weak_ptr<HeaderFooter>> headers_;
-    mutable std::vector<std::weak_ptr<HeaderFooter>> footers_;
+    mutable std::vector<std::shared_ptr<HeaderFooter>> headers_;
+    mutable std::vector<std::shared_ptr<HeaderFooter>> footers_;
     
     // Legacy members (backward compatibility)
     pugi::xml_node sectPr_node_;

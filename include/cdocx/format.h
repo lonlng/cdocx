@@ -216,10 +216,14 @@ public:
     
     // Outline level
     OutlineLevel outline_level = OutlineLevel::BodyText;
-    
+
+    // Drop cap
+    DropCapPosition drop_cap_position = DropCapPosition::None;
+    int lines_to_drop = 1;
+
     // Style name
     std::string style_name;
-    
+
     // Borders
     Borders borders;
     
@@ -304,7 +308,10 @@ public:
     // Small caps / All caps
     bool small_caps = false;
     bool all_caps = false;
-    
+
+    // Shading
+    Shading shading;
+
     // ------------------------------------------------------------------------
     // Convenience methods
     // ------------------------------------------------------------------------
@@ -331,6 +338,7 @@ public:
         small_caps = false;
         all_caps = false;
         hidden = false;
+        shading.clear();
     }
 };
 
@@ -482,7 +490,7 @@ public:
     double page_height = 841.95;  // A4 height ~11.69 inch
     
     // Orientation
-    enum class Orientation { Portrait, Landscape };
+    enum class Orientation : std::uint8_t { Portrait, Landscape };
     Orientation orientation = Orientation::Portrait;
     
     // Margins (in points)

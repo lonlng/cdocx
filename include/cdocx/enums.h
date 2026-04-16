@@ -35,8 +35,13 @@ enum class NodeType {
     Picture,
     Shape,
     Comment,
+    CommentRangeStart,
+    CommentRangeEnd,
     Footnote,
     Endnote,
+    FootnoteReference,
+    EndnoteReference,
+    FormField,
     SpecialChar,
     GroupShape,
     Hyperlink
@@ -71,6 +76,12 @@ enum class OutlineLevel {
     Level8,
     Level9,
     BodyText
+};
+
+enum class DropCapPosition {
+    None,
+    Normal,
+    Margin
 };
 
 // ============================================================================
@@ -232,6 +243,15 @@ enum class HeaderFooterType {
 };
 
 // ============================================================================
+// Footnote Types
+// ============================================================================
+
+enum class FootnoteType : std::uint8_t {
+    Footnote = 0,
+    Endnote = 1
+};
+
+// ============================================================================
 // Field Types
 // ============================================================================
 
@@ -256,6 +276,25 @@ enum class FieldType {
     PageRef,
     Formula,
     MergeField
+};
+
+// ============================================================================
+// Form Field Types
+// ============================================================================
+
+enum class FormFieldType : std::uint8_t {
+    TextInput,
+    CheckBox,
+    ComboBox
+};
+
+enum class TextFormFieldType : std::uint8_t {
+    Regular,
+    Number,
+    Date,
+    CurrentDate,
+    CurrentTime,
+    Calculated
 };
 
 // ============================================================================
@@ -548,6 +587,65 @@ enum class StyleIdentifier {
     UnresolvedMention = 375,
     User = 0x0FFE,
     Nil = 0x2FFF
+};
+
+// ============================================================================
+// Tab Stops
+// ============================================================================
+
+enum class TabAlignment : std::uint8_t {
+    Left,       // Left-aligns text after the tab stop
+    Center,     // Centers text around the tab stop
+    Right,      // Right-aligns text at the tab stop
+    Decimal,    // Aligns text at the decimal dot
+    Bar,        // Draws a vertical bar at the tab stop position
+    List,       // Delimiter between number/bullet and text
+    Clear       // Clears any tab stop in this position
+};
+
+enum class TabLeader : std::uint8_t {
+    None,       // No leader line
+    Dots,       // Dots
+    Dashes,     // Dashes
+    Line,       // Single line
+    Heavy,      // Thick line
+    MiddleDot   // Middle dots
+};
+
+// ============================================================================
+// File Format
+// ============================================================================
+
+enum class LoadFormat : std::uint8_t {
+    Auto = 0,
+    Docx = 20,
+    Docm = 21,
+    Dotx = 22,
+    Dotm = 23,
+    FlatOpc = 24,
+    Rtf = 30,
+    Html = 50,
+    Odt = 60,
+    Text = 62,
+    Markdown = 63,
+    Xml = 65,
+    Unknown = 255
+};
+
+enum class SaveFormat : std::uint8_t {
+    Auto = 0,
+    Docx = 20,
+    Docm = 21,
+    Dotx = 22,
+    Dotm = 23,
+    FlatOpc = 24,
+    Rtf = 30,
+    Html = 50,
+    Odt = 60,
+    Text = 62,
+    Markdown = 63,
+    Xml = 65,
+    Unknown = 255
 };
 
 // ============================================================================
