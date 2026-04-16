@@ -30,6 +30,7 @@ RUN apt-get update \
         python3-venv \
         build-essential \
         clang \
+        clangd \
         clang-format \
         clang-tidy \
         git \
@@ -40,6 +41,7 @@ RUN apt-get update \
         zip \
         ccache \
         cmake \
+        ninja-build \
         gdb \
         tzdata \
         locales \

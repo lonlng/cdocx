@@ -1200,6 +1200,41 @@ static void serialize_body_to_xml(pugi::xml_node body_xml, Body* body) {
     }
 }
 
+static void serialize_header_footer_to_xml(HeaderFooter* hf, Document* doc) {
+    if (!hf || !doc) return;
+    auto xml_doc = doc->get_xml_part(hf->get_part_path());
+    if (!xml_doc) return;
+
+    auto root = xml_doc->child("w:hdr");
+    if (!root) root = xml_doc->child("w:ftr");
+    if (!root) {
+        root = xml_doc->append_child(hf->is_header() ? "w:hdr" : "w:ftr");
+        root.append_attribute("xmlns:w").set_value(
+            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+        root.append_attribute("xmlns:r").set_value(
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+    } else {
+        while (root.first_child()) {
+            root.remove_child(root.first_child());
+        }
+    }
+
+    for (const auto& child : hf->get_children()) {
+        switch (child->node_type()) {
+            case NodeType::Paragraph:
+                serialize_paragraph_to_xml(root, dynamic_cast<Paragraph*>(child.get()));
+                break;
+            case NodeType::Table:
+                serialize_table_to_xml(root, dynamic_cast<Table*>(child.get()));
+                break;
+            default:
+                break;
+        }
+    }
+
+    doc->mark_modified(hf->get_part_path());
+}
+
 static void serialize_section_to_xml(pugi::xml_node body_xml, Section* section) {
     if (!section) return;
     
@@ -1234,6 +1269,14 @@ static void serialize_section_to_xml(pugi::xml_node body_xml, Section* section) 
             default: break;
         }
         footerRef.append_attribute("w:type").set_value(type_str);
+    }
+
+    // Serialize header/footer content
+    for (auto& header : section->get_all_headers()) {
+        serialize_header_footer_to_xml(header.get(), section->get_document());
+    }
+    for (auto& footer : section->get_all_footers()) {
+        serialize_header_footer_to_xml(footer.get(), section->get_document());
     }
 }
 
@@ -1322,8 +1365,52 @@ void Document::sync_sections_from_physical() {
                 else hf_ref.type = HeaderFooterType::Default;
                 section->add_footer_ref(hf_ref);
             }
+
+            // Parse header/footer content from XML into DOM
+            for (auto& header : section->get_all_headers()) {
+                auto xml_doc = get_xml_part(header->get_part_path());
+                if (xml_doc) {
+                    auto root = xml_doc->child("w:hdr");
+                    if (root) {
+                        header->remove_all_children();
+                        for (auto node = root.first_child(); node; node = node.next_sibling()) {
+                            const char* name = node.name();
+                            if (std::strcmp(name, "w:p") == 0) {
+                                if (auto para = parse_paragraph_from_xml(node)) {
+                                    header->append_child(para);
+                                }
+                            } else if (std::strcmp(name, "w:tbl") == 0) {
+                                if (auto table = parse_table_from_xml(node)) {
+                                    header->append_child(table);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            for (auto& footer : section->get_all_footers()) {
+                auto xml_doc = get_xml_part(footer->get_part_path());
+                if (xml_doc) {
+                    auto root = xml_doc->child("w:ftr");
+                    if (root) {
+                        footer->remove_all_children();
+                        for (auto node = root.first_child(); node; node = node.next_sibling()) {
+                            const char* name = node.name();
+                            if (std::strcmp(name, "w:p") == 0) {
+                                if (auto para = parse_paragraph_from_xml(node)) {
+                                    footer->append_child(para);
+                                }
+                            } else if (std::strcmp(name, "w:tbl") == 0) {
+                                if (auto table = parse_table_from_xml(node)) {
+                                    footer->append_child(table);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        
+
         section->set_body(sect_body);
         append_child(section);
     }

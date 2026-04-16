@@ -123,6 +123,21 @@ private:
      * @brief Replace placeholders in headers and footers
      */
     void replace_in_headers_footers();
+
+    /**
+     * @brief Replace placeholders in a single paragraph
+     */
+    void replace_in_paragraph(const std::shared_ptr<Paragraph>& para);
+
+    /**
+     * @brief Replace placeholders in a single table
+     */
+    void replace_in_table(const std::shared_ptr<Table>& table);
+
+    /**
+     * @brief Replace image placeholder in a single run
+     */
+    bool replace_image_in_run(const std::shared_ptr<Run>& run);
     
     /**
      * @brief Legacy: Process a single paragraph for placeholders

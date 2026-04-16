@@ -149,11 +149,13 @@ bool create_sample_template(const std::string& template_path,
     // Date
     auto p14 = doc.paragraphs().insert_paragraph_after("");
     auto p15 = doc.paragraphs().insert_paragraph_after("Report Date: {{date}}");
-    
-    // Add images
-    doc.add_media_with_rel(image1_path);
-    doc.add_media_with_rel(image2_path);
-    
+
+    // Image placeholders
+    auto p16 = doc.paragraphs().insert_paragraph_after("");
+    auto p17 = doc.paragraphs().insert_paragraph_after("Company Logo: {{logo}}");
+    auto p18 = doc.paragraphs().insert_paragraph_after("");
+    auto p19 = doc.paragraphs().insert_paragraph_after("Authorized Signature: {{signature}}");
+
     doc.save(template_path);
     std::cout << "  Created: " << template_path << std::endl;
     return true;
