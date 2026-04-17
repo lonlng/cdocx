@@ -5,33 +5,33 @@
  *          in documents using customizable patterns (default: {{key}}).
  *          Supports both text and image placeholders with FSM-based
  *          processing for handling placeholders split across multiple runs.
- * 
+ *
  * @author lonlng
  * @copyright MIT License
  * @date 2026
  * @version 0.2.0
- * 
+ *
  * @par Usage Example:
  * @code
  * #include <cdocx/template.h>
- * 
+ *
  * cdocx::Document doc("template.docx");
  * doc.open();
- * 
+ *
  * // Create template processor
  * cdocx::Template tmpl(&doc);
- * 
+ *
  * // Set text placeholder
  * tmpl.set("name", "John Doe");
  * tmpl.set("date", "2024-01-15");
  * tmpl.set("company", "Acme Inc.");
- * 
+ *
  * // Set image placeholder
  * tmpl.set_image("logo", "path/to/logo.png");
- * 
+ *
  * // Execute replacement
  * tmpl.replace_all();
- * 
+ *
  * // Save result
  * doc.save("output.docx");
  * @endcode
@@ -39,9 +39,10 @@
 
 #pragma once
 
-#include <cdocx/fwd.h>
 #include <cdocx/base.h>
+#include <cdocx/fwd.h>
 #include <cdocx/paragraph.h>
+
 #include <map>
 #include <string>
 #include <vector>
@@ -54,31 +55,31 @@ namespace cdocx {
  * @details The Template class provides a powerful mechanism for replacing
  *          placeholders in Word documents. It uses a Finite State Machine (FSM)
  *          to handle placeholders that may be split across multiple text runs.
- * 
+ *
  * @par Supported Placeholder Formats:
  * - Default format: {{key}}
  * - Custom format: set prefix and suffix via set_pattern()
- * 
+ *
  * @par Processing Flow:
  * 1. Set placeholder values (set(), set_image())
  * 2. Execute replacement (replace_all())
  * 3. Save document
- * 
+ *
  * @par Notes:
  * - Placeholder matching is case-sensitive
  * - Supports placeholders across multiple runs
  * - Image placeholders are replaced with actual images
- * 
+ *
  * @see Document, Document::get_paragraphs()
  * @since 0.1.0
  */
 class Template {
-private:
-    Document* doc_;  ///< Target document pointer
-    std::map<std::string, std::string> placeholders_;       ///< Text placeholders
-    std::map<std::string, std::string> image_placeholders_; ///< Image placeholders
-    std::string pattern_prefix_ = "{{";   ///< Placeholder start pattern
-    std::string pattern_suffix_ = "}}";   ///< Placeholder end pattern
+  private:
+    Document* doc_;                                          ///< Target document pointer
+    std::map<std::string, std::string> placeholders_;        ///< Text placeholders
+    std::map<std::string, std::string> image_placeholders_;  ///< Image placeholders
+    std::string pattern_prefix_ = "{{";                      ///< Placeholder start pattern
+    std::string pattern_suffix_ = "}}";                      ///< Placeholder end pattern
 
     /**
      * @struct PlaceholderContext
@@ -86,11 +87,11 @@ private:
      * @details Maintains state while scanning for multi-run placeholders
      */
     struct PlaceholderContext {
-        Run* first_run = nullptr;           ///< First run of current placeholder
-        std::vector<Run*> runs_to_delete;   ///< Runs to clean up after replacement
-        std::string collected_text;         ///< Accumulated text across runs
-        size_t prefix_pos = 0;              ///< Position in prefix pattern
-        
+        Run* first_run = nullptr;          ///< First run of current placeholder
+        std::vector<Run*> runs_to_delete;  ///< Runs to clean up after replacement
+        std::string collected_text;        ///< Accumulated text across runs
+        size_t prefix_pos = 0;             ///< Position in prefix pattern
+
         /**
          * @brief Reset the context state
          */
@@ -138,7 +139,7 @@ private:
      * @brief Replace image placeholder in a single run
      */
     bool replace_image_in_run(const std::shared_ptr<Run>& run);
-    
+
     /**
      * @brief Legacy: Process a single paragraph for placeholders
      * @param[in,out] p Paragraph to process
@@ -159,14 +160,14 @@ private:
      * @return true if replacement was successful
      */
     bool try_replace_placeholder(const PlaceholderContext& ctx, Paragraph& p);
-    
+
     /**
      * @brief Legacy: Delete runs collected during placeholder detection
      * @param[in] ctx Placeholder context
      * @param[in,out] p Current paragraph
      */
     void delete_collected_runs(const PlaceholderContext& ctx, Paragraph& p);
-    
+
     /**
      * @brief Legacy: Transition to collecting state in FSM
      * @param[in,out] ctx Placeholder context
@@ -174,9 +175,11 @@ private:
      * @param[in] text Current text
      * @param[in] prefix_pos Position in prefix pattern
      */
-    void transition_to_collecting_state(PlaceholderContext& ctx, Run& r, 
-                                        const std::string& text, size_t prefix_pos);
-    
+    void transition_to_collecting_state(PlaceholderContext& ctx,
+                                        Run& r,
+                                        const std::string& text,
+                                        size_t prefix_pos);
+
     /**
      * @brief Legacy: Process a paragraph using old API
      * @param[in,out] para Paragraph to process
@@ -184,7 +187,7 @@ private:
      */
     bool process_paragraph_legacy(Paragraph& para);
 
-public:
+  public:
     /**
      * @brief Construct template processor with default pattern
      * @param[in] document Target document (must remain valid during processing)
@@ -203,7 +206,7 @@ public:
      * @brief Set a text placeholder value
      * @param[in] key Placeholder key (without delimiters)
      * @param[in] value Replacement value
-     * 
+     *
      * @par Example:
      * @code
      * tmpl.set("name", "John Doe");
@@ -223,7 +226,7 @@ public:
      * @brief Set an image placeholder
      * @param[in] key Placeholder key
      * @param[in] image_path Path to the image file
-     * 
+     *
      * @par Example:
      * @code
      * tmpl.set_image("logo", "images/company_logo.png");
@@ -236,7 +239,7 @@ public:
      * @brief Set custom placeholder pattern
      * @param[in] prefix Start pattern
      * @param[in] suffix End pattern
-     * 
+     *
      * @par Example:
      * @code
      * tmpl.set_pattern("<%", "%>");  // Will match <%key%>
@@ -265,13 +268,13 @@ public:
      * @return Total count of text and image placeholders
      */
     size_t size() const { return placeholders_.size() + image_placeholders_.size(); }
-    
+
     /**
      * @brief Check if any placeholders are set
      * @return true if there are placeholders to replace
      */
     bool has_placeholders() const;
-    
+
     /**
      * @brief Get total placeholder count
      * @return Total number of placeholders
@@ -279,4 +282,4 @@ public:
     size_t get_placeholder_count() const;
 };
 
-} // namespace cdocx
+}  // namespace cdocx

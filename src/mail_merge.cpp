@@ -5,8 +5,8 @@
  */
 
 #include <cdocx/mail_merge.h>
-#include <cdocx/paragraph.h>
 #include <cdocx/node.h>
+#include <cdocx/paragraph.h>
 
 #include <algorithm>
 #include <cctype>
@@ -31,7 +31,8 @@ std::string trim(const std::string& s) {
 
 // Case-insensitive string comparison
 bool iequals(const std::string& a, const std::string& b) {
-    if (a.size() != b.size()) return false;
+    if (a.size() != b.size())
+        return false;
     for (size_t i = 0; i < a.size(); ++i) {
         if (std::tolower(static_cast<unsigned char>(a[i])) !=
             std::tolower(static_cast<unsigned char>(b[i]))) {
@@ -46,14 +47,16 @@ std::string parse_merge_field_name(const std::string& field_code) {
     std::string code = trim(field_code);
     std::istringstream iss(code);
     std::string keyword;
-    if (!(iss >> keyword)) return "";
+    if (!(iss >> keyword))
+        return "";
 
     // Check keyword (case-insensitive)
     std::string kw_lower;
     for (char c : keyword) {
         kw_lower += static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
     }
-    if (kw_lower != "mergefield") return "";
+    if (kw_lower != "mergefield")
+        return "";
 
     // The rest is the field name and optional switches
     std::string rest;
@@ -71,7 +74,8 @@ std::string parse_merge_field_name(const std::string& field_code) {
 
 // Check if a paragraph contains only whitespace/empty runs
 bool is_empty_paragraph(const Paragraph* para) {
-    if (!para) return true;
+    if (!para)
+        return true;
     for (const auto& child : para->get_children()) {
         if (child->node_type() == NodeType::Run) {
             auto* run = dynamic_cast<Run*>(child.get());
@@ -91,13 +95,14 @@ bool is_empty_paragraph(const Paragraph* para) {
     return true;
 }
 
-} // anonymous namespace
+}  // anonymous namespace
 
 // ============================================================================
 // MailMerge Implementation
 // ============================================================================
 
-MailMerge::MailMerge(Document* doc) : doc_(doc) {}
+MailMerge::MailMerge(Document* doc) : doc_(doc) {
+}
 
 void MailMerge::execute(const std::map<std::string, std::string>& data) {
     execute_impl(data);
@@ -112,7 +117,8 @@ void MailMerge::execute(const std::vector<std::pair<std::string, std::string>>& 
 }
 
 void MailMerge::execute_impl(const std::map<std::string, std::string>& data) {
-    if (!doc_) return;
+    if (!doc_)
+        return;
 
     // Round-trip sync to unify DOM and physical XML state.
     // This ensures MERGEFIELDs created via DOM or DocumentBuilder are visible.
@@ -125,26 +131,30 @@ void MailMerge::execute_impl(const std::map<std::string, std::string>& data) {
     for (auto& section : sections) {
         if (auto body = section->get_body()) {
             for (const auto& child : body->get_children()) {
-                if (child->node_type() != NodeType::Paragraph) continue;
+                if (child->node_type() != NodeType::Paragraph)
+                    continue;
                 auto* para = dynamic_cast<Paragraph*>(child.get());
-                if (!para) continue;
+                if (!para)
+                    continue;
 
                 auto children = para->get_children();
                 for (size_t i = 0; i < children.size(); ++i) {
                     auto& node = children[i];
-                    if (node->node_type() != NodeType::FieldStart) continue;
+                    if (node->node_type() != NodeType::FieldStart)
+                        continue;
                     auto* field = dynamic_cast<Field*>(node.get());
-                    if (!field) continue;
+                    if (!field)
+                        continue;
 
                     std::string field_name = parse_merge_field_name(field->get_field_code());
-                    if (field_name.empty()) continue;
+                    if (field_name.empty())
+                        continue;
 
                     removed_any_field = true;
 
-                    auto it = std::find_if(data.begin(), data.end(),
-                        [&field_name](const auto& kv) {
-                            return iequals(kv.first, field_name);
-                        });
+                    auto it = std::find_if(data.begin(), data.end(), [&field_name](const auto& kv) {
+                        return iequals(kv.first, field_name);
+                    });
 
                     if (it != data.end()) {
                         // Replace field with a Run containing the value
@@ -176,7 +186,8 @@ std::vector<std::string> MailMerge::get_field_names() const {
 
 std::vector<std::string> MailMerge::collect_field_names() const {
     std::vector<std::string> result;
-    if (!doc_) return result;
+    if (!doc_)
+        return result;
 
     // Round-trip sync to unify DOM and physical XML state.
     doc_->sync_to_physical_tree();
@@ -186,14 +197,18 @@ std::vector<std::string> MailMerge::collect_field_names() const {
     for (auto& section : sections) {
         if (auto body = section->get_body()) {
             for (const auto& child : body->get_children()) {
-                if (child->node_type() != NodeType::Paragraph) continue;
+                if (child->node_type() != NodeType::Paragraph)
+                    continue;
                 auto* para = dynamic_cast<Paragraph*>(child.get());
-                if (!para) continue;
+                if (!para)
+                    continue;
 
                 for (const auto& node : para->get_children()) {
-                    if (node->node_type() != NodeType::FieldStart) continue;
+                    if (node->node_type() != NodeType::FieldStart)
+                        continue;
                     auto* field = dynamic_cast<Field*>(node.get());
-                    if (!field) continue;
+                    if (!field)
+                        continue;
 
                     std::string name = parse_merge_field_name(field->get_field_code());
                     if (!name.empty()) {
@@ -207,7 +222,8 @@ std::vector<std::string> MailMerge::collect_field_names() const {
 }
 
 void MailMerge::delete_fields() {
-    if (!doc_) return;
+    if (!doc_)
+        return;
 
     // Round-trip sync to unify DOM and physical XML state.
     doc_->sync_to_physical_tree();
@@ -218,15 +234,19 @@ void MailMerge::delete_fields() {
     for (auto& section : sections) {
         if (auto body = section->get_body()) {
             for (const auto& child : body->get_children()) {
-                if (child->node_type() != NodeType::Paragraph) continue;
+                if (child->node_type() != NodeType::Paragraph)
+                    continue;
                 auto* para = dynamic_cast<Paragraph*>(child.get());
-                if (!para) continue;
+                if (!para)
+                    continue;
 
                 auto children = para->get_children();
                 for (auto& node : children) {
-                    if (node->node_type() != NodeType::FieldStart) continue;
+                    if (node->node_type() != NodeType::FieldStart)
+                        continue;
                     auto* field = dynamic_cast<Field*>(node.get());
-                    if (!field) continue;
+                    if (!field)
+                        continue;
 
                     std::string name = parse_merge_field_name(field->get_field_code());
                     if (!name.empty()) {
@@ -255,7 +275,8 @@ void MailMerge::apply_cleanup() {
         if (auto body = section->get_body()) {
             auto children = body->get_children();
             for (auto& child : children) {
-                if (child->node_type() != NodeType::Paragraph) continue;
+                if (child->node_type() != NodeType::Paragraph)
+                    continue;
                 auto* para = dynamic_cast<Paragraph*>(child.get());
                 if (para && is_empty_paragraph(para)) {
                     body->remove_child(child);
@@ -265,4 +286,4 @@ void MailMerge::apply_cleanup() {
     }
 }
 
-} // namespace cdocx
+}  // namespace cdocx

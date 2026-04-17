@@ -14,13 +14,13 @@ FormField::FormField(Document* doc) {
     set_document(doc);
 }
 
-FormField::FormField(Document* doc, FormFieldType type)
-    : type_(type) {
+FormField::FormField(Document* doc, FormFieldType type) : type_(type) {
     set_document(doc);
 }
 
 void FormField::accept(DocumentVisitor* visitor) {
-    if (!visitor) return;
+    if (!visitor)
+        return;
     visitor->visit_form_field(*this);
 }
 
@@ -47,4 +47,4 @@ std::shared_ptr<Node> FormField::clone(bool /*deep*/) const {
     return cloned;
 }
 
-} // namespace cdocx
+}  // namespace cdocx

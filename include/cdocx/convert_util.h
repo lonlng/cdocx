@@ -27,7 +27,7 @@ namespace cdocx {
  * @since 0.7.0
  */
 class ConvertUtil {
-public:
+  public:
     ConvertUtil() = delete;
 
     // ========================================================================
@@ -174,4 +174,4 @@ public:
     static double letter_height() { return inch_to_point(11.0); }
 };
 
-} // namespace cdocx
+}  // namespace cdocx

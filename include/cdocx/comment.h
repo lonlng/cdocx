@@ -9,10 +9,11 @@
 
 #pragma once
 
-#include <cdocx/node.h>
 #include <cdocx/enums.h>
-#include <string>
+#include <cdocx/node.h>
+
 #include <chrono>
+#include <string>
 
 namespace cdocx {
 
@@ -21,7 +22,7 @@ namespace cdocx {
 // ============================================================================
 
 class CommentRangeStart : public Node {
-public:
+  public:
     CommentRangeStart();
     explicit CommentRangeStart(int id);
     explicit CommentRangeStart(Document* doc);
@@ -35,7 +36,7 @@ public:
     void accept(DocumentVisitor* visitor) override;
     std::shared_ptr<Node> clone(bool deep = true) const override;
 
-private:
+  private:
     int id_ = 0;
 };
 
@@ -44,7 +45,7 @@ private:
 // ============================================================================
 
 class CommentRangeEnd : public Node {
-public:
+  public:
     CommentRangeEnd();
     explicit CommentRangeEnd(int id);
     explicit CommentRangeEnd(Document* doc);
@@ -58,7 +59,7 @@ public:
     void accept(DocumentVisitor* visitor) override;
     std::shared_ptr<Node> clone(bool deep = true) const override;
 
-private:
+  private:
     int id_ = 0;
 };
 
@@ -67,7 +68,7 @@ private:
 // ============================================================================
 
 class Comment : public CompositeNode {
-public:
+  public:
     Comment();
     explicit Comment(Document* doc);
     Comment(Document* doc, const std::string& author, const std::string& text);
@@ -100,7 +101,7 @@ public:
     // Convenience: append paragraph with text
     std::shared_ptr<Paragraph> append_paragraph(const std::string& text = "");
 
-private:
+  private:
     int id_ = 0;
     std::string author_;
     std::string initial_;
@@ -114,7 +115,7 @@ private:
 // ============================================================================
 
 class CommentCollection {
-private:
+  private:
     friend class Document;
 
     Document* doc_;
@@ -123,7 +124,7 @@ private:
 
     void collect_comments() const;
 
-public:
+  public:
     CommentCollection() : doc_(nullptr), collected_(true) {}
     explicit CommentCollection(Document* doc);
 
@@ -144,4 +145,4 @@ public:
     std::vector<std::shared_ptr<Comment>>::const_iterator end() const;
 };
 
-} // namespace cdocx
+}  // namespace cdocx

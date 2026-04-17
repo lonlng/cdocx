@@ -4,10 +4,10 @@
  */
 
 #include <cdocx/body.h>
-#include <cdocx/paragraph.h>
-#include <cdocx/table.h>
 #include <cdocx/document.h>
+#include <cdocx/paragraph.h>
 #include <cdocx/section.h>
+#include <cdocx/table.h>
 
 namespace cdocx {
 
@@ -22,8 +22,9 @@ Body::Body(Document* doc) {
 }
 
 void Body::accept(DocumentVisitor* visitor) {
-    if (!visitor) return;
-    
+    if (!visitor)
+        return;
+
     if (visitor->visit_body_start(*this) == VisitorAction::Continue) {
         for (const auto& child : children_) {
             child->accept(visitor);
@@ -34,13 +35,13 @@ void Body::accept(DocumentVisitor* visitor) {
 
 std::shared_ptr<Node> Body::clone(bool deep) const {
     auto cloned = std::make_shared<Body>(get_document());
-    
+
     if (deep) {
         for (const auto& child : children_) {
             cloned->append_child(child->clone(true));
         }
     }
-    
+
     return cloned;
 }
 
@@ -110,13 +111,12 @@ void Body::ensure_minimum() {
     // Ensure at least one paragraph
     bool has_content = false;
     for (const auto& child : children_) {
-        if (child->node_type() == NodeType::Paragraph || 
-            child->node_type() == NodeType::Table) {
+        if (child->node_type() == NodeType::Paragraph || child->node_type() == NodeType::Table) {
             has_content = true;
             break;
         }
     }
-    
+
     if (!has_content) {
         append_paragraph();
     }
@@ -198,4 +198,4 @@ Inline& Inline::set_subscript() {
     return *this;
 }
 
-} // namespace cdocx
+}  // namespace cdocx

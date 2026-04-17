@@ -8,6 +8,7 @@
 
 #include <cdocx/enums.h>
 #include <cdocx/format.h>
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -25,7 +26,7 @@ class Document;
  * @details Styles are metadata, not document content nodes.
  */
 class Style : public std::enable_shared_from_this<Style> {
-public:
+  public:
     Style();
     explicit Style(Document* doc, StyleType type = StyleType::Paragraph);
 
@@ -78,7 +79,7 @@ public:
     // ------------------------------------------------------------------------
     void remove();
 
-private:
+  private:
     Document* document_ = nullptr;
     std::string name_;
     std::string style_id_;
@@ -102,7 +103,7 @@ class StyleCollection {
     std::vector<std::shared_ptr<Style>> styles_;
     Document* document_ = nullptr;
 
-public:
+  public:
     using iterator = std::vector<std::shared_ptr<Style>>::iterator;
     using const_iterator = std::vector<std::shared_ptr<Style>>::const_iterator;
 
@@ -129,12 +130,8 @@ public:
     const_iterator begin() const { return styles_.begin(); }
     const_iterator end() const { return styles_.end(); }
 
-    std::shared_ptr<Style> first() const {
-        return styles_.empty() ? nullptr : styles_.front();
-    }
-    std::shared_ptr<Style> last() const {
-        return styles_.empty() ? nullptr : styles_.back();
-    }
+    std::shared_ptr<Style> first() const { return styles_.empty() ? nullptr : styles_.front(); }
+    std::shared_ptr<Style> last() const { return styles_.empty() ? nullptr : styles_.back(); }
 
     std::shared_ptr<Style> add(StyleType type, const std::string& name);
     void add(const std::shared_ptr<Style>& style);
@@ -146,4 +143,4 @@ public:
     void load_from_document();
 };
 
-} // namespace cdocx
+}  // namespace cdocx

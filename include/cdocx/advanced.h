@@ -6,23 +6,23 @@
  *          - Document range operations (text extraction, replacement)
  *          - DocumentBuilder for fluent document construction
  *          - DocumentSearch for find and replace operations
- * 
+ *
  * @author lonlng
  * @copyright MIT License
  * @date 2026
  * @version 0.2.0
- * 
+ *
  * @par Usage Example:
  * @code
  * #include <cdocx/advanced.h>
- * 
+ *
  * // ========== Bookmarks ==========
  * auto bookmarks = doc.get_bookmarks();
  * auto bm = bookmarks.get("Section1");
  * if (bm) {
  *     bm->set_text("New content");
  * }
- * 
+ *
  * // ========== DocumentBuilder ==========
  * cdocx::DocumentBuilder builder(&doc);
  * builder.move_to_document_end();
@@ -30,7 +30,7 @@
  * builder.set_font_size(24);
  * builder.writeln("Chapter 1");
  * builder.clear_formatting();
- * 
+ *
  * // Create table
  * builder.start_table();
  * builder.insert_row();
@@ -40,7 +40,7 @@
  * builder.write("Cell 2");
  * builder.end_row();
  * builder.end_table();
- * 
+ *
  * // ========== Search and Replace ==========
  * cdocx::DocumentSearch::replace_all(doc, "old", "new");
  * int count = cdocx::DocumentSearch::replace_all(doc, "TODO", "DONE");
@@ -49,10 +49,11 @@
 
 #pragma once
 
-#include <cdocx/fwd.h>
 #include <cdocx/base.h>
-#include <cdocx/formfield.h>
 #include <cdocx/constants.h>
+#include <cdocx/formfield.h>
+#include <cdocx/fwd.h>
+
 #include <functional>
 #include <map>
 #include <optional>
@@ -78,7 +79,7 @@ class Footnote;
  * @brief Represents formatting information extracted from a bookmark
  * @details Stores character formatting properties that can be extracted
  *          from bookmark content and reapplied after text replacement.
- * 
+ *
  * @see Bookmark
  * @since 0.3.0
  */
@@ -94,26 +95,26 @@ struct BookmarkFormat {
     bool italic = false;         ///< Italic flag
     bool underline = false;      ///< Underline flag
     bool strikethrough = false;  ///< Strikethrough flag
-    
+
     // Paragraph formatting (from w:pPr) - P1 enhancement
-    std::string alignment;       ///< Paragraph alignment (left, center, right, both, distribute)
-    int line_spacing = 0;        ///< Line spacing in twips (1/20 of a point)
-    std::string line_rule;       ///< Line rule (auto, exact, atLeast)
-    int space_before = 0;        ///< Space before paragraph in twips
-    int space_after = 0;         ///< Space after paragraph in twips
-    int first_line_indent = 0;   ///< First line indent in twips (positive) or hanging (negative)
-    int left_indent = 0;         ///< Left indent in twips
-    int right_indent = 0;        ///< Right indent in twips
-    bool keep_next = false;      ///< Keep with next paragraph
-    bool keep_lines = false;     ///< Keep lines together (no page break within)
-    bool page_break_before = false; ///< Page break before paragraph
-    
+    std::string alignment;      ///< Paragraph alignment (left, center, right, both, distribute)
+    int line_spacing = 0;       ///< Line spacing in twips (1/20 of a point)
+    std::string line_rule;      ///< Line rule (auto, exact, atLeast)
+    int space_before = 0;       ///< Space before paragraph in twips
+    int space_after = 0;        ///< Space after paragraph in twips
+    int first_line_indent = 0;  ///< First line indent in twips (positive) or hanging (negative)
+    int left_indent = 0;        ///< Left indent in twips
+    int right_indent = 0;       ///< Right indent in twips
+    bool keep_next = false;     ///< Keep with next paragraph
+    bool keep_lines = false;    ///< Keep lines together (no page break within)
+    bool page_break_before = false;  ///< Page break before paragraph
+
     /**
      * @brief Check if format is valid (has meaningful data)
      * @return true if font_size > 0 or any font is specified
      */
     bool is_valid() const { return font_size > 0 || !font_ascii.empty() || !font_far_east.empty(); }
-    
+
     /**
      * @brief Reset all format values to defaults
      */
@@ -167,31 +168,31 @@ enum class ImageAlignment : std::uint8_t {
 struct ImageSize {
     double width_pt = 0;   ///< Width in points (1 inch = 72 points)
     double height_pt = 0;  ///< Height in points
-    
+
     /**
      * @brief Default constructor
      */
     ImageSize() = default;
-    
+
     /**
      * @brief Construct with dimensions
      * @param w Width in points
      * @param h Height in points
      */
     ImageSize(double w, double h) : width_pt(w), height_pt(h) {}
-    
+
     /**
      * @brief Convert width to EMU
      * @return Width in EMU units
      */
     int64_t width_emu() const { return static_cast<int64_t>(width_pt * 12700); }
-    
+
     /**
      * @brief Convert height to EMU
      * @return Height in EMU units
      */
     int64_t height_emu() const { return static_cast<int64_t>(height_pt * 12700); }
-    
+
     /**
      * @brief Check if size is valid (both dimensions > 0)
      * @return true if valid
@@ -224,14 +225,14 @@ bool detect_image_size_from_memory(const std::vector<uint8_t>& data, ImageSize& 
  * @brief Image format information
  */
 struct ImageFormatInfo {
-    std::string format;          ///< Detected format ("PNG", "JPEG", "BMP", "GIF", "UNKNOWN")
-    std::string mime_type;       ///< MIME type
-    int width = 0;               ///< Width in pixels
-    int height = 0;              ///< Height in pixels
-    int dpi_x = 96;              ///< Horizontal DPI
-    int dpi_y = 96;              ///< Vertical DPI
-    bool is_valid = false;       ///< Whether the file is valid
-    std::string error_message;   ///< Error message if detection failed
+    std::string format;         ///< Detected format ("PNG", "JPEG", "BMP", "GIF", "UNKNOWN")
+    std::string mime_type;      ///< MIME type
+    int width = 0;              ///< Width in pixels
+    int height = 0;             ///< Height in pixels
+    int dpi_x = 96;             ///< Horizontal DPI
+    int dpi_y = 96;             ///< Vertical DPI
+    bool is_valid = false;      ///< Whether the file is valid
+    std::string error_message;  ///< Error message if detection failed
 };
 
 /**
@@ -259,11 +260,11 @@ ImageFormatInfo validate_image_format_from_memory(const std::vector<uint8_t>& da
  * @details A bookmark marks a location or range in the document that can be
  *          referenced by name. Bookmarks can be used for navigation,
  *          cross-references, or as placeholders for content replacement.
- * 
+ *
  * @par Usage Example:
  * @code
  * auto bookmarks = doc.get_bookmarks();
- * 
+ *
  * // Get bookmark by name
  * auto bm = bookmarks.get("Introduction");
  * if (bm) {
@@ -272,21 +273,21 @@ ImageFormatInfo validate_image_format_from_memory(const std::vector<uint8_t>& da
  *     bm->remove();  // Delete bookmark but keep text
  * }
  * @endcode
- * 
+ *
  * @see BookmarkCollection
  * @since 0.2.0
  */
 class Bookmark {
-private:
-    friend class Document;           ///< Grants access to private constructor
-    friend class BookmarkCollection; ///< Grants access to internal members
-    
+  private:
+    friend class Document;            ///< Grants access to private constructor
+    friend class BookmarkCollection;  ///< Grants access to internal members
+
     Document* doc_;              ///< Owning document
     std::string name_;           ///< Bookmark name
     pugi::xml_node start_node_;  ///< Bookmark start marker node
     pugi::xml_node end_node_;    ///< Bookmark end marker node
 
-public:
+  public:
     /**
      * @brief Default constructor
      * @details Creates an invalid bookmark
@@ -300,8 +301,7 @@ public:
      * @param[in] start Start marker node
      * @param[in] end End marker node
      */
-    Bookmark(Document* doc, const std::string& name,
-             pugi::xml_node start, pugi::xml_node end);
+    Bookmark(Document* doc, const std::string& name, pugi::xml_node start, pugi::xml_node end);
 
     /**
      * @brief Get bookmark name
@@ -347,11 +347,11 @@ public:
      * @details Removes both the bookmark markers and all enclosed content
      */
     bool remove_with_content();
-    
+
     // ===================================================================
     // Enhanced Format-Preserving Methods (New in v0.3.0)
     // ===================================================================
-    
+
     /**
      * @brief Extract formatting information from bookmark content
      * @return BookmarkFormat structure containing extracted format
@@ -360,7 +360,7 @@ public:
      * @since 0.3.0
      */
     BookmarkFormat get_format() const;
-    
+
     /**
      * @brief Set text content while preserving original format
      * @param[in] text New text content
@@ -370,7 +370,7 @@ public:
      * @since 0.3.0
      */
     bool set_text_keep_format(const std::string& text);
-    
+
     /**
      * @brief Set text with explicit format control
      * @param[in] text New text content
@@ -379,21 +379,21 @@ public:
      * @since 0.3.0
      */
     bool set_text_formatted(const std::string& text, const BookmarkFormat& format);
-    
+
     /**
      * @brief Check if bookmark spans multiple paragraphs
      * @return true if start and end are in different paragraphs
      * @since 0.3.0
      */
     bool is_cross_paragraph() const;
-    
+
     /**
      * @brief Get all paragraphs covered by this bookmark
      * @return Vector of paragraph xml_nodes
      * @since 0.3.0
      */
     std::vector<pugi::xml_node> get_covered_paragraphs() const;
-    
+
     /**
      * @brief Set text for cross-paragraph bookmark
      * @param[in] text New text content
@@ -410,35 +410,35 @@ public:
  * @brief Collection of bookmarks in a document
  * @details Provides access to all bookmarks in the document. Bookmarks are
  *          collected on first access and cached for performance.
- * 
+ *
  * @par Usage Example:
  * @code
  * auto bookmarks = doc.get_bookmarks();
- * 
+ *
  * // Iterate all bookmarks
  * for (auto& bm : bookmarks) {
  *     std::cout << bm.get_name() << std::endl;
  * }
- * 
+ *
  * // Check if exists
  * if (bookmarks.contains("Summary")) {
  *     // ...
  * }
- * 
+ *
  * // Delete bookmark
  * bookmarks.remove("TempBookmark");
  * @endcode
- * 
+ *
  * @see Bookmark
  * @since 0.2.0
  */
 class BookmarkCollection {
-private:
+  private:
     friend class Document;  ///< Grants access to private constructor
-    
-    Document* doc_;                    ///< Owning document
+
+    Document* doc_;                            ///< Owning document
     mutable std::vector<Bookmark> bookmarks_;  ///< Cached bookmarks
-    mutable bool collected_ = false;   ///< Collection status flag
+    mutable bool collected_ = false;           ///< Collection status flag
 
     /**
      * @brief Collect all bookmarks from document
@@ -447,12 +447,12 @@ private:
      */
     void collect_bookmarks() const;
 
-public:
+  public:
     /**
      * @brief Default constructor (creates empty collection)
      */
     BookmarkCollection() : doc_(nullptr), collected_(true) {}
-    
+
     /**
      * @brief Construct collection for a document
      * @param[in] doc Target document
@@ -519,7 +519,7 @@ public:
     std::vector<Bookmark>::iterator end();
     std::vector<Bookmark>::const_iterator begin() const;
     std::vector<Bookmark>::const_iterator end() const;
-    
+
     /**
      * @brief Get bookmark names as a list
      * @return Vector of bookmark names
@@ -538,22 +538,22 @@ public:
  * @details A Range specifies a portion of the document between two points.
  *          It can be used for text extraction, replacement, and deletion
  *          operations within a specific area.
- * 
+ *
  * @see DocumentSearch
  * @since 0.2.0
  */
 class Range {
-private:
-    friend class Document;       ///< Grants access to private constructor
-    friend class DocumentSearch; ///< Grants access to search operations
-    
+  private:
+    friend class Document;        ///< Grants access to private constructor
+    friend class DocumentSearch;  ///< Grants access to search operations
+
     Document* doc_;              ///< Owning document
     pugi::xml_node start_para_;  ///< Start paragraph node
     pugi::xml_node end_para_;    ///< End paragraph node
     size_t start_offset_;        ///< Character offset in start paragraph
     size_t end_offset_;          ///< Character offset in end paragraph
 
-public:
+  public:
     /**
      * @brief Default constructor
      */
@@ -617,12 +617,12 @@ public:
  * @brief Static utility class for table manipulation
  * @details Provides static methods for common table operations such as
  *          inserting/deleting rows and cells, merging cells, etc.
- * 
+ *
  * @see Table, TableRow, TableCell
  * @since 0.2.0
  */
 class TableOperations {
-public:
+  public:
     /**
      * @brief Insert a row at specified index
      * @param[in,out] table Target table
@@ -711,7 +711,7 @@ public:
  * @details DocumentBuilder provides a convenient way to construct documents
  *          without manually managing XML nodes. It maintains a cursor position
  *          and formatting state, allowing for intuitive document construction.
- * 
+ *
  * @par Main Features:
  * - Navigation: Move to any position in document
  * - Writing: Add formatted text
@@ -719,17 +719,17 @@ public:
  * - Bookmarks: Create bookmark markers
  * - Hyperlinks: Insert hyperlinks
  * - Images: Insert images
- * 
+ *
  * @par Usage Example:
  * @code
  * cdocx::DocumentBuilder builder(&doc);
- * 
+ *
  * // Write formatted text
  * builder.set_bold(true);
  * builder.set_font_size(24);
  * builder.writeln("Title");
  * builder.clear_formatting();
- * 
+ *
  * // Create table
  * builder.start_table();
  * for (int i = 0; i < 3; i++) {
@@ -741,76 +741,76 @@ public:
  *     builder.end_row();
  * }
  * builder.end_table();
- * 
+ *
  * // Insert hyperlink
  * builder.insert_hyperlink("Click here", "https://example.com");
- * 
+ *
  * // Create bookmark
  * builder.start_bookmark("Section1");
  * builder.writeln("Important section");
  * builder.end_bookmark("Section1");
  * @endcode
- * 
+ *
  * @see Document
  * @since 0.2.0
  */
 class DocumentBuilder {
-
-public:
+  public:
     DocumentBuilder();
     ~DocumentBuilder();
-    
+
     // Document properties
     DocumentBuilder& with_title(const std::string& title);
     DocumentBuilder& with_author(const std::string& author);
     DocumentBuilder& with_subject(const std::string& subject);
     DocumentBuilder& with_keywords(const std::string& keywords);
-    
+
     // Page setup
     DocumentBuilder& with_page_size(double width, double height);
     DocumentBuilder& with_margins(double top, double bottom, double left, double right);
     DocumentBuilder& with_orientation(PageOrientation orientation);
-    
+
     // Content
     DocumentBuilder& add_paragraph(std::shared_ptr<Paragraph> paragraph);
     DocumentBuilder& add_paragraph(const std::string& text);
     DocumentBuilder& add_table(std::shared_ptr<Table> table);
     DocumentBuilder& add_table(size_t rows, size_t columns);
-    
+
     // Builder
     std::shared_ptr<Document> build();
-    
-private:
+
+  private:
     std::shared_ptr<Document> doc_sptr;
 
-private:
-    Document* doc_ = nullptr;          ///< Target document
-    pugi::xml_document* target_xml_doc_ = nullptr; ///< Active XML document (document.xml or header/footer)
-    pugi::xml_node current_node_;      ///< Current position node
-    pugi::xml_node current_paragraph_; ///< Current paragraph node
+  private:
+    Document* doc_ = nullptr;  ///< Target document
+    pugi::xml_document* target_xml_doc_ =
+        nullptr;                        ///< Active XML document (document.xml or header/footer)
+    pugi::xml_node current_node_;       ///< Current position node
+    pugi::xml_node current_paragraph_;  ///< Current paragraph node
 
     /**
      * @struct FormattingState
      * @brief Current formatting state
      */
     struct FormattingState {
-        bool bold = false;              ///< Bold flag
-        bool italic = false;            ///< Italic flag
-        bool underline = false;         ///< Underline flag
-        bool strikethrough = false;     ///< Strikethrough flag
-        std::string font_name;          ///< Font family name
-        int font_size = 0;              ///< Font size in points
-        std::string color;              ///< Text color (hex)
-        std::string alignment;          ///< Paragraph alignment
+        bool bold = false;           ///< Bold flag
+        bool italic = false;         ///< Italic flag
+        bool underline = false;      ///< Underline flag
+        bool strikethrough = false;  ///< Strikethrough flag
+        std::string font_name;       ///< Font family name
+        int font_size = 0;           ///< Font size in points
+        std::string color;           ///< Text color (hex)
+        std::string alignment;       ///< Paragraph alignment
     };
-    FormattingState format_;            ///< Current formatting state
+    FormattingState format_;  ///< Current formatting state
 
     // Table building state
-    bool in_table_ = false;             ///< Currently in table flag
-    pugi::xml_node current_table_;      ///< Current table node
-    pugi::xml_node current_row_;        ///< Current row node
-    pugi::xml_node current_cell_;       ///< Current cell node
-    
+    bool in_table_ = false;         ///< Currently in table flag
+    pugi::xml_node current_table_;  ///< Current table node
+    pugi::xml_node current_row_;    ///< Current row node
+    pugi::xml_node current_cell_;   ///< Current cell node
+
     // Bookmark stack for tracking open bookmarks
     std::map<std::string, int> bookmark_stack_;
 
@@ -839,7 +839,7 @@ private:
      */
     pugi::xml_node get_body();
 
-public:
+  public:
     /**
      * @brief Construct builder for a document
      * @param[in] doc Target document
@@ -955,8 +955,9 @@ public:
      * @param[in] reference_mark Custom reference mark
      * @return The inserted footnote node
      */
-    std::shared_ptr<Footnote> insert_footnote(FootnoteType type, const std::string& text,
-                                               const std::string& reference_mark);
+    std::shared_ptr<Footnote> insert_footnote(FootnoteType type,
+                                              const std::string& text,
+                                              const std::string& reference_mark);
 
     /**
      * @brief Insert field by type
@@ -982,20 +983,38 @@ public:
     std::shared_ptr<Field> insert_field(const std::string& field_code,
                                         const std::string& field_value);
 
-    /** @brief Insert page number field */
-    std::shared_ptr<Field> insert_page_number();
+  private:
+    std::shared_ptr<Field> insert_field_node(const std::shared_ptr<Field>& field);
+
+  public:
+    /**
+     * @brief Insert page number field
+     * @param[in] switches Optional field switches (e.g., "\\* ROMAN")
+     */
+    std::shared_ptr<Field> insert_page_number(const std::string& switches = "");
 
     /** @brief Insert number of pages field */
     std::shared_ptr<Field> insert_num_pages();
 
-    /** @brief Insert date field */
-    std::shared_ptr<Field> insert_date();
+    /**
+     * @brief Insert date field
+     * @param[in] switches Optional field switches (e.g., "\\@ \"yyyy-MM-dd\"")
+     */
+    std::shared_ptr<Field> insert_date(const std::string& switches = "");
 
-    /** @brief Insert time field */
-    std::shared_ptr<Field> insert_time();
+    /**
+     * @brief Insert time field
+     * @param[in] switches Optional field switches
+     */
+    std::shared_ptr<Field> insert_time(const std::string& switches = "");
 
-    /** @brief Insert merge field */
-    std::shared_ptr<Field> insert_merge_field(const std::string& field_name);
+    /**
+     * @brief Insert merge field
+     * @param[in] field_name Merge field name
+     * @param[in] switches Optional field switches
+     */
+    std::shared_ptr<Field> insert_merge_field(const std::string& field_name,
+                                              const std::string& switches = "");
 
     /**
      * @brief Insert table of contents field
@@ -1108,10 +1127,9 @@ public:
      * @param[in] size Size in points (0 = auto)
      * @return The inserted form field
      */
-    std::shared_ptr<FormField> insert_check_box(
-        const std::string& name,
-        bool checked_value,
-        int size = 0);
+    std::shared_ptr<FormField> insert_check_box(const std::string& name,
+                                                bool checked_value,
+                                                int size = 0);
 
     /**
      * @brief Insert a checkbox form field with default value
@@ -1121,11 +1139,10 @@ public:
      * @param[in] size Size in points (0 = auto)
      * @return The inserted form field
      */
-    std::shared_ptr<FormField> insert_check_box(
-        const std::string& name,
-        bool default_value,
-        bool checked_value,
-        int size);
+    std::shared_ptr<FormField> insert_check_box(const std::string& name,
+                                                bool default_value,
+                                                bool checked_value,
+                                                int size);
 
     /**
      * @brief Insert a combobox form field
@@ -1134,10 +1151,9 @@ public:
      * @param[in] selected_index Selected item index
      * @return The inserted form field
      */
-    std::shared_ptr<FormField> insert_combo_box(
-        const std::string& name,
-        const std::vector<std::string>& items,
-        int selected_index = 0);
+    std::shared_ptr<FormField> insert_combo_box(const std::string& name,
+                                                const std::vector<std::string>& items,
+                                                int selected_index = 0);
 
     // ========================================================================
     // Image
@@ -1162,26 +1178,26 @@ public:
  * @brief Static utility class for searching and replacing text
  * @details Provides static methods for finding text and replacing content
  *          throughout the document.
- * 
+ *
  * @par Usage Example:
  * @code
  * // Simple replace
  * cdocx::DocumentSearch::replace(doc, "old", "new");
- * 
+ *
  * // Replace all
  * int count = cdocx::DocumentSearch::replace_all(doc, "TODO", "DONE");
  * std::cout << "Replaced " << count << " occurrences" << std::endl;
- * 
+ *
  * // Replace with formatting
  * cdocx::DocumentSearch::replace_with_formatting(
  *     doc, "important", "IMPORTANT", cdocx::bold | cdocx::italic);
  * @endcode
- * 
+ *
  * @see Range
  * @since 0.2.0
  */
 class DocumentSearch {
-public:
+  public:
     /**
      * @brief Callback function type for search operations
      * @param[in] found_text The text that was found
@@ -1232,8 +1248,10 @@ public:
      * @param[in] flag Formatting to apply
      * @return true if replacement was made
      */
-    static bool replace_with_formatting(Document& doc, const std::string& old_text,
-                                        const std::string& new_text, formatting_flag flag);
+    static bool replace_with_formatting(Document& doc,
+                                        const std::string& old_text,
+                                        const std::string& new_text,
+                                        formatting_flag flag);
 
     /**
      * @brief Find and process with callback
@@ -1242,7 +1260,9 @@ public:
      * @param[in] callback Function to call for each match
      * @return Number of matches processed
      */
-    static int find_and_process(Document& doc, const std::string& pattern, const SearchCallback& callback);
+    static int find_and_process(Document& doc,
+                                const std::string& pattern,
+                                const SearchCallback& callback);
 };
 
 // ============================================================================
@@ -1254,55 +1274,55 @@ public:
  * @brief Utility functions for document processing
  */
 namespace utils {
-    /**
-     * @brief Convert points to twips
-     * @param points Points value
-     * @return Twips value (1 point = 20 twips)
-     */
-    inline int points_to_twips(double points) {
-        return static_cast<int>(points * 20);
-    }
-
-    /**
-     * @brief Convert twips to points
-     * @param twips Twips value
-     * @return Points value
-     */
-    inline double twips_to_points(int twips) {
-        return twips / 20.0;
-    }
-
-    /**
-     * @brief Convert inches to twips
-     * @param inches Inches value
-     * @return Twips value (1 inch = 1440 twips)
-     */
-    inline int inches_to_twips(double inches) {
-        return static_cast<int>(inches * 1440);
-    }
-
-    /**
-     * @brief Check if string starts with prefix (case-insensitive)
-     * @param str String to check
-     * @param prefix Prefix to look for
-     * @return true if str starts with prefix
-     */
-    bool starts_with_ci(const std::string& str, const std::string& prefix);
-
-    /**
-     * @brief Check if string contains substring (case-insensitive)
-     * @param str String to search
-     * @param substr Substring to find
-     * @return true if str contains substr
-     */
-    bool contains_ci(const std::string& str, const std::string& substr);
-
-    /**
-     * @brief Convert string to lowercase
-     * @param str String to convert
-     * @return Lowercase version of str
-     */
-    std::string to_lower(const std::string& str);
+/**
+ * @brief Convert points to twips
+ * @param points Points value
+ * @return Twips value (1 point = 20 twips)
+ */
+inline int points_to_twips(double points) {
+    return static_cast<int>(points * 20);
 }
 
-} // namespace cdocx
+/**
+ * @brief Convert twips to points
+ * @param twips Twips value
+ * @return Points value
+ */
+inline double twips_to_points(int twips) {
+    return twips / 20.0;
+}
+
+/**
+ * @brief Convert inches to twips
+ * @param inches Inches value
+ * @return Twips value (1 inch = 1440 twips)
+ */
+inline int inches_to_twips(double inches) {
+    return static_cast<int>(inches * 1440);
+}
+
+/**
+ * @brief Check if string starts with prefix (case-insensitive)
+ * @param str String to check
+ * @param prefix Prefix to look for
+ * @return true if str starts with prefix
+ */
+bool starts_with_ci(const std::string& str, const std::string& prefix);
+
+/**
+ * @brief Check if string contains substring (case-insensitive)
+ * @param str String to search
+ * @param substr Substring to find
+ * @return true if str contains substr
+ */
+bool contains_ci(const std::string& str, const std::string& substr);
+
+/**
+ * @brief Convert string to lowercase
+ * @param str String to convert
+ * @return Lowercase version of str
+ */
+std::string to_lower(const std::string& str);
+}  // namespace utils
+
+}  // namespace cdocx

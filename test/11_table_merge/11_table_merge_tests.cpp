@@ -518,3 +518,124 @@ TEST(TableOperationsTest, SetAndGetCellText) {
     doc.save();
     fs::remove("test_ops_cell_text.docx");
 }
+
+TEST(TableLegacyIteratorTest, CellParagraphsAccess) {
+    Document doc("test_legacy_cell_para.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto body = doc.get_first_section()->get_body();
+    auto table = body->append_table(2, 2);
+    auto cell00 = table->get_cell(0, 0);
+    auto cell01 = table->get_cell(0, 1);
+    ASSERT_NE(cell00, nullptr);
+    ASSERT_NE(cell01, nullptr);
+
+    // Set text in two different cells
+    cell00->set_text("Cell 0,0");
+    cell01->set_text("Cell 0,1");
+
+    doc.sync_to_physical_tree();
+    doc.save();
+
+    // Reopen and use raw XML to construct legacy TableCell for testing
+    Document doc2("test_legacy_cell_para.docx");
+    doc2.open();
+    ASSERT_TRUE(doc2.is_open());
+
+    auto doc_xml = doc2.get_document_xml();
+    ASSERT_NE(doc_xml, nullptr);
+
+    auto body_xml = doc_xml->child("w:document").child("w:body");
+    ASSERT_TRUE(body_xml);
+
+    auto tbl = body_xml.child("w:tbl");
+    ASSERT_TRUE(tbl);
+
+    auto tr = tbl.child("w:tr");
+    ASSERT_TRUE(tr);
+
+    // First row, first cell
+    TableCell cell(tr, tr.child("w:tc"));
+    ASSERT_TRUE(cell.has_next());
+
+    auto* para = cell.paragraphs();
+    ASSERT_NE(para, nullptr);
+    EXPECT_NE(para->get_text().find("Cell 0,0"), std::string::npos);
+
+    // Move to second cell in first row
+    cell.next();
+    ASSERT_TRUE(cell.has_next());
+
+    para = cell.paragraphs();
+    ASSERT_NE(para, nullptr);
+    EXPECT_NE(para->get_text().find("Cell 0,1"), std::string::npos);
+
+    doc2.close();
+    fs::remove("test_legacy_cell_para.docx");
+}
+
+TEST(TablePropertiesTest, ApplyToXmlNode) {
+    Document doc("test_table_props.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto body = doc.get_first_section()->get_body();
+    auto table = body->append_table(2, 2);
+    ASSERT_NE(table, nullptr);
+
+    // Apply table properties directly to the XML node after sync
+    doc.sync_to_physical_tree();
+
+    auto doc_xml = doc.get_document_xml();
+    ASSERT_NE(doc_xml, nullptr);
+
+    auto tbl = doc_xml->child("w:document").child("w:body").child("w:tbl");
+    ASSERT_TRUE(tbl);
+
+    TableProperties props;
+    props.width.type = TableProperties::WidthType::Absolute;
+    props.width.value = 5000;
+    props.alignment = ParagraphProperties::Alignment::Centered;
+    props.borders.top = ParagraphProperties::Border{
+        ParagraphProperties::Border::Style::Single, 8, "FF0000", 0};
+    props.cellMargin.top = 100;
+    props.cellMargin.left = 200;
+
+    props.applyTo(tbl);
+
+    // Verify width
+    auto tblPr = tbl.child("w:tblPr");
+    ASSERT_TRUE(tblPr);
+
+    auto tblW = tblPr.child("w:tblW");
+    ASSERT_TRUE(tblW);
+    EXPECT_EQ(std::string(tblW.attribute("w:type").value()), "dxa");
+    EXPECT_EQ(tblW.attribute("w:w").as_int(), 5000);
+
+    // Verify alignment
+    auto jc = tblPr.child("w:jc");
+    ASSERT_TRUE(jc);
+    EXPECT_EQ(std::string(jc.attribute("w:val").value()), "center");
+
+    // Verify borders
+    auto tblBorders = tblPr.child("w:tblBorders");
+    ASSERT_TRUE(tblBorders);
+    auto top = tblBorders.child("w:top");
+    ASSERT_TRUE(top);
+    EXPECT_EQ(std::string(top.attribute("w:val").value()), "single");
+    EXPECT_EQ(top.attribute("w:sz").as_int(), 8);
+    EXPECT_EQ(std::string(top.attribute("w:color").value()), "FF0000");
+
+    // Verify cell margins
+    auto tblCellMar = tblPr.child("w:tblCellMar");
+    ASSERT_TRUE(tblCellMar);
+    auto mar_top = tblCellMar.child("w:top");
+    ASSERT_TRUE(mar_top);
+    EXPECT_EQ(mar_top.attribute("w:w").as_int(), 100);
+    EXPECT_EQ(std::string(mar_top.attribute("w:type").value()), "dxa");
+    auto mar_left = tblCellMar.child("w:left");
+    ASSERT_TRUE(mar_left);
+    EXPECT_EQ(mar_left.attribute("w:w").as_int(), 200);
+
+    doc.save();
+    fs::remove("test_table_props.docx");
+}

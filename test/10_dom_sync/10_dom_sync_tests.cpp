@@ -119,7 +119,7 @@ TEST(DomSyncTest, FieldRoundTrip) {
             if (child->node_type() == NodeType::FieldStart) {
                 auto field = std::dynamic_pointer_cast<Field>(child);
                 ASSERT_NE(field, nullptr);
-                EXPECT_EQ(field->get_field_code(), " PAGE ");
+                EXPECT_EQ(field->get_field_code(), "PAGE");
                 EXPECT_EQ(field->get_result(), "1");
                 found_field = true;
                 break;

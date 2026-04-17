@@ -13,6 +13,7 @@
 #pragma once
 
 #include <cdocx/fwd.h>
+
 #include <pugixml.hpp>
 #include <string>
 #include <vector>
@@ -49,9 +50,7 @@ struct TableBorders {
     /**
      * @brief All borders preset (default)
      */
-    static TableBorders All() {
-        return TableBorders();
-    }
+    static TableBorders All() { return TableBorders(); }
 
     /**
      * @brief Outside borders only preset
@@ -68,8 +67,8 @@ struct TableBorders {
  * @brief Cell merge configuration
  */
 struct CellMerge {
-    int row_span = 1;  ///< Number of rows to span
-    int col_span = 1;  ///< Number of columns to span
+    int row_span = 1;        ///< Number of rows to span
+    int col_span = 1;        ///< Number of columns to span
     bool is_restart = true;  ///< true for merge start, false for continue
 };
 
@@ -91,7 +90,7 @@ struct CellMerge {
  * @endcode
  */
 class TableBuilder {
-public:
+  public:
     /**
      * @brief Construct table builder with dimensions
      * @param rows Number of rows
@@ -162,8 +161,8 @@ public:
      * @param font_size Font size in half-points
      * @return Reference to this builder for chaining
      */
-    TableBuilder& SetCellTextFormatted(int row, int col, const std::string& text,
-                                        bool bold, bool italic, int font_size);
+    TableBuilder& SetCellTextFormatted(
+        int row, int col, const std::string& text, bool bold, bool italic, int font_size);
 
     /**
      * @brief Set cell vertical alignment
@@ -233,7 +232,7 @@ public:
      */
     pugi::xml_node Build(pugi::xml_document& doc_xml) const;
 
-private:
+  private:
     int rows_;
     int cols_;
     TableBorders borders_;
@@ -335,8 +334,9 @@ bool is_table_caption(pugi::xml_node para);
  * @return The created caption paragraph node, or empty node on failure
  * @details Generates caption in format "表 X description" with Chinese formatting
  */
-pugi::xml_node insert_table_caption(Document* doc, pugi::xml_node after_node,
-                                     const std::string& description,
-                                     int table_number = 0);
+pugi::xml_node insert_table_caption(Document* doc,
+                                    pugi::xml_node after_node,
+                                    const std::string& description,
+                                    int table_number = 0);
 
 }  // namespace cdocx

@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include <cdocx/node.h>
 #include <cdocx/enums.h>
+#include <cdocx/node.h>
+
 #include <string>
 
 namespace cdocx {
@@ -19,7 +20,7 @@ namespace cdocx {
 // ============================================================================
 
 class Footnote : public CompositeNode {
-public:
+  public:
     Footnote();
     explicit Footnote(Document* doc);
     Footnote(Document* doc, FootnoteType type);
@@ -43,9 +44,7 @@ public:
     void set_text(const std::string& text);
 
     NodeType node_type() const override {
-        return type_ == FootnoteType::Endnote
-            ? NodeType::Endnote
-            : NodeType::Footnote;
+        return type_ == FootnoteType::Endnote ? NodeType::Endnote : NodeType::Footnote;
     }
 
     void accept(DocumentVisitor* visitor) override;
@@ -54,7 +53,7 @@ public:
     // Convenience: append paragraph with text
     std::shared_ptr<Paragraph> append_paragraph(const std::string& text = "");
 
-private:
+  private:
     int id_ = 0;
     FootnoteType type_ = FootnoteType::Footnote;
     bool is_auto_ = true;
@@ -66,7 +65,7 @@ private:
 // ============================================================================
 
 class FootnoteReference : public Node {
-public:
+  public:
     FootnoteReference();
     explicit FootnoteReference(Document* doc);
 
@@ -78,7 +77,7 @@ public:
     void accept(DocumentVisitor* visitor) override;
     std::shared_ptr<Node> clone(bool deep = true) const override;
 
-private:
+  private:
     int id_ = 0;
 };
 
@@ -87,7 +86,7 @@ private:
 // ============================================================================
 
 class EndnoteReference : public Node {
-public:
+  public:
     EndnoteReference();
     explicit EndnoteReference(Document* doc);
 
@@ -99,8 +98,78 @@ public:
     void accept(DocumentVisitor* visitor) override;
     std::shared_ptr<Node> clone(bool deep = true) const override;
 
-private:
+  private:
     int id_ = 0;
 };
 
-} // namespace cdocx
+// ============================================================================
+// FootnoteCollection - Typed access to document footnotes
+// ============================================================================
+
+class FootnoteCollection {
+  private:
+    friend class Document;
+
+    Document* doc_;
+    mutable std::vector<std::shared_ptr<Footnote>> footnotes_;
+    mutable bool collected_ = false;
+
+    void collect_footnotes() const;
+
+  public:
+    FootnoteCollection() : doc_(nullptr), collected_(true) {}
+    explicit FootnoteCollection(Document* doc);
+
+    size_t count() const;
+    std::shared_ptr<Footnote> get(size_t index) const;
+    std::shared_ptr<Footnote> get_by_id(int id) const;
+    bool contains(int id) const;
+
+    std::shared_ptr<Footnote> add(const std::string& text);
+    std::shared_ptr<Footnote> add(const std::string& text, const std::string& reference_mark);
+    bool remove_at(size_t index);
+    bool remove(int id);
+    void clear();
+
+    std::vector<std::shared_ptr<Footnote>>::iterator begin();
+    std::vector<std::shared_ptr<Footnote>>::iterator end();
+    std::vector<std::shared_ptr<Footnote>>::const_iterator begin() const;
+    std::vector<std::shared_ptr<Footnote>>::const_iterator end() const;
+};
+
+// ============================================================================
+// EndnoteCollection - Typed access to document endnotes
+// ============================================================================
+
+class EndnoteCollection {
+  private:
+    friend class Document;
+
+    Document* doc_;
+    mutable std::vector<std::shared_ptr<Footnote>> endnotes_;
+    mutable bool collected_ = false;
+
+    void collect_endnotes() const;
+
+  public:
+    EndnoteCollection() : doc_(nullptr), collected_(true) {}
+    explicit EndnoteCollection(Document* doc);
+
+    size_t count() const;
+    std::shared_ptr<Footnote> get(size_t index) const;
+    std::shared_ptr<Footnote> get_by_id(int id) const;
+    bool contains(int id) const;
+
+    std::shared_ptr<Footnote> add(const std::string& text);
+    std::shared_ptr<Footnote> add(const std::string& text, const std::string& reference_mark);
+    bool remove_at(size_t index);
+    bool remove(int id);
+    void clear();
+
+    std::vector<std::shared_ptr<Footnote>>::iterator begin();
+    std::vector<std::shared_ptr<Footnote>>::iterator end();
+    std::vector<std::shared_ptr<Footnote>>::const_iterator begin() const;
+    std::vector<std::shared_ptr<Footnote>>::const_iterator end() const;
+};
+
+}  // namespace cdocx

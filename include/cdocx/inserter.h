@@ -4,36 +4,36 @@
  * @details Provides the DocumentInserter class for inserting content from
  *          one document into another. Supports inserting entire documents,
  *          paragraphs only, or tables only, at various positions.
- * 
+ *
  * @author lonlng
  * @copyright MIT License
  * @date 2026
  * @version 0.2.0
- * 
+ *
  * @par Usage Example:
  * @code
  * #include <cdocx/inserter.h>
- * 
+ *
  * // Open target document
  * cdocx::Document target("main.docx");
  * target.open();
- * 
+ *
  * // Open source document
  * cdocx::Document source("content.docx");
  * source.open();
- * 
+ *
  * // Create inserter
  * cdocx::DocumentInserter inserter(&target);
- * 
+ *
  * // Insert entire document at end
  * inserter.insert_document(&source);
- * 
+ *
  * // Insert at specific position (0 = beginning, -1 = end)
  * inserter.insert_document_at(&source, 2);
- * 
+ *
  * // Insert paragraphs only
  * inserter.insert_paragraphs(&source);
- * 
+ *
  * // Save result
  * target.save("combined.docx");
  * @endcode
@@ -41,8 +41,9 @@
 
 #pragma once
 
-#include <cdocx/fwd.h>
 #include <cdocx/base.h>
+#include <cdocx/fwd.h>
+
 #include <pugixml.hpp>
 
 namespace cdocx {
@@ -55,22 +56,22 @@ namespace cdocx {
  *          - Complete documents (paragraphs and tables)
  *          - Paragraphs only
  *          - Tables only
- * 
+ *
  * @par Insert Positions:
  * - Default: end of document
  * - Specified index: 0 = document start, 1 = after first element, -1 = document end
  * - Specified paragraph: insert after specific paragraph
- * 
+ *
  * @par Notes:
  * - Source document content is cloned, source document is not modified
  * - Styles may need manual synchronization
  * - Media files like images need separate handling
- * 
+ *
  * @see Document
  * @since 0.1.0
  */
 class DocumentInserter {
-private:
+  private:
     Document* target_doc_;  ///< Target document for insertion
 
     /**
@@ -79,8 +80,7 @@ private:
      * @param[in] target_parent Target parent node (body or cell)
      * @return The cloned paragraph node
      */
-    pugi::xml_node clone_paragraph(const pugi::xml_node& source_para, 
-                                    pugi::xml_node target_parent);
+    pugi::xml_node clone_paragraph(const pugi::xml_node& source_para, pugi::xml_node target_parent);
 
     /**
      * @brief Clone a table from source to target
@@ -88,10 +88,9 @@ private:
      * @param[in] target_parent Target parent node
      * @return The cloned table node
      */
-    pugi::xml_node clone_table(const pugi::xml_node& source_table,
-                               pugi::xml_node target_parent);
+    pugi::xml_node clone_table(const pugi::xml_node& source_table, pugi::xml_node target_parent);
 
-public:
+  public:
     /**
      * @brief Construct inserter for target document
      * @param[in] target Target document (must remain valid during operations)
@@ -143,4 +142,4 @@ public:
     void insert_tables(Document* source, int position = -1);
 };
 
-} // namespace cdocx
+}  // namespace cdocx

@@ -20,8 +20,8 @@ enum class NodeType {
     Section,
     Body,
     HeaderFooter,
-    Header,       ///< Header content
-    Footer,       ///< Footer content
+    Header,  ///< Header content
+    Footer,  ///< Footer content
     Paragraph,
     Run,
     Table,
@@ -60,9 +60,9 @@ enum class ParagraphAlignment {
 };
 
 enum class LineSpacingRule {
-    Auto,       // Multiple line spacing
-    Exact,      // Exact points
-    AtLeast     // Minimum points
+    Auto,    // Multiple line spacing
+    Exact,   // Exact points
+    AtLeast  // Minimum points
 };
 
 enum class OutlineLevel {
@@ -234,9 +234,9 @@ enum class HeightRule {
 // ============================================================================
 
 enum class HeaderFooterType {
-    Primary,        // Default header/footer
-    FirstPage,      // First page only
-    EvenPages,       // Even pages only    
+    Primary,    // Default header/footer
+    FirstPage,  // First page only
+    EvenPages,  // Even pages only
     Default,    ///< Default header/footer
     First,      ///< First page only
     Even        ///< Even pages only
@@ -594,22 +594,22 @@ enum class StyleIdentifier {
 // ============================================================================
 
 enum class TabAlignment : std::uint8_t {
-    Left,       // Left-aligns text after the tab stop
-    Center,     // Centers text around the tab stop
-    Right,      // Right-aligns text at the tab stop
-    Decimal,    // Aligns text at the decimal dot
-    Bar,        // Draws a vertical bar at the tab stop position
-    List,       // Delimiter between number/bullet and text
-    Clear       // Clears any tab stop in this position
+    Left,     // Left-aligns text after the tab stop
+    Center,   // Centers text around the tab stop
+    Right,    // Right-aligns text at the tab stop
+    Decimal,  // Aligns text at the decimal dot
+    Bar,      // Draws a vertical bar at the tab stop position
+    List,     // Delimiter between number/bullet and text
+    Clear     // Clears any tab stop in this position
 };
 
 enum class TabLeader : std::uint8_t {
-    None,       // No leader line
-    Dots,       // Dots
-    Dashes,     // Dashes
-    Line,       // Single line
-    Heavy,      // Thick line
-    MiddleDot   // Middle dots
+    None,      // No leader line
+    Dots,      // Dots
+    Dashes,    // Dashes
+    Line,      // Single line
+    Heavy,     // Thick line
+    MiddleDot  // Middle dots
 };
 
 // ============================================================================
@@ -653,9 +653,9 @@ enum class SaveFormat : std::uint8_t {
 // ============================================================================
 
 enum class VisitorAction {
-    Continue,       // Continue visiting
-    Skip,           // Skip this node's children
-    Stop            // Stop visiting completely
+    Continue,  // Continue visiting
+    Skip,      // Skip this node's children
+    Stop       // Stop visiting completely
 };
 
-} // namespace cdocx
+}  // namespace cdocx

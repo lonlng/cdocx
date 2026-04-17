@@ -9,8 +9,9 @@
 
 #pragma once
 
-#include <cdocx/node.h>
 #include <cdocx/enums.h>
+#include <cdocx/node.h>
+
 #include <string>
 #include <vector>
 
@@ -21,7 +22,7 @@ namespace cdocx {
 // ============================================================================
 
 class FormField : public Node {
-public:
+  public:
     FormField();
     explicit FormField(Document* doc);
     FormField(Document* doc, FormFieldType type);
@@ -92,7 +93,7 @@ public:
     void accept(DocumentVisitor* visitor) override;
     std::shared_ptr<Node> clone(bool deep = true) const override;
 
-private:
+  private:
     FormFieldType type_ = FormFieldType::TextInput;
     std::string name_;
     std::string result_;
@@ -120,4 +121,4 @@ private:
     int selected_index_ = 0;
 };
 
-} // namespace cdocx
+}  // namespace cdocx

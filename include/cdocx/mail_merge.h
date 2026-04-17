@@ -9,9 +9,10 @@
 
 #pragma once
 
+#include <cdocx/base.h>
 #include <cdocx/document.h>
 #include <cdocx/section.h>
-#include <cdocx/base.h>
+
 #include <map>
 #include <string>
 #include <utility>
@@ -30,16 +31,14 @@ enum class MailMergeCleanupOptions : std::uint8_t {
     RemoveEmptyRegions = 4
 };
 
-inline MailMergeCleanupOptions operator|(MailMergeCleanupOptions lhs,
-                                          MailMergeCleanupOptions rhs) {
-    return static_cast<MailMergeCleanupOptions>(
-        static_cast<std::uint8_t>(lhs) | static_cast<std::uint8_t>(rhs));
+inline MailMergeCleanupOptions operator|(MailMergeCleanupOptions lhs, MailMergeCleanupOptions rhs) {
+    return static_cast<MailMergeCleanupOptions>(static_cast<std::uint8_t>(lhs) |
+                                                static_cast<std::uint8_t>(rhs));
 }
 
-inline MailMergeCleanupOptions operator&(MailMergeCleanupOptions lhs,
-                                          MailMergeCleanupOptions rhs) {
-    return static_cast<MailMergeCleanupOptions>(
-        static_cast<std::uint8_t>(lhs) & static_cast<std::uint8_t>(rhs));
+inline MailMergeCleanupOptions operator&(MailMergeCleanupOptions lhs, MailMergeCleanupOptions rhs) {
+    return static_cast<MailMergeCleanupOptions>(static_cast<std::uint8_t>(lhs) &
+                                                static_cast<std::uint8_t>(rhs));
 }
 
 // ============================================================================
@@ -47,7 +46,7 @@ inline MailMergeCleanupOptions operator&(MailMergeCleanupOptions lhs,
 // ============================================================================
 
 class MailMerge {
-public:
+  public:
     explicit MailMerge(Document* doc);
 
     /**
@@ -74,21 +73,16 @@ public:
     void delete_fields();
 
     // Cleanup options
-    MailMergeCleanupOptions get_cleanup_options() const {
-        return cleanup_options_;
-    }
-    void set_cleanup_options(MailMergeCleanupOptions options) {
-        cleanup_options_ = options;
-    }
+    MailMergeCleanupOptions get_cleanup_options() const { return cleanup_options_; }
+    void set_cleanup_options(MailMergeCleanupOptions options) { cleanup_options_ = options; }
 
-private:
+  private:
     Document* doc_ = nullptr;
-    MailMergeCleanupOptions cleanup_options_ =
-        MailMergeCleanupOptions::RemoveUnusedFields;
+    MailMergeCleanupOptions cleanup_options_ = MailMergeCleanupOptions::RemoveUnusedFields;
 
     void execute_impl(const std::map<std::string, std::string>& data);
     std::vector<std::string> collect_field_names() const;
     void apply_cleanup();
 };
 
-} // namespace cdocx
+}  // namespace cdocx

@@ -4,17 +4,16 @@
  * @since 0.7.0
  */
 
-#include <cdocx/paragraph_builder.h>
-#include <cdocx/paragraph.h>
 #include <cdocx/base.h>
+#include <cdocx/paragraph.h>
+#include <cdocx/paragraph_builder.h>
 
 namespace cdocx {
 
-ParagraphBuilder::ParagraphBuilder()
-    : para_(std::make_shared<Paragraph>()) {}
+ParagraphBuilder::ParagraphBuilder() : para_(std::make_shared<Paragraph>()) {
+}
 
-ParagraphBuilder::ParagraphBuilder(const std::string& text)
-    : para_(std::make_shared<Paragraph>()) {
+ParagraphBuilder::ParagraphBuilder(const std::string& text) : para_(std::make_shared<Paragraph>()) {
     para_->append_text(text);
 }
 
@@ -26,8 +25,10 @@ ParagraphBuilder& ParagraphBuilder::add_run(const std::string& text) {
     return *this;
 }
 
-ParagraphBuilder& ParagraphBuilder::add_run(const std::string& text, bool bold,
-                                            bool italic, int font_size) {
+ParagraphBuilder& ParagraphBuilder::add_run(const std::string& text,
+                                            bool bold,
+                                            bool italic,
+                                            int font_size) {
     auto run = std::make_shared<Run>();
     run->set_text(text);
     run->set_bold(bold);
@@ -108,4 +109,4 @@ void ParagraphBuilder::apply_current_formatting(Run& run) {
     }
 }
 
-} // namespace cdocx
+}  // namespace cdocx

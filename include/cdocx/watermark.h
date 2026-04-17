@@ -10,6 +10,7 @@
 #pragma once
 
 #include <cdocx/document.h>
+
 #include <string>
 
 namespace cdocx {
@@ -29,8 +30,8 @@ enum class WatermarkLayout : std::uint8_t {
 
 struct TextWatermarkOptions {
     std::string font_family = "Calibri";
-    std::string color = "C0C0C0";      ///< Silver, hex RGB
-    float font_size = 0;               ///< 0 = auto
+    std::string color = "C0C0C0";  ///< Silver, hex RGB
+    float font_size = 0;           ///< 0 = auto
     bool semi_transparent = true;
     WatermarkLayout layout = WatermarkLayout::Diagonal;
 };
@@ -40,7 +41,7 @@ struct TextWatermarkOptions {
 // ============================================================================
 
 struct ImageWatermarkOptions {
-    double scale = 0;                  ///< 0 = auto, otherwise percentage
+    double scale = 0;  ///< 0 = auto, otherwise percentage
     bool washout = true;
 };
 
@@ -49,7 +50,7 @@ struct ImageWatermarkOptions {
 // ============================================================================
 
 class Watermark {
-public:
+  public:
     explicit Watermark(Document* doc);
 
     /// Set text watermark with default options
@@ -70,7 +71,7 @@ public:
     /// Check if document has a watermark
     bool has_watermark() const;
 
-private:
+  private:
     Document* document_;
 
     void ensure_header_for_watermark();
@@ -81,4 +82,4 @@ private:
     void clear_watermark_from_header();
 };
 
-} // namespace cdocx
+}  // namespace cdocx

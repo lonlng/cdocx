@@ -5,8 +5,8 @@
  */
 
 #include <cdocx/comment.h>
-#include <cdocx/paragraph.h>
 #include <cdocx/document.h>
+#include <cdocx/paragraph.h>
 
 namespace cdocx {
 
@@ -16,7 +16,8 @@ namespace cdocx {
 
 CommentRangeStart::CommentRangeStart() = default;
 
-CommentRangeStart::CommentRangeStart(int id) : id_(id) {}
+CommentRangeStart::CommentRangeStart(int id) : id_(id) {
+}
 
 CommentRangeStart::CommentRangeStart(Document* doc) {
     set_document(doc);
@@ -40,7 +41,8 @@ std::shared_ptr<Node> CommentRangeStart::clone(bool /*deep*/) const {
 
 CommentRangeEnd::CommentRangeEnd() = default;
 
-CommentRangeEnd::CommentRangeEnd(int id) : id_(id) {}
+CommentRangeEnd::CommentRangeEnd(int id) : id_(id) {
+}
 
 CommentRangeEnd::CommentRangeEnd(Document* doc) {
     set_document(doc);
@@ -112,7 +114,8 @@ void Comment::set_text(const std::string& text) {
 }
 
 void Comment::accept(DocumentVisitor* visitor) {
-    if (!visitor) return;
+    if (!visitor)
+        return;
     if (visitor->visit_comment(*this) == VisitorAction::Continue) {
         for (auto& child : get_children()) {
             child->accept(visitor);
@@ -150,7 +153,8 @@ std::shared_ptr<Paragraph> Comment::append_paragraph(const std::string& text) {
 // CommentCollection
 // ============================================================================
 
-CommentCollection::CommentCollection(Document* doc) : doc_(doc) {}
+CommentCollection::CommentCollection(Document* doc) : doc_(doc) {
+}
 
 void CommentCollection::collect_comments() const {
     if (collected_) {
@@ -190,7 +194,8 @@ bool CommentCollection::contains(int id) const {
     return get_by_id(id) != nullptr;
 }
 
-std::shared_ptr<Comment> CommentCollection::add(const std::string& author, const std::string& text) {
+std::shared_ptr<Comment> CommentCollection::add(const std::string& author,
+                                                const std::string& text) {
     if (!doc_) {
         return nullptr;
     }
@@ -251,4 +256,4 @@ std::vector<std::shared_ptr<Comment>>::const_iterator CommentCollection::end() c
     return comments_.end();
 }
 
-} // namespace cdocx
+}  // namespace cdocx

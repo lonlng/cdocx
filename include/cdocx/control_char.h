@@ -25,7 +25,7 @@ namespace cdocx {
  * @since 0.7.0
  */
 class ControlChar {
-public:
+  public:
     ControlChar() = delete;
 
     /// @brief Tab character: "\t"
@@ -73,4 +73,4 @@ public:
     static constexpr char field_end_char = '\x15';
 };
 
-} // namespace cdocx
+}  // namespace cdocx

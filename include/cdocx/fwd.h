@@ -3,16 +3,16 @@
  * @brief Forward declarations for CDocx library
  * @details Provides forward declarations for all public classes in the CDocx library.
  *          Use this header to reduce compile times when only forward declarations are needed.
- * 
+ *
  * @author lonlng
  * @copyright MIT License
  * @date 2026
  * @version 0.2.0
- * 
+ *
  * @par Usage Example:
  * @code
  * #include <cdocx/fwd.h>  // Lightweight, forward declarations only
- * 
+ *
  * // Declare function parameters and return types
  * void process_document(cdocx::Document& doc);
  * cdocx::Paragraph* find_paragraph(cdocx::Document& doc, const std::string& text);
@@ -24,7 +24,7 @@
 namespace pugi {
 class xml_node;      ///< Forward declaration for pugixml node
 class xml_document;  ///< Forward declaration for pugixml document
-} // namespace pugi
+}  // namespace pugi
 
 namespace cdocx {
 
@@ -168,4 +168,4 @@ class SectionCollection;
  */
 class NumberingManager;
 
-} // namespace cdocx
+}  // namespace cdocx

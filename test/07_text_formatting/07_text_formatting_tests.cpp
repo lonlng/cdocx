@@ -10,6 +10,7 @@
 
 #include <gtest/gtest.h>
 #include <cdocx.h>
+#include <cstring>
 #include <filesystem>
 #include <iostream>
 
@@ -481,6 +482,82 @@ TEST(TextFormattingTest, DropCapNoneNotSerialized) {
         ASSERT_NE(p, nullptr);
 
         EXPECT_EQ(p->get_paragraph_format().drop_cap_position, cdocx::DropCapPosition::None);
+    }
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+}
+
+TEST(TextFormattingTest, RunPropertiesXmlRoundTrip) {
+    const std::string test_file = "test_run_props_xml.docx";
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        cdocx::Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+
+        // Use DOM API so the paragraph exists in the DOM tree before sync
+        auto sect = doc.get_first_section();
+        ASSERT_NE(sect, nullptr);
+
+        auto para = sect->append_paragraph("Styled Text");
+        auto run = para->get_first_run();
+        ASSERT_NE(run, nullptr);
+        run->set_bold(true);
+        run->set_italic(true);
+        run->set_font_size(14);
+        run->set_color("FF0000");
+
+        doc.sync_to_physical_tree();
+        doc.save();
+
+        // Access the raw XML run and use get_properties_xml
+        auto doc_xml = doc.get_document_xml();
+        ASSERT_NE(doc_xml, nullptr);
+
+        auto body = doc_xml->child("w:document").child("w:body");
+        auto p = body.child("w:p");
+        // Find the paragraph with our styled text (skip the empty default paragraph)
+        while (p) {
+            auto t = p.child("w:r").child("w:t");
+            if (t && std::strcmp(t.text().get(), "Styled Text") == 0) {
+                break;
+            }
+            p = p.next_sibling("w:p");
+        }
+        ASSERT_TRUE(p);
+        auto r = p.child("w:r");
+        ASSERT_TRUE(r);
+
+        cdocx::Run run_xml(&doc);
+        run_xml.set_parent_xml(p);
+        run_xml.set_current_xml(r);
+
+        auto props = run_xml.get_properties_xml();
+        EXPECT_TRUE(props.fontStyle.bold);
+        EXPECT_TRUE(props.fontStyle.italic);
+        EXPECT_EQ(props.fontSize, 28);  // 14pt = 28 half-points
+        EXPECT_EQ(props.color, "FF0000");
+
+        // Modify via set_properties_xml and verify
+        cdocx::TextProperties new_props;
+        new_props.fontStyle.bold = false;
+        new_props.fontStyle.italic = false;
+        new_props.fontSize = 24;  // 12pt
+        new_props.color = "0000FF";
+        new_props.underline.style = cdocx::TextProperties::UnderlineStyle::Single;
+        new_props.strike = cdocx::TextProperties::StrikeStyle::Single;
+
+        run_xml.set_properties_xml(new_props);
+
+        auto updated = run_xml.get_properties_xml();
+        EXPECT_FALSE(updated.fontStyle.bold);
+        EXPECT_FALSE(updated.fontStyle.italic);
+        EXPECT_EQ(updated.fontSize, 24);
+        EXPECT_EQ(updated.color, "0000FF");
+        EXPECT_EQ(updated.underline.style, cdocx::TextProperties::UnderlineStyle::Single);
+        EXPECT_EQ(updated.strike, cdocx::TextProperties::StrikeStyle::Single);
+
+        doc.save();
     }
 
     if (fs::exists(test_file)) fs::remove(test_file);

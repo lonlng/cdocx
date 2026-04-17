@@ -21,7 +21,8 @@ void Node::remove() {
 }
 
 int Node::get_index() const {
-    if (!parent_) return -1;
+    if (!parent_)
+        return -1;
     const auto& children = parent_->get_children();
     for (size_t i = 0; i < children.size(); ++i) {
         if (children[i].get() == this) {
@@ -34,7 +35,8 @@ int Node::get_index() const {
 bool Node::is_descendant_of(const Node* ancestor) const {
     Node* current = parent_;
     while (current) {
-        if (current == ancestor) return true;
+        if (current == ancestor)
+            return true;
         current = current->get_parent();
     }
     return false;
@@ -47,7 +49,8 @@ std::shared_ptr<Node> Node::get_previous_node_in_document() const {
         auto current = prev;
         while (current->is_composite()) {
             auto composite = std::dynamic_pointer_cast<CompositeNode>(current);
-            if (!composite || !composite->has_children()) break;
+            if (!composite || !composite->has_children())
+                break;
             current = composite->get_last_child();
         }
         return current;
@@ -94,41 +97,46 @@ std::shared_ptr<Node> Node::get_next_logical() const {
 // ============================================================================
 
 std::shared_ptr<Node> CompositeNode::get_first_child() const {
-    if (children_.empty()) return nullptr;
+    if (children_.empty())
+        return nullptr;
     return children_.front();
 }
 
 std::shared_ptr<Node> CompositeNode::get_last_child() const {
-    if (children_.empty()) return nullptr;
+    if (children_.empty())
+        return nullptr;
     return children_.back();
 }
 
 std::shared_ptr<Node> CompositeNode::get_child(int index) const {
-    if (index < 0 || static_cast<size_t>(index) >= children_.size()) return nullptr;
+    if (index < 0 || static_cast<size_t>(index) >= children_.size())
+        return nullptr;
     return children_[index];
 }
 
 std::shared_ptr<Node> CompositeNode::append_child(std::shared_ptr<Node> child) {
-    if (!child) return nullptr;
-    
+    if (!child)
+        return nullptr;
+
     child->set_parent(this);
     child->set_document(document_);
-    
+
     if (!children_.empty()) {
         child->set_previous_sibling(children_.back());
         children_.back()->set_next_sibling(child);
     }
-    
+
     children_.push_back(child);
     return child;
 }
 
 std::shared_ptr<Node> CompositeNode::insert_child(int index, std::shared_ptr<Node> child) {
-    if (!child || index < 0 || static_cast<size_t>(index) > children_.size()) return nullptr;
-    
+    if (!child || index < 0 || static_cast<size_t>(index) > children_.size())
+        return nullptr;
+
     child->set_parent(this);
     child->set_document(document_);
-    
+
     if (index == 0) {
         if (!children_.empty()) {
             child->set_next_sibling(children_.front());
@@ -143,14 +151,15 @@ std::shared_ptr<Node> CompositeNode::insert_child(int index, std::shared_ptr<Nod
         (*it)->set_previous_sibling(child);
         children_.insert(it, child);
     }
-    
+
     return child;
 }
 
 std::shared_ptr<Node> CompositeNode::insert_before(const std::shared_ptr<Node>& new_node,
-                                                    const std::shared_ptr<Node>& ref_node) {
-    if (!new_node || !ref_node) return nullptr;
-    
+                                                   const std::shared_ptr<Node>& ref_node) {
+    if (!new_node || !ref_node)
+        return nullptr;
+
     for (size_t i = 0; i < children_.size(); ++i) {
         if (children_[i] == ref_node) {
             return insert_child(static_cast<int>(i), new_node);
@@ -160,9 +169,10 @@ std::shared_ptr<Node> CompositeNode::insert_before(const std::shared_ptr<Node>& 
 }
 
 std::shared_ptr<Node> CompositeNode::insert_after(const std::shared_ptr<Node>& new_node,
-                                                   const std::shared_ptr<Node>& ref_node) {
-    if (!new_node || !ref_node) return nullptr;
-    
+                                                  const std::shared_ptr<Node>& ref_node) {
+    if (!new_node || !ref_node)
+        return nullptr;
+
     for (size_t i = 0; i < children_.size(); ++i) {
         if (children_[i] == ref_node) {
             return insert_child(static_cast<int>(i + 1), new_node);
@@ -172,8 +182,9 @@ std::shared_ptr<Node> CompositeNode::insert_after(const std::shared_ptr<Node>& n
 }
 
 void CompositeNode::remove_child(const std::shared_ptr<Node>& child) {
-    if (!child) return;
-    
+    if (!child)
+        return;
+
     for (auto it = children_.begin(); it != children_.end(); ++it) {
         if (*it == child) {
             // Update sibling links
@@ -183,7 +194,7 @@ void CompositeNode::remove_child(const std::shared_ptr<Node>& child) {
             if (child->get_next_sibling()) {
                 child->get_next_sibling()->set_previous_sibling(child->get_previous_sibling());
             }
-            
+
             child->set_parent(nullptr);
             children_.erase(it);
             return;
@@ -264,7 +275,8 @@ std::vector<std::shared_ptr<Node>> NodeCollection::find_all(const std::string& t
     return result;
 }
 
-std::shared_ptr<Node> NodeCollection::find_if(const std::function<bool(const Node&)>& predicate) const {
+std::shared_ptr<Node> NodeCollection::find_if(
+    const std::function<bool(const Node&)>& predicate) const {
     for (const auto& node : nodes_) {
         if (predicate(*node)) {
             return node;
@@ -273,7 +285,8 @@ std::shared_ptr<Node> NodeCollection::find_if(const std::function<bool(const Nod
     return nullptr;
 }
 
-NodeCollection NodeCollection::find_all_if(const std::function<bool(const Node&)>& predicate) const {
+NodeCollection NodeCollection::find_all_if(
+    const std::function<bool(const Node&)>& predicate) const {
     std::vector<std::shared_ptr<Node>> result;
     for (const auto& node : nodes_) {
         if (predicate(*node)) {
@@ -290,7 +303,8 @@ void NodeCollection::add(const std::shared_ptr<Node>& node) {
 }
 
 void NodeCollection::remove(const std::shared_ptr<Node>& node) {
-    if (!node) return;
+    if (!node)
+        return;
     for (auto it = nodes_.begin(); it != nodes_.end(); ++it) {
         if (*it == node) {
             nodes_.erase(it);
@@ -303,4 +317,4 @@ void NodeCollection::clear() {
     nodes_.clear();
 }
 
-} // namespace cdocx
+}  // namespace cdocx

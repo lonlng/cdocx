@@ -3,28 +3,28 @@
  * @brief Figure caption generation for CDocx
  * @details Provides CaptionGenerator class for creating standardized
  *          Chinese figure captions in the format "图 X [description]".
- * 
+ *
  * @author lonlng
  * @copyright MIT License
  * @date 2026
  * @version 0.3.0
- * 
+ *
  * @par Usage Example:
  * @code
  * #include <cdocx/caption_generator.h>
- * 
+ *
  * cdocx::Document doc("template.docx");
  * doc.open();
- * 
+ *
  * // Insert figure caption after a specific paragraph
- * cdocx::CaptionGenerator::insert_figure_caption(&doc, para, 
+ * cdocx::CaptionGenerator::insert_figure_caption(&doc, para,
  *                                                "GPR Detection Result", 1);
- * 
+ *
  * // Auto-numbered caption
  * int next_number = cdocx::CaptionGenerator::count_existing_figures(&doc) + 1;
  * cdocx::CaptionGenerator::insert_figure_caption(&doc, para,
  *                                                "Chart Analysis", next_number);
- * 
+ *
  * doc.save("output.docx");
  * @endcode
  */
@@ -32,6 +32,7 @@
 #pragma once
 
 #include <cdocx/fwd.h>
+
 #include <pugixml.hpp>
 #include <string>
 #include <vector>
@@ -43,17 +44,17 @@ namespace cdocx {
  * @brief Utility class for generating figure captions
  * @details Generates standardized Chinese figure captions with proper
  *          formatting (SimSun font for Chinese, Times New Roman for numbers).
- * 
+ *
  * @par Format Specification:
  * - Text: "图 X [description]" (e.g., "图 1 GPR Detection Result")
  * - Font: Chinese = SimSun, Western = Times New Roman
  * - Size: 10.5pt (五号)
  * - Alignment: Center
- * 
+ *
  * @since 0.3.0
  */
 class CaptionGenerator {
-public:
+  public:
     /**
      * @brief Insert a figure caption after specified paragraph
      * @param[in] doc Target document
@@ -63,9 +64,9 @@ public:
      * @return The created caption paragraph node, or empty node on failure
      */
     static pugi::xml_node insert_figure_caption(Document* doc,
-                                                 pugi::xml_node after_para,
-                                                 const std::string& description,
-                                                 int figure_number = 0);
+                                                pugi::xml_node after_para,
+                                                const std::string& description,
+                                                int figure_number = 0);
 
     /**
      * @brief Insert figure caption at end of document
@@ -75,8 +76,8 @@ public:
      * @return The created caption paragraph node, or empty node on failure
      */
     static pugi::xml_node insert_figure_caption_at_end(Document* doc,
-                                                        const std::string& description,
-                                                        int figure_number = 0);
+                                                       const std::string& description,
+                                                       int figure_number = 0);
 
     /**
      * @brief Count existing figures in document
@@ -107,7 +108,7 @@ public:
      */
     static std::string extract_caption_text(pugi::xml_node para);
 
-private:
+  private:
     /**
      * @brief Create caption paragraph with proper formatting
      * @param[in] doc Target document
@@ -116,8 +117,8 @@ private:
      * @return Created paragraph node
      */
     static pugi::xml_node create_caption_paragraph(Document* doc,
-                                                    const std::string& full_text,
-                                                    pugi::xml_node insert_after);
+                                                   const std::string& full_text,
+                                                   pugi::xml_node insert_after);
 
     /**
      * @brief Generate full caption text
@@ -125,8 +126,7 @@ private:
      * @param[in] description Description text
      * @return Formatted caption text
      */
-    static std::string generate_caption_text(int figure_number,
-                                              const std::string& description);
+    static std::string generate_caption_text(int figure_number, const std::string& description);
 
     /**
      * @brief Get document body node
@@ -142,12 +142,12 @@ private:
  * @since 0.3.0
  */
 struct CaptionFormat {
-    std::string font_ascii = "Times New Roman";    ///< Western font
-    std::string font_east_asia = "SimSun";          ///< Chinese font
-    std::string font_hansi = "Times New Roman";    ///< ANSI font
-    int font_size = 21;                             ///< Size in half-points (21 = 10.5pt)
-    std::string alignment = "center";               ///< Paragraph alignment
-    
+    std::string font_ascii = "Times New Roman";  ///< Western font
+    std::string font_east_asia = "SimSun";       ///< Chinese font
+    std::string font_hansi = "Times New Roman";  ///< ANSI font
+    int font_size = 21;                          ///< Size in half-points (21 = 10.5pt)
+    std::string alignment = "center";            ///< Paragraph alignment
+
     /**
      * @brief Create default Chinese caption format
      * @return CaptionFormat with Chinese defaults
@@ -163,4 +163,4 @@ struct CaptionFormat {
     }
 };
 
-} // namespace cdocx
+}  // namespace cdocx

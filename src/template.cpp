@@ -2,21 +2,22 @@
  * @file template.cpp
  * @brief Template class implementation
  * @details Implementation of placeholder replacement
- * 
+ *
  * @author lonlng
  * @copyright MIT License
  * @date 2026
  * @version 0.2.0
  */
 
-#include <cdocx/template.h>
+#include <cdocx/advanced.h>
 #include <cdocx/document.h>
-#include <cdocx/table.h>
 #include <cdocx/paragraph.h>
 #include <cdocx/section.h>
-#include <cdocx/advanced.h>
-#include <pugixml.hpp>
+#include <cdocx/table.h>
+#include <cdocx/template.h>
+
 #include <filesystem>
+#include <pugixml.hpp>
 
 namespace cdocx {
 
@@ -24,10 +25,12 @@ namespace cdocx {
 // Constructor
 // ============================================================================
 
-Template::Template(Document* document) : doc_(document) {}
+Template::Template(Document* document) : doc_(document) {
+}
 
 Template::Template(Document* document, const std::string& prefix, const std::string& suffix)
-    : doc_(document), pattern_prefix_(prefix), pattern_suffix_(suffix) {}
+    : doc_(document), pattern_prefix_(prefix), pattern_suffix_(suffix) {
+}
 
 // ============================================================================
 // Placeholder Management
@@ -88,8 +91,10 @@ bool Template::try_replace_single_run(Run& r) {
     return false;
 }
 
-void Template::transition_to_collecting_state(PlaceholderContext& ctx, Run& r,
-                                              const std::string& text, size_t prefix_pos) {
+void Template::transition_to_collecting_state(PlaceholderContext& ctx,
+                                              Run& r,
+                                              const std::string& text,
+                                              size_t prefix_pos) {
     ctx.first_run = &r;
     ctx.prefix_pos = prefix_pos;
     ctx.collected_text = text.substr(prefix_pos);
@@ -98,7 +103,8 @@ void Template::transition_to_collecting_state(PlaceholderContext& ctx, Run& r,
 
 bool Template::try_replace_placeholder(const PlaceholderContext& ctx, Paragraph& p) {
     (void)p;
-    if (!ctx.first_run) return false;
+    if (!ctx.first_run)
+        return false;
 
     size_t best_pos = std::string::npos;
     std::string best_value;
@@ -116,7 +122,8 @@ bool Template::try_replace_placeholder(const PlaceholderContext& ctx, Paragraph&
         }
     }
 
-    if (best_pos == std::string::npos) return false;
+    if (best_pos == std::string::npos)
+        return false;
 
     size_t pattern_end = best_pos + best_pattern.length();
     std::string trailing = ctx.collected_text.substr(pattern_end);
@@ -209,27 +216,32 @@ bool Template::process_paragraph_legacy(Paragraph& para) {
 // ============================================================================
 
 bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
-    if (!run || !doc_) return false;
+    if (!run || !doc_)
+        return false;
 
     std::string text = run->get_text();
     for (const auto& [key, image_path] : image_placeholders_) {
         std::string pattern = pattern_prefix_ + key + pattern_suffix_;
-        if (text != pattern) continue;
+        if (text != pattern)
+            continue;
 
-        if (!std::filesystem::exists(image_path)) continue;
+        if (!std::filesystem::exists(image_path))
+            continue;
 
         ImageSize size;
-        if (!detect_image_size(image_path, size)) continue;
+        if (!detect_image_size(image_path, size))
+            continue;
 
         std::string rel_id = doc_->add_media_with_rel(image_path, nullptr);
-        if (rel_id.empty()) continue;
+        if (rel_id.empty())
+            continue;
 
         run->set_text("");
 
         pugi::xml_document drawing_doc;
         pugi::xml_node drawing = drawing_doc.append_child("w:drawing");
-        drawing.append_attribute("xmlns:wp").set_value(
-            "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing");
+        drawing.append_attribute("xmlns:wp")
+            .set_value("http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing");
 
         pugi::xml_node inline_node = drawing.append_child("wp:inline");
         inline_node.append_attribute("distT").set_value(0);
@@ -255,8 +267,8 @@ bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
             "http://schemas.openxmlformats.org/drawingml/2006/picture");
 
         pugi::xml_node pic = graphic_data.append_child("pic:pic");
-        pic.append_attribute("xmlns:pic").set_value(
-            "http://schemas.openxmlformats.org/drawingml/2006/picture");
+        pic.append_attribute("xmlns:pic")
+            .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
 
         pugi::xml_node nvPicPr = pic.append_child("pic:nvPicPr");
         pugi::xml_node cnvPr = nvPicPr.append_child("pic:cNvPr");
@@ -286,7 +298,8 @@ bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
 }
 
 void Template::replace_in_paragraph(const std::shared_ptr<Paragraph>& para) {
-    if (!para) return;
+    if (!para)
+        return;
 
     // First pass: handle image placeholders (exact single-run match)
     for (auto& child : para->get_children()) {
@@ -300,7 +313,8 @@ void Template::replace_in_paragraph(const std::shared_ptr<Paragraph>& para) {
 }
 
 void Template::replace_in_table(const std::shared_ptr<Table>& table) {
-    if (!table) return;
+    if (!table)
+        return;
     for (auto& row_child : table->get_children()) {
         if (auto row = std::dynamic_pointer_cast<Row>(row_child)) {
             for (auto& cell_child : row->get_children()) {
@@ -317,7 +331,8 @@ void Template::replace_in_table(const std::shared_ptr<Table>& table) {
 }
 
 void Template::replace_in_paragraphs() {
-    if (!doc_) return;
+    if (!doc_)
+        return;
     auto paragraphs = doc_->get_paragraphs();
     for (auto& para : paragraphs) {
         replace_in_paragraph(para);
@@ -325,7 +340,8 @@ void Template::replace_in_paragraphs() {
 }
 
 void Template::replace_in_tables() {
-    if (!doc_) return;
+    if (!doc_)
+        return;
     auto tables = doc_->get_tables();
     for (auto& table : tables) {
         replace_in_table(table);
@@ -342,11 +358,14 @@ void Template::replace_all() {
 }
 
 void Template::replace_in_headers_footers() {
-    if (!doc_) return;
+    if (!doc_)
+        return;
     for (auto& section : doc_->get_sections()) {
-        if (!section) continue;
+        if (!section)
+            continue;
         for (auto& header : section->get_all_headers()) {
-            if (!header) continue;
+            if (!header)
+                continue;
             for (auto& para : header->get_paragraphs()) {
                 replace_in_paragraph(para);
             }
@@ -355,7 +374,8 @@ void Template::replace_in_headers_footers() {
             }
         }
         for (auto& footer : section->get_all_footers()) {
-            if (!footer) continue;
+            if (!footer)
+                continue;
             for (auto& para : footer->get_paragraphs()) {
                 replace_in_paragraph(para);
             }
@@ -374,4 +394,4 @@ size_t Template::get_placeholder_count() const {
     return placeholders_.size() + image_placeholders_.size();
 }
 
-} // namespace cdocx
+}  // namespace cdocx

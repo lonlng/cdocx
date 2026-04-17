@@ -5,6 +5,7 @@
  */
 
 #include <cdocx/convert_util.h>
+
 #include <cmath>
 
 namespace cdocx {
@@ -73,4 +74,4 @@ double ConvertUtil::twips_to_point(int twips) {
     return static_cast<double>(twips) / kTwipsPerPoint;
 }
 
-} // namespace cdocx
+}  // namespace cdocx

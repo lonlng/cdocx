@@ -5,11 +5,12 @@
  */
 
 #include <cdocx.h>
-#include <cdocx/document.h>
 #include <cdocx/advanced.h>
-#include <cdocx/table_builder.h>
-#include <filesystem>
+#include <cdocx/document.h>
 #include <cdocx/paragraph_builder.h>
+#include <cdocx/table_builder.h>
+
+#include <filesystem>
 
 namespace cdocx {
 
@@ -55,8 +56,7 @@ std::shared_ptr<TableBuilder> CDocx::table() {
 }
 
 std::shared_ptr<TableBuilder> CDocx::table(size_t rows, size_t columns) {
-    return std::make_shared<TableBuilder>(static_cast<int>(rows),
-                                          static_cast<int>(columns));
+    return std::make_shared<TableBuilder>(static_cast<int>(rows), static_cast<int>(columns));
 }
 
 std::string CDocx::version() {
@@ -67,4 +67,4 @@ std::string CDocx::version_string() {
     return "CDocx v" + std::string(CDOCX_VERSION);
 }
 
-} // namespace cdocx
+}  // namespace cdocx

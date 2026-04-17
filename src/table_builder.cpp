@@ -7,10 +7,10 @@
  * @version 0.5.0
  */
 
-#include <cdocx/table_builder.h>
-#include <cdocx/document.h>
 #include <cdocx/advanced.h>
 #include <cdocx/caption_generator.h>
+#include <cdocx/document.h>
+#include <cdocx/table_builder.h>
 
 namespace cdocx {
 
@@ -48,8 +48,8 @@ TableBuilder& TableBuilder::SetCellText(int row, int col, const std::string& tex
     return *this;
 }
 
-TableBuilder& TableBuilder::SetCellTextFormatted(int row, int col, const std::string& text,
-                                                  bool bold, bool italic, int font_size) {
+TableBuilder& TableBuilder::SetCellTextFormatted(
+    int row, int col, const std::string& text, bool bold, bool italic, int font_size) {
     if (row >= 0 && row < rows_ && col >= 0 && col < cols_) {
         cells_[row][col].text = text;
         cells_[row][col].bold = bold;
@@ -112,8 +112,8 @@ void TableBuilder::CreateTableStructure(pugi::xml_node tbl) const {
     tblInd.append_attribute("w:type").set_value("dxa");
 
     // Borders
-    if (borders_.top || borders_.left || borders_.bottom || borders_.right ||
-        borders_.inside_h || borders_.inside_v) {
+    if (borders_.top || borders_.left || borders_.bottom || borders_.right || borders_.inside_h ||
+        borders_.inside_v) {
         xml_node tblBorders = tblPr.append_child("w:tblBorders");
 
         auto add_border = [&](const char* name, bool enabled) {
@@ -333,13 +333,12 @@ bool InsertTableWithCaption(Document& doc,
                 pugi::xml_node bookmark_para = paras[0];
                 pugi::xml_node prev_para = bookmark_para.previous_sibling("w:p");
                 if (prev_para) {
-                    CaptionGenerator::insert_figure_caption(&doc, prev_para,
-                        caption, figure_num);
+                    CaptionGenerator::insert_figure_caption(&doc, prev_para, caption, figure_num);
                 } else {
                     // If no previous paragraph, insert at document beginning
                     // by finding the body and inserting before first paragraph
-                    CaptionGenerator::insert_figure_caption(&doc, bookmark_para,
-                        caption, figure_num);
+                    CaptionGenerator::insert_figure_caption(
+                        &doc, bookmark_para, caption, figure_num);
                 }
             }
         }
@@ -381,24 +380,24 @@ int count_existing_tables(Document* doc) {
     if (!doc) {
         return 0;
     }
-    
+
     pugi::xml_document* doc_xml = doc->get_document_xml();
     if (!doc_xml) {
         return 0;
     }
-    
+
     int count = 0;
     pugi::xml_node body = doc_xml->child("w:document").child("w:body");
     if (!body) {
         return 0;
     }
-    
+
     for (pugi::xml_node para = body.child("w:p"); para; para = para.next_sibling("w:p")) {
         if (is_table_caption(para)) {
             count++;
         }
     }
-    
+
     return count;
 }
 
@@ -406,7 +405,7 @@ bool is_table_caption(pugi::xml_node para) {
     if (!para) {
         return false;
     }
-    
+
     // Extract all text from paragraph
     std::string text;
     for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
@@ -415,68 +414,69 @@ bool is_table_caption(pugi::xml_node para) {
             text += t.text().get();
         }
     }
-    
+
     // Trim whitespace
     size_t start = text.find_first_not_of(" \t\n\r");
     if (start == std::string::npos) {
         return false;
     }
     text = text.substr(start);
-    
+
     // Check if starts with "表" followed by number
     // Support both "表 1" and "表1" formats
     if (text.length() < 2) {
         return false;
     }
-    
+
     // Check for "表" character (UTF-8: 0xE8 0xA1 0xA8)
     if (text.substr(0, 3) != "\xE8\xA1\xA8") {
         return false;
     }
-    
+
     // Check for number after "表"
     size_t pos = 3;
     // Skip optional space
     if (pos < text.length() && text[pos] == ' ') {
         pos++;
     }
-    
+
     // Check for digit
     if (pos < text.length() && std::isdigit(static_cast<unsigned char>(text[pos]))) {
         return true;
     }
-    
+
     return false;
 }
 
-pugi::xml_node insert_table_caption(Document* doc, pugi::xml_node after_node,
-                                     const std::string& description,
-                                     int table_number) {
+pugi::xml_node insert_table_caption(Document* doc,
+                                    pugi::xml_node after_node,
+                                    const std::string& description,
+                                    int table_number) {
     if (!doc) {
         return pugi::xml_node();
     }
-    
+
     // Auto-generate table number if not provided
     if (table_number <= 0) {
         table_number = get_next_table_number(doc);
     }
-    
+
     // Generate full caption text: "表 X description"
     std::string full_text = "\xE8\xA1\xA8 " + std::to_string(table_number);  // "表 "
     if (!description.empty()) {
         full_text += " " + description;
     }
-    
+
     pugi::xml_document* doc_xml = doc->get_document_xml();
     if (!doc_xml) {
         return pugi::xml_node();
     }
-    
+
     pugi::xml_node body = doc_xml->child("w:document").child("w:body");
     if (!body) {
         return pugi::xml_node();
     }
-    
+
     // Create new paragraph after the table node
     pugi::xml_node caption_para;
     if (after_node) {
@@ -484,11 +484,11 @@ pugi::xml_node insert_table_caption(Document* doc, pugi::xml_node after_node,
     } else {
         caption_para = body.append_child("w:p");
     }
-    
+
     if (!caption_para) {
         return pugi::xml_node();
     }
-    
+
     // Create paragraph properties with center alignment
     pugi::xml_node pPr = caption_para.append_child("w:pPr");
     if (pPr) {
@@ -496,7 +496,7 @@ pugi::xml_node insert_table_caption(Document* doc, pugi::xml_node after_node,
         if (jc) {
             jc.append_attribute("w:val").set_value("center");
         }
-        
+
         // Add spacing before and after
         pugi::xml_node spacing = pPr.append_child("w:spacing");
         if (spacing) {
@@ -504,13 +504,13 @@ pugi::xml_node insert_table_caption(Document* doc, pugi::xml_node after_node,
             spacing.append_attribute("w:after").set_value(100);   // 5pt
         }
     }
-    
+
     // Create run with text
     pugi::xml_node run = caption_para.append_child("w:r");
     if (!run) {
         return caption_para;
     }
-    
+
     // Add run properties with fonts (same as figure caption)
     pugi::xml_node rPr = run.append_child("w:rPr");
     if (rPr) {
@@ -521,7 +521,7 @@ pugi::xml_node insert_table_caption(Document* doc, pugi::xml_node after_node,
             rFonts.append_attribute("w:eastAsia").set_value("SimSun");
             rFonts.append_attribute("w:hAnsi").set_value("Times New Roman");
         }
-        
+
         // Font size: 10.5pt (21 half-points)
         pugi::xml_node sz = rPr.append_child("w:sz");
         if (sz) {
@@ -532,13 +532,13 @@ pugi::xml_node insert_table_caption(Document* doc, pugi::xml_node after_node,
             szCs.append_attribute("w:val").set_value(21);
         }
     }
-    
+
     // Add text
     pugi::xml_node t = run.append_child("w:t");
     if (t) {
         t.text().set(full_text.c_str());
     }
-    
+
     return caption_para;
 }
 

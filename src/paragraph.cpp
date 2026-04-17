@@ -1,6 +1,7 @@
-#include <cdocx/paragraph.h>
 #include <cdocx/document.h>
 #include <cdocx/format_context.h>
+#include <cdocx/paragraph.h>
+
 #include <cstring>
 
 namespace cdocx {
@@ -15,6 +16,16 @@ Paragraph::Paragraph(Document* doc) {
 
 std::string Paragraph::get_text() const {
     std::string result;
+    // Legacy fallback: if bound to XML but has no DOM children, read from XML directly
+    if (current_ && get_children().empty()) {
+        for (auto run = current_.child("w:r"); run; run = run.next_sibling("w:r")) {
+            auto t = run.child("w:t");
+            if (t) {
+                result += t.text().get();
+            }
+        }
+        return result;
+    }
     for (const auto& child : get_children()) {
         result += child->get_text();
     }
@@ -22,7 +33,8 @@ std::string Paragraph::get_text() const {
 }
 
 void Paragraph::accept(DocumentVisitor* visitor) {
-    if (!visitor) return;
+    if (!visitor)
+        return;
     if (visitor->visit_paragraph_start(*this) == VisitorAction::Continue) {
         for (const auto& child : get_children()) {
             child->accept(visitor);
@@ -177,13 +189,13 @@ Run& Paragraph::add_run(const char* text, formatting_flag f) {
     if (!current_) {
         return run_;
     }
-    
+
     // Create new run element
     pugi::xml_node new_run = current_.append_child("w:r");
-    
+
     // Create run properties element
     pugi::xml_node meta = new_run.append_child("w:rPr");
-    
+
     // Apply formatting flags
     if (f & bold) {
         meta.append_child("w:b");
@@ -208,45 +220,51 @@ Run& Paragraph::add_run(const char* text, formatting_flag f) {
     if (f & shadow) {
         meta.append_child("w:shadow").append_attribute("w:val").set_value("true");
     }
-    
+
     // Create text element
     pugi::xml_node new_run_text = new_run.append_child("w:t");
-    
+
     // Preserve spaces if text starts or ends with whitespace
     if (*text != 0 && (std::isspace(text[0]) || std::isspace(text[std::strlen(text) - 1]))) {
         new_run_text.append_attribute("xml:space").set_value("preserve");
     }
-    
+
     // Set text content
     new_run_text.text().set(text);
     run_.set_current_xml(new_run);
-    
+
     return run_;
 }
 
-Run& Paragraph::add_run_with_bookmark(Document& doc, const std::string& text, const std::string& bookmark_name, formatting_flag f) {
+Run& Paragraph::add_run_with_bookmark(Document& doc,
+                                      const std::string& text,
+                                      const std::string& bookmark_name,
+                                      formatting_flag f) {
     return add_run_with_bookmark(doc, text.c_str(), bookmark_name, f);
 }
 
-Run& Paragraph::add_run_with_bookmark(Document& doc, const char* text, const std::string& bookmark_name, formatting_flag f) {
+Run& Paragraph::add_run_with_bookmark(Document& doc,
+                                      const char* text,
+                                      const std::string& bookmark_name,
+                                      formatting_flag f) {
     if (!current_) {
         return run_;
     }
-    
+
     // Generate unique bookmark ID
     int bookmark_id = doc.generate_unique_bookmark_id();
-    
+
     // Create bookmarkStart element before the run
     pugi::xml_node bookmark_start = current_.append_child("w:bookmarkStart");
     bookmark_start.append_attribute("w:id").set_value(bookmark_id);
     bookmark_start.append_attribute("w:name").set_value(bookmark_name.c_str());
-    
+
     // Create new run element (same as add_run)
     pugi::xml_node new_run = current_.append_child("w:r");
-    
+
     // Create run properties element
     pugi::xml_node meta = new_run.append_child("w:rPr");
-    
+
     // Apply formatting flags
     if (f & bold) {
         meta.append_child("w:b");
@@ -271,24 +289,24 @@ Run& Paragraph::add_run_with_bookmark(Document& doc, const char* text, const std
     if (f & shadow) {
         meta.append_child("w:shadow").append_attribute("w:val").set_value("true");
     }
-    
+
     // Create text element
     pugi::xml_node new_run_text = new_run.append_child("w:t");
-    
+
     // Preserve spaces if text starts or ends with whitespace
     if (*text != 0 && (std::isspace(text[0]) || std::isspace(text[std::strlen(text) - 1]))) {
         new_run_text.append_attribute("xml:space").set_value("preserve");
     }
-    
+
     // Set text content
     new_run_text.text().set(text);
-    
+
     // Create bookmarkEnd element after the run
     pugi::xml_node bookmark_end = current_.append_child("w:bookmarkEnd");
     bookmark_end.append_attribute("w:id").set_value(bookmark_id);
-    
+
     run_.set_current_xml(new_run);
-    
+
     return run_;
 }
 
@@ -302,7 +320,7 @@ void Paragraph::remove_run(const Run& r) {
 Paragraph& Paragraph::insert_paragraph_after(const std::string& text, formatting_flag f) {
     // Insert new paragraph after current
     pugi::xml_node new_para = parent_.insert_child_after("w:p", current_);
-    
+
     // Create static pointer to avoid stack allocation issues
     // Note: This is a potential memory leak in the original code
     static Paragraph* p = nullptr;
@@ -312,7 +330,7 @@ Paragraph& Paragraph::insert_paragraph_after(const std::string& text, formatting
     p = new Paragraph();
     p->set_current(new_para);
     p->add_run(text, f);
-    
+
     return *p;
 }
 
@@ -320,7 +338,7 @@ bool Paragraph::clear() {
     if (!current_) {
         return false;
     }
-    
+
     // Remove all run elements
     pugi::xml_node run = current_.child("w:r");
     while (run) {
@@ -342,16 +360,16 @@ Paragraph* Paragraph::insert_before(const std::string& text, formatting_flag f) 
     if (!parent_ || !current_) {
         return nullptr;
     }
-    
+
     // Insert new paragraph before current
     pugi::xml_node new_para = parent_.insert_child_before("w:p", current_);
-    
+
     // Note: This returns a pointer to a heap-allocated object
     // Caller is responsible for deletion (but API design suggests this is managed)
     Paragraph* p = new Paragraph();
     p->set_current(new_para);
     p->add_run(text, f);
-    
+
     return p;
 }
 
@@ -377,15 +395,15 @@ bool Paragraph::set_alignment(const std::string& alignment) {
     if (!current_) {
         return false;
     }
-    
+
     pugi::xml_node pPr = get_or_create_pPr(current_);
-    
+
     // Get or create justification element
     pugi::xml_node jc = pPr.child("w:jc");
     if (!jc) {
         jc = pPr.append_child("w:jc");
     }
-    
+
     jc.append_attribute("w:val").set_value(alignment.c_str());
     return true;
 }
@@ -394,15 +412,15 @@ bool Paragraph::set_style(const std::string& style_id) {
     if (!current_) {
         return false;
     }
-    
+
     pugi::xml_node pPr = get_or_create_pPr(current_);
-    
+
     // Get or create paragraph style element
     pugi::xml_node pStyle = pPr.child("w:pStyle");
     if (!pStyle) {
         pStyle = pPr.prepend_child("w:pStyle");
     }
-    
+
     pStyle.append_attribute("w:val").set_value(style_id.c_str());
     return true;
 }
@@ -411,19 +429,19 @@ bool Paragraph::set_line_spacing(int line_spacing, bool is_exact) {
     if (!current_) {
         return false;
     }
-    
+
     pugi::xml_node pPr = get_or_create_pPr(current_);
-    
+
     // Get or create spacing element
     pugi::xml_node spacing = pPr.child("w:spacing");
     if (!spacing) {
         spacing = pPr.append_child("w:spacing");
     }
-    
+
     // Set line rule
     spacing.append_attribute("w:lineRule").set_value(is_exact ? "exact" : "auto");
     spacing.append_attribute("w:line").set_value(line_spacing);
-    
+
     return true;
 }
 
@@ -431,14 +449,14 @@ bool Paragraph::set_spacing_before(int spacing) {
     if (!current_) {
         return false;
     }
-    
+
     pugi::xml_node pPr = get_or_create_pPr(current_);
-    
+
     pugi::xml_node sp = pPr.child("w:spacing");
     if (!sp) {
         sp = pPr.append_child("w:spacing");
     }
-    
+
     sp.append_attribute("w:before").set_value(spacing);
     return true;
 }
@@ -447,14 +465,14 @@ bool Paragraph::set_spacing_after(int spacing) {
     if (!current_) {
         return false;
     }
-    
+
     pugi::xml_node pPr = get_or_create_pPr(current_);
-    
+
     pugi::xml_node sp = pPr.child("w:spacing");
     if (!sp) {
         sp = pPr.append_child("w:spacing");
     }
-    
+
     sp.append_attribute("w:after").set_value(spacing);
     return true;
 }
@@ -463,15 +481,15 @@ bool Paragraph::set_indent(int left, int right, int first_line) {
     if (!current_) {
         return false;
     }
-    
+
     pugi::xml_node pPr = get_or_create_pPr(current_);
-    
+
     // Get or create indentation element
     pugi::xml_node ind = pPr.child("w:ind");
     if (!ind) {
         ind = pPr.append_child("w:ind");
     }
-    
+
     // Set indentation values (-1 means ignore)
     if (left >= 0) {
         ind.append_attribute("w:left").set_value(left);
@@ -482,7 +500,7 @@ bool Paragraph::set_indent(int left, int right, int first_line) {
     if (first_line != 0) {
         ind.append_attribute("w:firstLine").set_value(first_line);
     }
-    
+
     return true;
 }
 
@@ -566,26 +584,26 @@ bool Paragraph::set_numbering(NumberingId numId, NumberingLevel level) {
     if (!current_) {
         return false;
     }
-    
+
     pugi::xml_node pPr = get_or_create_pPr(current_);
-    
+
     // Remove existing numPr if any
     pugi::xml_node existing_numPr = pPr.child("w:numPr");
     if (existing_numPr) {
         pPr.remove_child(existing_numPr);
     }
-    
+
     // Create numPr element
     pugi::xml_node numPr = pPr.append_child("w:numPr");
-    
+
     // Add ilvl (level)
     pugi::xml_node ilvl = numPr.append_child("w:ilvl");
     ilvl.append_attribute("w:val").set_value(numbering_level_to_int(level));
-    
+
     // Add numId
     pugi::xml_node numId_node = numPr.append_child("w:numId");
     numId_node.append_attribute("w:val").set_value(static_cast<unsigned int>(numId));
-    
+
     return true;
 }
 
@@ -593,17 +611,17 @@ bool Paragraph::remove_numbering() {
     if (!current_) {
         return false;
     }
-    
+
     pugi::xml_node pPr = current_.child("w:pPr");
     if (!pPr) {
         return false;
     }
-    
+
     pugi::xml_node numPr = pPr.child("w:numPr");
     if (!numPr) {
         return false;
     }
-    
+
     return pPr.remove_child(numPr);
 }
 
@@ -611,12 +629,12 @@ bool Paragraph::has_numbering() const {
     if (!current_) {
         return false;
     }
-    
+
     pugi::xml_node pPr = current_.child("w:pPr");
     if (!pPr) {
         return false;
     }
-    
+
     return pPr.child("w:numPr") != nullptr;
 }
 
@@ -624,22 +642,22 @@ NumberingId Paragraph::get_numbering_id() const {
     if (!current_) {
         return 0;
     }
-    
+
     pugi::xml_node pPr = current_.child("w:pPr");
     if (!pPr) {
         return 0;
     }
-    
+
     pugi::xml_node numPr = pPr.child("w:numPr");
     if (!numPr) {
         return 0;
     }
-    
+
     pugi::xml_node numId = numPr.child("w:numId");
     if (!numId) {
         return 0;
     }
-    
+
     return numId.attribute("w:val").as_uint();
 }
 
@@ -647,27 +665,27 @@ NumberingLevel Paragraph::get_numbering_level() const {
     if (!current_) {
         return NumberingLevel::Level1;
     }
-    
+
     pugi::xml_node pPr = current_.child("w:pPr");
     if (!pPr) {
         return NumberingLevel::Level1;
     }
-    
+
     pugi::xml_node numPr = pPr.child("w:numPr");
     if (!numPr) {
         return NumberingLevel::Level1;
     }
-    
+
     pugi::xml_node ilvl = numPr.child("w:ilvl");
     if (!ilvl) {
         return NumberingLevel::Level1;
     }
-    
+
     int level = ilvl.attribute("w:val").as_int();
     if (level < 0 || level > 8) {
         return NumberingLevel::Level1;
     }
-    
+
     return static_cast<NumberingLevel>(level);
 }
 
@@ -675,22 +693,22 @@ bool Paragraph::set_list_level(NumberingLevel level) {
     if (!current_) {
         return false;
     }
-    
+
     pugi::xml_node pPr = current_.child("w:pPr");
     if (!pPr) {
         return false;
     }
-    
+
     pugi::xml_node numPr = pPr.child("w:numPr");
     if (!numPr) {
         return false;
     }
-    
+
     pugi::xml_node ilvl = numPr.child("w:ilvl");
     if (!ilvl) {
         ilvl = numPr.prepend_child("w:ilvl");
     }
-    
+
     ilvl.attribute("w:val").set_value(numbering_level_to_int(level));
     return true;
 }
@@ -719,16 +737,36 @@ Paragraph& Paragraph::set_properties(const ParagraphProperties& props) {
 Paragraph& Paragraph::set_outline_level(cdocx::ParagraphProperties::OutlineLevel level) {
     using OL = cdocx::ParagraphProperties::OutlineLevel;
     switch (level) {
-        case OL::Level1: format_.outline_level = OutlineLevel::Level1; break;
-        case OL::Level2: format_.outline_level = OutlineLevel::Level2; break;
-        case OL::Level3: format_.outline_level = OutlineLevel::Level3; break;
-        case OL::Level4: format_.outline_level = OutlineLevel::Level4; break;
-        case OL::Level5: format_.outline_level = OutlineLevel::Level5; break;
-        case OL::Level6: format_.outline_level = OutlineLevel::Level6; break;
-        case OL::Level7: format_.outline_level = OutlineLevel::Level7; break;
-        case OL::Level8: format_.outline_level = OutlineLevel::Level8; break;
-        case OL::Level9: format_.outline_level = OutlineLevel::Level9; break;
-        default: format_.outline_level = OutlineLevel::BodyText; break;
+        case OL::Level1:
+            format_.outline_level = OutlineLevel::Level1;
+            break;
+        case OL::Level2:
+            format_.outline_level = OutlineLevel::Level2;
+            break;
+        case OL::Level3:
+            format_.outline_level = OutlineLevel::Level3;
+            break;
+        case OL::Level4:
+            format_.outline_level = OutlineLevel::Level4;
+            break;
+        case OL::Level5:
+            format_.outline_level = OutlineLevel::Level5;
+            break;
+        case OL::Level6:
+            format_.outline_level = OutlineLevel::Level6;
+            break;
+        case OL::Level7:
+            format_.outline_level = OutlineLevel::Level7;
+            break;
+        case OL::Level8:
+            format_.outline_level = OutlineLevel::Level8;
+            break;
+        case OL::Level9:
+            format_.outline_level = OutlineLevel::Level9;
+            break;
+        default:
+            format_.outline_level = OutlineLevel::BodyText;
+            break;
     }
     return *this;
 }
@@ -761,4 +799,4 @@ std::string ParagraphCollection::get_text() const {
     return result;
 }
 
-}
+}  // namespace cdocx

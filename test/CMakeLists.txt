@@ -56,6 +56,8 @@ add_test_suite(13_document_builder "" "advanced;builder;hyperlink;image" 60)
 add_test_suite(14_style_collection "" "advanced;styles;dom" 60)
 add_test_suite(15_mail_merge "" "advanced;mail_merge" 60)
 add_test_suite(16_comment_collection "" "advanced;comments;dom" 60)
+add_test_suite(17_footnote_collection "" "advanced;footnotes;endnotes;dom" 60)
+add_test_suite(18_field_switches "" "advanced;fields;dom" 60)
 
 # ----------------------------------------------------------------------------
 # Test Execution Targets

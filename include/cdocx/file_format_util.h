@@ -18,6 +18,7 @@
 #pragma once
 
 #include <cdocx/enums.h>
+
 #include <istream>
 #include <memory>
 #include <string>
@@ -33,7 +34,7 @@ namespace cdocx {
  * @brief Contains data returned by FileFormatUtil document format detection
  */
 class FileFormatInfo {
-public:
+  public:
     FileFormatInfo();
 
     /// Gets the detected document format
@@ -56,7 +57,7 @@ public:
     const std::string& encoding() const { return encoding_; }
     void set_encoding(const std::string& value) { encoding_ = value; }
 
-private:
+  private:
     LoadFormat load_format_ = LoadFormat::Unknown;
     bool is_encrypted_ = false;
     bool has_digital_signature_ = false;
@@ -72,7 +73,7 @@ private:
  * @brief Provides utility methods for working with file formats
  */
 class FileFormatUtil {
-public:
+  public:
     FileFormatUtil() = delete;
 
     /**
@@ -112,4 +113,4 @@ public:
     static SaveFormat LoadFormatToSaveFormat(LoadFormat load_format);
 };
 
-} // namespace cdocx
+}  // namespace cdocx

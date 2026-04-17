@@ -4,7 +4,7 @@
  * @details Provides a unified way to apply text formatting (color, font size,
  *          font name, bold, italic, underline) to XML run elements. This class
  *          is used internally by Run and Paragraph to avoid code duplication.
- * 
+ *
  * @author lonlng
  * @copyright MIT License
  * @date 2026
@@ -24,22 +24,22 @@ namespace cdocx {
  * @details This class provides static methods to apply various text formatting
  *          attributes to a w:r (run) element. It centralizes the formatting logic
  *          to ensure consistency between Run and Paragraph classes.
- * 
+ *
  * @par Usage Example:
  * @code
  * pugi::xml_node run = ...; // Get a run element
- * 
+ *
  * // Apply formatting
  * TextFormatContext::apply_color(run, "FF0000");
  * TextFormatContext::apply_font_size(run, 24);
  * TextFormatContext::apply_bold(run, true);
  * @endcode
- * 
+ *
  * @see Run, Paragraph
  * @since 0.3.0
  */
 class TextFormatContext {
-public:
+  public:
     /**
      * @brief Apply text color to a run
      * @param[in] run The w:r XML element
@@ -47,7 +47,7 @@ public:
      * @return true if successful, false if run is invalid
      */
     static bool apply_color(pugi::xml_node run, const std::string& color_hex);
-    
+
     /**
      * @brief Apply font size to a run
      * @param[in] run The w:r XML element
@@ -55,7 +55,7 @@ public:
      * @return true if successful, false if run is invalid
      */
     static bool apply_font_size(pugi::xml_node run, int size);
-    
+
     /**
      * @brief Apply font name to a run
      * @param[in] run The w:r XML element
@@ -63,7 +63,7 @@ public:
      * @return true if successful, false if run is invalid
      */
     static bool apply_font_name(pugi::xml_node run, const std::string& font_name);
-    
+
     /**
      * @brief Apply bold formatting to a run
      * @param[in] run The w:r XML element
@@ -71,7 +71,7 @@ public:
      * @return true if successful, false if run is invalid
      */
     static bool apply_bold(pugi::xml_node run, bool bold);
-    
+
     /**
      * @brief Apply italic formatting to a run
      * @param[in] run The w:r XML element
@@ -79,7 +79,7 @@ public:
      * @return true if successful, false if run is invalid
      */
     static bool apply_italic(pugi::xml_node run, bool italic);
-    
+
     /**
      * @brief Apply underline formatting to a run
      * @param[in] run The w:r XML element
@@ -88,7 +88,7 @@ public:
      */
     static bool apply_underline(pugi::xml_node run, bool underline);
 
-private:
+  private:
     /**
      * @brief Get or create the w:rPr (run properties) element
      * @param[in] run The w:r element
@@ -97,4 +97,4 @@ private:
     static pugi::xml_node get_or_create_rPr(pugi::xml_node run);
 };
 
-} // namespace cdocx
+}  // namespace cdocx

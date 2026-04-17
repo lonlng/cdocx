@@ -4,10 +4,11 @@
  * @since 0.4.0
  */
 
-#include <cdocx/properties.h>
 #include <cdocx/base.h>
 #include <cdocx/format_context.h>
 #include <cdocx/paragraph.h>
+#include <cdocx/properties.h>
+#include <cdocx/table.h>
 
 #include <algorithm>
 #include <cstring>
@@ -29,13 +30,13 @@ void TextProperties::applyTo(pugi::xml_node run_node) const {
     if (!run_node) {
         return;
     }
-    
+
     // Get or create rPr node
     pugi::xml_node rPr = run_node.child("w:rPr");
     if (!rPr) {
         rPr = run_node.prepend_child("w:rPr");
     }
-    
+
     // Font settings
     if (font) {
         pugi::xml_node rFonts = rPr.child("w:rFonts");
@@ -60,7 +61,7 @@ void TextProperties::applyTo(pugi::xml_node run_node) const {
             rFonts.append_attribute("w:hint").set_value(hint_str);
         }
     }
-    
+
     // Font style (bold/italic)
     if (fontStyle.bold) {
         rPr.append_child("w:b");
@@ -68,7 +69,7 @@ void TextProperties::applyTo(pugi::xml_node run_node) const {
     if (fontStyle.italic) {
         rPr.append_child("w:i");
     }
-    
+
     // Font size
     if (fontSize > 0) {
         pugi::xml_node sz = rPr.append_child("w:sz");
@@ -76,43 +77,79 @@ void TextProperties::applyTo(pugi::xml_node run_node) const {
         pugi::xml_node szCs = rPr.append_child("w:szCs");
         szCs.append_attribute("w:val").set_value(fontSize);
     }
-    
+
     // Color
     if (!color.empty()) {
         pugi::xml_node color_node = rPr.append_child("w:color");
         color_node.append_attribute("w:val").set_value(color.c_str());
     }
-    
+
     // Underline
     if (underline.style != UnderlineStyle::None) {
         pugi::xml_node u = rPr.append_child("w:u");
         const char* style_str = "single";
         switch (underline.style) {
-            case UnderlineStyle::Words: style_str = "words"; break;
-            case UnderlineStyle::Single: style_str = "single"; break;
-            case UnderlineStyle::Double: style_str = "double"; break;
-            case UnderlineStyle::Thick: style_str = "thick"; break;
-            case UnderlineStyle::Dotted: style_str = "dotted"; break;
-            case UnderlineStyle::DottedHeavy: style_str = "dottedHeavy"; break;
-            case UnderlineStyle::Dash: style_str = "dash"; break;
-            case UnderlineStyle::DashedHeavy: style_str = "dashedHeavy"; break;
-            case UnderlineStyle::DashLong: style_str = "dashLong"; break;
-            case UnderlineStyle::DashLongHeavy: style_str = "dashLongHeavy"; break;
-            case UnderlineStyle::DotDash: style_str = "dotDash"; break;
-            case UnderlineStyle::DashDotHeavy: style_str = "dashDotHeavy"; break;
-            case UnderlineStyle::DotDotDash: style_str = "dotDotDash"; break;
-            case UnderlineStyle::DashDotDotHeavy: style_str = "dashDotDotHeavy"; break;
-            case UnderlineStyle::Wave: style_str = "wave"; break;
-            case UnderlineStyle::WavyDouble: style_str = "wavyDouble"; break;
-            case UnderlineStyle::WavyHeavy: style_str = "wavyHeavy"; break;
-            default: style_str = "single"; break;
+            case UnderlineStyle::Words:
+                style_str = "words";
+                break;
+            case UnderlineStyle::Single:
+                style_str = "single";
+                break;
+            case UnderlineStyle::Double:
+                style_str = "double";
+                break;
+            case UnderlineStyle::Thick:
+                style_str = "thick";
+                break;
+            case UnderlineStyle::Dotted:
+                style_str = "dotted";
+                break;
+            case UnderlineStyle::DottedHeavy:
+                style_str = "dottedHeavy";
+                break;
+            case UnderlineStyle::Dash:
+                style_str = "dash";
+                break;
+            case UnderlineStyle::DashedHeavy:
+                style_str = "dashedHeavy";
+                break;
+            case UnderlineStyle::DashLong:
+                style_str = "dashLong";
+                break;
+            case UnderlineStyle::DashLongHeavy:
+                style_str = "dashLongHeavy";
+                break;
+            case UnderlineStyle::DotDash:
+                style_str = "dotDash";
+                break;
+            case UnderlineStyle::DashDotHeavy:
+                style_str = "dashDotHeavy";
+                break;
+            case UnderlineStyle::DotDotDash:
+                style_str = "dotDotDash";
+                break;
+            case UnderlineStyle::DashDotDotHeavy:
+                style_str = "dashDotDotHeavy";
+                break;
+            case UnderlineStyle::Wave:
+                style_str = "wave";
+                break;
+            case UnderlineStyle::WavyDouble:
+                style_str = "wavyDouble";
+                break;
+            case UnderlineStyle::WavyHeavy:
+                style_str = "wavyHeavy";
+                break;
+            default:
+                style_str = "single";
+                break;
         }
         u.append_attribute("w:val").set_value(style_str);
         if (underline.color != "auto") {
             u.append_attribute("w:color").set_value(underline.color.c_str());
         }
     }
-    
+
     // Strikethrough
     if (strike == StrikeStyle::Single) {
         rPr.append_child("w:strike");
@@ -120,7 +157,7 @@ void TextProperties::applyTo(pugi::xml_node run_node) const {
         pugi::xml_node strike_node = rPr.append_child("w:dstrike");
         strike_node.append_attribute("w:val").set_value("true");
     }
-    
+
     // Vertical align
     if (vertAlign == VertAlign::Superscript) {
         pugi::xml_node vAlign = rPr.append_child("w:vertAlign");
@@ -129,34 +166,46 @@ void TextProperties::applyTo(pugi::xml_node run_node) const {
         pugi::xml_node vAlign = rPr.append_child("w:vertAlign");
         vAlign.append_attribute("w:val").set_value("subscript");
     }
-    
+
     // Highlight
     if (highlight != Highlight::None) {
-        static const char* highlight_names[] = {
-            "none", "black", "white", "red", "green", "blue", "yellow", "cyan", "magenta",
-            "darkRed", "darkGreen", "darkBlue", "darkYellow", "darkCyan", "darkMagenta",
-            "darkGray", "lightGray"
-        };
+        static const char* highlight_names[] = {"none",
+                                                "black",
+                                                "white",
+                                                "red",
+                                                "green",
+                                                "blue",
+                                                "yellow",
+                                                "cyan",
+                                                "magenta",
+                                                "darkRed",
+                                                "darkGreen",
+                                                "darkBlue",
+                                                "darkYellow",
+                                                "darkCyan",
+                                                "darkMagenta",
+                                                "darkGray",
+                                                "lightGray"};
         int idx = static_cast<int>(highlight);
-        if (idx >= 0 && idx < sizeof(highlight_names)/sizeof(highlight_names[0])) {
+        if (idx >= 0 && idx < sizeof(highlight_names) / sizeof(highlight_names[0])) {
             pugi::xml_node highlight_node = rPr.append_child("w:highlight");
             highlight_node.append_attribute("w:val").set_value(highlight_names[idx]);
         }
     }
-    
+
     // Scale
     if (scale != 100) {
         pugi::xml_node w_node = rPr.append_child("w:w");
         w_node.append_attribute("w:val").set_value(scale);
     }
-    
+
     // Spacing
     if (spacing.type != SpacingType::Normal) {
         pugi::xml_node spacing_node = rPr.append_child("w:spacing");
         spacing_node.append_attribute("w:val").set_value(
             spacing.type == SpacingType::Expanded ? spacing.value : -spacing.value);
     }
-    
+
     // Position
     if (position.type != PositionType::Normal) {
         pugi::xml_node pos_node = rPr.append_child("w:position");
@@ -174,12 +223,12 @@ TextProperties TextProperties::extractFrom(pugi::xml_node run_node) {
     if (!run_node) {
         return props;
     }
-    
+
     pugi::xml_node rPr = run_node.child("w:rPr");
     if (!rPr) {
         return props;
     }
-    
+
     // Extract font
     pugi::xml_node rFonts = rPr.child("w:rFonts");
     if (rFonts) {
@@ -188,7 +237,7 @@ TextProperties TextProperties::extractFrom(pugi::xml_node run_node) {
         font.eastAsia = rFonts.attribute("w:eastAsia").value();
         font.hAnsi = rFonts.attribute("w:hAnsi").value();
         font.cs = rFonts.attribute("w:cs").value();
-        
+
         const char* hint = rFonts.attribute("w:hint").value();
         if (strcmp(hint, "eastAsia") == 0) {
             font.hint = Font::Hint::EastAsia;
@@ -197,55 +246,72 @@ TextProperties TextProperties::extractFrom(pugi::xml_node run_node) {
         }
         props.font = font;
     }
-    
+
     // Extract bold/italic
     props.fontStyle.bold = rPr.child("w:b") != nullptr;
     props.fontStyle.italic = rPr.child("w:i") != nullptr;
-    
+
     // Extract font size
     pugi::xml_node sz = rPr.child("w:sz");
     if (sz) {
         props.fontSize = sz.attribute("w:val").as_int();
     }
-    
+
     // Extract color
     pugi::xml_node color = rPr.child("w:color");
     if (color) {
         props.color = color.attribute("w:val").value();
     }
-    
+
     // Extract underline
     pugi::xml_node u = rPr.child("w:u");
     if (u) {
         const char* val = u.attribute("w:val").value();
         props.underline.color = u.attribute("w:color").value();
-        
-        if (strcmp(val, "words") == 0) props.underline.style = UnderlineStyle::Words;
-        else if (strcmp(val, "double") == 0) props.underline.style = UnderlineStyle::Double;
-        else if (strcmp(val, "thick") == 0) props.underline.style = UnderlineStyle::Thick;
-        else if (strcmp(val, "dotted") == 0) props.underline.style = UnderlineStyle::Dotted;
-        else if (strcmp(val, "dottedHeavy") == 0) props.underline.style = UnderlineStyle::DottedHeavy;
-        else if (strcmp(val, "dash") == 0) props.underline.style = UnderlineStyle::Dash;
-        else if (strcmp(val, "dashedHeavy") == 0) props.underline.style = UnderlineStyle::DashedHeavy;
-        else if (strcmp(val, "dashLong") == 0) props.underline.style = UnderlineStyle::DashLong;
-        else if (strcmp(val, "dashLongHeavy") == 0) props.underline.style = UnderlineStyle::DashLongHeavy;
-        else if (strcmp(val, "dotDash") == 0) props.underline.style = UnderlineStyle::DotDash;
-        else if (strcmp(val, "dashDotHeavy") == 0) props.underline.style = UnderlineStyle::DashDotHeavy;
-        else if (strcmp(val, "dotDotDash") == 0) props.underline.style = UnderlineStyle::DotDotDash;
-        else if (strcmp(val, "dashDotDotHeavy") == 0) props.underline.style = UnderlineStyle::DashDotDotHeavy;
-        else if (strcmp(val, "wave") == 0) props.underline.style = UnderlineStyle::Wave;
-        else if (strcmp(val, "wavyDouble") == 0) props.underline.style = UnderlineStyle::WavyDouble;
-        else if (strcmp(val, "wavyHeavy") == 0) props.underline.style = UnderlineStyle::WavyHeavy;
-        else props.underline.style = UnderlineStyle::Single;
+
+        if (strcmp(val, "words") == 0)
+            props.underline.style = UnderlineStyle::Words;
+        else if (strcmp(val, "double") == 0)
+            props.underline.style = UnderlineStyle::Double;
+        else if (strcmp(val, "thick") == 0)
+            props.underline.style = UnderlineStyle::Thick;
+        else if (strcmp(val, "dotted") == 0)
+            props.underline.style = UnderlineStyle::Dotted;
+        else if (strcmp(val, "dottedHeavy") == 0)
+            props.underline.style = UnderlineStyle::DottedHeavy;
+        else if (strcmp(val, "dash") == 0)
+            props.underline.style = UnderlineStyle::Dash;
+        else if (strcmp(val, "dashedHeavy") == 0)
+            props.underline.style = UnderlineStyle::DashedHeavy;
+        else if (strcmp(val, "dashLong") == 0)
+            props.underline.style = UnderlineStyle::DashLong;
+        else if (strcmp(val, "dashLongHeavy") == 0)
+            props.underline.style = UnderlineStyle::DashLongHeavy;
+        else if (strcmp(val, "dotDash") == 0)
+            props.underline.style = UnderlineStyle::DotDash;
+        else if (strcmp(val, "dashDotHeavy") == 0)
+            props.underline.style = UnderlineStyle::DashDotHeavy;
+        else if (strcmp(val, "dotDotDash") == 0)
+            props.underline.style = UnderlineStyle::DotDotDash;
+        else if (strcmp(val, "dashDotDotHeavy") == 0)
+            props.underline.style = UnderlineStyle::DashDotDotHeavy;
+        else if (strcmp(val, "wave") == 0)
+            props.underline.style = UnderlineStyle::Wave;
+        else if (strcmp(val, "wavyDouble") == 0)
+            props.underline.style = UnderlineStyle::WavyDouble;
+        else if (strcmp(val, "wavyHeavy") == 0)
+            props.underline.style = UnderlineStyle::WavyHeavy;
+        else
+            props.underline.style = UnderlineStyle::Single;
     }
-    
+
     // Extract strikethrough
     if (rPr.child("w:strike")) {
         props.strike = StrikeStyle::Single;
     } else if (rPr.child("w:dstrike")) {
         props.strike = StrikeStyle::Double;
     }
-    
+
     // Extract vertical align
     pugi::xml_node vAlign = rPr.child("w:vertAlign");
     if (vAlign) {
@@ -256,21 +322,30 @@ TextProperties TextProperties::extractFrom(pugi::xml_node run_node) {
             props.vertAlign = VertAlign::Subscript;
         }
     }
-    
+
     // Extract highlight
     pugi::xml_node highlight = rPr.child("w:highlight");
     if (highlight) {
         const char* val = highlight.attribute("w:val").value();
-        static struct { const char* name; Highlight value; } highlight_map[] = {
-            {"black", Highlight::Black}, {"white", Highlight::White},
-            {"red", Highlight::Red}, {"green", Highlight::Green},
-            {"blue", Highlight::Blue}, {"yellow", Highlight::Yellow},
-            {"cyan", Highlight::Cyan}, {"magenta", Highlight::Magenta},
-            {"darkRed", Highlight::DarkRed}, {"darkGreen", Highlight::DarkGreen},
-            {"darkBlue", Highlight::DarkBlue}, {"darkYellow", Highlight::DarkYellow},
-            {"darkCyan", Highlight::DarkCyan}, {"darkMagenta", Highlight::DarkMagenta},
-            {"darkGray", Highlight::DarkGray}, {"lightGray", Highlight::LightGray}
-        };
+        static struct {
+            const char* name;
+            Highlight value;
+        } highlight_map[] = {{"black", Highlight::Black},
+                             {"white", Highlight::White},
+                             {"red", Highlight::Red},
+                             {"green", Highlight::Green},
+                             {"blue", Highlight::Blue},
+                             {"yellow", Highlight::Yellow},
+                             {"cyan", Highlight::Cyan},
+                             {"magenta", Highlight::Magenta},
+                             {"darkRed", Highlight::DarkRed},
+                             {"darkGreen", Highlight::DarkGreen},
+                             {"darkBlue", Highlight::DarkBlue},
+                             {"darkYellow", Highlight::DarkYellow},
+                             {"darkCyan", Highlight::DarkCyan},
+                             {"darkMagenta", Highlight::DarkMagenta},
+                             {"darkGray", Highlight::DarkGray},
+                             {"lightGray", Highlight::LightGray}};
         for (const auto& item : highlight_map) {
             if (strcmp(val, item.name) == 0) {
                 props.highlight = item.value;
@@ -278,7 +353,7 @@ TextProperties TextProperties::extractFrom(pugi::xml_node run_node) {
             }
         }
     }
-    
+
     return props;
 }
 
@@ -294,13 +369,13 @@ void ParagraphProperties::applyTo(pugi::xml_node para_node) const {
     if (!para_node) {
         return;
     }
-    
+
     // Get or create pPr node
     pugi::xml_node pPr = para_node.child("w:pPr");
     if (!pPr) {
         pPr = para_node.prepend_child("w:pPr");
     }
-    
+
     // Style ID
     if (!styleId.empty()) {
         pugi::xml_node pStyle = pPr.child("w:pStyle");
@@ -309,35 +384,45 @@ void ParagraphProperties::applyTo(pugi::xml_node para_node) const {
         }
         pStyle.append_attribute("w:val").set_value(styleId.c_str());
     }
-    
+
     // Alignment
     if (align) {
         pugi::xml_node jc = pPr.append_child("w:jc");
         const char* align_str = "left";
         switch (*align) {
-            case Alignment::Left: align_str = "left"; break;
-            case Alignment::Centered: align_str = "center"; break;
-            case Alignment::Right: align_str = "right"; break;
-            case Alignment::Justified: align_str = "both"; break;
-            case Alignment::Distributed: align_str = "distribute"; break;
+            case Alignment::Left:
+                align_str = "left";
+                break;
+            case Alignment::Centered:
+                align_str = "center";
+                break;
+            case Alignment::Right:
+                align_str = "right";
+                break;
+            case Alignment::Justified:
+                align_str = "both";
+                break;
+            case Alignment::Distributed:
+                align_str = "distribute";
+                break;
         }
         jc.append_attribute("w:val").set_value(align_str);
     }
-    
+
     // Outline level
     if (outlineLevel != OutlineLevel::BodyText) {
         int level = static_cast<int>(outlineLevel);
         pugi::xml_node outline = pPr.append_child("w:outlineLvl");
         outline.append_attribute("w:val").set_value(level);
     }
-    
+
     // Indentation
     if (indent) {
         pugi::xml_node ind = pPr.append_child("w:ind");
         // Left
         if (indent->left.value != 0) {
-            const char* attr = (indent->left.type == Indentation::Type::Character) 
-                               ? "w:firstLineChars" : "w:left";
+            const char* attr =
+                (indent->left.type == Indentation::Type::Character) ? "w:firstLineChars" : "w:left";
             ind.append_attribute(attr).set_value(indent->left.value);
         }
         // Right
@@ -346,12 +431,13 @@ void ParagraphProperties::applyTo(pugi::xml_node para_node) const {
         }
         // Special
         if (indent->special.kind != Indentation::Special::Kind::None) {
-            const char* attr = (indent->special.kind == Indentation::Special::Kind::FirstLine) 
-                               ? "w:firstLine" : "w:hanging";
+            const char* attr = (indent->special.kind == Indentation::Special::Kind::FirstLine)
+                                   ? "w:firstLine"
+                                   : "w:hanging";
             ind.append_attribute(attr).set_value(indent->special.value);
         }
     }
-    
+
     // Spacing
     if (spacing) {
         pugi::xml_node sp = pPr.append_child("w:spacing");
@@ -371,7 +457,7 @@ void ParagraphProperties::applyTo(pugi::xml_node para_node) const {
         }
         sp.append_attribute("w:line").set_value(spacing->lineSpacing.value);
     }
-    
+
     // Page break control
     if (keepNext) {
         pPr.append_child("w:keepNext");
@@ -386,7 +472,7 @@ void ParagraphProperties::applyTo(pugi::xml_node para_node) const {
         pugi::xml_node pb = pPr.append_child("w:pageBreakAfter");
         pb.append_attribute("w:val").set_value("true");
     }
-    
+
     // Borders
     if (borders) {
         pugi::xml_node pBdr = pPr.append_child("w:pBdr");
@@ -395,15 +481,33 @@ void ParagraphProperties::applyTo(pugi::xml_node para_node) const {
                 pugi::xml_node b = pBdr.append_child(name);
                 const char* style_str = "single";
                 switch (border->style) {
-                    case Border::Style::None: style_str = "nil"; break;
-                    case Border::Style::Single: style_str = "single"; break;
-                    case Border::Style::Double: style_str = "double"; break;
-                    case Border::Style::Thick: style_str = "thick"; break;
-                    case Border::Style::Dotted: style_str = "dotted"; break;
-                    case Border::Style::Dash: style_str = "dash"; break;
-                    case Border::Style::DotDash: style_str = "dotDash"; break;
-                    case Border::Style::Wave: style_str = "wave"; break;
-                    default: style_str = "single"; break;
+                    case Border::Style::None:
+                        style_str = "nil";
+                        break;
+                    case Border::Style::Single:
+                        style_str = "single";
+                        break;
+                    case Border::Style::Double:
+                        style_str = "double";
+                        break;
+                    case Border::Style::Thick:
+                        style_str = "thick";
+                        break;
+                    case Border::Style::Dotted:
+                        style_str = "dotted";
+                        break;
+                    case Border::Style::Dash:
+                        style_str = "dash";
+                        break;
+                    case Border::Style::DotDash:
+                        style_str = "dotDash";
+                        break;
+                    case Border::Style::Wave:
+                        style_str = "wave";
+                        break;
+                    default:
+                        style_str = "single";
+                        break;
                 }
                 b.append_attribute("w:val").set_value(style_str);
                 b.append_attribute("w:sz").set_value(border->size);
@@ -432,29 +536,34 @@ ParagraphProperties ParagraphProperties::extractFrom(pugi::xml_node para_node) {
     if (!para_node) {
         return props;
     }
-    
+
     pugi::xml_node pPr = para_node.child("w:pPr");
     if (!pPr) {
         return props;
     }
-    
+
     // Extract style ID
     pugi::xml_node pStyle = pPr.child("w:pStyle");
     if (pStyle) {
         props.styleId = pStyle.attribute("w:val").value();
     }
-    
+
     // Extract alignment
     pugi::xml_node jc = pPr.child("w:jc");
     if (jc) {
         const char* val = jc.attribute("w:val").value();
-        if (strcmp(val, "center") == 0) props.align = Alignment::Centered;
-        else if (strcmp(val, "right") == 0) props.align = Alignment::Right;
-        else if (strcmp(val, "both") == 0) props.align = Alignment::Justified;
-        else if (strcmp(val, "distribute") == 0) props.align = Alignment::Distributed;
-        else props.align = Alignment::Left;
+        if (strcmp(val, "center") == 0)
+            props.align = Alignment::Centered;
+        else if (strcmp(val, "right") == 0)
+            props.align = Alignment::Right;
+        else if (strcmp(val, "both") == 0)
+            props.align = Alignment::Justified;
+        else if (strcmp(val, "distribute") == 0)
+            props.align = Alignment::Distributed;
+        else
+            props.align = Alignment::Left;
     }
-    
+
     // Extract outline level
     pugi::xml_node outline = pPr.child("w:outlineLvl");
     if (outline) {
@@ -478,47 +587,71 @@ namespace {
 
 const char* tab_alignment_to_string(TabAlignment alignment) {
     switch (alignment) {
-        case TabAlignment::Center:    return "center";
-        case TabAlignment::Right:     return "right";
-        case TabAlignment::Decimal:   return "decimal";
-        case TabAlignment::Bar:       return "bar";
-        case TabAlignment::List:      return "list";
-        case TabAlignment::Clear:     return "clear";
-        default:                      return "left";
+        case TabAlignment::Center:
+            return "center";
+        case TabAlignment::Right:
+            return "right";
+        case TabAlignment::Decimal:
+            return "decimal";
+        case TabAlignment::Bar:
+            return "bar";
+        case TabAlignment::List:
+            return "list";
+        case TabAlignment::Clear:
+            return "clear";
+        default:
+            return "left";
     }
 }
 
 TabAlignment string_to_tab_alignment(const char* str) {
-    if (std::strcmp(str, "center") == 0)   return TabAlignment::Center;
-    if (std::strcmp(str, "right") == 0)    return TabAlignment::Right;
-    if (std::strcmp(str, "decimal") == 0)  return TabAlignment::Decimal;
-    if (std::strcmp(str, "bar") == 0)      return TabAlignment::Bar;
-    if (std::strcmp(str, "list") == 0)     return TabAlignment::List;
-    if (std::strcmp(str, "clear") == 0)    return TabAlignment::Clear;
+    if (std::strcmp(str, "center") == 0)
+        return TabAlignment::Center;
+    if (std::strcmp(str, "right") == 0)
+        return TabAlignment::Right;
+    if (std::strcmp(str, "decimal") == 0)
+        return TabAlignment::Decimal;
+    if (std::strcmp(str, "bar") == 0)
+        return TabAlignment::Bar;
+    if (std::strcmp(str, "list") == 0)
+        return TabAlignment::List;
+    if (std::strcmp(str, "clear") == 0)
+        return TabAlignment::Clear;
     return TabAlignment::Left;
 }
 
 const char* tab_leader_to_string(TabLeader leader) {
     switch (leader) {
-        case TabLeader::Dots:       return "dot";
-        case TabLeader::Dashes:     return "hyphen";
-        case TabLeader::Line:       return "underscore";
-        case TabLeader::Heavy:      return "heavy";
-        case TabLeader::MiddleDot:  return "middleDot";
-        default:                    return "none";
+        case TabLeader::Dots:
+            return "dot";
+        case TabLeader::Dashes:
+            return "hyphen";
+        case TabLeader::Line:
+            return "underscore";
+        case TabLeader::Heavy:
+            return "heavy";
+        case TabLeader::MiddleDot:
+            return "middleDot";
+        default:
+            return "none";
     }
 }
 
 TabLeader string_to_tab_leader(const char* str) {
-    if (std::strcmp(str, "dot") == 0)         return TabLeader::Dots;
-    if (std::strcmp(str, "hyphen") == 0)      return TabLeader::Dashes;
-    if (std::strcmp(str, "underscore") == 0)  return TabLeader::Line;
-    if (std::strcmp(str, "heavy") == 0)       return TabLeader::Heavy;
-    if (std::strcmp(str, "middleDot") == 0)   return TabLeader::MiddleDot;
+    if (std::strcmp(str, "dot") == 0)
+        return TabLeader::Dots;
+    if (std::strcmp(str, "hyphen") == 0)
+        return TabLeader::Dashes;
+    if (std::strcmp(str, "underscore") == 0)
+        return TabLeader::Line;
+    if (std::strcmp(str, "heavy") == 0)
+        return TabLeader::Heavy;
+    if (std::strcmp(str, "middleDot") == 0)
+        return TabLeader::MiddleDot;
     return TabLeader::None;
 }
 
-} // anonymous namespace
+}  // anonymous namespace
 
 void TabStopCollection::add(const TabStop& tab_stop) {
     // Replace existing tab stop at the same position
@@ -537,8 +670,9 @@ void TabStopCollection::add(double position, TabAlignment alignment, TabLeader l
 
 void TabStopCollection::remove(double position) {
     tab_stops_.erase(
-        std::remove_if(tab_stops_.begin(), tab_stops_.end(),
-            [position](const TabStop& ts) { return ts.position == position; }),
+        std::remove_if(tab_stops_.begin(),
+                       tab_stops_.end(),
+                       [position](const TabStop& ts) { return ts.position == position; }),
         tab_stops_.end());
 }
 
@@ -582,7 +716,8 @@ void TabStopCollection::applyTo(pugi::xml_node para_node) const {
     for (const auto& ts : tab_stops_) {
         pugi::xml_node tab = tabs.append_child("w:tab");
         tab.append_attribute("w:val").set_value(tab_alignment_to_string(ts.alignment));
-        tab.append_attribute("w:pos").set_value(static_cast<int>(ts.position * 20)); // points to twips
+        tab.append_attribute("w:pos").set_value(
+            static_cast<int>(ts.position * 20));  // points to twips
         if (ts.leader != TabLeader::None) {
             tab.append_attribute("w:leader").set_value(tab_leader_to_string(ts.leader));
         }
@@ -608,7 +743,7 @@ TabStopCollection TabStopCollection::extractFrom(pugi::xml_node para_node) {
     for (pugi::xml_node tab = tabs.child("w:tab"); tab; tab = tab.next_sibling("w:tab")) {
         TabStop ts;
         ts.alignment = string_to_tab_alignment(tab.attribute("w:val").value());
-        ts.position = tab.attribute("w:pos").as_int() / 20.0; // twips to points
+        ts.position = tab.attribute("w:pos").as_int() / 20.0;  // twips to points
 
         pugi::xml_attribute leader_attr = tab.attribute("w:leader");
         if (leader_attr) {
@@ -626,32 +761,155 @@ TabStopCollection TabStopCollection::extractFrom(pugi::xml_node para_node) {
 // ============================================================================
 
 void TableProperties::applyTo(Table& table) const {
-    // TODO: Get table XML node and apply
-    (void)table;
+    pugi::xml_node tbl_xml = table.get_current_xml();
+    if (tbl_xml) {
+        applyTo(tbl_xml);
+    }
 }
 
 void TableProperties::applyTo(pugi::xml_node tbl_node) const {
     if (!tbl_node) {
         return;
     }
-    
+
     pugi::xml_node tblPr = tbl_node.child("w:tblPr");
     if (!tblPr) {
         tblPr = tbl_node.prepend_child("w:tblPr");
     }
-    
+
+    auto ensure_attr = [](pugi::xml_node node, const char* name) {
+        pugi::xml_attribute attr = node.attribute(name);
+        if (!attr) {
+            attr = node.append_attribute(name);
+        }
+        return attr;
+    };
+
     // Table width
     pugi::xml_node tblW = tblPr.child("w:tblW");
     if (!tblW) {
         tblW = tblPr.append_child("w:tblW");
     }
     const char* type_str = "auto";
-    if (width.type == WidthType::Percent) type_str = "pct";
-    else if (width.type == WidthType::Absolute) type_str = "dxa";
-    tblW.append_attribute("w:type").set_value(type_str);
-    tblW.append_attribute("w:w").set_value(width.value);
-    
-    // TODO: Apply alignment, borders, cell margins
+    if (width.type == WidthType::Percent)
+        type_str = "pct";
+    else if (width.type == WidthType::Absolute)
+        type_str = "dxa";
+    ensure_attr(tblW, "w:type").set_value(type_str);
+    ensure_attr(tblW, "w:w").set_value(width.value);
+
+    // Table alignment
+    if (alignment != ParagraphProperties::Alignment::Left) {
+        pugi::xml_node jc = tblPr.child("w:jc");
+        if (!jc) {
+            jc = tblPr.append_child("w:jc");
+        }
+        const char* align_val = "left";
+        switch (alignment) {
+            case ParagraphProperties::Alignment::Centered:
+                align_val = "center";
+                break;
+            case ParagraphProperties::Alignment::Right:
+                align_val = "right";
+                break;
+            default:
+                break;
+        }
+        ensure_attr(jc, "w:val").set_value(align_val);
+    } else {
+        tblPr.remove_child("w:jc");
+    }
+
+    // Table borders
+    if (borders.top || borders.left || borders.bottom || borders.right) {
+        pugi::xml_node tblBorders = tblPr.child("w:tblBorders");
+        if (!tblBorders) {
+            tblBorders = tblPr.append_child("w:tblBorders");
+        }
+
+        auto apply_border = [&tblBorders, &ensure_attr](
+                                const char* name,
+                                const std::optional<ParagraphProperties::Border>& border) {
+            if (!border) {
+                tblBorders.remove_child(name);
+                return;
+            }
+            pugi::xml_node b = tblBorders.child(name);
+            if (!b) {
+                b = tblBorders.append_child(name);
+            }
+            const char* style_str = "single";
+            switch (border->style) {
+                case ParagraphProperties::Border::Style::None:
+                    style_str = "nil";
+                    break;
+                case ParagraphProperties::Border::Style::Single:
+                    style_str = "single";
+                    break;
+                case ParagraphProperties::Border::Style::Double:
+                    style_str = "double";
+                    break;
+                case ParagraphProperties::Border::Style::Thick:
+                    style_str = "thick";
+                    break;
+                case ParagraphProperties::Border::Style::Dotted:
+                    style_str = "dotted";
+                    break;
+                case ParagraphProperties::Border::Style::Dash:
+                    style_str = "dash";
+                    break;
+                case ParagraphProperties::Border::Style::DotDash:
+                    style_str = "dotDash";
+                    break;
+                case ParagraphProperties::Border::Style::Wave:
+                    style_str = "wave";
+                    break;
+                default:
+                    style_str = "single";
+                    break;
+            }
+            ensure_attr(b, "w:val").set_value(style_str);
+            ensure_attr(b, "w:sz").set_value(border->size);
+            ensure_attr(b, "w:color").set_value(border->color.c_str());
+            ensure_attr(b, "w:space").set_value(border->space);
+        };
+
+        apply_border("w:top", borders.top);
+        apply_border("w:left", borders.left);
+        apply_border("w:bottom", borders.bottom);
+        apply_border("w:right", borders.right);
+    } else {
+        tblPr.remove_child("w:tblBorders");
+    }
+
+    // Cell margins
+    if (cellMargin.top > 0 || cellMargin.left > 0 || cellMargin.bottom > 0 ||
+        cellMargin.right > 0) {
+        pugi::xml_node tblCellMar = tblPr.child("w:tblCellMar");
+        if (!tblCellMar) {
+            tblCellMar = tblPr.append_child("w:tblCellMar");
+        }
+
+        auto apply_margin = [&tblCellMar, &ensure_attr](const char* name, int value) {
+            if (value <= 0) {
+                tblCellMar.remove_child(name);
+                return;
+            }
+            pugi::xml_node m = tblCellMar.child(name);
+            if (!m) {
+                m = tblCellMar.append_child(name);
+            }
+            ensure_attr(m, "w:w").set_value(value);
+            ensure_attr(m, "w:type").set_value("dxa");
+        };
+
+        apply_margin("w:top", cellMargin.top);
+        apply_margin("w:left", cellMargin.left);
+        apply_margin("w:bottom", cellMargin.bottom);
+        apply_margin("w:right", cellMargin.right);
+    } else {
+        tblPr.remove_child("w:tblCellMar");
+    }
 }
 
 // ============================================================================
@@ -662,7 +920,7 @@ void SectionProperties::applyTo(pugi::xml_node sectPr_node) const {
     if (!sectPr_node) {
         return;
     }
-    
+
     // Page size
     pugi::xml_node pgSz = sectPr_node.child("w:pgSz");
     if (!pgSz) {
@@ -673,7 +931,7 @@ void SectionProperties::applyTo(pugi::xml_node sectPr_node) const {
     if (orientation == Orientation::Landscape) {
         pgSz.append_attribute("w:orient").set_value("landscape");
     }
-    
+
     // Page margins
     pugi::xml_node pgMar = sectPr_node.child("w:pgMar");
     if (!pgMar) {
@@ -685,7 +943,7 @@ void SectionProperties::applyTo(pugi::xml_node sectPr_node) const {
     pgMar.append_attribute("w:left").set_value(pageMargins.left);
     pgMar.append_attribute("w:header").set_value(pageMargins.header);
     pgMar.append_attribute("w:footer").set_value(pageMargins.footer);
-    
+
     // Columns
     pugi::xml_node cols = sectPr_node.child("w:cols");
     if (!cols) {
@@ -698,4 +956,4 @@ void SectionProperties::applyTo(pugi::xml_node sectPr_node) const {
     }
 }
 
-} // namespace cdocx
+}  // namespace cdocx

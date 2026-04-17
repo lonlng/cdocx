@@ -11,6 +11,7 @@
 #pragma once
 
 #include <cdocx/fwd.h>
+
 #include <memory>
 #include <string>
 
@@ -36,7 +37,7 @@ class Run;
  * @endcode
  */
 class ParagraphBuilder {
-public:
+  public:
     /**
      * @brief Construct empty paragraph builder
      */
@@ -78,8 +79,7 @@ public:
      * @param font_size Font size in points
      * @return Reference to this builder for chaining
      */
-    ParagraphBuilder& add_run(const std::string& text, bool bold, bool italic,
-                               int font_size);
+    ParagraphBuilder& add_run(const std::string& text, bool bold, bool italic, int font_size);
 
     // ========================================================================
     // Formatting (applied to subsequent runs)
@@ -150,7 +150,7 @@ public:
      */
     std::shared_ptr<Paragraph> build();
 
-private:
+  private:
     std::shared_ptr<Paragraph> para_;
     bool bold_ = false;
     bool italic_ = false;

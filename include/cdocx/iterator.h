@@ -4,27 +4,27 @@
  * @details Provides template-based iterator classes for traversing document
  *          elements (paragraphs, runs, tables, etc.) using C++11 range-based
  *          for loops and traditional iterator patterns.
- * 
+ *
  * @author lonlng
  * @copyright MIT License
  * @date 2026
  * @version 0.2.0
- * 
+ *
  * @par Usage Example:
  * @code
  * #include <cdocx/iterator.h>
  * #include <cdocx/base.h>
- * 
+ *
  * cdocx::Document doc("file.docx");
  * doc.open();
- * 
+ *
  * // Range-based for loop
  * for (const auto& para : doc.paragraphs()) {
  *     for (const auto& run : para.runs()) {
  *         std::cout << run.get_text() << std::endl;
  *     }
  * }
- * 
+ *
  * // Traditional iterator style
  * auto para = doc.paragraphs();
  * while (para.has_next()) {
@@ -54,32 +54,32 @@ namespace cdocx {
  * @tparam T The element type (Run, Paragraph, Table, etc.)
  * @tparam P The parent node type (typically pugi::xml_node)
  * @tparam C The current node type (typically pugi::xml_node)
- * 
+ *
  * @details This iterator supports C++11 range-based for loops and provides
  *          a standard iterator interface. It wraps pugixml nodes and converts
  *          them to CDocx element types on demand.
- * 
+ *
  * @par Iterator Category:
  * - Forward Iterator
- * 
+ *
  * @par Requirements:
  * - Type T must provide set_parent() and set_current() methods
  * - Type T must have a default constructor
- * 
+ *
  * @since 0.1.0
  * @see IteratorHelper
  */
 template <class T, class P, class C>
 class Iterator {
-private:
+  private:
     using ParentType = P;   ///< Parent node type alias
     using CurrentType = C;  ///< Current node type alias
-    
+
     ParentType parent_{0};    ///< Parent XML node
     CurrentType current_{0};  ///< Current XML node
     mutable T buffer_{};      ///< Buffer for element conversion
 
-public:
+  public:
     /**
      * @brief Default constructor
      * @details Creates an empty iterator (end iterator)
@@ -91,8 +91,7 @@ public:
      * @param[in] parent The parent XML node
      * @param[in] current The current XML node
      */
-    Iterator(ParentType parent, CurrentType current)
-        : parent_(parent), current_(current) {}
+    Iterator(ParentType parent, CurrentType current) : parent_(parent), current_(current) {}
 
     /**
      * @brief Inequality comparison operator
@@ -110,9 +109,7 @@ public:
      * @return true if iterators point to the same position
      * @return false if iterators point to different positions
      */
-    bool operator==(const Iterator& other) const {
-        return !this->operator!=(other);
-    }
+    bool operator==(const Iterator& other) const { return !this->operator!=(other); }
 
     /**
      * @brief Pre-increment operator
@@ -130,7 +127,7 @@ public:
      *          updated when this method is called (lazy evaluation).
      * @return const reference to the current element
      */
-    auto operator*() const -> T const& {
+    auto operator*() const -> const T& {
         // Only update the buffer when the user wants to access the data
         buffer_.set_parent(parent_);
         buffer_.set_current(current_);
@@ -141,7 +138,7 @@ public:
      * @brief Arrow operator
      * @return Pointer to the current element
      */
-    auto operator->() const -> T const* { return &(this->operator*()); }
+    auto operator->() const -> const T* { return &(this->operator*()); }
 };
 
 /**
@@ -150,7 +147,7 @@ public:
  * @details Provides factory methods for creating begin and end iterators
  *          for CDocx container classes. This class is used internally by
  *          the begin() and end() free functions.
- * 
+ *
  * @par Usage Example:
  * @code
  * // Usually no need to use this class directly, use begin() and end() instead
@@ -158,12 +155,12 @@ public:
  *     // Iterate paragraphs
  * }
  * @endcode
- * 
+ *
  * @since 0.1.0
  * @see begin(), end()
  */
 class IteratorHelper {
-private:
+  private:
     using XmlNode = pugi::xml_node;  ///< XML node type alias
 
     /**
@@ -173,7 +170,7 @@ private:
      * @return Iterator pointing to the first element
      */
     template <class T>
-    static auto make_begin(T const& obj) -> Iterator<T, XmlNode> {
+    static auto make_begin(const T& obj) -> Iterator<T, XmlNode> {
         return Iterator<T, XmlNode>(obj.parent_, obj.current_);
     }
 
@@ -184,16 +181,15 @@ private:
      * @return Iterator pointing past the last element
      */
     template <class T>
-    static auto make_end(T const& obj) -> Iterator<T, XmlNode> {
-        return Iterator<T, XmlNode>(
-            obj.parent_, static_cast<decltype(obj.current_)>(0));
+    static auto make_end(const T& obj) -> Iterator<T, XmlNode> {
+        return Iterator<T, XmlNode>(obj.parent_, static_cast<decltype(obj.current_)>(0));
     }
 
     // Grant friend access to begin() and end() functions
     template <class T>
-    friend auto begin(T const&) -> Iterator<T, XmlNode>;
+    friend auto begin(const T&) -> Iterator<T, XmlNode>;
     template <class T>
-    friend auto end(T const&) -> Iterator<T, XmlNode>;
+    friend auto end(const T&) -> Iterator<T, XmlNode>;
 };
 
 // ============================================================================
@@ -209,7 +205,7 @@ private:
  * @since 0.1.0
  */
 template <class T>
-auto begin(T const& obj) -> Iterator<T, pugi::xml_node> {
+auto begin(const T& obj) -> Iterator<T, pugi::xml_node> {
     return IteratorHelper::make_begin(obj);
 }
 
@@ -222,8 +218,8 @@ auto begin(T const& obj) -> Iterator<T, pugi::xml_node> {
  * @since 0.1.0
  */
 template <class T>
-auto end(T const& obj) -> Iterator<T, pugi::xml_node> {
+auto end(const T& obj) -> Iterator<T, pugi::xml_node> {
     return IteratorHelper::make_end(obj);
 }
 
-} // namespace cdocx
+}  // namespace cdocx

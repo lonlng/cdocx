@@ -3,52 +3,53 @@
  * @brief High-level bookmark replacement API
  * @details Provides BookmarkReplacer class for easy bookmark-based content
  *          replacement including text and images with format preservation.
- * 
+ *
  * @author lonlng
  * @copyright MIT License
  * @date 2026
  * @version 0.3.0
- * 
+ *
  * @par Usage Example:
  * @code
  * #include <cdocx/bookmark_replacer.h>
- * 
+ *
  * cdocx::Document doc("template.docx");
  * doc.open();
- * 
+ *
  * cdocx::BookmarkReplacer replacer(&doc);
- * 
+ *
  * // Simple text replacement (preserves format)
  * replacer.replace_text("NAME", "John Doe");
  * replacer.replace_text("DATE", "2024-06-15");
- * 
+ *
  * // Batch replacement
  * std::map<std::string, std::string> replacements = {
  *     {"COMPANY", "Acme Corp"},
  *     {"ADDRESS", "123 Main St"}
  * };
  * replacer.replace_text_batch(replacements);
- * 
+ *
  * // Image replacement with caption
  * replacer.replace_with_image("LOGO", "logo.png", "Company Logo");
- * 
+ *
  * // Advanced image replacement
  * cdocx::ImageSize size(400, 300);  // 400x300 points
- * replacer.replace_with_image_advanced("CHART", "chart.png", size, 
+ * replacer.replace_with_image_advanced("CHART", "chart.png", size,
  *                                      "Sales Chart", cdocx::ImageAlignment::Center);
- * 
+ *
  * // Check statistics
  * auto stats = replacer.get_stats();
  * std::cout << "Success: " << stats.success_count << std::endl;
- * 
+ *
  * doc.save("output.docx");
  * @endcode
  */
 
 #pragma once
 
-#include <cdocx/fwd.h>
 #include <cdocx/advanced.h>
+#include <cdocx/fwd.h>
+
 #include <cstdint>
 #include <functional>
 #include <map>
@@ -70,9 +71,8 @@ class Bookmark;
  * @param new_text Output parameter for new text
  * @return true to proceed with replacement, false to skip
  */
-using ReplaceCallback = std::function<bool(const std::string& bookmark_name,
-                                            const std::string& old_text,
-                                            std::string& new_text)>;
+using ReplaceCallback = std::function<bool(
+    const std::string& bookmark_name, const std::string& old_text, std::string& new_text)>;
 
 /**
  * @struct ReplacementStats
@@ -83,7 +83,7 @@ struct ReplacementStats {
     int success_count = 0;  ///< Number of successful replacements
     int fail_count = 0;     ///< Number of failed replacements
     int skip_count = 0;     ///< Number of skipped replacements
-    
+
     /**
      * @brief Reset all counters to zero
      */
@@ -92,14 +92,12 @@ struct ReplacementStats {
         fail_count = 0;
         skip_count = 0;
     }
-    
+
     /**
      * @brief Get total operations count
      * @return Sum of success, fail, and skip
      */
-    int total() const {
-        return success_count + fail_count + skip_count;
-    }
+    int total() const { return success_count + fail_count + skip_count; }
 };
 
 /**
@@ -107,7 +105,7 @@ struct ReplacementStats {
  * @brief High-level API for bookmark-based content replacement
  * @details Provides a convenient interface for replacing bookmark content
  *          with text or images while preserving or controlling formatting.
- * 
+ *
  * @par Features:
  * - Text replacement with format preservation
  * - Batch text replacement
@@ -115,22 +113,22 @@ struct ReplacementStats {
  * - Alignment control for images
  * - Conditional replacement via callbacks
  * - Detailed statistics tracking
- * 
+ *
  * @since 0.3.0
  */
 class BookmarkReplacer {
-public:
+  public:
     /**
      * @brief Construct replacer for a document
      * @param[in] doc Target document (must remain valid during replacer lifetime)
      */
     explicit BookmarkReplacer(Document* doc);
-    
+
     /**
      * @brief Destructor
      */
     ~BookmarkReplacer() = default;
-    
+
     // Disable copy, enable move
     BookmarkReplacer(const BookmarkReplacer&) = delete;
     BookmarkReplacer& operator=(const BookmarkReplacer&) = delete;
@@ -147,8 +145,7 @@ public:
      * @param[in] new_text New text content
      * @return true if replacement was successful
      */
-    bool replace_text(const std::string& bookmark_name,
-                      const std::string& new_text);
+    bool replace_text(const std::string& bookmark_name, const std::string& new_text);
 
     /**
      * @brief Replace multiple bookmarks in batch
@@ -156,7 +153,7 @@ public:
      * @return Number of successful replacements
      */
     int replace_text_batch(const std::map<std::string, std::string>& replacements);
-    
+
     /**
      * @brief Preview batch replacements without actually applying them
      * @param[in] replacements Map of bookmark_name -> new_text
@@ -164,27 +161,27 @@ public:
      * @details Checks if all bookmarks exist without modifying the document.
      *          Use this before replace_text_batch_transaction to validate.
      */
-    std::vector<std::tuple<std::string, bool, std::string>> 
-        preview_replacements(const std::map<std::string, std::string>& replacements) const;
-    
+    std::vector<std::tuple<std::string, bool, std::string>> preview_replacements(
+        const std::map<std::string, std::string>& replacements) const;
+
     /**
      * @struct BatchResult
      * @brief Detailed result for batch replacement operations
      * @since 0.5.0
      */
     struct BatchResult {
-        bool all_succeeded = false;     ///< Whether all replacements succeeded
-        int success_count = 0;          ///< Number of successful replacements
-        int fail_count = 0;             ///< Number of failed replacements
+        bool all_succeeded = false;  ///< Whether all replacements succeeded
+        int success_count = 0;       ///< Number of successful replacements
+        int fail_count = 0;          ///< Number of failed replacements
         std::vector<std::pair<std::string, std::string>> failures;  ///< (bookmark, error) pairs
-        
+
         /**
          * @brief Check if specific bookmark succeeded
          * @param bookmark_name Name of the bookmark
          * @return true if succeeded
          */
         bool did_succeed(const std::string& bookmark_name) const;
-        
+
         /**
          * @brief Get error message for specific bookmark
          * @param bookmark_name Name of the bookmark
@@ -192,7 +189,7 @@ public:
          */
         std::string get_error(const std::string& bookmark_name) const;
     };
-    
+
     /**
      * @brief Replace bookmarks in transaction mode (all or nothing)
      * @param[in] replacements Map of bookmark_name -> new_text
@@ -202,8 +199,8 @@ public:
      *          If strict=true and any replacement fails, the document is restored.
      *          Use preview_replacements() first to validate bookmarks.
      */
-    BatchResult replace_text_batch_transaction(const std::map<std::string, std::string>& replacements,
-                                                bool strict = true);
+    BatchResult replace_text_batch_transaction(
+        const std::map<std::string, std::string>& replacements, bool strict = true);
 
     /**
      * @brief Replace text with explicit format control
@@ -213,8 +210,8 @@ public:
      * @return true if replacement was successful
      */
     bool replace_text_with_format(const std::string& bookmark_name,
-                                   const std::string& new_text,
-                                   const BookmarkFormat& format);
+                                  const std::string& new_text,
+                                  const BookmarkFormat& format);
 
     // ========================================================================
     // Image Replacement
@@ -242,10 +239,10 @@ public:
      * @return true if replacement was successful
      */
     bool replace_with_image_advanced(const std::string& bookmark_name,
-                                      const std::string& image_path,
-                                      const ImageSize& size,
-                                      const std::string& caption = "",
-                                      ImageAlignment align = ImageAlignment::Center);
+                                     const std::string& image_path,
+                                     const ImageSize& size,
+                                     const std::string& caption = "",
+                                     ImageAlignment align = ImageAlignment::Center);
 
     /**
      * @brief Replace bookmark with image from memory
@@ -282,8 +279,7 @@ public:
      * @param[in] new_text New text content
      * @return true if successful
      */
-    bool replace_and_remove(const std::string& bookmark_name,
-                            const std::string& new_text);
+    bool replace_and_remove(const std::string& bookmark_name, const std::string& new_text);
 
     /**
      * @brief Replace with image and remove bookmark
@@ -293,8 +289,8 @@ public:
      * @return true if successful
      */
     bool replace_with_image_and_remove(const std::string& bookmark_name,
-                                        const std::string& image_path,
-                                        const std::string& caption = "");
+                                       const std::string& image_path,
+                                       const std::string& caption = "");
 
     // ========================================================================
     // Query Methods
@@ -335,10 +331,10 @@ public:
      */
     void reset_stats() { stats_.reset(); }
 
-private:
-    Document* doc_;                      ///< Target document
-    ReplacementStats stats_;             ///< Operation statistics
-    mutable int next_image_id_ = 1;      ///< Counter for image IDs
+  private:
+    Document* doc_;                  ///< Target document
+    ReplacementStats stats_;         ///< Operation statistics
+    mutable int next_image_id_ = 1;  ///< Counter for image IDs
 
     /**
      * @brief Get bookmark by name
@@ -370,10 +366,10 @@ private:
      * @return true if successful
      */
     bool insert_image_at_bookmark(Bookmark& bookmark,
-                                   const std::string& image_path,
-                                   const ImageSize& size,
-                                   ImageAlignment align,
-                                   const std::string& rel_id);
+                                  const std::string& image_path,
+                                  const ImageSize& size,
+                                  ImageAlignment align,
+                                  const std::string& rel_id);
 
     /**
      * @brief Get file extension from path
@@ -390,4 +386,4 @@ private:
     std::string get_content_type(const std::string& ext) const;
 };
 
-} // namespace cdocx
+}  // namespace cdocx
