@@ -79,6 +79,11 @@ class Style : public std::enable_shared_from_this<Style> {
     // ------------------------------------------------------------------------
     void remove();
 
+    // Preserve raw style XML for round-trip fidelity of unmanaged properties
+    void preserve_style_xml(pugi::xml_node style_node);
+    pugi::xml_node get_preserved_style_xml() const;
+    bool has_preserved_style_xml() const;
+
   private:
     Document* document_ = nullptr;
     std::string name_;
@@ -90,6 +95,8 @@ class Style : public std::enable_shared_from_this<Style> {
     std::string base_style_name_;
     Font font_;
     ParagraphFormat paragraph_format_;
+
+    pugi::xml_document preserved_style_xml_;
 };
 
 // ============================================================================

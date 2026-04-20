@@ -253,6 +253,9 @@ class NumberingManager {
     AbstractNumberingId nextAbstractId_ = 0;
     NumberingId nextNumId_ = 1;  // Start from 1 (0 means no numbering)
 
+    // Track whether definitions were modified after loading
+    bool modified_ = false;
+
   public:
     /**
      * @brief Default constructor
@@ -365,6 +368,12 @@ class NumberingManager {
      * @return true if has definitions
      */
     bool has_definitions() const { return !abstractDefinitions_.empty(); }
+
+    /**
+     * @brief Check if definitions were modified after loading
+     * @return true if modified
+     */
+    bool is_modified() const { return modified_; }
 
     /**
      * @brief Clear all definitions

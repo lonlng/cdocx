@@ -114,6 +114,13 @@ class Borders {
     Border right;
     Border inside_horizontal;
     Border inside_vertical;
+    bool explicitly_defined = false;  // true if the container was in XML
+    bool top_defined = false;
+    bool left_defined = false;
+    bool bottom_defined = false;
+    bool right_defined = false;
+    bool inside_h_defined = false;
+    bool inside_v_defined = false;
 
     // Set all borders to the same style
     void set_all(const Border& border) {

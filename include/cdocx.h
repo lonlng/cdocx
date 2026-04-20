@@ -36,6 +36,7 @@
 #include "cdocx/advanced.h"
 #include "cdocx/base.h"
 #include "cdocx/body.h"
+#include "cdocx/bookmark_inserter.h"
 #include "cdocx/caption_generator.h"
 #include "cdocx/comment.h"
 #include "cdocx/control_char.h"

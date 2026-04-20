@@ -41,7 +41,8 @@ void DocxTreeNode::set_binary_data(std::vector<uint8_t>&& data) {
         // Parse new XML data
         auto new_doc = std::make_shared<pugi::xml_document>();
         auto result = new_doc->load_buffer(
-            data.data(), data.size(), pugi::parse_default, pugi::encoding_utf8);
+            data.data(), data.size(),
+            pugi::parse_default | pugi::parse_ws_pcdata, pugi::encoding_utf8);
         if (result) {
             xml_doc = std::move(new_doc);
         }

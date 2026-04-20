@@ -14,6 +14,35 @@ Paragraph::Paragraph(Document* doc) {
     set_document(doc);
 }
 
+Paragraph::Paragraph(const Paragraph& other)
+    : CompositeNode(other),
+      format_(other.format_),
+      list_format_(other.list_format_),
+      parent_(other.parent_),
+      current_(other.current_),
+      run_(other.run_) {
+    if (other.preserved_pPr_.first_child()) {
+        preserved_pPr_.reset();
+        preserved_pPr_.append_copy(other.preserved_pPr_.first_child());
+    }
+}
+
+Paragraph& Paragraph::operator=(const Paragraph& other) {
+    if (this != &other) {
+        CompositeNode::operator=(other);
+        format_ = other.format_;
+        list_format_ = other.list_format_;
+        parent_ = other.parent_;
+        current_ = other.current_;
+        run_ = other.run_;
+        preserved_pPr_.reset();
+        if (other.preserved_pPr_.first_child()) {
+            preserved_pPr_.append_copy(other.preserved_pPr_.first_child());
+        }
+    }
+    return *this;
+}
+
 std::string Paragraph::get_text() const {
     std::string result;
     // Legacy fallback: if bound to XML but has no DOM children, read from XML directly
@@ -47,6 +76,9 @@ std::shared_ptr<Node> Paragraph::clone(bool deep) const {
     auto cloned = std::make_shared<Paragraph>(get_document());
     cloned->set_paragraph_format(format_);
     cloned->get_list_format() = list_format_;
+    if (has_preserved_pPr()) {
+        cloned->preserve_pPr(get_preserved_pPr());
+    }
     if (deep) {
         for (const auto& child : get_children()) {
             if (auto child_clone = child->clone(deep)) {
@@ -55,6 +87,23 @@ std::shared_ptr<Node> Paragraph::clone(bool deep) const {
         }
     }
     return cloned;
+}
+
+void Paragraph::preserve_pPr(pugi::xml_node pPr) {
+    if (!pPr) {
+        preserved_pPr_.reset();
+        return;
+    }
+    preserved_pPr_.reset();
+    preserved_pPr_.append_copy(pPr);
+}
+
+pugi::xml_node Paragraph::get_preserved_pPr() const {
+    return preserved_pPr_.first_child();
+}
+
+bool Paragraph::has_preserved_pPr() const {
+    return preserved_pPr_.first_child();
 }
 
 // ============================================================================

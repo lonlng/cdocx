@@ -386,8 +386,19 @@ class Table : public CompositeNode {
     void dumpStructure() const;
     void set_properties(const TableProperties& props);
 
+    // Preserve original tblPr and tblGrid for round-trip fidelity
+    void preserve_tblPr(pugi::xml_node tblPr);
+    pugi::xml_node get_preserved_tblPr() const;
+    bool has_preserved_tblPr() const;
+
+    void preserve_tblGrid(pugi::xml_node tblGrid);
+    pugi::xml_node get_preserved_tblGrid() const;
+    bool has_preserved_tblGrid() const;
+
   private:
     TableFormat format_;
+    pugi::xml_document preserved_tblPr_;
+    pugi::xml_document preserved_tblGrid_;
 };
 
 // ============================================================================

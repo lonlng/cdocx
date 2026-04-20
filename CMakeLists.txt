@@ -231,6 +231,13 @@ FetchContent_Declare(
 # Make dependencies available
 FetchContent_MakeAvailable(pugixml zip)
 
+# Suppress GCC 14 warnings in third-party C library (zip)
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU" AND CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL "14")
+    if(TARGET zip)
+        target_compile_options(zip PRIVATE -Wno-stringop-truncation)
+    endif()
+endif()
+
 target_link_libraries(cdocx 
     PUBLIC pugixml
     PUBLIC zip::zip

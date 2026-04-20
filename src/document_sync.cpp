@@ -87,6 +87,235 @@ static void parse_shading_from_xml(pugi::xml_node shd, Shading& shading) {
 }
 
 // ============================================================================
+// Border Helpers
+// ============================================================================
+static void parse_border_from_xml(pugi::xml_node border_node, Border& border) {
+    if (!border_node)
+        return;
+    const char* val = border_node.attribute("w:val").value();
+    if (std::strcmp(val, "single") == 0) {
+        border.type = BorderType::Single;
+    } else if (std::strcmp(val, "thick") == 0) {
+        border.type = BorderType::Thick;
+    } else if (std::strcmp(val, "double") == 0) {
+        border.type = BorderType::Double;
+    } else if (std::strcmp(val, "dotted") == 0) {
+        border.type = BorderType::Dotted;
+    } else if (std::strcmp(val, "dashed") == 0) {
+        border.type = BorderType::Dashed;
+    } else if (std::strcmp(val, "dotDash") == 0) {
+        border.type = BorderType::DotDash;
+    } else if (std::strcmp(val, "dotDotDash") == 0) {
+        border.type = BorderType::DotDotDash;
+    } else if (std::strcmp(val, "triple") == 0) {
+        border.type = BorderType::Triple;
+    } else if (std::strcmp(val, "thinThickSmallGap") == 0) {
+        border.type = BorderType::ThinThickSmall;
+    } else if (std::strcmp(val, "thickThinSmallGap") == 0) {
+        border.type = BorderType::ThickThinSmall;
+    } else if (std::strcmp(val, "thinThickThinSmallGap") == 0) {
+        border.type = BorderType::ThinThickThinSmall;
+    } else if (std::strcmp(val, "thinThickMediumGap") == 0) {
+        border.type = BorderType::ThinThickMedium;
+    } else if (std::strcmp(val, "thickThinMediumGap") == 0) {
+        border.type = BorderType::ThickThinMedium;
+    } else if (std::strcmp(val, "thinThickThinMediumGap") == 0) {
+        border.type = BorderType::ThinThickThinMedium;
+    } else if (std::strcmp(val, "thinThickLargeGap") == 0) {
+        border.type = BorderType::ThinThickLarge;
+    } else if (std::strcmp(val, "thickThinLargeGap") == 0) {
+        border.type = BorderType::ThickThinLarge;
+    } else if (std::strcmp(val, "thinThickThinLargeGap") == 0) {
+        border.type = BorderType::ThinThickThinLarge;
+    } else if (std::strcmp(val, "wave") == 0) {
+        border.type = BorderType::Wave;
+    } else if (std::strcmp(val, "doubleWave") == 0) {
+        border.type = BorderType::DoubleWave;
+    } else if (std::strcmp(val, "dashSmallGap") == 0) {
+        border.type = BorderType::DashSmall;
+    } else if (std::strcmp(val, "threeDEmboss") == 0) {
+        border.type = BorderType::ThreeDEmboss;
+    } else if (std::strcmp(val, "threeDEngrave") == 0) {
+        border.type = BorderType::ThreeDEngrave;
+    } else if (std::strcmp(val, "outset") == 0) {
+        border.type = BorderType::Outset;
+    } else if (std::strcmp(val, "inset") == 0) {
+        border.type = BorderType::Inset;
+    } else if (std::strcmp(val, "clear") == 0) {
+        border.type = BorderType::Clear;
+    } else {
+        border.type = BorderType::None;
+    }
+
+    auto sz = border_node.attribute("w:sz");
+    if (sz) {
+        border.width = sz.as_int() / 8.0;
+    }
+
+    auto space = border_node.attribute("w:space");
+    if (space) {
+        border.space = space.as_int();
+    }
+
+    auto color = border_node.attribute("w:color");
+    if (color) {
+        std::string c = color.value();
+        if (c == "auto") {
+            border.color = Color::auto_color();
+        } else {
+            border.color = Color::from_hex(c);
+        }
+    }
+}
+
+static void parse_borders_from_xml(pugi::xml_node borders_node, Borders& borders) {
+    if (!borders_node)
+        return;
+    borders.explicitly_defined = true;
+    if (borders_node.child("w:top")) {
+        borders.top_defined = true;
+        parse_border_from_xml(borders_node.child("w:top"), borders.top);
+    }
+    if (borders_node.child("w:left")) {
+        borders.left_defined = true;
+        parse_border_from_xml(borders_node.child("w:left"), borders.left);
+    }
+    if (borders_node.child("w:bottom")) {
+        borders.bottom_defined = true;
+        parse_border_from_xml(borders_node.child("w:bottom"), borders.bottom);
+    }
+    if (borders_node.child("w:right")) {
+        borders.right_defined = true;
+        parse_border_from_xml(borders_node.child("w:right"), borders.right);
+    }
+    if (borders_node.child("w:insideH")) {
+        borders.inside_h_defined = true;
+        parse_border_from_xml(borders_node.child("w:insideH"), borders.inside_horizontal);
+    }
+    if (borders_node.child("w:insideV")) {
+        borders.inside_v_defined = true;
+        parse_border_from_xml(borders_node.child("w:insideV"), borders.inside_vertical);
+    }
+}
+
+static void serialize_border_to_xml(pugi::xml_node parent,
+                                    const char* name,
+                                    const Border& border,
+                                    bool include_nil = false) {
+    if (!border.is_visible()) {
+        if (!include_nil || border.type != BorderType::None)
+            return;
+        auto node = parent.append_child(name);
+        node.append_attribute("w:val").set_value("nil");
+        return;
+    }
+    auto node = parent.append_child(name);
+    const char* val = "single";
+    switch (border.type) {
+        case BorderType::Single:
+            val = "single";
+            break;
+        case BorderType::Thick:
+            val = "thick";
+            break;
+        case BorderType::Double:
+            val = "double";
+            break;
+        case BorderType::Dotted:
+            val = "dotted";
+            break;
+        case BorderType::Dashed:
+            val = "dashed";
+            break;
+        case BorderType::DotDash:
+            val = "dotDash";
+            break;
+        case BorderType::DotDotDash:
+            val = "dotDotDash";
+            break;
+        case BorderType::Triple:
+            val = "triple";
+            break;
+        case BorderType::ThinThickSmall:
+            val = "thinThickSmallGap";
+            break;
+        case BorderType::ThickThinSmall:
+            val = "thickThinSmallGap";
+            break;
+        case BorderType::ThinThickThinSmall:
+            val = "thinThickThinSmallGap";
+            break;
+        case BorderType::ThinThickMedium:
+            val = "thinThickMediumGap";
+            break;
+        case BorderType::ThickThinMedium:
+            val = "thickThinMediumGap";
+            break;
+        case BorderType::ThinThickThinMedium:
+            val = "thinThickThinMediumGap";
+            break;
+        case BorderType::ThinThickLarge:
+            val = "thinThickLargeGap";
+            break;
+        case BorderType::ThickThinLarge:
+            val = "thickThinLargeGap";
+            break;
+        case BorderType::ThinThickThinLarge:
+            val = "thinThickThinLargeGap";
+            break;
+        case BorderType::Wave:
+            val = "wave";
+            break;
+        case BorderType::DoubleWave:
+            val = "doubleWave";
+            break;
+        case BorderType::DashSmall:
+            val = "dashSmallGap";
+            break;
+        case BorderType::ThreeDEmboss:
+            val = "threeDEmboss";
+            break;
+        case BorderType::ThreeDEngrave:
+            val = "threeDEngrave";
+            break;
+        case BorderType::Outset:
+            val = "outset";
+            break;
+        case BorderType::Inset:
+            val = "inset";
+            break;
+        case BorderType::Clear:
+            val = "clear";
+            break;
+        default:
+            val = "single";
+            break;
+    }
+    node.append_attribute("w:val").set_value(val);
+    node.append_attribute("w:sz").set_value(static_cast<int>(border.width * 8));
+    node.append_attribute("w:space").set_value(static_cast<int>(border.space));
+    if (border.color.is_auto()) {
+        node.append_attribute("w:color").set_value("auto");
+    } else {
+        node.append_attribute("w:color").set_value(border.color.to_hex_rgb().c_str());
+    }
+}
+
+static void serialize_borders_to_xml(pugi::xml_node parent,
+                                     const char* container_name,
+                                     const Borders& borders) {
+    if (!borders.has_visible() && !borders.explicitly_defined)
+        return;
+    auto container = parent.append_child(container_name);
+    serialize_border_to_xml(container, "w:top", borders.top, borders.top_defined);
+    serialize_border_to_xml(container, "w:left", borders.left, borders.left_defined);
+    serialize_border_to_xml(container, "w:bottom", borders.bottom, borders.bottom_defined);
+    serialize_border_to_xml(container, "w:right", borders.right, borders.right_defined);
+    serialize_border_to_xml(container, "w:insideH", borders.inside_horizontal, borders.inside_h_defined);
+    serialize_border_to_xml(container, "w:insideV", borders.inside_vertical, borders.inside_v_defined);
+}
+
+// ============================================================================
 // Public Sync Methods
 // ============================================================================
 
@@ -605,17 +834,56 @@ void Document::sync_sections_to_physical() {
     mark_modified("word/document.xml");
 }
 
-static void serialize_run_formatting_to_xml(pugi::xml_node run_xml, const Font& font) {
+static void serialize_run_formatting_to_xml(pugi::xml_node run_xml,
+                                              const Font& font,
+                                              pugi::xml_node preserved_rPr) {
     bool has_formatting = font.bold || font.italic || font.strikethrough ||
                           font.underline != UnderlineType::None || font.size > 0 ||
                           !font.name.empty() || font.color != Color::auto_color() ||
                           font.script_type != ScriptType::Normal || font.shading.has_fill() ||
                           font.spacing != 0 || font.scale != 100;
 
-    if (!has_formatting)
+    if (!has_formatting && !preserved_rPr)
         return;
 
-    auto rPr = run_xml.prepend_child("w:rPr");
+    auto rPr = run_xml.child("w:rPr");
+    if (!rPr) {
+        if (preserved_rPr) {
+            rPr = run_xml.prepend_copy(preserved_rPr);
+            // Strip whitespace text nodes from pretty-printed XML
+            for (pugi::xml_node child = rPr.first_child(); child;) {
+                pugi::xml_node next = child.next_sibling();
+                if (child.type() == pugi::node_pcdata || child.type() == pugi::node_cdata) {
+                    rPr.remove_child(child);
+                }
+                child = next;
+            }
+        } else {
+            rPr = run_xml.prepend_child("w:rPr");
+        }
+    }
+
+    // Remember whether the original had w:szCs before we remove managed children
+    bool original_had_szCs = preserved_rPr && preserved_rPr.child("w:szCs");
+
+    // Remove managed children that we will re-serialize from DOM font state.
+    // w:rFonts is handled separately: if font.name is empty we leave the
+    // original rFonts untouched so that attributes like w:hint survive.
+    const char* managed[] = {"w:b",     "w:i",     "w:strike", "w:u",
+                             "w:sz",    "w:szCs",  "w:color",  "w:vertAlign",
+                             "w:spacing", "w:w",     "w:shd"};
+    for (const char* name : managed) {
+        pugi::xml_node child = rPr.child(name);
+        if (child)
+            rPr.remove_child(child);
+    }
+    if (!font.name.empty()) {
+        pugi::xml_node child = rPr.child("w:rFonts");
+        if (child)
+            rPr.remove_child(child);
+    }
+
+    // Re-add managed children from current font state
     serialize_shading_to_xml(rPr, font.shading);
     if (font.bold) {
         rPr.append_child("w:b");
@@ -681,8 +949,10 @@ static void serialize_run_formatting_to_xml(pugi::xml_node run_xml, const Font& 
     if (font.size > 0) {
         auto sz = rPr.append_child("w:sz");
         sz.append_attribute("w:val").set_value(static_cast<int>(font.size * 2));
-        auto szCs = rPr.append_child("w:szCs");
-        szCs.append_attribute("w:val").set_value(static_cast<int>(font.size * 2));
+        if (original_had_szCs) {
+            auto szCs = rPr.append_child("w:szCs");
+            szCs.append_attribute("w:val").set_value(static_cast<int>(font.size * 2));
+        }
     }
     if (!font.name.empty()) {
         auto rFonts = rPr.append_child("w:rFonts");
@@ -718,7 +988,9 @@ static void serialize_run_to_xml(pugi::xml_node parent, Run* run) {
         return;
 
     auto run_xml = parent.append_child("w:r");
-    serialize_run_formatting_to_xml(run_xml, run->get_font());
+    serialize_run_formatting_to_xml(run_xml, run->get_font(),
+                                     run->has_preserved_rPr() ? run->get_preserved_rPr()
+                                                              : pugi::xml_node());
 
     const std::string& text = run->get_text();
     if (!text.empty()) {
@@ -926,7 +1198,9 @@ static void serialize_hyperlink_to_xml(pugi::xml_node parent, Hyperlink* link) {
     }
 
     auto run_xml = hyperlink_xml.append_child("w:r");
-    serialize_run_formatting_to_xml(run_xml, link->get_font());
+    serialize_run_formatting_to_xml(run_xml, link->get_font(),
+                                     link->has_preserved_rPr() ? link->get_preserved_rPr()
+                                                              : pugi::xml_node());
 
     std::string result = link->get_result();
     if (!result.empty()) {
@@ -1120,6 +1394,35 @@ static void serialize_paragraph_to_xml(pugi::xml_node parent, Paragraph* para) {
     serialize_paragraph_format_to_xml(para_xml, para->get_paragraph_format());
     serialize_list_format_to_xml(para_xml, para->get_list_format());
 
+    // Preserve unmanaged pPr children and attributes that ParagraphFormat doesn't track.
+    if (para->has_preserved_pPr()) {
+        pugi::xml_node preserved_pPr = para->get_preserved_pPr();
+        pugi::xml_node pPr = para_xml.child("w:pPr");
+        if (!pPr) {
+            para_xml.prepend_copy(preserved_pPr);
+        } else {
+            for (pugi::xml_node child = preserved_pPr.first_child(); child;
+                 child = child.next_sibling()) {
+                // Skip whitespace text nodes from pretty-printed XML
+                if (child.type() == pugi::node_pcdata || child.type() == pugi::node_cdata)
+                    continue;
+                const char* name = child.name();
+                pugi::xml_node existing = pPr.child(name);
+                if (!existing) {
+                    pPr.append_copy(child);
+                } else {
+                    // Merge any attributes that the DOM serialization didn't create
+                    for (pugi::xml_attribute attr = child.first_attribute(); attr;
+                         attr = attr.next_attribute()) {
+                        if (!existing.attribute(attr.name())) {
+                            existing.append_copy(attr);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     std::vector<int> comment_ids_for_reference;
     for (const auto& child : para->get_children()) {
         switch (child->node_type()) {
@@ -1192,7 +1495,8 @@ static void serialize_cell_to_xml(pugi::xml_node parent, Cell* cell) {
     // Cell properties
     const CellFormat& fmt = cell->get_cell_format();
     bool has_props = fmt.width != 0 || fmt.vertical_alignment != CellVerticalAlignment::Top ||
-                     fmt.horizontal_merge > 1 || fmt.vertical_merge;
+                     fmt.horizontal_merge > 1 || fmt.vertical_merge ||
+                     fmt.borders.has_visible() || fmt.shading.has_fill();
     if (has_props) {
         auto tcPr = tc.append_child("w:tcPr");
         if (fmt.width != 0) {
@@ -1225,6 +1529,8 @@ static void serialize_cell_to_xml(pugi::xml_node parent, Cell* cell) {
                 vMerge.append_attribute("w:val").set_value("restart");
             }
         }
+        serialize_borders_to_xml(tcPr, "w:tcBorders", fmt.borders);
+        serialize_shading_to_xml(tcPr, fmt.shading);
     }
 
     for (const auto& child : cell->get_children()) {
@@ -1278,7 +1584,28 @@ static void serialize_table_to_xml(pugi::xml_node parent, Table* table) {
 
     // Table properties
     const TableFormat& fmt = table->get_table_format();
-    auto tblPr = tbl.append_child("w:tblPr");
+    pugi::xml_node tblPr;
+    if (table->has_preserved_tblPr()) {
+        tblPr = tbl.append_copy(table->get_preserved_tblPr());
+        // Strip whitespace text nodes from pretty-printed XML
+        for (pugi::xml_node child = tblPr.first_child(); child;) {
+            pugi::xml_node next = child.next_sibling();
+            if (child.type() == pugi::node_pcdata || child.type() == pugi::node_cdata) {
+                tblPr.remove_child(child);
+            }
+            child = next;
+        }
+        // Remove managed children so we can re-serialize current DOM state
+        const char* managed[] = {"w:tblW", "w:tblLayout", "w:jc",
+                                 "w:tblInd", "w:tblStyle", "w:shd", "w:tblBorders"};
+        for (const char* name : managed) {
+            pugi::xml_node child = tblPr.child(name);
+            if (child)
+                tblPr.remove_child(child);
+        }
+    } else {
+        tblPr = tbl.append_child("w:tblPr");
+    }
 
     auto tblW = tblPr.append_child("w:tblW");
     if (fmt.auto_fit_behavior == AutoFitBehavior::AutoFitToWindow) {
@@ -1325,16 +1652,21 @@ static void serialize_table_to_xml(pugi::xml_node parent, Table* table) {
     }
 
     serialize_shading_to_xml(tblPr, fmt.shading);
+    serialize_borders_to_xml(tblPr, "w:tblBorders", fmt.borders);
 
-    auto rows = table->get_rows();
-    if (rows.get_count() > 0) {
-        // Table grid
-        auto tblGrid = tbl.append_child("w:tblGrid");
-        auto first_row = rows.first();
-        if (first_row) {
-            auto cells = first_row->get_cells();
-            for (size_t c = 0; c < cells.get_count(); ++c) {
-                tblGrid.append_child("w:gridCol");
+    // Table grid
+    if (table->has_preserved_tblGrid()) {
+        tbl.append_copy(table->get_preserved_tblGrid());
+    } else {
+        auto rows = table->get_rows();
+        if (rows.get_count() > 0) {
+            auto tblGrid = tbl.append_child("w:tblGrid");
+            auto first_row = rows.first();
+            if (first_row) {
+                auto cells = first_row->get_cells();
+                for (size_t c = 0; c < cells.get_count(); ++c) {
+                    tblGrid.append_child("w:gridCol");
+                }
             }
         }
     }
@@ -1617,10 +1949,26 @@ static void parse_run_format_from_xml(Inline* run, pugi::xml_node run_node) {
         return;
 
     auto rPr = run_node.child("w:rPr");
-    if (!rPr)
+    if (!rPr) {
+        // No explicit formatting: set font to empty so defaults aren't serialized
+        Font empty_font;
+        empty_font.size = 0;
+        empty_font.name = "";
+        empty_font.name_far_east = "";
+        empty_font.color = Color::auto_color();
+        run->set_font(empty_font);
         return;
+    }
+
+    // Preserve the original rPr for round-trip fidelity of unmanaged properties
+    run->preserve_rPr(rPr);
 
     Font font;
+    // Reset defaults to "not set" so only explicitly present properties are serialized
+    font.size = 0;
+    font.name = "";
+    font.name_far_east = "";
+    font.color = Color::auto_color();
     if (rPr.child("w:b"))
         font.bold = true;
     if (rPr.child("w:i"))
@@ -1718,8 +2066,12 @@ std::shared_ptr<Run> Document::parse_run_from_xml(pugi::xml_node run_node) {
     // Parse formatting
     parse_run_format_from_xml(run.get(), run_node);
 
-    // Preserve unknown children (e.g., w:drawing) for round-trip fidelity
+    // Preserve unknown children (e.g., w:drawing) for round-trip fidelity.
+    // Skip whitespace text nodes introduced by pretty-printed XML.
     for (auto child = run_node.first_child(); child; child = child.next_sibling()) {
+        if (child.type() == pugi::node_pcdata || child.type() == pugi::node_cdata) {
+            continue;
+        }
         const char* name = child.name();
         if (std::strcmp(name, "w:t") != 0 && std::strcmp(name, "w:rPr") != 0) {
             run->preserve_child(child);
@@ -1739,6 +2091,7 @@ std::shared_ptr<Paragraph> Document::parse_paragraph_from_xml(pugi::xml_node par
     // Parse paragraph properties
     auto pPr = para_node.child("w:pPr");
     if (pPr) {
+        para->preserve_pPr(pPr);
         auto jc = pPr.child("w:jc");
         if (jc) {
             const char* val = jc.attribute("w:val").value();
@@ -2124,6 +2477,7 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
     // Parse table properties
     auto tblPr = table_node.child("w:tblPr");
     if (tblPr) {
+        table->preserve_tblPr(tblPr);
         auto jc = tblPr.child("w:jc");
         if (jc) {
             const char* val = jc.attribute("w:val").value();
@@ -2142,6 +2496,7 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
             table->set_style(tblStyle.attribute("w:val").value());
         }
         parse_shading_from_xml(tblPr.child("w:shd"), table->get_table_format().shading);
+        parse_borders_from_xml(tblPr.child("w:tblBorders"), table->get_table_format().borders);
         auto tblLayout = tblPr.child("w:tblLayout");
         if (tblLayout) {
             const char* layout_type = tblLayout.attribute("w:type").value();
@@ -2166,6 +2521,12 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
                 table->get_table_format().allow_auto_fit = true;
             }
         }
+    }
+
+    // Preserve table grid for round-trip fidelity
+    auto tblGrid = table_node.child("w:tblGrid");
+    if (tblGrid) {
+        table->preserve_tblGrid(tblGrid);
     }
 
     for (auto tr = table_node.child("w:tr"); tr; tr = tr.next_sibling("w:tr")) {
@@ -2224,6 +2585,8 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
                     cell->get_cell_format().vertical_merge_start =
                         (std::strcmp(vmerge_val, "restart") == 0);
                 }
+                parse_shading_from_xml(tcPr.child("w:shd"), cell->get_cell_format().shading);
+                parse_borders_from_xml(tcPr.child("w:tcBorders"), cell->get_cell_format().borders);
             }
 
             // Parse cell content
@@ -2384,6 +2747,12 @@ static void parse_font_from_xml(pugi::xml_node rPr, Font& font) {
     if (!rPr)
         return;
 
+    // Reset defaults to "not set" so only explicitly present properties are serialized
+    font.size = 0;
+    font.name = "";
+    font.name_far_east = "";
+    font.color = Color::auto_color();
+
     if (rPr.child("w:b"))
         font.bold = true;
     if (rPr.child("w:i"))
@@ -2516,54 +2885,141 @@ static void parse_style_paragraph_format_from_xml(pugi::xml_node pPr, ParagraphF
 }
 
 static void serialize_style_to_xml(pugi::xml_node styles_root, const Style& style) {
-    auto style_xml = styles_root.append_child("w:style");
-    style_xml.append_attribute("w:type").set_value(style_type_to_string(style.get_type()));
-    style_xml.append_attribute("w:styleId").set_value(style.get_style_id().c_str());
+    pugi::xml_node style_xml;
 
-    if (style.get_is_default()) {
-        style_xml.append_attribute("w:default").set_value("1");
-    }
-    if (!style.get_is_built_in()) {
-        style_xml.append_attribute("w:customStyle").set_value("1");
+    if (style.has_preserved_style_xml()) {
+        // Start from a deep copy of the original style XML for maximum fidelity
+        style_xml = styles_root.append_copy(style.get_preserved_style_xml());
+
+        // Overlay DOM-managed attributes
+        style_xml.attribute("w:type").set_value(style_type_to_string(style.get_type()));
+        style_xml.attribute("w:styleId").set_value(style.get_style_id().c_str());
+
+        if (style.get_is_default()) {
+            if (!style_xml.attribute("w:default")) {
+                style_xml.append_attribute("w:default").set_value("1");
+            }
+        } else {
+            style_xml.remove_attribute("w:default");
+        }
+
+        if (!style.get_is_built_in()) {
+            if (!style_xml.attribute("w:customStyle")) {
+                style_xml.append_attribute("w:customStyle").set_value("1");
+            }
+        } else {
+            style_xml.remove_attribute("w:customStyle");
+        }
+
+        // Update name
+        auto name_node = style_xml.child("w:name");
+        if (!style.get_name().empty()) {
+            if (!name_node) {
+                name_node = style_xml.prepend_child("w:name");
+            }
+            name_node.attribute("w:val").set_value(style.get_name().c_str());
+        } else if (name_node) {
+            style_xml.remove_child(name_node);
+        }
+
+        // Update basedOn
+        auto basedOn_node = style_xml.child("w:basedOn");
+        if (!style.get_base_style_name().empty()) {
+            if (!basedOn_node) {
+                basedOn_node = style_xml.prepend_child("w:basedOn");
+            }
+            basedOn_node.attribute("w:val").set_value(style.get_base_style_name().c_str());
+        } else if (basedOn_node) {
+            style_xml.remove_child(basedOn_node);
+        }
+    } else {
+        // No preserved XML: build from scratch (programmatically created style)
+        style_xml = styles_root.append_child("w:style");
+        style_xml.append_attribute("w:type").set_value(style_type_to_string(style.get_type()));
+        style_xml.append_attribute("w:styleId").set_value(style.get_style_id().c_str());
+
+        if (style.get_is_default()) {
+            style_xml.append_attribute("w:default").set_value("1");
+        }
+        if (!style.get_is_built_in()) {
+            style_xml.append_attribute("w:customStyle").set_value("1");
+        }
+
+        if (!style.get_name().empty()) {
+            auto name = style_xml.append_child("w:name");
+            name.append_attribute("w:val").set_value(style.get_name().c_str());
+        }
+
+        if (!style.get_base_style_name().empty()) {
+            auto basedOn = style_xml.append_child("w:basedOn");
+            basedOn.append_attribute("w:val").set_value(style.get_base_style_name().c_str());
+        }
     }
 
-    if (!style.get_name().empty()) {
-        auto name = style_xml.append_child("w:name");
-        name.append_attribute("w:val").set_value(style.get_name().c_str());
-    }
-
-    if (!style.get_base_style_name().empty()) {
-        auto basedOn = style_xml.append_child("w:basedOn");
-        basedOn.append_attribute("w:val").set_value(style.get_base_style_name().c_str());
-    }
-
-    // Serialize font formatting as w:rPr
+    // Determine if DOM has explicit font/paragraph formatting
     const Font& font = style.get_font();
     bool has_font_formatting = font.bold || font.italic || font.strikethrough ||
                                font.underline != UnderlineType::None || font.size > 0 ||
                                !font.name.empty() || font.color != Color::auto_color() ||
                                font.script_type != ScriptType::Normal;
 
-    if (has_font_formatting) {
-        auto run_xml = style_xml.append_child("w:r");
-        serialize_run_formatting_to_xml(run_xml, font);
-        // Move w:rPr from w:r to directly under w:style
-        auto rPr = run_xml.child("w:rPr");
-        if (rPr) {
-            style_xml.insert_move_after(rPr, style_xml.last_child());
-            run_xml.parent().remove_child(run_xml);
-        }
-    }
-
-    // Serialize paragraph formatting as w:pPr (for paragraph and table styles)
     const ParagraphFormat& para_format = style.get_paragraph_format();
     bool has_para_format = para_format.alignment != ParagraphAlignment::Left ||
                            para_format.left_indent != 0 || para_format.right_indent != 0 ||
                            para_format.first_line_indent != 0 || para_format.space_before != 0 ||
                            para_format.space_after != 0 || para_format.line_spacing != 1.15;
 
+    // Merge w:rPr: preserve unknown children, overlay managed ones
+    auto rPr = style_xml.child("w:rPr");
+    if (has_font_formatting) {
+        if (!rPr) {
+            rPr = style_xml.append_child("w:rPr");
+        }
+        // Check if original rPr had szCs before we remove anything
+        bool original_had_szCs = rPr.child("w:szCs") != nullptr;
+
+        // Remove managed children that we will re-serialize
+        static const char* managed_rPr[] = {"w:b",   "w:i",     "w:strike", "w:u",
+                                              "w:sz",  "w:szCs",  "w:rFonts", "w:color",
+                                              "w:vertAlign", "w:spacing", "w:w", "w:shd"};
+        for (const char* tag : managed_rPr) {
+            for (auto child = rPr.child(tag); child; child = rPr.child(tag)) {
+                rPr.remove_child(child);
+            }
+        }
+        // Serialize current DOM font formatting into the existing rPr
+        auto run_xml = rPr.parent().append_child("w:r");
+        serialize_run_formatting_to_xml(run_xml, font, pugi::xml_node());
+        auto new_rPr = run_xml.child("w:rPr");
+        if (new_rPr) {
+            // Move all children from new_rPr into the existing rPr
+            for (auto child = new_rPr.first_child(); child;) {
+                auto next = child.next_sibling();
+                rPr.append_move(child);
+                child = next;
+            }
+            run_xml.parent().remove_child(run_xml);
+        }
+        // Restore szCs if the original had it and we have a font size
+        if (original_had_szCs && font.size > 0) {
+            auto szCs = rPr.append_child("w:szCs");
+            szCs.append_attribute("w:val").set_value(static_cast<int>(font.size * 2));
+        }
+    }
+
+    // Merge w:pPr: preserve unknown children, overlay managed ones
+    auto pPr = style_xml.child("w:pPr");
     if (has_para_format) {
-        auto pPr = style_xml.append_child("w:pPr");
+        if (!pPr) {
+            pPr = style_xml.append_child("w:pPr");
+        }
+        // Remove managed children that we will re-serialize
+        static const char* managed_pPr[] = {"w:jc", "w:ind", "w:spacing", "w:shd", "w:dropCap"};
+        for (const char* tag : managed_pPr) {
+            for (auto child = pPr.child(tag); child; child = pPr.child(tag)) {
+                pPr.remove_child(child);
+            }
+        }
         serialize_style_paragraph_format_to_xml(pPr, para_format);
     }
 }
@@ -2595,6 +3051,14 @@ static std::shared_ptr<Style> parse_style_from_xml(pugi::xml_node style_node, Do
         Font font;
         parse_font_from_xml(rPr, font);
         style->set_font(font);
+    } else {
+        // No explicit rPr: set font to empty so defaults aren't serialized
+        Font empty_font;
+        empty_font.size = 0;
+        empty_font.name = "";
+        empty_font.name_far_east = "";
+        empty_font.color = Color::auto_color();
+        style->set_font(empty_font);
     }
 
     auto pPr = style_node.child("w:pPr");
@@ -2602,7 +3066,13 @@ static std::shared_ptr<Style> parse_style_from_xml(pugi::xml_node style_node, Do
         ParagraphFormat format;
         parse_style_paragraph_format_from_xml(pPr, format);
         style->set_paragraph_format(format);
+    } else {
+        // No explicit pPr: set paragraph format to defaults so they aren't serialized
+        style->set_paragraph_format(ParagraphFormat());
     }
+
+    // Preserve full original style XML for round-trip fidelity
+    style->preserve_style_xml(style_node);
 
     return style;
 }
@@ -2620,10 +3090,22 @@ void Document::sync_styles_to_physical() {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml");
     }
 
-    styles_doc->reset();
-    auto root = styles_doc->append_child("w:styles");
-    root.append_attribute("xmlns:w").set_value(
-        "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+    auto root = styles_doc->child("w:styles");
+    if (!root) {
+        styles_doc->reset();
+        root = styles_doc->append_child("w:styles");
+        root.append_attribute("xmlns:w").set_value(
+            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+    }
+
+    // Remove only w:style nodes, preserve docDefaults, latentStyles, etc.
+    for (auto child = root.first_child(); child;) {
+        auto next = child.next_sibling();
+        if (std::strcmp(child.name(), "w:style") == 0) {
+            root.remove_child(child);
+        }
+        child = next;
+    }
 
     for (const auto& style : styles()) {
         serialize_style_to_xml(root, *style);

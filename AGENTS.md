@@ -454,6 +454,18 @@ cdocx::BookmarkReplacer replacer(&doc);
 replacer.replace_text("bookmark_name", "replacement text");
 ```
 
+### 8.1 BookmarkInserter Class (`bookmark_inserter.h`)
+**Status: Implemented (v0.7.0).** Programmatically wraps existing text with bookmark markers. Handles text that spans multiple adjacent `<w:r>` runs within a single paragraph.
+
+```cpp
+cdocx::BookmarkInserter inserter(&doc);
+inserter.insert("COMPANY", "Acme Inc.");          // first occurrence only
+inserter.insert_all("DATE", "2024-01-15");        // all occurrences
+inserter.insert_batch({{"NAME", "John"}, {"AGE", "30"}});
+```
+
+**Important:** Because `BookmarkInserter` manipulates the physical XML tree directly, callers must invoke `doc.sync_from_physical_tree()` before `doc.save()` if the DOM and physical tree are out of sync.
+
 ### 9. DocumentBuilder (`advanced.h`)
 The actual implementation is a **cursor-based builder** with working:
 - Cursor movement (`move_to_document_start`, `move_to_paragraph`)

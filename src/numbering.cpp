@@ -190,6 +190,7 @@ AbstractNumberingId NumberingManager::add_abstract_definition(
     AbstractNumberingDefinition mutableDef = def;
     mutableDef.id = id;
     abstractDefinitions_[id] = mutableDef;
+    modified_ = true;
     return id;
 }
 
@@ -198,6 +199,7 @@ NumberingId NumberingManager::add_numbering_definition(const NumberingDefinition
     NumberingDefinition mutableDef = def;
     mutableDef.id = id;
     numDefinitions_[id] = mutableDef;
+    modified_ = true;
     return id;
 }
 
@@ -259,6 +261,7 @@ bool NumberingManager::override_level(NumberingId numId,
     }
 
     it->second.levelOverrides[level] = levelDef;
+    modified_ = true;
     return true;
 }
 
@@ -335,6 +338,8 @@ void NumberingManager::load_from_xml(pugi::xml_node numbering_root) {
 
         numDefinitions_[def.id] = def;
     }
+
+    modified_ = false;
 }
 
 void NumberingManager::save_to_xml(pugi::xml_node numbering_root) {
@@ -424,6 +429,7 @@ void NumberingManager::clear() {
     numDefinitions_.clear();
     nextAbstractId_ = 0;
     nextNumId_ = 1;
+    modified_ = false;
 }
 
 pugi::xml_document* NumberingManager::get_numbering_xml() {

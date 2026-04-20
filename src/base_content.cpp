@@ -231,6 +231,9 @@ void Run::accept(DocumentVisitor* visitor) {
 std::shared_ptr<Node> Run::clone(bool deep) const {
     auto cloned = std::make_shared<Run>(get_document(), text_);
     cloned->font_ = font_;
+    if (preserved_rPr_.first_child()) {
+        cloned->preserved_rPr_.append_copy(preserved_rPr_.first_child());
+    }
     if (preserved_children_.first_child()) {
         for (auto child = preserved_children_.first_child(); child; child = child.next_sibling()) {
             cloned->preserved_children_.append_copy(child);

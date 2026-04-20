@@ -55,6 +55,8 @@ class Inline : public Node {
   public:
     Inline();
     explicit Inline(Document* doc);
+    Inline(const Inline& other);
+    Inline& operator=(const Inline& other);
 
     // Node overrides
     bool is_composite() const override { return false; }
@@ -79,8 +81,14 @@ class Inline : public Node {
     Inline& set_superscript();
     Inline& set_subscript();
 
+    // Preserve original rPr for round-trip fidelity of unmanaged properties
+    void preserve_rPr(pugi::xml_node rPr);
+    pugi::xml_node get_preserved_rPr() const;
+    bool has_preserved_rPr() const;
+
   protected:
     Font font_;
+    pugi::xml_document preserved_rPr_;
 };
 
 // ============================================================================

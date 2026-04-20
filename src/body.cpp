@@ -140,12 +140,45 @@ Inline::Inline(Document* doc) {
     set_document(doc);
 }
 
+Inline::Inline(const Inline& other) : Node(other), font_(other.font_) {
+    if (other.preserved_rPr_.first_child()) {
+        preserved_rPr_.append_copy(other.preserved_rPr_.first_child());
+    }
+}
+
+Inline& Inline::operator=(const Inline& other) {
+    if (this != &other) {
+        Node::operator=(other);
+        font_ = other.font_;
+        preserved_rPr_.reset();
+        if (other.preserved_rPr_.first_child()) {
+            preserved_rPr_.append_copy(other.preserved_rPr_.first_child());
+        }
+    }
+    return *this;
+}
+
 std::shared_ptr<Paragraph> Inline::get_parent_paragraph() const {
     Paragraph* para = get_ancestor<Paragraph>();
     if (para) {
         return std::static_pointer_cast<Paragraph>(para->shared_from_this());
     }
     return nullptr;
+}
+
+void Inline::preserve_rPr(pugi::xml_node rPr) {
+    if (!rPr)
+        return;
+    preserved_rPr_.reset();
+    preserved_rPr_.append_copy(rPr);
+}
+
+pugi::xml_node Inline::get_preserved_rPr() const {
+    return preserved_rPr_.first_child();
+}
+
+bool Inline::has_preserved_rPr() const {
+    return preserved_rPr_.first_child() != nullptr;
 }
 
 Inline& Inline::set_bold(bool value) {

@@ -259,6 +259,7 @@ LoadResult Document::open_with_config(const std::string& filepath, const LoadCon
     if (is_open_) {
         sync_from_physical_tree();
         sync_styles_from_physical();
+        load_numbering();
     }
 
     return result;
@@ -1443,7 +1444,8 @@ bool Document::load_tree_from_zip() {
             node->xml_doc = std::make_shared<pugi::xml_document>();
 
             pugi::xml_parse_result result = node->xml_doc->load_buffer(
-                data.data(), data.size(), pugi::parse_default | pugi::parse_declaration);
+                data.data(), data.size(),
+                pugi::parse_default | pugi::parse_declaration | pugi::parse_ws_pcdata);
 
             if (!result) {
                 // XML parse failed, treat as binary
@@ -1560,7 +1562,8 @@ LoadResult Document::load_tree_with_result() {
             node->xml_doc = std::make_shared<pugi::xml_document>();
 
             pugi::xml_parse_result parse_result = node->xml_doc->load_buffer(
-                data.data(), data.size(), pugi::parse_default | pugi::parse_declaration);
+                data.data(), data.size(),
+                pugi::parse_default | pugi::parse_declaration | pugi::parse_ws_pcdata);
 
             if (parse_result) {
                 last_load_stats_.xml_files++;
@@ -2385,6 +2388,18 @@ void Document::load_numbering() {
 void Document::save_numbering() {
     if (!numbering_manager_)
         return;
+
+    // If the manager has no definitions, do not overwrite an existing
+    // numbering.xml that may contain data loaded from the original document.
+    if (!numbering_manager_->has_definitions()) {
+        return;
+    }
+
+    // If definitions were loaded from XML but never modified, preserve the
+    // original XML to avoid losing rich formatting not tracked by the manager.
+    if (!numbering_manager_->is_modified()) {
+        return;
+    }
 
     pugi::xml_document* doc = nullptr;
     if (has_xml_part("word/numbering.xml")) {

@@ -343,9 +343,45 @@ void Table::accept(DocumentVisitor* visitor) {
     }
 }
 
+void Table::preserve_tblPr(pugi::xml_node tblPr) {
+    if (!tblPr)
+        return;
+    preserved_tblPr_.reset();
+    preserved_tblPr_.append_copy(tblPr);
+}
+
+pugi::xml_node Table::get_preserved_tblPr() const {
+    return preserved_tblPr_.first_child();
+}
+
+bool Table::has_preserved_tblPr() const {
+    return preserved_tblPr_.first_child() != nullptr;
+}
+
+void Table::preserve_tblGrid(pugi::xml_node tblGrid) {
+    if (!tblGrid)
+        return;
+    preserved_tblGrid_.reset();
+    preserved_tblGrid_.append_copy(tblGrid);
+}
+
+pugi::xml_node Table::get_preserved_tblGrid() const {
+    return preserved_tblGrid_.first_child();
+}
+
+bool Table::has_preserved_tblGrid() const {
+    return preserved_tblGrid_.first_child() != nullptr;
+}
+
 std::shared_ptr<Node> Table::clone(bool deep) const {
     auto cloned = std::make_shared<Table>(get_document());
     cloned->set_table_format(format_);
+    if (has_preserved_tblPr()) {
+        cloned->preserve_tblPr(get_preserved_tblPr());
+    }
+    if (has_preserved_tblGrid()) {
+        cloned->preserve_tblGrid(get_preserved_tblGrid());
+    }
     if (deep) {
         for (const auto& child : get_children()) {
             if (auto child_clone = child->clone(deep)) {

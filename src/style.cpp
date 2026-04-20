@@ -16,6 +16,21 @@ void Style::remove() {
     }
 }
 
+void Style::preserve_style_xml(pugi::xml_node style_node) {
+    if (!style_node)
+        return;
+    preserved_style_xml_.reset();
+    preserved_style_xml_.append_copy(style_node);
+}
+
+pugi::xml_node Style::get_preserved_style_xml() const {
+    return preserved_style_xml_.first_child();
+}
+
+bool Style::has_preserved_style_xml() const {
+    return preserved_style_xml_.first_child();
+}
+
 // ---------------------------------------------------------------------------
 // StyleCollection
 // ---------------------------------------------------------------------------

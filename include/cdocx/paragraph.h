@@ -45,6 +45,8 @@ class Paragraph : public CompositeNode {
     Paragraph();
     explicit Paragraph(Document* doc);
     Paragraph(pugi::xml_node parent_node, pugi::xml_node current_node);
+    Paragraph(const Paragraph& other);
+    Paragraph& operator=(const Paragraph& other);
 
     // Node overrides
     NodeType node_type() const override { return NodeType::Paragraph; }
@@ -161,6 +163,11 @@ class Paragraph : public CompositeNode {
     Paragraph& set_keep_lines(bool value);
     Paragraph& set_page_break_before(bool value);
 
+    // Preserve raw pPr for round-trip fidelity of unmanaged properties (e.g., w:rPr)
+    void preserve_pPr(pugi::xml_node pPr);
+    pugi::xml_node get_preserved_pPr() const;
+    bool has_preserved_pPr() const;
+
   private:
     ParagraphFormat format_;
     ListFormat list_format_;
@@ -169,6 +176,8 @@ class Paragraph : public CompositeNode {
     pugi::xml_node parent_;
     pugi::xml_node current_;
     Run run_;
+
+    pugi::xml_document preserved_pPr_;
 };
 
 // ============================================================================
