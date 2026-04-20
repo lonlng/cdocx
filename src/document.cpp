@@ -41,6 +41,17 @@ extern "C" {
 
 namespace cdocx {
 
+namespace {
+
+pugi::xml_node get_settings_root(Document* doc) {
+    pugi::xml_document* settings = doc->get_settings();
+    if (!settings)
+        return pugi::xml_node();
+    return settings->child("w:settings");
+}
+
+}  // namespace
+
 // ============================================================================
 // Constructor / Destructor
 // ============================================================================
@@ -330,11 +341,7 @@ void Document::save(const std::string& filepath) {
 }
 
 void Document::protect(ProtectionType type, const std::string& password) {
-    pugi::xml_document* settings = get_settings();
-    if (!settings)
-        return;
-
-    pugi::xml_node root = settings->child("w:settings");
+    pugi::xml_node root = get_settings_root(this);
     if (!root)
         return;
 
@@ -384,11 +391,7 @@ void Document::protect(ProtectionType type, const std::string& password) {
 }
 
 void Document::unprotect() {
-    pugi::xml_document* settings = get_settings();
-    if (!settings)
-        return;
-
-    pugi::xml_node root = settings->child("w:settings");
+    pugi::xml_node root = get_settings_root(this);
     if (!root)
         return;
 
@@ -397,11 +400,7 @@ void Document::unprotect() {
 }
 
 bool Document::is_protected() const {
-    pugi::xml_document* settings = const_cast<Document*>(this)->get_settings();
-    if (!settings)
-        return false;
-
-    pugi::xml_node root = settings->child("w:settings");
+    pugi::xml_node root = get_settings_root(const_cast<Document*>(this));
     if (!root)
         return false;
 
@@ -418,13 +417,9 @@ Watermark Document::watermark() {
 }
 
 double Document::get_default_tab_stop() const {
-    pugi::xml_document* settings = const_cast<Document*>(this)->get_settings();
-    if (!settings)
-        return 36.0;  // Word default: 0.5 inch = 36 points
-
-    pugi::xml_node root = settings->child("w:settings");
+    pugi::xml_node root = get_settings_root(const_cast<Document*>(this));
     if (!root)
-        return 36.0;
+        return 36.0;  // Word default: 0.5 inch = 36 points
 
     pugi::xml_node defaultTabStop = root.child("w:defaultTabStop");
     if (!defaultTabStop)
@@ -435,11 +430,7 @@ double Document::get_default_tab_stop() const {
 }
 
 void Document::set_default_tab_stop(double points) {
-    pugi::xml_document* settings = get_settings();
-    if (!settings)
-        return;
-
-    pugi::xml_node root = settings->child("w:settings");
+    pugi::xml_node root = get_settings_root(this);
     if (!root)
         return;
 
@@ -856,10 +847,10 @@ pugi::xml_document* Document::get_footer(int index) {
     return get_xml_part(name);
 }
 
-std::vector<std::string> Document::get_header_names() const {
+static std::vector<std::string> collect_part_names(const DocxTree& tree, const char* part_prefix) {
     std::vector<std::string> names;
-    tree_.iterate_files([&names](const std::shared_ptr<DocxTreeNode>& node) {
-        if (node->full_path.find("word/header") != std::string::npos &&
+    tree.iterate_files([&names, part_prefix](const std::shared_ptr<DocxTreeNode>& node) {
+        if (node->full_path.find(part_prefix) != std::string::npos &&
             node->full_path.find(".xml") != std::string::npos) {
             names.push_back(node->full_path);
         }
@@ -867,15 +858,12 @@ std::vector<std::string> Document::get_header_names() const {
     return names;
 }
 
+std::vector<std::string> Document::get_header_names() const {
+    return collect_part_names(tree_, "word/header");
+}
+
 std::vector<std::string> Document::get_footer_names() const {
-    std::vector<std::string> names;
-    tree_.iterate_files([&names](const std::shared_ptr<DocxTreeNode>& node) {
-        if (node->full_path.find("word/footer") != std::string::npos &&
-            node->full_path.find(".xml") != std::string::npos) {
-            names.push_back(node->full_path);
-        }
-    });
-    return names;
+    return collect_part_names(tree_, "word/footer");
 }
 
 int Document::get_next_header_number() {
@@ -1444,7 +1432,8 @@ bool Document::load_tree_from_zip() {
             node->xml_doc = std::make_shared<pugi::xml_document>();
 
             pugi::xml_parse_result result = node->xml_doc->load_buffer(
-                data.data(), data.size(),
+                data.data(),
+                data.size(),
                 pugi::parse_default | pugi::parse_declaration | pugi::parse_ws_pcdata);
 
             if (!result) {
@@ -1562,7 +1551,8 @@ LoadResult Document::load_tree_with_result() {
             node->xml_doc = std::make_shared<pugi::xml_document>();
 
             pugi::xml_parse_result parse_result = node->xml_doc->load_buffer(
-                data.data(), data.size(),
+                data.data(),
+                data.size(),
                 pugi::parse_default | pugi::parse_declaration | pugi::parse_ws_pcdata);
 
             if (parse_result) {

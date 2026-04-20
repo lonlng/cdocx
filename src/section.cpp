@@ -52,6 +52,52 @@ static void remove_ref_from_node(pugi::xml_node sectPr, HeaderFooterType type, b
     }
 }
 
+static bool has_header_footer(const std::vector<std::shared_ptr<HeaderFooter>>& collection,
+                              HeaderFooterType type) {
+    for (const auto& hf : collection) {
+        if (hf && hf->get_header_footer_type() == type)
+            return true;
+    }
+    return false;
+}
+
+static std::shared_ptr<HeaderFooter> get_header_footer(
+    const std::vector<std::shared_ptr<HeaderFooter>>& collection, HeaderFooterType type) {
+    for (const auto& hf : collection) {
+        if (hf && hf->get_header_footer_type() == type)
+            return hf;
+    }
+    return nullptr;
+}
+
+static std::vector<std::shared_ptr<HeaderFooter>> get_all_header_footer(
+    const std::vector<std::shared_ptr<HeaderFooter>>& collection) {
+    std::vector<std::shared_ptr<HeaderFooter>> result;
+    for (const auto& hf : collection) {
+        if (hf)
+            result.push_back(hf);
+    }
+    return result;
+}
+
+static void remove_header_footer(HeaderFooterType type,
+                                 std::vector<std::shared_ptr<HeaderFooter>>& collection,
+                                 std::vector<HeaderFooterRef>& refs,
+                                 pugi::xml_node sectPr,
+                                 bool is_header) {
+    collection.erase(std::remove_if(collection.begin(),
+                                    collection.end(),
+                                    [type](const std::shared_ptr<HeaderFooter>& hf) {
+                                        return hf && hf->get_header_footer_type() == type;
+                                    }),
+                     collection.end());
+    remove_ref_from_node(sectPr, type, is_header);
+    refs.erase(
+        std::remove_if(
+            refs.begin(), refs.end(), [type](const HeaderFooterRef& r) { return r.type == type; }),
+        refs.end());
+}
+
 // ============================================================================
 // Section Implementation
 // ============================================================================
@@ -266,12 +312,8 @@ std::shared_ptr<HeaderFooter> Section::add_header(HeaderFooterType type) {
         return nullptr;
 
     // Check if already exists
-    if (has_header(type)) {
-        // Return existing header
-        for (auto& h : headers_) {
-            if (h && h->get_header_footer_type() == type)
-                return h;
-        }
+    if (auto existing = get_header_footer(headers_, type)) {
+        return existing;
     }
 
     // Generate unique part name
@@ -328,12 +370,8 @@ std::shared_ptr<HeaderFooter> Section::add_footer(HeaderFooterType type) {
         return nullptr;
 
     // Check if already exists
-    if (has_footer(type)) {
-        // Return existing footer
-        for (auto& f : footers_) {
-            if (f && f->get_header_footer_type() == type)
-                return f;
-        }
+    if (auto existing = get_header_footer(footers_, type)) {
+        return existing;
     }
 
     // Generate unique part name
@@ -386,83 +424,35 @@ std::shared_ptr<HeaderFooter> Section::add_footer(HeaderFooterType type) {
 }
 
 std::shared_ptr<HeaderFooter> Section::get_header(HeaderFooterType type) const {
-    for (const auto& h : headers_) {
-        if (h && h->get_header_footer_type() == type) {
-            return h;
-        }
-    }
-    return nullptr;
+    return get_header_footer(headers_, type);
 }
 
 std::shared_ptr<HeaderFooter> Section::get_footer(HeaderFooterType type) const {
-    for (const auto& f : footers_) {
-        if (f && f->get_header_footer_type() == type) {
-            return f;
-        }
-    }
-    return nullptr;
+    return get_header_footer(footers_, type);
 }
 
 bool Section::has_header(HeaderFooterType type) const {
-    for (const auto& h : headers_) {
-        if (h && h->get_header_footer_type() == type)
-            return true;
-    }
-    return false;
+    return has_header_footer(headers_, type);
 }
 
 bool Section::has_footer(HeaderFooterType type) const {
-    for (const auto& f : footers_) {
-        if (f && f->get_header_footer_type() == type)
-            return true;
-    }
-    return false;
+    return has_header_footer(footers_, type);
 }
 
 void Section::remove_header(HeaderFooterType type) {
-    headers_.erase(std::remove_if(headers_.begin(),
-                                  headers_.end(),
-                                  [type](const std::shared_ptr<HeaderFooter>& h) {
-                                      return h && h->get_header_footer_type() == type;
-                                  }),
-                   headers_.end());
-    remove_ref_from_node(sectPr_node_, type, true);
-    header_refs_.erase(std::remove_if(header_refs_.begin(),
-                                      header_refs_.end(),
-                                      [type](const HeaderFooterRef& r) { return r.type == type; }),
-                       header_refs_.end());
+    remove_header_footer(type, headers_, header_refs_, sectPr_node_, true);
 }
 
 void Section::remove_footer(HeaderFooterType type) {
-    footers_.erase(std::remove_if(footers_.begin(),
-                                  footers_.end(),
-                                  [type](const std::shared_ptr<HeaderFooter>& f) {
-                                      return f && f->get_header_footer_type() == type;
-                                  }),
-                   footers_.end());
-    remove_ref_from_node(sectPr_node_, type, false);
-    footer_refs_.erase(std::remove_if(footer_refs_.begin(),
-                                      footer_refs_.end(),
-                                      [type](const HeaderFooterRef& r) { return r.type == type; }),
-                       footer_refs_.end());
+    remove_header_footer(type, footers_, footer_refs_, sectPr_node_, false);
 }
 
 std::vector<std::shared_ptr<HeaderFooter>> Section::get_all_headers() const {
-    std::vector<std::shared_ptr<HeaderFooter>> result;
-    for (const auto& h : headers_) {
-        if (h)
-            result.push_back(h);
-    }
-    return result;
+    return get_all_header_footer(headers_);
 }
 
 std::vector<std::shared_ptr<HeaderFooter>> Section::get_all_footers() const {
-    std::vector<std::shared_ptr<HeaderFooter>> result;
-    for (const auto& f : footers_) {
-        if (f)
-            result.push_back(f);
-    }
-    return result;
+    return get_all_header_footer(footers_);
 }
 
 void Section::apply_properties() {

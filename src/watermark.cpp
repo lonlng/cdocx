@@ -59,8 +59,9 @@ static pugi::xml_node get_first_header_xml(Document* doc) {
 }
 
 static void remove_watermark_nodes(pugi::xml_node header) {
-    if (!header)
+    if (!header) {
         return;
+    }
     for (pugi::xml_node para = header.child("w:p"); para;) {
         bool is_watermark = false;
         for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
@@ -75,22 +76,24 @@ static void remove_watermark_nodes(pugi::xml_node header) {
                     }
                 }
             }
-            if (is_watermark)
+            if (is_watermark) {
                 break;
+            }
             for (pugi::xml_node drawing = run.child("w:drawing"); drawing;
                  drawing = drawing.next_sibling("w:drawing")) {
-                pugi::xml_node docPr =
+                pugi::xml_node doc_pr =
                     drawing.child("wp:anchor").child("a:graphic").child("a:graphicData");
-                if (docPr) {
-                    pugi::xml_attribute name_attr = docPr.attribute("uri");
+                if (doc_pr) {
+                    pugi::xml_attribute name_attr = doc_pr.attribute("uri");
                     if (name_attr && std::strstr(name_attr.value(), "watermark") != nullptr) {
                         is_watermark = true;
                         break;
                     }
                 }
             }
-            if (is_watermark)
+            if (is_watermark) {
                 break;
+            }
         }
         pugi::xml_node next_para = para.next_sibling("w:p");
         if (is_watermark) {
@@ -332,11 +335,32 @@ void Watermark::insert_image_watermark_into_header(const std::string& image_path
     shape.append_attribute("o:allowincell").set_value("f");
     shape.append_attribute("stroked").set_value("f");
 
+    // Apply scale if explicitly set (> 0)
+    if (options.scale > 0) {
+        int width_pt = static_cast<int>(400.0 * options.scale / 100.0);
+        int height_pt = static_cast<int>(300.0 * options.scale / 100.0);
+        std::string style =
+            "position:absolute;margin-left:0;margin-top:0;width:" + std::to_string(width_pt) +
+            "pt;height:" + std::to_string(height_pt) +
+            "pt;z-index:-251658752;"
+            "mso-position-horizontal:center;mso-position-horizontal-relative:margin;"
+            "mso-position-vertical:center;mso-position-vertical-relative:margin";
+        shape.attribute("style").set_value(style.c_str());
+    }
+
+    // Apply washout effect (grayscale + reduced contrast)
+    if (options.washout) {
+        auto fill = shape.append_child("v:fill");
+        fill.append_attribute("type").set_value("frame");
+        fill.append_attribute("opacity").set_value("0.5");
+        auto image = shape.append_child("v:image");
+        image.append_attribute("o:title").set_value("Watermark");
+        image.append_attribute("cropleft").set_value("f");
+    }
+
     auto imagedata = shape.append_child("v:imagedata");
     imagedata.append_attribute("r:id").set_value(rel_id.c_str());
     imagedata.append_attribute("o:title").set_value("Watermark");
-
-    (void)options;
 }
 
 void Watermark::clear_watermark_from_header() {

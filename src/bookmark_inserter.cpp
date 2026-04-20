@@ -263,13 +263,11 @@ bool BookmarkInserter::insert_in_paragraph(pugi::xml_node paragraph,
                 runs[start_run_idx].text.substr(0, match_start_in_first).c_str());
             clear_run_text_nodes(start_run);
             pugi::xml_node t_node = start_run.append_child("w:t");
-            t_node.text().set(
-                runs[start_run_idx].text.substr(match_start_in_first).c_str());
+            t_node.text().set(runs[start_run_idx].text.substr(match_start_in_first).c_str());
             t_node.append_attribute("_cdocx_bmk").set_value("1");
         } else {
             // Entire start run is consumed by the match: mark its text nodes.
-            for (pugi::xml_node t = start_run.child("w:t"); t;
-                 t = t.next_sibling("w:t")) {
+            for (pugi::xml_node t = start_run.child("w:t"); t; t = t.next_sibling("w:t")) {
                 t.append_attribute("_cdocx_bmk").set_value("1");
             }
         }
@@ -283,13 +281,11 @@ bool BookmarkInserter::insert_in_paragraph(pugi::xml_node paragraph,
                 runs[end_run_idx].text.substr(match_end_in_last).c_str());
             clear_run_text_nodes(end_run);
             pugi::xml_node t_node = end_run.append_child("w:t");
-            t_node.text().set(
-                runs[end_run_idx].text.substr(0, match_end_in_last).c_str());
+            t_node.text().set(runs[end_run_idx].text.substr(0, match_end_in_last).c_str());
             t_node.append_attribute("_cdocx_bmk").set_value("1");
         } else {
             // Entire end run is consumed by the match: mark its text nodes.
-            for (pugi::xml_node t = end_run.child("w:t"); t;
-                 t = t.next_sibling("w:t")) {
+            for (pugi::xml_node t = end_run.child("w:t"); t; t = t.next_sibling("w:t")) {
                 t.append_attribute("_cdocx_bmk").set_value("1");
             }
         }
@@ -297,8 +293,7 @@ bool BookmarkInserter::insert_in_paragraph(pugi::xml_node paragraph,
 
         // Mark intermediate runs so they are skipped by future scans.
         for (std::size_t i = start_run_idx + 1; i < end_run_idx; ++i) {
-            for (pugi::xml_node t = runs[i].run.child("w:t"); t;
-                 t = t.next_sibling("w:t")) {
+            for (pugi::xml_node t = runs[i].run.child("w:t"); t; t = t.next_sibling("w:t")) {
                 t.append_attribute("_cdocx_bmk").set_value("1");
             }
         }
@@ -306,13 +301,11 @@ bool BookmarkInserter::insert_in_paragraph(pugi::xml_node paragraph,
 
     int bm_id = allocate_bookmark_id();
 
-    pugi::xml_node bm_start =
-        paragraph.insert_child_before("w:bookmarkStart", first_marked_run);
+    pugi::xml_node bm_start = paragraph.insert_child_before("w:bookmarkStart", first_marked_run);
     bm_start.append_attribute("w:id").set_value(bm_id);
     bm_start.append_attribute("w:name").set_value(bookmark_name.c_str());
 
-    pugi::xml_node bm_end =
-        paragraph.insert_child_after("w:bookmarkEnd", last_marked_run);
+    pugi::xml_node bm_end = paragraph.insert_child_after("w:bookmarkEnd", last_marked_run);
     bm_end.append_attribute("w:id").set_value(bm_id);
 
     return true;

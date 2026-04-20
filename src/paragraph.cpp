@@ -6,6 +6,36 @@
 
 namespace cdocx {
 
+namespace {
+
+void apply_formatting_flags(pugi::xml_node rPr, formatting_flag f) {
+    if (f & bold) {
+        rPr.append_child("w:b");
+    }
+    if (f & italic) {
+        rPr.append_child("w:i");
+    }
+    if (f & underline) {
+        rPr.append_child("w:u").append_attribute("w:val").set_value("single");
+    }
+    if (f & strikethrough) {
+        rPr.append_child("w:strike").append_attribute("w:val").set_value("true");
+    }
+    if (f & superscript) {
+        rPr.append_child("w:vertAlign").append_attribute("w:val").set_value("superscript");
+    } else if (f & subscript) {
+        rPr.append_child("w:vertAlign").append_attribute("w:val").set_value("subscript");
+    }
+    if (f & smallcaps) {
+        rPr.append_child("w:smallCaps").append_attribute("w:val").set_value("true");
+    }
+    if (f & shadow) {
+        rPr.append_child("w:shadow").append_attribute("w:val").set_value("true");
+    }
+}
+
+}  // namespace
+
 // ============================================================================
 // Paragraph DOM Implementation
 // ============================================================================
@@ -245,30 +275,7 @@ Run& Paragraph::add_run(const char* text, formatting_flag f) {
     // Create run properties element
     pugi::xml_node meta = new_run.append_child("w:rPr");
 
-    // Apply formatting flags
-    if (f & bold) {
-        meta.append_child("w:b");
-    }
-    if (f & italic) {
-        meta.append_child("w:i");
-    }
-    if (f & underline) {
-        meta.append_child("w:u").append_attribute("w:val").set_value("single");
-    }
-    if (f & strikethrough) {
-        meta.append_child("w:strike").append_attribute("w:val").set_value("true");
-    }
-    if (f & superscript) {
-        meta.append_child("w:vertAlign").append_attribute("w:val").set_value("superscript");
-    } else if (f & subscript) {
-        meta.append_child("w:vertAlign").append_attribute("w:val").set_value("subscript");
-    }
-    if (f & smallcaps) {
-        meta.append_child("w:smallCaps").append_attribute("w:val").set_value("true");
-    }
-    if (f & shadow) {
-        meta.append_child("w:shadow").append_attribute("w:val").set_value("true");
-    }
+    apply_formatting_flags(meta, f);
 
     // Create text element
     pugi::xml_node new_run_text = new_run.append_child("w:t");
@@ -314,30 +321,7 @@ Run& Paragraph::add_run_with_bookmark(Document& doc,
     // Create run properties element
     pugi::xml_node meta = new_run.append_child("w:rPr");
 
-    // Apply formatting flags
-    if (f & bold) {
-        meta.append_child("w:b");
-    }
-    if (f & italic) {
-        meta.append_child("w:i");
-    }
-    if (f & underline) {
-        meta.append_child("w:u").append_attribute("w:val").set_value("single");
-    }
-    if (f & strikethrough) {
-        meta.append_child("w:strike").append_attribute("w:val").set_value("true");
-    }
-    if (f & superscript) {
-        meta.append_child("w:vertAlign").append_attribute("w:val").set_value("superscript");
-    } else if (f & subscript) {
-        meta.append_child("w:vertAlign").append_attribute("w:val").set_value("subscript");
-    }
-    if (f & smallcaps) {
-        meta.append_child("w:smallCaps").append_attribute("w:val").set_value("true");
-    }
-    if (f & shadow) {
-        meta.append_child("w:shadow").append_attribute("w:val").set_value("true");
-    }
+    apply_formatting_flags(meta, f);
 
     // Create text element
     pugi::xml_node new_run_text = new_run.append_child("w:t");

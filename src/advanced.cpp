@@ -63,6 +63,22 @@ std::string to_lower(const std::string& str) {
 
 }  // namespace utils
 
+namespace {
+
+// Collect all text from <w:r> runs inside a <w:p> paragraph.
+std::string collect_text_from_runs(pugi::xml_node para) {
+    std::string result;
+    for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
+        pugi::xml_node t = run.child("w:t");
+        if (t) {
+            result += t.text().get();
+        }
+    }
+    return result;
+}
+
+}  // namespace
+
 // ============================================================================
 // Bookmark Implementation
 // ============================================================================
@@ -135,12 +151,7 @@ std::string Bookmark::get_text() const {
         // Middle paragraphs: collect all text
         pugi::xml_node current = start_para.next_sibling("w:p");
         while (current && current != end_para) {
-            for (pugi::xml_node run = current.child("w:r"); run; run = run.next_sibling("w:r")) {
-                pugi::xml_node t = run.child("w:t");
-                if (t) {
-                    result += t.text().get();
-                }
-            }
+            result += collect_text_from_runs(current);
             current = current.next_sibling("w:p");
         }
 
@@ -845,14 +856,7 @@ std::string Range::get_text() const {
 
     pugi::xml_node current = start_para_;
     while (current) {
-        // Get text from paragraph
-        for (pugi::xml_node run = current.child("w:r"); run; run = run.next_sibling("w:r")) {
-            pugi::xml_node t = run.child("w:t");
-            if (t) {
-                result += t.text().get();
-            }
-        }
-
+        result += collect_text_from_runs(current);
         if (current == end_para_) {
             break;
         }
@@ -886,14 +890,7 @@ bool Range::replace(const std::string& old_text, const std::string& new_text) {
 
     pugi::xml_node current = start_para_;
     while (current) {
-        // Collect text from all runs in this paragraph
-        std::string para_text;
-        for (pugi::xml_node run = current.child("w:r"); run; run = run.next_sibling("w:r")) {
-            pugi::xml_node t = run.child("w:t");
-            if (t) {
-                para_text += t.text().get();
-            }
-        }
+        std::string para_text = collect_text_from_runs(current);
 
         size_t pos = para_text.find(old_text);
         if (pos != std::string::npos) {
@@ -975,14 +972,7 @@ int Range::replace_all(const std::string& old_text, const std::string& new_text)
     int total = 0;
     pugi::xml_node current = start_para_;
     while (current) {
-        // Collect text from all runs in this paragraph
-        std::string para_text;
-        for (pugi::xml_node run = current.child("w:r"); run; run = run.next_sibling("w:r")) {
-            pugi::xml_node t = run.child("w:t");
-            if (t) {
-                para_text += t.text().get();
-            }
-        }
+        std::string para_text = collect_text_from_runs(current);
 
         int count = 0;
         size_t pos = 0;
