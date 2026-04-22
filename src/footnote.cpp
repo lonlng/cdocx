@@ -56,8 +56,9 @@ void Footnote::set_text(const std::string& text) {
 }
 
 void Footnote::accept(DocumentVisitor* visitor) {
-    if (!visitor)
+    if (!visitor) {
         return;
+    }
     if (visitor->visit_footnote_start(*this) == VisitorAction::Continue) {
         for (auto& child : get_children()) {
             child->accept(visitor);

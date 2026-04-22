@@ -51,7 +51,7 @@ class Paragraph : public CompositeNode {
     // Node overrides
     NodeType node_type() const override { return NodeType::Paragraph; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
     std::string get_text() const override;
 
     // Formatting

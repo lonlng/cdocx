@@ -170,8 +170,9 @@ AbstractNumberingDefinition AbstractNumberingDefinition::make_outline_list() {
         // Build level text
         std::stringstream ss;
         for (int j = 0; j <= i; ++j) {
-            if (j > 0)
+            if (j > 0) {
                 ss << ".";
+            }
             ss << "%" << (j + 1);
         }
         def.levels[i].levelText = ss.str();
@@ -285,12 +286,14 @@ void NumberingManager::load_from_xml(pugi::xml_node numbering_root) {
         // Parse levels
         for (auto lvl : abstractNum.children("w:lvl")) {
             auto ilvl = lvl.attribute("w:ilvl");
-            if (!ilvl)
+            if (!ilvl) {
                 continue;
+            }
 
             int level = ilvl.as_int();
-            if (level < 0 || level >= 9)
+            if (level < 0 || level >= 9) {
                 continue;
+            }
 
             LevelDefinition levelDef;
 
@@ -471,29 +474,40 @@ const char* number_style_to_string(NumberStyle style) {
 }
 
 NumberStyle string_to_number_style(const char* val) {
-    if (!val || !*val)
+    if (!val || !*val) {
         return NumberStyle::Decimal;
+    }
 
-    if (std::strcmp(val, "bullet") == 0)
+    if (std::strcmp(val, "bullet") == 0) {
         return NumberStyle::Bullet;
-    if (std::strcmp(val, "decimal") == 0)
+    }
+    if (std::strcmp(val, "decimal") == 0) {
         return NumberStyle::Decimal;
-    if (std::strcmp(val, "upperRoman") == 0)
+    }
+    if (std::strcmp(val, "upperRoman") == 0) {
         return NumberStyle::UpperRoman;
-    if (std::strcmp(val, "lowerRoman") == 0)
+    }
+    if (std::strcmp(val, "lowerRoman") == 0) {
         return NumberStyle::LowerRoman;
-    if (std::strcmp(val, "upperLetter") == 0)
+    }
+    if (std::strcmp(val, "upperLetter") == 0) {
         return NumberStyle::UpperLetter;
-    if (std::strcmp(val, "lowerLetter") == 0)
+    }
+    if (std::strcmp(val, "lowerLetter") == 0) {
         return NumberStyle::LowerLetter;
-    if (std::strcmp(val, "ordinal") == 0)
+    }
+    if (std::strcmp(val, "ordinal") == 0) {
         return NumberStyle::OrdinalText;
-    if (std::strcmp(val, "cardinalText") == 0)
+    }
+    if (std::strcmp(val, "cardinalText") == 0) {
         return NumberStyle::CardinalText;
-    if (std::strcmp(val, "chineseCounting") == 0)
+    }
+    if (std::strcmp(val, "chineseCounting") == 0) {
         return NumberStyle::ChineseCounting;
-    if (std::strcmp(val, "ideographEnchanted") == 0)
+    }
+    if (std::strcmp(val, "ideographEnchanted") == 0) {
         return NumberStyle::IdeographEnchanted;
+    }
 
     return NumberStyle::Decimal;
 }

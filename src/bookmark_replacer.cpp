@@ -14,9 +14,7 @@
 
 #include <algorithm>
 #include <cctype>
-#include <chrono>
 #include <fstream>
-#include <sstream>
 
 namespace cdocx {
 
@@ -591,20 +589,27 @@ std::string BookmarkReplacer::get_file_extension(const std::string& path) const 
 }
 
 std::string BookmarkReplacer::get_content_type(const std::string& ext) const {
-    if (ext == "png")
+    if (ext == "png") {
         return "image/png";
-    if (ext == "jpg" || ext == "jpeg")
+    }
+    if (ext == "jpg" || ext == "jpeg") {
         return "image/jpeg";
-    if (ext == "gif")
+    }
+    if (ext == "gif") {
         return "image/gif";
-    if (ext == "bmp")
+    }
+    if (ext == "bmp") {
         return "image/bmp";
-    if (ext == "tiff" || ext == "tif")
+    }
+    if (ext == "tiff" || ext == "tif") {
         return "image/tiff";
-    if (ext == "wmf")
+    }
+    if (ext == "wmf") {
         return "image/x-wmf";
-    if (ext == "emf")
+    }
+    if (ext == "emf") {
         return "image/x-emf";
+    }
     return "";
 }
 

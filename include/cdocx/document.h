@@ -49,11 +49,6 @@
 
 #include <pugixml.hpp>
 
-// Forward declaration for PIMPL
-namespace cdocx {
-class DocumentImpl;
-}
-
 #include <chrono>
 #include <cstdint>
 #include <functional>
@@ -70,7 +65,6 @@ namespace cdocx {
 class Body;
 class Paragraph;
 class Table;
-class Template;
 class Bookmark;
 class BookmarkCollection;
 class Comment;
@@ -80,7 +74,6 @@ class FootnoteCollection;
 class EndnoteCollection;
 class Range;
 class DocumentBuilder;
-class DocumentSearch;
 class DocumentProperties;
 class SectionCollection;
 class ParagraphCollection;
@@ -302,7 +295,7 @@ class Document : public CompositeNode {
     // Node overrides
     NodeType node_type() const override { return NodeType::Document; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
 
     // File operations
     void open();
@@ -552,8 +545,6 @@ class Document : public CompositeNode {
     // Section properties
     SectionProperties default_section_properties_;
 
-    // PIMPL (backward compatibility during transition)
-    std::unique_ptr<DocumentImpl> impl_;
 
     // Internal methods
     bool open_zip(const std::string& path);

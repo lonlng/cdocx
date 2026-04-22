@@ -1,0 +1,1133 @@
+/**
+ * @file sync_serialize.cpp
+ * @brief DOM to Physical XML serialization
+ */
+
+#include "sync_common.h"
+
+#include <cdocx/body.h>
+#include <cdocx/comment.h>
+#include <cdocx/document.h>
+#include <cdocx/footnote.h>
+#include <cdocx/formfield.h>
+#include <cdocx/section.h>
+#include <cdocx/table.h>
+
+#include <cctype>
+#include <cstring>
+
+namespace cdocx {
+
+static void serialize_section_to_xml(pugi::xml_node body_xml, const Section* section);
+static void serialize_table_to_xml(pugi::xml_node parent, const Table* table);
+
+// ============================================================================
+// DOM -> Physical (Serialization)
+// ============================================================================
+
+void Document::merge_sections_from_physical() {
+    auto *doc_xml = get_document_xml();
+    if (!doc_xml) {
+        return;
+    }
+
+    auto body = doc_xml->child("w:document").child("w:body");
+    if (!body) {
+        return;
+    }
+
+    // Parse XML section ranges
+    struct SectionRange {
+        pugi::xml_node begin;
+        pugi::xml_node end;
+    };
+    std::vector<SectionRange> ranges;
+
+    pugi::xml_node current_begin = body.first_child();
+    for (auto node = body.first_child(); node; node = node.next_sibling()) {
+        if (std::strcmp(node.name(), "w:sectPr") == 0) {
+            ranges.push_back({current_begin, node});
+            current_begin = node.next_sibling();
+        }
+    }
+    if (ranges.empty() && body.first_child()) {
+        ranges.push_back({body.first_child(), pugi::xml_node()});
+    }
+
+    auto dom_sections = get_sections();
+    std::vector<std::shared_ptr<Section>> dom_sections_vec;
+    for (auto& s : dom_sections) {
+        dom_sections_vec.push_back(s);
+    }
+
+    // Ensure we have enough DOM sections
+    while (dom_sections_vec.size() < ranges.size()) {
+        auto section = std::make_shared<Section>(this);
+        section->set_first_section(dom_sections_vec.empty());
+        auto sect_body = std::make_shared<Body>(this);
+        section->set_body(sect_body);
+        append_child(section);
+        sections_cache_.push_back(section);
+        dom_sections_vec.push_back(section);
+    }
+
+    // Merge each XML section into the corresponding DOM section
+    for (size_t i = 0; i < ranges.size(); ++i) {
+        auto section = dom_sections_vec[i];
+        auto sect_body = section->get_body();
+        if (!sect_body) {
+            sect_body = std::make_shared<Body>(this);
+            section->set_body(sect_body);
+        }
+
+        // Collect existing DOM children
+        std::vector<std::shared_ptr<Node>> dom_children;
+        for (const auto& child : sect_body->get_children()) {
+            dom_children.push_back(child);
+        }
+
+        // Collect XML children
+        std::vector<std::shared_ptr<Node>> xml_children;
+        for (auto node = ranges[i].begin; node && node != ranges[i].end;
+             node = node.next_sibling()) {
+            const char* name = node.name();
+            if (std::strcmp(name, "w:p") == 0) {
+                if (auto para = parse_paragraph_from_xml(node)) {
+                    xml_children.push_back(para);
+                }
+            } else if (std::strcmp(name, "w:tbl") == 0) {
+                if (auto table = parse_table_from_xml(node)) {
+                    xml_children.push_back(table);
+                }
+            }
+        }
+
+        // Merge by position: replace dirty-linked paragraphs, keep others,
+        // append extra XML children, preserve extra DOM children
+        size_t merge_count = std::min(dom_children.size(), xml_children.size());
+        for (size_t j = 0; j < merge_count; ++j) {
+            bool should_replace = false;
+            if (dom_children[j]->node_type() == NodeType::Paragraph) {
+                auto* para = dynamic_cast<Paragraph*>(dom_children[j].get());
+                if (para && para->get_current() &&
+                    dirty_xml_paragraphs_.count(para->get_current()) > 0) {
+                    should_replace = true;
+                }
+            }
+
+            if (should_replace) {
+                sect_body->insert_child(static_cast<int>(j), xml_children[j]);
+                sect_body->remove_child(dom_children[j]);
+            }
+        }
+
+        // Append extra XML children
+        for (size_t j = merge_count; j < xml_children.size(); ++j) {
+            sect_body->append_child(xml_children[j]);
+        }
+
+        // Update section properties
+        if (ranges[i].end) {
+            section->set_sectPr_node(ranges[i].end);
+            section->load_properties();
+        }
+    }
+
+    sections_dirty_ = false;
+}
+
+void Document::sync_sections_to_physical() {
+    auto *doc_xml = get_document_xml();
+    if (!doc_xml) {
+        return;
+    }
+
+    auto body = doc_xml->child("w:document").child("w:body");
+    if (!body) {
+        return;
+    }
+
+    // If DOM has no sections, preserve existing XML
+    auto sections = get_sections();
+    if (sections.is_empty()) {
+        return;
+    }
+
+    // Count XML paragraph/table children
+    int xml_child_count = 0;
+    for (auto child = body.first_child(); child; child = child.next_sibling()) {
+        const char* name = child.name();
+        if (std::strcmp(name, "w:p") == 0 || std::strcmp(name, "w:tbl") == 0) {
+            ++xml_child_count;
+        }
+    }
+
+    // Count DOM paragraph/table children across all sections
+    int dom_child_count = 0;
+    for (auto& section : sections) {
+        if (auto sect_body = section->get_body()) {
+            for (const auto& child : sect_body->get_children()) {
+                if (child->node_type() == NodeType::Paragraph ||
+                    child->node_type() == NodeType::Table) {
+                    ++dom_child_count;
+                }
+            }
+        }
+    }
+
+    // Update DOM paragraphs whose XML was explicitly modified by DocumentBuilder
+    // or legacy API, so their content is not lost during DOM serialization.
+    for (auto& section : sections) {
+        if (auto sect_body = section->get_body()) {
+            for (const auto& child : sect_body->get_children()) {
+                if (child->node_type() == NodeType::Paragraph) {
+                    auto* para = dynamic_cast<Paragraph*>(child.get());
+                    if (para && para->get_current() &&
+                        dirty_xml_paragraphs_.count(para->get_current()) > 0) {
+                        for (auto xml_para = body.child("w:p"); xml_para;
+                             xml_para = xml_para.next_sibling("w:p")) {
+                            if (xml_para == para->get_current()) {
+                                if (auto updated = parse_paragraph_from_xml(xml_para)) {
+                                    para->remove_all_children();
+                                    for (const auto& new_child : updated->get_children()) {
+                                        para->append_child(new_child);
+                                    }
+                                }
+                                para->set_current(pugi::xml_node());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // If XML has more content than DOM, legacy API or DocumentBuilder may have
+    // modified XML directly. Use merge when DocumentBuilder is involved to
+    // preserve DOM-only content; otherwise fall back to full sync.
+    if (xml_child_count > dom_child_count) {
+        if (!dirty_xml_paragraphs_.empty()) {
+            merge_sections_from_physical();
+        } else {
+            sync_from_physical_tree();
+        }
+        sections = get_sections();
+    }
+    dirty_xml_paragraphs_.clear();
+
+    // Preserve unknown nodes (not paragraphs, tables, or section properties)
+    pugi::xml_document preserved_doc;
+    for (auto child = body.first_child(); child;) {
+        auto next = child.next_sibling();
+        const char* name = child.name();
+        if (std::strcmp(name, "w:p") != 0 && std::strcmp(name, "w:tbl") != 0 &&
+            std::strcmp(name, "w:sectPr") != 0) {
+            preserved_doc.append_copy(child);
+        }
+        child = next;
+    }
+
+    // Remove all existing children from body
+    while (body.first_child()) {
+        body.remove_child(body.first_child());
+    }
+
+    // Serialize each section
+    for (auto& section : sections) {
+        serialize_section_to_xml(body, section.get());
+    }
+
+    // Re-append preserved unknown nodes at the end
+    for (auto child = preserved_doc.first_child(); child; child = child.next_sibling()) {
+        body.append_copy(child);
+    }
+
+    mark_modified("word/document.xml");
+}
+
+void serialize_font_to_rPr(pugi::xml_node rPr, const Font& font, bool add_sz_cs) {
+    serialize_shading_to_xml(rPr, font.shading);
+    if (font.bold) {
+        rPr.append_child("w:b");
+    }
+    if (font.italic) {
+        rPr.append_child("w:i");
+    }
+    if (font.strikethrough) {
+        auto strike = rPr.append_child("w:strike");
+        strike.append_attribute("w:val").set_value("true");
+    }
+    if (font.underline != UnderlineType::None) {
+        auto u = rPr.append_child("w:u");
+        const char* val = underline_type_to_string(font.underline);
+        if (!val) {
+            val = "single";
+        }
+        u.append_attribute("w:val").set_value(val);
+    }
+    if (font.size > 0) {
+        auto sz = rPr.append_child("w:sz");
+        sz.append_attribute("w:val").set_value(static_cast<int>(font.size * 2));
+        if (add_sz_cs) {
+            auto sz_cs = rPr.append_child("w:szCs");
+            sz_cs.append_attribute("w:val").set_value(static_cast<int>(font.size * 2));
+        }
+    }
+    if (!font.name.empty()) {
+        auto rFonts = rPr.append_child("w:rFonts");
+        rFonts.append_attribute("w:ascii").set_value(font.name.c_str());
+        rFonts.append_attribute("w:hAnsi").set_value(font.name.c_str());
+        if (!font.name_far_east.empty()) {
+            rFonts.append_attribute("w:eastAsia").set_value(font.name_far_east.c_str());
+        }
+    }
+    if (font.color != Color::auto_color()) {
+        auto color = rPr.append_child("w:color");
+        color.append_attribute("w:val").set_value(font.color.to_hex_rgb().c_str());
+    }
+    if (font.script_type != ScriptType::Normal) {
+        auto vAlign = rPr.append_child("w:vertAlign");
+        vAlign.append_attribute("w:val").set_value(script_type_to_string(font.script_type));
+    }
+    if (font.spacing != 0) {
+        auto sp = rPr.append_child("w:spacing");
+        sp.append_attribute("w:val").set_value(static_cast<int>(font.spacing * 20));
+    }
+    if (font.scale != 100) {
+        auto w = rPr.append_child("w:w");
+        w.append_attribute("w:val").set_value(font.scale);
+    }
+}
+
+static void serialize_run_formatting_to_xml(pugi::xml_node run_xml,
+                                        const Font& font,
+                                        pugi::xml_node preserved_rPr) {
+    bool has_formatting = font.bold || font.italic || font.strikethrough ||
+                          font.underline != UnderlineType::None || font.size != 12.0 ||
+                          font.name != "Times New Roman" || font.color != Color::black() ||
+                          font.script_type != ScriptType::Normal ||
+                          font.shading.has_fill() || font.spacing != 0 || font.scale != 100;
+
+    if (!has_formatting && !preserved_rPr) {
+        return;
+    }
+
+    auto rPr = run_xml.child("w:rPr");
+    if (!rPr) {
+        if (preserved_rPr) {
+            rPr = run_xml.prepend_copy(preserved_rPr);
+            strip_whitespace_text_nodes(rPr);
+        } else {
+            rPr = run_xml.prepend_child("w:rPr");
+        }
+    }
+
+    // Remember whether the original had w:szCs before we remove managed children
+    bool original_had_sz_cs = preserved_rPr && preserved_rPr.child("w:szCs");
+
+    // Remove managed children that we will re-serialize from DOM font state.
+    // w:rFonts is handled separately: if font.name is empty we leave the
+    // original rFonts untouched so that attributes like w:hint survive.
+    remove_managed_children(rPr,
+                            {"w:b",
+                             "w:i",
+                             "w:strike",
+                             "w:u",
+                             "w:sz",
+                             "w:szCs",
+                             "w:color",
+                             "w:vertAlign",
+                             "w:spacing",
+                             "w:w",
+                             "w:shd"});
+    if (!font.name.empty()) {
+        remove_managed_children(rPr, {"w:rFonts"});
+    }
+
+    // Re-add managed children from current font state
+    serialize_font_to_rPr(rPr, font, original_had_sz_cs);
+
+    // If rPr ended up empty, remove it entirely to avoid <w:rPr/> bloat.
+    if (!rPr.first_child()) {
+        run_xml.remove_child(rPr);
+    }
+}
+
+static void serialize_run_to_xml(pugi::xml_node parent, const Run* run) {
+    if (!run) {
+        return;
+    }
+
+    auto run_xml = parent.append_child("w:r");
+    serialize_run_formatting_to_xml(
+        run_xml,
+        run->get_font(),
+        run->has_preserved_rPr() ? run->get_preserved_rPr() : pugi::xml_node());
+
+    const std::string& text = run->get_text();
+    if (!text.empty()) {
+        auto text_node = run_xml.append_child("w:t");
+        if (std::isspace(static_cast<unsigned char>(text.front())) ||
+            std::isspace(static_cast<unsigned char>(text.back()))) {
+            text_node.append_attribute("xml:space").set_value("preserve");
+        }
+        text_node.text().set(text.c_str());
+    }
+
+    // Serialize preserved children (e.g., w:drawing) for round-trip fidelity
+    if (run->has_preserved_children()) {
+        run->serialize_preserved_children(run_xml);
+    }
+}
+
+static void serialize_field_to_xml(pugi::xml_node parent, Field* field) {
+    if (!field) {
+        return;
+    }
+
+    auto begin_run = parent.append_child("w:r");
+    begin_run.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("begin");
+
+    std::string code = field->get_full_field_code();
+    if (!code.empty()) {
+        auto instr_run = parent.append_child("w:r");
+        auto instr_text = instr_run.append_child("w:instrText");
+        instr_text.append_attribute("xml:space").set_value("preserve");
+        instr_text.text().set(code.c_str());
+    }
+
+    auto sep_run = parent.append_child("w:r");
+    sep_run.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("separate");
+
+    std::string result = field->get_result();
+    if (!result.empty()) {
+        auto resultrun = parent.append_child("w:r");
+        auto text_node = resultrun.append_child("w:t");
+        text_node.text().set(result.c_str());
+    }
+
+    auto end_run = parent.append_child("w:r");
+    end_run.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("end");
+}
+
+static void serialize_form_field_to_xml(pugi::xml_node parent, const FormField* field) {
+    if (!field) {
+        return;
+    }
+
+    int bookmark_id = 0;
+    if (!field->get_name().empty()) {
+        auto bm_start = parent.append_child("w:bookmarkStart");
+        bookmark_id =
+            field->get_document() ? field->get_document()->generate_unique_bookmark_id() : 1;
+        bm_start.append_attribute("w:id").set_value(bookmark_id);
+        bm_start.append_attribute("w:name").set_value(field->get_name().c_str());
+    }
+
+    auto begin_run = parent.append_child("w:r");
+    auto fld_char = begin_run.append_child("w:fldChar");
+    fld_char.append_attribute("w:fldCharType").set_value("begin");
+
+    auto ff_data = fld_char.append_child("w:ffData");
+    if (!field->get_name().empty()) {
+        ff_data.append_child("w:name").append_attribute("w:val").set_value(
+            field->get_name().c_str());
+    }
+    ff_data.append_child("w:enabled")
+        .append_attribute("w:val")
+        .set_value(field->get_enabled() ? "1" : "0");
+    ff_data.append_child("w:calcOnExit")
+        .append_attribute("w:val")
+        .set_value(field->get_calculate_on_exit() ? "1" : "0");
+
+    switch (field->get_form_field_type()) {
+        case FormFieldType::TextInput: {
+            auto text_input = ff_data.append_child("w:textInput");
+            const char* typeval = "regular";
+            switch (field->get_text_input_type()) {
+                case TextFormFieldType::Number:
+                    typeval = "number";
+                    break;
+                case TextFormFieldType::Date:
+                    typeval = "date";
+                    break;
+                case TextFormFieldType::CurrentDate:
+                    typeval = "currentDate";
+                    break;
+                case TextFormFieldType::CurrentTime:
+                    typeval = "currentTime";
+                    break;
+                case TextFormFieldType::Calculated:
+                    typeval = "calculated";
+                    break;
+                default:
+                    break;
+            }
+            text_input.append_child("w:type").append_attribute("w:val").set_value(typeval);
+            if (!field->get_text_input_default().empty()) {
+                text_input.append_child("w:default")
+                    .append_attribute("w:val")
+                    .set_value(field->get_text_input_default().c_str());
+            }
+            if (field->get_max_length() > 0) {
+                text_input.append_child("w:maxLength")
+                    .append_attribute("w:val")
+                    .set_value(field->get_max_length());
+            }
+            if (!field->get_text_input_format().empty()) {
+                text_input.append_child("w:format")
+                    .append_attribute("w:val")
+                    .set_value(field->get_text_input_format().c_str());
+            }
+            break;
+        }
+        case FormFieldType::CheckBox: {
+            auto check_box = ff_data.append_child("w:checkBox");
+            if (field->get_is_check_box_exact_size() && field->get_check_box_size() > 0) {
+                auto size = check_box.append_child("w:size");
+                size.append_attribute("w:val").set_value(
+                    static_cast<int>(field->get_check_box_size() * 2));
+            } else {
+                check_box.append_child("w:sizeAuto");
+            }
+            check_box.append_child("w:default")
+                .append_attribute("w:val")
+                .set_value(field->get_default_value() ? "1" : "0");
+            check_box.append_child("w:checked")
+                .append_attribute("w:val")
+                .set_value(field->get_checked() ? "1" : "0");
+            break;
+        }
+        case FormFieldType::ComboBox: {
+            auto dd_list = ff_data.append_child("w:ddList");
+            for (const auto& item : field->get_drop_down_items()) {
+                dd_list.append_child("w:listEntry")
+                    .append_attribute("w:val")
+                    .set_value(item.c_str());
+            }
+            if (field->get_drop_down_selected_index() >= 0) {
+                dd_list.append_child("w:default")
+                    .append_attribute("w:val")
+                    .set_value(field->get_drop_down_selected_index());
+            }
+            break;
+        }
+    }
+
+    auto instr_run = parent.append_child("w:r");
+    auto instr_text = instr_run.append_child("w:instrText");
+    const char* instr = "FORMTEXT";
+    if (field->get_form_field_type() == FormFieldType::CheckBox) {
+        instr = "FORMCHECKBOX";
+    } else if (field->get_form_field_type() == FormFieldType::ComboBox) {
+        instr = "FORMDROPDOWN";
+    }
+    instr_text.text().set(instr);
+
+    auto sep_run = parent.append_child("w:r");
+    sep_run.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("separate");
+
+    std::string result = field->get_result();
+    if (!result.empty()) {
+        auto res_run = parent.append_child("w:r");
+        auto text_node = res_run.append_child("w:t");
+        text_node.text().set(result.c_str());
+    }
+
+    auto end_run = parent.append_child("w:r");
+    end_run.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("end");
+
+    if (bookmark_id != 0) {
+        auto bm_end = parent.append_child("w:bookmarkEnd");
+        bm_end.append_attribute("w:id").set_value(bookmark_id);
+    }
+}
+
+static void serialize_hyperlink_to_xml(pugi::xml_node parent, Hyperlink* link) {
+    if (!link) {
+        return;
+    }
+
+    auto hyperlink_xml = parent.append_child("w:hyperlink");
+
+    std::string address = link->get_address();
+    std::string bookmark = link->get_bookmark_name();
+
+    Document* doc = link->get_document();
+    if (!address.empty() && doc) {
+        std::string rel_id = doc->find_relationship_id("word/_rels/document.xml.rels", address);
+        if (rel_id.empty()) {
+            rel_id = doc->add_relationship(
+                "word/_rels/document.xml.rels",
+                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink",
+                address,
+                "External");
+        }
+        hyperlink_xml.append_attribute("r:id").set_value(rel_id.c_str());
+    } else if (!bookmark.empty()) {
+        hyperlink_xml.append_attribute("w:anchor").set_value(bookmark.c_str());
+    }
+
+    if (!link->get_tooltip().empty()) {
+        hyperlink_xml.append_attribute("w:tooltip").set_value(link->get_tooltip().c_str());
+    }
+
+    auto run_xml = hyperlink_xml.append_child("w:r");
+    serialize_run_formatting_to_xml(
+        run_xml,
+        link->get_font(),
+        link->has_preserved_rPr() ? link->get_preserved_rPr() : pugi::xml_node());
+
+    std::string result = link->get_result();
+    if (!result.empty()) {
+        auto text_node = run_xml.append_child("w:t");
+        text_node.text().set(result.c_str());
+    }
+}
+
+static void serialize_special_char_to_xml(pugi::xml_node parent, SpecialChar* sc) {
+    if (!sc) {
+        return;
+    }
+    char16_t code = sc->get_char();
+    switch (code) {
+        case 0x0009:  // Tab
+            parent.append_child("w:tab");
+            break;
+        case 0x000A:  // Line break
+            parent.append_child("w:br");
+            break;
+        case 0x000C:  // Page break
+        {
+            auto br = parent.append_child("w:br");
+            br.append_attribute("w:type").set_value("page");
+            break;
+        }
+        case 0x000E:  // Column break
+        {
+            auto br = parent.append_child("w:br");
+            br.append_attribute("w:type").set_value("column");
+            break;
+        }
+        default:
+            // For other special chars, append as text in a run
+            {
+                auto run = parent.append_child("w:r");
+                auto t = run.append_child("w:t");
+                t.text().set(sc->get_text().c_str());
+            }
+    }
+}
+
+void serialize_paragraph_format_children_to_xml(pugi::xml_node pPr,
+                                                  const ParagraphFormat& format) {
+    serialize_shading_to_xml(pPr, format.shading);
+
+    if (format.drop_cap_position != DropCapPosition::None) {
+        auto dropCap = pPr.append_child("w:dropCap");
+        dropCap.append_attribute("w:lines").set_value(format.lines_to_drop);
+        dropCap.append_attribute("w:type").set_value(
+            drop_cap_position_to_string(format.drop_cap_position));
+    }
+
+    if (format.alignment != ParagraphAlignment::Left) {
+        auto jc = pPr.append_child("w:jc");
+        jc.append_attribute("w:val").set_value(paragraph_alignment_to_string(format.alignment));
+    }
+
+    if (format.left_indent != 0 || format.right_indent != 0 || format.first_line_indent != 0) {
+        auto ind = pPr.append_child("w:ind");
+        if (format.left_indent != 0) {
+            ind.append_attribute("w:left").set_value(static_cast<int>(format.left_indent * 20));
+        }
+        if (format.right_indent != 0) {
+            ind.append_attribute("w:right").set_value(static_cast<int>(format.right_indent * 20));
+        }
+        if (format.first_line_indent != 0) {
+            ind.append_attribute("w:firstLine")
+                .set_value(static_cast<int>(format.first_line_indent * 20));
+        }
+    }
+
+    if (format.space_before != 0 || format.space_after != 0 || format.line_spacing != 1.15) {
+        auto spacing = pPr.append_child("w:spacing");
+        if (format.space_before != 0) {
+            spacing.append_attribute("w:before")
+                .set_value(static_cast<int>(format.space_before * 20));
+        }
+        if (format.space_after != 0) {
+            spacing.append_attribute("w:after").set_value(
+                static_cast<int>(format.space_after * 20));
+        }
+        if (format.line_spacing != 1.15) {
+            int line_value = static_cast<int>(format.line_spacing * 240);
+            if (format.line_spacing_rule == LineSpacingRule::Exact ||
+                format.line_spacing_rule == LineSpacingRule::AtLeast) {
+                line_value = static_cast<int>(format.line_spacing * 20);
+            }
+            spacing.append_attribute("w:lineRule")
+                .set_value(line_spacing_rule_to_string(format.line_spacing_rule));
+            spacing.append_attribute("w:line").set_value(line_value);
+        }
+    }
+
+    if (format.keep_with_next) {
+        pPr.append_child("w:keepNext");
+    }
+    if (format.keep_together) {
+        pPr.append_child("w:keepLines");
+    }
+    if (format.page_break_before) {
+        pPr.append_child("w:pageBreakBefore");
+    }
+    if (!format.widow_control) {
+        auto widow = pPr.append_child("w:widow_control");
+        widow.append_attribute("w:val").set_value("0");
+    }
+    if (format.outline_level != OutlineLevel::BodyText) {
+        auto outline = pPr.append_child("w:outlineLvl");
+        outline.append_attribute("w:val").set_value(static_cast<int>(format.outline_level));
+    }
+}
+
+static void serialize_paragraph_format_to_xml(pugi::xml_node para_xml, const ParagraphFormat& format) {
+    bool has_format =
+        format.alignment != ParagraphAlignment::Left || format.left_indent != 0 ||
+        format.right_indent != 0 || format.first_line_indent != 0 || format.space_before != 0 ||
+        format.space_after != 0 || format.line_spacing != 1.15 || !format.style_name.empty() ||
+        format.shading.has_fill() || format.drop_cap_position != DropCapPosition::None ||
+        format.keep_with_next || format.keep_together || format.page_break_before ||
+        !format.widow_control || format.outline_level != OutlineLevel::BodyText;
+
+    if (!has_format) {
+        return;
+    }
+
+    auto pPr = para_xml.prepend_child("w:pPr");
+    serialize_paragraph_format_children_to_xml(pPr, format);
+
+    if (!format.style_name.empty()) {
+        auto p_style = pPr.append_child("w:pStyle");
+        p_style.append_attribute("w:val").set_value(format.style_name.c_str());
+    }
+}
+
+static void serialize_list_format_to_xml(pugi::xml_node para_xml, const ListFormat& list_format) {
+    if (!list_format.is_list_item()) {
+        return;
+    }
+
+    auto pPr = para_xml.child("w:pPr");
+    if (!pPr) {
+        pPr = para_xml.prepend_child("w:pPr");
+    }
+
+    auto numPr = pPr.append_child("w:numPr");
+    auto ilvl = numPr.append_child("w:ilvl");
+    ilvl.append_attribute("w:val").set_value(static_cast<int>(list_format.level));
+    auto num_id = numPr.append_child("w:numId");
+    num_id.append_attribute("w:val").set_value(static_cast<unsigned int>(list_format.list_id));
+}
+
+static void serialize_bookmark_start_to_xml(pugi::xml_node parent, BookmarkStart* bookmark) {
+    if (!bookmark) {
+        return;
+    }
+    auto xml = parent.append_child("w:bookmarkStart");
+    xml.append_attribute("w:id").set_value(bookmark->get_id());
+    xml.append_attribute("w:name").set_value(bookmark->get_name().c_str());
+}
+
+static void serialize_bookmark_end_to_xml(pugi::xml_node parent, BookmarkEnd* bookmark) {
+    if (!bookmark) {
+        return;
+    }
+    auto xml = parent.append_child("w:bookmarkEnd");
+    xml.append_attribute("w:id").set_value(bookmark->get_id());
+}
+
+static void serialize_comment_range_start_to_xml(pugi::xml_node parent, CommentRangeStart* comment) {
+    if (!comment) {
+        return;
+    }
+    auto xml = parent.append_child("w:commentRangeStart");
+    xml.append_attribute("w:id").set_value(comment->get_id());
+}
+
+static void serialize_comment_range_end_to_xml(pugi::xml_node parent, CommentRangeEnd* comment) {
+    if (!comment) {
+        return;
+    }
+    auto xml = parent.append_child("w:commentRangeEnd");
+    xml.append_attribute("w:id").set_value(comment->get_id());
+}
+
+static void serialize_comment_reference_to_xml(pugi::xml_node parent, int id) {
+    auto r = parent.append_child("w:r");
+    auto ref = r.append_child("w:commentReference");
+    ref.append_attribute("w:id").set_value(id);
+}
+
+void serialize_paragraph_to_xml(pugi::xml_node parent, const Paragraph* para) {
+    if (!para) {
+        return;
+    }
+    auto para_xml = parent.append_child("w:p");
+
+    serialize_paragraph_format_to_xml(para_xml, para->get_paragraph_format());
+    serialize_list_format_to_xml(para_xml, para->get_list_format());
+
+    // Preserve unmanaged pPr children and attributes that ParagraphFormat doesn't track.
+    if (para->has_preserved_pPr()) {
+        pugi::xml_node preserved_pPr = para->get_preserved_pPr();
+        pugi::xml_node pPr = para_xml.child("w:pPr");
+        if (!pPr) {
+            para_xml.prepend_copy(preserved_pPr);
+        } else {
+            for (pugi::xml_node child = preserved_pPr.first_child(); child;
+                 child = child.next_sibling()) {
+                // Skip whitespace text nodes from pretty-printed XML
+                if (child.type() == pugi::node_pcdata || child.type() == pugi::node_cdata) {
+                    continue;
+                }
+                const char* name = child.name();
+                pugi::xml_node existing = pPr.child(name);
+                if (!existing) {
+                    pPr.append_copy(child);
+                } else {
+                    // Merge any attributes that the DOM serialization didn't create
+                    for (pugi::xml_attribute attr = child.first_attribute(); attr;
+                         attr = attr.next_attribute()) {
+                        if (!existing.attribute(attr.name())) {
+                            existing.append_copy(attr);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    std::vector<int> comment_ids_for_reference;
+    for (const auto& child : para->get_children()) {
+        switch (child->node_type()) {
+            case NodeType::Run:
+                serialize_run_to_xml(para_xml, dynamic_cast<Run*>(child.get()));
+                break;
+            case NodeType::SpecialChar:
+                serialize_special_char_to_xml(para_xml, dynamic_cast<SpecialChar*>(child.get()));
+                break;
+            case NodeType::BookmarkStart:
+                serialize_bookmark_start_to_xml(para_xml,
+                                                dynamic_cast<BookmarkStart*>(child.get()));
+                break;
+            case NodeType::BookmarkEnd:
+                serialize_bookmark_end_to_xml(para_xml, dynamic_cast<BookmarkEnd*>(child.get()));
+                break;
+            case NodeType::CommentRangeStart:
+                serialize_comment_range_start_to_xml(para_xml,
+                                                     dynamic_cast<CommentRangeStart*>(child.get()));
+                break;
+            case NodeType::CommentRangeEnd:
+                serialize_comment_range_end_to_xml(para_xml,
+                                                   dynamic_cast<CommentRangeEnd*>(child.get()));
+                if (auto* cre = dynamic_cast<CommentRangeEnd*>(child.get())) {
+                    comment_ids_for_reference.push_back(cre->get_id());
+                }
+                break;
+            case NodeType::FieldStart:
+                serialize_field_to_xml(para_xml, dynamic_cast<Field*>(child.get()));
+                break;
+            case NodeType::FormField:
+                serialize_form_field_to_xml(para_xml, dynamic_cast<FormField*>(child.get()));
+                break;
+            case NodeType::Hyperlink:
+                serialize_hyperlink_to_xml(para_xml, dynamic_cast<Hyperlink*>(child.get()));
+                break;
+            case NodeType::FootnoteReference: {
+                auto ref = para_xml.append_child("w:footnoteReference");
+                if (auto* fnr = dynamic_cast<FootnoteReference*>(child.get())) {
+                    ref.append_attribute("w:id").set_value(fnr->get_id());
+                }
+                break;
+            }
+            case NodeType::EndnoteReference: {
+                auto ref = para_xml.append_child("w:endnoteReference");
+                if (auto* enr = dynamic_cast<EndnoteReference*>(child.get())) {
+                    ref.append_attribute("w:id").set_value(enr->get_id());
+                }
+                break;
+            }
+            case NodeType::FieldSeparator:
+            case NodeType::FieldEnd:
+                // These node types are not used as standalone DOM nodes
+                break;
+            default:
+                break;
+        }
+    }
+    // Add comment references after the paragraph content
+    for (int comment_id : comment_ids_for_reference) {
+        serialize_comment_reference_to_xml(para_xml, comment_id);
+    }
+}
+
+static void serialize_cell_to_xml(pugi::xml_node parent, Cell* cell) {
+    if (!cell) {
+        return;
+    }
+    auto tc = parent.append_child("w:tc");
+
+    // Cell properties — always write tcPr with at least a default tcW so that
+    // Word has structural information for layout.  Omitting tcPr entirely can
+    // cause unexpected default behaviour in some consumers.
+    const CellFormat& fmt = cell->get_cell_format();
+    auto tcPr = tc.append_child("w:tcPr");
+    {
+        auto tc_w = tcPr.append_child("w:tcW");
+        if (fmt.width != 0) {
+            tc_w.append_attribute("w:w").set_value(static_cast<int>(fmt.width * 20));
+            tc_w.append_attribute("w:type").set_value(fmt.preferred_width ? "pct" : "dxa");
+        } else {
+            tc_w.append_attribute("w:w").set_value("0");
+            tc_w.append_attribute("w:type").set_value("auto");
+        }
+    }
+    if (fmt.vertical_alignment != CellVerticalAlignment::Top) {
+        auto vAlign = tcPr.append_child("w:vAlign");
+        vAlign.append_attribute("w:val").set_value(
+            cell_vertical_alignment_to_string(fmt.vertical_alignment));
+    }
+    if (fmt.horizontal_merge > 1) {
+        auto grid_span = tcPr.append_child("w:gridSpan");
+        grid_span.append_attribute("w:val").set_value(fmt.horizontal_merge);
+    }
+    if (fmt.vertical_merge) {
+        auto v_merge = tcPr.append_child("w:vMerge");
+        if (fmt.vertical_merge_start) {
+            v_merge.append_attribute("w:val").set_value("restart");
+        }
+    }
+    serialize_borders_to_xml(tcPr, "w:tcBorders", fmt.borders);
+    serialize_shading_to_xml(tcPr, fmt.shading);
+
+    for (const auto& child : cell->get_children()) {
+        if (child->node_type() == NodeType::Paragraph) {
+            serialize_paragraph_to_xml(tc, dynamic_cast<Paragraph*>(child.get()));
+        } else if (child->node_type() == NodeType::Table) {
+            serialize_table_to_xml(tc, dynamic_cast<Table*>(child.get()));
+        }
+    }
+
+    // Ensure at least one paragraph
+    if (tc.child("w:p") == nullptr) {
+        tc.append_child("w:p").append_child("w:r").append_child("w:t");
+    }
+}
+
+static void serialize_row_to_xml(pugi::xml_node parent, Row* row) {
+    if (!row) {
+        return;
+    }
+    auto tr = parent.append_child("w:tr");
+
+    const RowFormat& fmt = row->get_row_format();
+    bool has_row_props = fmt.height != 0 || fmt.heading || !fmt.allow_break_across_pages;
+    if (has_row_props) {
+        auto trPr = tr.append_child("w:trPr");
+        if (fmt.height != 0) {
+            auto tr_height = trPr.append_child("w:trHeight");
+            tr_height.append_attribute("w:val").set_value(static_cast<int>(fmt.height * 20));
+            tr_height.append_attribute("w:hRule").set_value(fmt.height_rule_exact ? "exact"
+                                                                                  : "atLeast");
+        }
+        if (fmt.heading) {
+            trPr.append_child("w:tblHeader");
+        }
+        if (!fmt.allow_break_across_pages) {
+            trPr.append_child("w:cantSplit");
+        }
+    }
+
+    for (const auto& child : row->get_children()) {
+        if (child->node_type() == NodeType::Cell) {
+            serialize_cell_to_xml(tr, dynamic_cast<Cell*>(child.get()));
+        }
+    }
+}
+
+static void serialize_table_to_xml(pugi::xml_node parent, const Table* table) {
+    if (!table) {
+        return;
+    }
+    auto tbl = parent.append_child("w:tbl");
+
+    // Table properties
+    const TableFormat& fmt = table->get_table_format();
+    pugi::xml_node tblPr;
+    if (table->has_preserved_tblPr()) {
+        tblPr = tbl.append_copy(table->get_preserved_tblPr());
+        strip_whitespace_text_nodes(tblPr);
+        // Remove managed children so we can re-serialize current DOM state
+        remove_managed_children(
+            tblPr,
+            {"w:tblW", "w:tblLayout", "w:jc", "w:tblInd", "w:tblStyle", "w:shd", "w:tblBorders"});
+    } else {
+        tblPr = tbl.append_child("w:tblPr");
+    }
+
+    auto tbl_w = tblPr.append_child("w:tblW");
+    if (fmt.auto_fit_behavior == AutoFitBehavior::AutoFitToWindow) {
+        tbl_w.append_attribute("w:w").set_value("5000");
+        tbl_w.append_attribute("w:type").set_value("pct");
+    } else {
+        tbl_w.append_attribute("w:w").set_value("0");
+        tbl_w.append_attribute("w:type").set_value("auto");
+    }
+
+    auto tbl_layout = tblPr.append_child("w:tblLayout");
+    if (fmt.auto_fit_behavior == AutoFitBehavior::FixedColumnWidth) {
+        tbl_layout.append_attribute("w:type").set_value("fixed");
+    } else {
+        tbl_layout.append_attribute("w:type").set_value("autofit");
+    }
+
+    if (fmt.alignment != TableAlignment::Left) {
+        auto jc = tblPr.append_child("w:jc");
+        jc.append_attribute("w:val").set_value(table_alignment_to_string(fmt.alignment));
+    }
+
+    if (fmt.left_indent != 0) {
+        auto tbl_ind = tblPr.append_child("w:tblInd");
+        tbl_ind.append_attribute("w:w").set_value(static_cast<int>(fmt.left_indent * 20));
+        tbl_ind.append_attribute("w:type").set_value("dxa");
+    }
+
+    std::string style_name = table->get_style_name();
+    if (!style_name.empty()) {
+        auto tbl_style = tblPr.append_child("w:tblStyle");
+        tbl_style.append_attribute("w:val").set_value(style_name.c_str());
+    }
+
+    serialize_shading_to_xml(tblPr, fmt.shading);
+    serialize_borders_to_xml(tblPr, "w:tblBorders", fmt.borders);
+
+    // Table grid
+    if (table->has_preserved_tblGrid()) {
+        tbl.append_copy(table->get_preserved_tblGrid());
+    } else {
+        auto rows = table->get_rows();
+        if (rows.get_count() > 0) {
+            auto tbl_grid = tbl.append_child("w:tblGrid");
+            auto first_row = rows.first();
+            if (first_row) {
+                auto cells = first_row->get_cells();
+                for (size_t c = 0; c < cells.get_count(); ++c) {
+                    tbl_grid.append_child("w:gridCol");
+                }
+            }
+        }
+    }
+
+    for (const auto& child : table->get_children()) {
+        if (child->node_type() == NodeType::Row) {
+            serialize_row_to_xml(tbl, dynamic_cast<Row*>(child.get()));
+        }
+    }
+}
+
+static void serialize_body_to_xml(pugi::xml_node body_xml, Body* body) {
+    if (!body) {
+        return;
+    }
+    for (const auto& child : body->get_children()) {
+        switch (child->node_type()) {
+            case NodeType::Paragraph:
+                serialize_paragraph_to_xml(body_xml, dynamic_cast<Paragraph*>(child.get()));
+                break;
+            case NodeType::Table:
+                serialize_table_to_xml(body_xml, dynamic_cast<Table*>(child.get()));
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+static void serialize_header_footer_to_xml(HeaderFooter* hf, Document* doc) {
+    if (!hf || !doc) {
+        return;
+    }
+    auto *xml_doc = doc->get_xml_part(hf->get_part_path());
+    if (!xml_doc) {
+        return;
+    }
+
+    auto root = xml_doc->child("w:hdr");
+    if (!root) {
+        root = xml_doc->child("w:ftr");
+    }
+    if (!root) {
+        root = xml_doc->append_child(hf->is_header() ? "w:hdr" : "w:ftr");
+        root.append_attribute("xmlns:w").set_value(
+            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+        root.append_attribute("xmlns:r").set_value(
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+    } else {
+        while (root.first_child()) {
+            root.remove_child(root.first_child());
+        }
+    }
+
+    for (const auto& child : hf->get_children()) {
+        switch (child->node_type()) {
+            case NodeType::Paragraph:
+                serialize_paragraph_to_xml(root, dynamic_cast<Paragraph*>(child.get()));
+                break;
+            case NodeType::Table:
+                serialize_table_to_xml(root, dynamic_cast<Table*>(child.get()));
+                break;
+            default:
+                break;
+        }
+    }
+
+    doc->mark_modified(hf->get_part_path());
+}
+
+static void serialize_section_to_xml(pugi::xml_node body_xml, const Section* section) {
+    if (!section) {
+        return;
+    }
+
+    // Serialize body content
+    if (auto body = section->get_body()) {
+        serialize_body_to_xml(body_xml, body.get());
+    }
+
+    // Section properties
+    auto sectPr = body_xml.append_child("w:sectPr");
+    section->get_properties().applyTo(sectPr);
+
+    // Header/footer references
+    for (const auto& ref : section->get_header_refs()) {
+        auto headerRef = sectPr.append_child("w:headerReference");
+        headerRef.append_attribute("r:id").set_value(ref.relationship_id.c_str());
+        headerRef.append_attribute("w:type").set_value(header_footer_type_to_string(ref.type));
+    }
+    for (const auto& ref : section->get_footer_refs()) {
+        auto footerRef = sectPr.append_child("w:footerReference");
+        footerRef.append_attribute("r:id").set_value(ref.relationship_id.c_str());
+        footerRef.append_attribute("w:type").set_value(header_footer_type_to_string(ref.type));
+    }
+
+    // Serialize header/footer content
+    for (auto& header : section->get_all_headers()) {
+        serialize_header_footer_to_xml(header.get(), section->get_document());
+    }
+    for (auto& footer : section->get_all_footers()) {
+        serialize_header_footer_to_xml(footer.get(), section->get_document());
+    }
+}
+
+
+}  // namespace cdocx

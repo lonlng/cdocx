@@ -22,8 +22,9 @@ Body::Body(Document* doc) {
 }
 
 void Body::accept(DocumentVisitor* visitor) {
-    if (!visitor)
+    if (!visitor) {
         return;
+    }
 
     if (visitor->visit_body_start(*this) == VisitorAction::Continue) {
         for (const auto& child : children_) {
@@ -179,8 +180,9 @@ std::shared_ptr<Paragraph> Inline::get_parent_paragraph() const {
 }
 
 void Inline::preserve_rPr(pugi::xml_node rPr) {
-    if (!rPr)
+    if (!rPr) {
         return;
+    }
     preserved_rPr_.reset();
     preserved_rPr_.append_copy(rPr);
 }

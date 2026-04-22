@@ -32,15 +32,17 @@ static std::string ToLower(std::string s) {
 }
 
 static bool StartsWith(const std::vector<uint8_t>& data, const char* prefix, size_t len) {
-    if (data.size() < len)
+    if (data.size() < len) {
         return false;
+    }
     return std::memcmp(data.data(), prefix, len) == 0;
 }
 
 static bool StartsWithString(const std::vector<uint8_t>& data, const char* prefix) {
     size_t len = std::strlen(prefix);
-    if (data.size() < len)
+    if (data.size() < len) {
         return false;
+    }
     return std::memcmp(data.data(), prefix, len) == 0;
 }
 
@@ -73,7 +75,7 @@ static std::shared_ptr<FileFormatInfo> DetectFromZip(zip_t* za) {
         return info;
     }
 
-    std::string ct_lower = ToLower(content_types);
+    const std::string ct_lower = ToLower(content_types);
 
     // Detect macros
     if (Contains(ct_lower, "macros") || Contains(ct_lower, "vnd.ms-office.vba")) {
@@ -104,7 +106,7 @@ static std::shared_ptr<FileFormatInfo> DetectFromZip(zip_t* za) {
     } else {
         // Could be ODT - check mimetype
         std::string mimetype = ReadZipEntry(za, "mimetype");
-        std::string mime_lower = ToLower(mimetype);
+        const std::string mime_lower = ToLower(mimetype);
         if (Contains(mime_lower, "application/vnd.oasis.opendocument.text")) {
             info->set_load_format(LoadFormat::Odt);
         } else {
@@ -215,12 +217,15 @@ std::shared_ptr<FileFormatInfo> FileFormatUtil::DetectFileFormat(std::istream& s
     bool has_null = false;
     size_t printable = 0;
     for (uint8_t b : buffer) {
-        if (b == 0)
+        if (b == 0) {
             has_null = true;
-        if (b >= 32 && b <= 126)
+        }
+        if (b >= 32 && b <= 126) {
             printable++;
-        if (b == '\n' || b == '\r' || b == '\t')
+        }
+        if (b == '\n' || b == '\r' || b == '\t') {
             printable++;
+        }
     }
     if (!has_null && printable > buffer.size() * 0.8) {
         info->set_load_format(LoadFormat::Text);
@@ -298,28 +303,39 @@ SaveFormat FileFormatUtil::ExtensionToSaveFormat(const std::string& extension) {
     if (!ext.empty() && ext[0] != '.') {
         ext = "." + ext;
     }
-    if (ext == ".docx")
+    if (ext == ".docx") {
         return SaveFormat::Docx;
-    if (ext == ".docm")
+    }
+    if (ext == ".docm") {
         return SaveFormat::Docm;
-    if (ext == ".dotx")
+    }
+    if (ext == ".dotx") {
         return SaveFormat::Dotx;
-    if (ext == ".dotm")
+    }
+    if (ext == ".dotm") {
         return SaveFormat::Dotm;
-    if (ext == ".fopc" || ext == ".flatopc")
+    }
+    if (ext == ".fopc" || ext == ".flatopc") {
         return SaveFormat::FlatOpc;
-    if (ext == ".rtf")
+    }
+    if (ext == ".rtf") {
         return SaveFormat::Rtf;
-    if (ext == ".html" || ext == ".htm")
+    }
+    if (ext == ".html" || ext == ".htm") {
         return SaveFormat::Html;
-    if (ext == ".odt")
+    }
+    if (ext == ".odt") {
         return SaveFormat::Odt;
-    if (ext == ".txt" || ext == ".text")
+    }
+    if (ext == ".txt" || ext == ".text") {
         return SaveFormat::Text;
-    if (ext == ".md" || ext == ".markdown")
+    }
+    if (ext == ".md" || ext == ".markdown") {
         return SaveFormat::Markdown;
-    if (ext == ".xml" || ext == ".wordml" || ext == ".wml")
+    }
+    if (ext == ".xml" || ext == ".wordml" || ext == ".wml") {
         return SaveFormat::Xml;
+    }
     return SaveFormat::Unknown;
 }
 

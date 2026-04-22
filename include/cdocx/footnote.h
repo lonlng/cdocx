@@ -48,7 +48,7 @@ class Footnote : public CompositeNode {
     }
 
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
 
     // Convenience: append paragraph with text
     std::shared_ptr<Paragraph> append_paragraph(const std::string& text = "");
@@ -75,7 +75,7 @@ class FootnoteReference : public Node {
     NodeType node_type() const override { return NodeType::FootnoteReference; }
     std::string get_text() const override { return ""; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
 
   private:
     int id_ = 0;
@@ -96,7 +96,7 @@ class EndnoteReference : public Node {
     NodeType node_type() const override { return NodeType::EndnoteReference; }
     std::string get_text() const override { return ""; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
 
   private:
     int id_ = 0;

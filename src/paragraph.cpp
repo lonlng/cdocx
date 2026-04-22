@@ -92,8 +92,9 @@ std::string Paragraph::get_text() const {
 }
 
 void Paragraph::accept(DocumentVisitor* visitor) {
-    if (!visitor)
+    if (!visitor) {
         return;
+    }
     if (visitor->visit_paragraph_start(*this) == VisitorAction::Continue) {
         for (const auto& child : get_children()) {
             child->accept(visitor);

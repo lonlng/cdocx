@@ -114,8 +114,9 @@ void Comment::set_text(const std::string& text) {
 }
 
 void Comment::accept(DocumentVisitor* visitor) {
-    if (!visitor)
+    if (!visitor) {
         return;
+    }
     if (visitor->visit_comment(*this) == VisitorAction::Continue) {
         for (auto& child : get_children()) {
             child->accept(visitor);

@@ -39,7 +39,7 @@ class Body : public CompositeNode {
     // Node overrides
     NodeType node_type() const override { return NodeType::Body; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
 
     // Parent section
     std::shared_ptr<Section> get_parent_section() const;

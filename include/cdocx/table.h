@@ -25,9 +25,7 @@ namespace cdocx {
 
 // Forward declarations
 class Document;
-class Body;
 class Paragraph;
-class ParagraphCollection;
 
 // ============================================================================
 // Legacy TableRow/TableCell Forward Declarations (for backward compatibility)
@@ -48,7 +46,7 @@ class Cell : public CompositeNode {
     // Node overrides
     NodeType node_type() const override { return NodeType::Cell; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
     std::string get_text() const override;
 
     // Cell format
@@ -153,7 +151,7 @@ class Row : public CompositeNode {
     // Node overrides
     NodeType node_type() const override { return NodeType::Row; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
     std::string get_text() const override;
 
     // Row format
@@ -290,7 +288,7 @@ class Table : public CompositeNode {
     // Node overrides
     NodeType node_type() const override { return NodeType::Table; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
     std::string get_text() const override;
 
     // Table format

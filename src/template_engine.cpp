@@ -338,10 +338,10 @@ size_t TemplateEngine::size() const {
 // ============================================================================
 
 static TemplateTarget ResolveTarget(Document* doc,
-                                     const std::string& key,
-                                     TemplateTarget preferred,
-                                     const std::string& /*prefix*/,
-                                     const std::string& /*suffix*/) {
+                                    const std::string& key,
+                                    TemplateTarget preferred,
+                                    const std::string& /*prefix*/,
+                                    const std::string& /*suffix*/) {
     switch (preferred) {
         case TemplateTarget::Auto: {
             // Check if bookmark exists
@@ -479,12 +479,12 @@ static bool InsertImageRunAfter(pugi::xml_node para,
         pugi::xml_node stretch = blip_fill.append_child("a:stretch");
         stretch.append_child("a:fillRect");
 
-        pugi::xml_node sp_props = pic.append_child("pic:sp_props");
-        pugi::xml_node xfrm = sp_props.append_child("a:xfrm");
+        pugi::xml_node spProps = pic.append_child("pic:spProps");
+        pugi::xml_node xfrm = spProps.append_child("a:xfrm");
         pugi::xml_node ext = xfrm.append_child("a:ext");
         ext.append_attribute("cx").set_value(size.width_emu());
         ext.append_attribute("cy").set_value(size.height_emu());
-        pugi::xml_node prst_geom = sp_props.append_child("a:prst_geom");
+        pugi::xml_node prst_geom = spProps.append_child("a:prst_geom");
         prst_geom.append_attribute("prst").set_value("rect");
         prst_geom.append_child("a:avLst");
     } else {
@@ -500,15 +500,15 @@ static bool InsertImageRunAfter(pugi::xml_node para,
         simple_pos.append_attribute("x").set_value(0);
         simple_pos.append_attribute("y").set_value(0);
 
-        pugi::xml_node position_h = anchor.append_child("wp:position_h");
-        position_h.append_attribute("relativeFrom").set_value("column");
-        pugi::xml_node align_node = position_h.append_child("wp:align");
+        pugi::xml_node positionh = anchor.append_child("wp:positionh");
+        positionh.append_attribute("relativeFrom").set_value("column");
+        pugi::xml_node align_node = positionh.append_child("wp:align");
         align_node.text().set(align == ImageAlignment::Left ? "left" : "right");
 
-        pugi::xml_node position_v = anchor.append_child("wp:position_v");
-        position_v.append_attribute("relativeFrom").set_value("paragraph");
-        pugi::xml_node pos_v_align = position_v.append_child("wp:align");
-        pos_v_align.text().set("top");
+        pugi::xml_node positionv = anchor.append_child("wp:positionv");
+        positionv.append_attribute("relativeFrom").set_value("paragraph");
+        pugi::xml_node pos_vAlign = positionv.append_child("wp:align");
+        pos_vAlign.text().set("top");
 
         pugi::xml_node extent = anchor.append_child("wp:extent");
         extent.append_attribute("cx").set_value(size.width_emu());
@@ -542,12 +542,12 @@ static bool InsertImageRunAfter(pugi::xml_node para,
         pugi::xml_node stretch = blip_fill.append_child("a:stretch");
         stretch.append_child("a:fillRect");
 
-        pugi::xml_node sp_props = pic.append_child("pic:sp_props");
-        pugi::xml_node xfrm = sp_props.append_child("a:xfrm");
+        pugi::xml_node spProps = pic.append_child("pic:spProps");
+        pugi::xml_node xfrm = spProps.append_child("a:xfrm");
         pugi::xml_node ext = xfrm.append_child("a:ext");
         ext.append_attribute("cx").set_value(size.width_emu());
         ext.append_attribute("cy").set_value(size.height_emu());
-        pugi::xml_node prst_geom = sp_props.append_child("a:prst_geom");
+        pugi::xml_node prst_geom = spProps.append_child("a:prst_geom");
         prst_geom.append_attribute("prst").set_value("rect");
         prst_geom.append_child("a:avLst");
     }

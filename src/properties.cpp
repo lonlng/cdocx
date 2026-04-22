@@ -269,40 +269,41 @@ TextProperties TextProperties::extractFrom(pugi::xml_node run_node) {
         const char* val = u.attribute("w:val").value();
         props.underline.color = u.attribute("w:color").value();
 
-        if (strcmp(val, "words") == 0)
+        if (strcmp(val, "words") == 0) {
             props.underline.style = UnderlineStyle::Words;
-        else if (strcmp(val, "double") == 0)
+        } else if (strcmp(val, "double") == 0) {
             props.underline.style = UnderlineStyle::Double;
-        else if (strcmp(val, "thick") == 0)
+        } else if (strcmp(val, "thick") == 0) {
             props.underline.style = UnderlineStyle::Thick;
-        else if (strcmp(val, "dotted") == 0)
+        } else if (strcmp(val, "dotted") == 0) {
             props.underline.style = UnderlineStyle::Dotted;
-        else if (strcmp(val, "dottedHeavy") == 0)
+        } else if (strcmp(val, "dottedHeavy") == 0) {
             props.underline.style = UnderlineStyle::DottedHeavy;
-        else if (strcmp(val, "dash") == 0)
+        } else if (strcmp(val, "dash") == 0) {
             props.underline.style = UnderlineStyle::Dash;
-        else if (strcmp(val, "dashedHeavy") == 0)
+        } else if (strcmp(val, "dashedHeavy") == 0) {
             props.underline.style = UnderlineStyle::DashedHeavy;
-        else if (strcmp(val, "dashLong") == 0)
+        } else if (strcmp(val, "dashLong") == 0) {
             props.underline.style = UnderlineStyle::DashLong;
-        else if (strcmp(val, "dashLongHeavy") == 0)
+        } else if (strcmp(val, "dashLongHeavy") == 0) {
             props.underline.style = UnderlineStyle::DashLongHeavy;
-        else if (strcmp(val, "dotDash") == 0)
+        } else if (strcmp(val, "dotDash") == 0) {
             props.underline.style = UnderlineStyle::DotDash;
-        else if (strcmp(val, "dashDotHeavy") == 0)
+        } else if (strcmp(val, "dashDotHeavy") == 0) {
             props.underline.style = UnderlineStyle::DashDotHeavy;
-        else if (strcmp(val, "dotDotDash") == 0)
+        } else if (strcmp(val, "dotDotDash") == 0) {
             props.underline.style = UnderlineStyle::DotDotDash;
-        else if (strcmp(val, "dashDotDotHeavy") == 0)
+        } else if (strcmp(val, "dashDotDotHeavy") == 0) {
             props.underline.style = UnderlineStyle::DashDotDotHeavy;
-        else if (strcmp(val, "wave") == 0)
+        } else if (strcmp(val, "wave") == 0) {
             props.underline.style = UnderlineStyle::Wave;
-        else if (strcmp(val, "wavyDouble") == 0)
+        } else if (strcmp(val, "wavyDouble") == 0) {
             props.underline.style = UnderlineStyle::WavyDouble;
-        else if (strcmp(val, "wavyHeavy") == 0)
+        } else if (strcmp(val, "wavyHeavy") == 0) {
             props.underline.style = UnderlineStyle::WavyHeavy;
-        else
+        } else {
             props.underline.style = UnderlineStyle::Single;
+        }
     }
 
     // Extract strikethrough
@@ -552,16 +553,17 @@ ParagraphProperties ParagraphProperties::extractFrom(pugi::xml_node para_node) {
     pugi::xml_node jc = pPr.child("w:jc");
     if (jc) {
         const char* val = jc.attribute("w:val").value();
-        if (strcmp(val, "center") == 0)
+        if (strcmp(val, "center") == 0) {
             props.align = Alignment::Centered;
-        else if (strcmp(val, "right") == 0)
+        } else if (strcmp(val, "right") == 0) {
             props.align = Alignment::Right;
-        else if (strcmp(val, "both") == 0)
+        } else if (strcmp(val, "both") == 0) {
             props.align = Alignment::Justified;
-        else if (strcmp(val, "distribute") == 0)
+        } else if (strcmp(val, "distribute") == 0) {
             props.align = Alignment::Distributed;
-        else
+        } else {
             props.align = Alignment::Left;
+        }
     }
 
     // Extract outline level
@@ -585,7 +587,7 @@ ParagraphProperties ParagraphProperties::extractFrom(pugi::xml_node para_node) {
 
 namespace {
 
-const char* tab_alignment_to_string(TabAlignment alignment) {
+const char* tab_alignmentto_string(TabAlignment alignment) {
     switch (alignment) {
         case TabAlignment::Center:
             return "center";
@@ -605,18 +607,24 @@ const char* tab_alignment_to_string(TabAlignment alignment) {
 }
 
 TabAlignment string_to_tab_alignment(const char* str) {
-    if (std::strcmp(str, "center") == 0)
+    if (std::strcmp(str, "center") == 0) {
         return TabAlignment::Center;
-    if (std::strcmp(str, "right") == 0)
+    }
+    if (std::strcmp(str, "right") == 0) {
         return TabAlignment::Right;
-    if (std::strcmp(str, "decimal") == 0)
+    }
+    if (std::strcmp(str, "decimal") == 0) {
         return TabAlignment::Decimal;
-    if (std::strcmp(str, "bar") == 0)
+    }
+    if (std::strcmp(str, "bar") == 0) {
         return TabAlignment::Bar;
-    if (std::strcmp(str, "list") == 0)
+    }
+    if (std::strcmp(str, "list") == 0) {
         return TabAlignment::List;
-    if (std::strcmp(str, "clear") == 0)
+    }
+    if (std::strcmp(str, "clear") == 0) {
         return TabAlignment::Clear;
+    }
     return TabAlignment::Left;
 }
 
@@ -638,16 +646,21 @@ const char* tab_leader_to_string(TabLeader leader) {
 }
 
 TabLeader string_to_tab_leader(const char* str) {
-    if (std::strcmp(str, "dot") == 0)
+    if (std::strcmp(str, "dot") == 0) {
         return TabLeader::Dots;
-    if (std::strcmp(str, "hyphen") == 0)
+    }
+    if (std::strcmp(str, "hyphen") == 0) {
         return TabLeader::Dashes;
-    if (std::strcmp(str, "underscore") == 0)
+    }
+    if (std::strcmp(str, "underscore") == 0) {
         return TabLeader::Line;
-    if (std::strcmp(str, "heavy") == 0)
+    }
+    if (std::strcmp(str, "heavy") == 0) {
         return TabLeader::Heavy;
-    if (std::strcmp(str, "middleDot") == 0)
+    }
+    if (std::strcmp(str, "middleDot") == 0) {
         return TabLeader::MiddleDot;
+    }
     return TabLeader::None;
 }
 
@@ -715,7 +728,7 @@ void TabStopCollection::applyTo(pugi::xml_node para_node) const {
     pugi::xml_node tabs = pPr.append_child("w:tabs");
     for (const auto& ts : tab_stops_) {
         pugi::xml_node tab = tabs.append_child("w:tab");
-        tab.append_attribute("w:val").set_value(tab_alignment_to_string(ts.alignment));
+        tab.append_attribute("w:val").set_value(tab_alignmentto_string(ts.alignment));
         tab.append_attribute("w:pos").set_value(
             static_cast<int>(ts.position * 20));  // points to twips
         if (ts.leader != TabLeader::None) {
@@ -790,12 +803,13 @@ void TableProperties::applyTo(pugi::xml_node tbl_node) const {
     if (!tblW) {
         tblW = tblPr.append_child("w:tblW");
     }
-    const char* type_str = "auto";
-    if (width.type == WidthType::Percent)
-        type_str = "pct";
-    else if (width.type == WidthType::Absolute)
-        type_str = "dxa";
-    ensure_attr(tblW, "w:type").set_value(type_str);
+    const char* typestr = "auto";
+    if (width.type == WidthType::Percent) {
+        typestr = "pct";
+    } else if (width.type == WidthType::Absolute) {
+        typestr = "dxa";
+    }
+    ensure_attr(tblW, "w:type").set_value(typestr);
     ensure_attr(tblW, "w:w").set_value(width.value);
 
     // Table alignment

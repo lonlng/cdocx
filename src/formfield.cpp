@@ -19,8 +19,9 @@ FormField::FormField(Document* doc, FormFieldType type) : type_(type) {
 }
 
 void FormField::accept(DocumentVisitor* visitor) {
-    if (!visitor)
+    if (!visitor) {
         return;
+    }
     visitor->visit_form_field(*this);
 }
 

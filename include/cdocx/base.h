@@ -107,7 +107,7 @@ class Run : public Inline {
     // Node overrides
     NodeType node_type() const override { return NodeType::Run; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
     std::string get_text() const override {
         if (current_xml_) {
             return get_text_xml();
@@ -259,7 +259,7 @@ class SpecialChar : public Inline {
     NodeType node_type() const override { return NodeType::SpecialChar; }
     std::string get_text() const override;
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
 
   private:
     char16_t char_code_ = 0;
@@ -350,7 +350,7 @@ class Field : public Inline {
     NodeType node_type() const override { return NodeType::FieldStart; }
     std::string get_text() const override { return result_; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
 
   private:
     FieldType type_ = FieldType::Unknown;
@@ -382,7 +382,7 @@ class BookmarkStart : public Node {
     NodeType node_type() const override { return NodeType::BookmarkStart; }
     std::string get_text() const override { return ""; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
 
   private:
     std::string name_;
@@ -402,7 +402,7 @@ class BookmarkEnd : public Node {
     NodeType node_type() const override { return NodeType::BookmarkEnd; }
     std::string get_text() const override { return ""; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
 
   private:
     int id_ = 0;
@@ -430,7 +430,7 @@ class Hyperlink : public Field {
 
     // Node overrides
     NodeType node_type() const override { return cdocx::NodeType::Hyperlink; }
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
     void accept(DocumentVisitor* visitor) override;
     void update() override;
 

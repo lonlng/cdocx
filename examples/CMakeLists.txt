@@ -97,6 +97,28 @@ endforeach()
 # Convenience Targets
 # ----------------------------------------------------------------------------
 
+# ----------------------------------------------------------------------------
+# Additional source variants within existing example directories
+# ----------------------------------------------------------------------------
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/21_template_engine/main_2.cpp)
+    set(example_dir ${CMAKE_CURRENT_SOURCE_DIR}/21_template_engine)
+    set(example_bin_dir ${CMAKE_CURRENT_BINARY_DIR}/21_template_engine)
+    add_cdocx_executable(21_template_engine_2 SOURCES ${example_dir}/main_2.cpp)
+    set_target_properties(21_template_engine_2 PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${example_bin_dir}
+        RUNTIME_OUTPUT_DIRECTORY_DEBUG ${example_bin_dir}
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${example_bin_dir}
+    )
+    if(EXISTS ${example_dir}/data)
+        file(COPY ${example_dir}/data DESTINATION ${example_bin_dir})
+    endif()
+    list(APPEND ALL_EXAMPLE_TARGETS 21_template_engine_2)
+endif()
+
+# ----------------------------------------------------------------------------
+# Convenience Targets
+# ----------------------------------------------------------------------------
+
 add_custom_target(examples
     DEPENDS ${ALL_EXAMPLE_TARGETS}
     COMMENT "Building all CDocx examples"

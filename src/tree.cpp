@@ -11,11 +11,29 @@
  * @version 0.4.0
  */
 
-#include <detail/impl.h>
+#include <cdocx/document.h>
 
-#include <algorithm>
+#include <pugixml.hpp>
+
 #include <cstring>
-#include <fstream>
+#include <mutex>
+#include <shared_mutex>
+
+namespace {
+
+/**
+ * @brief Custom XML writer for serializing pugi::xml_document to string.
+ * @internal Only used by DocxTreeNode::serialize_xml_to_binary().
+ */
+struct xml_string_writer : pugi::xml_writer {
+    std::string result{};
+
+    void write(const void* data, size_t size) override {
+        result.append(static_cast<const char*>(data), size);
+    }
+};
+
+}  // namespace
 
 namespace cdocx {
 
@@ -167,8 +185,9 @@ std::shared_ptr<DocxTreeNode> DocxTree::find_node(const std::string& path) const
 
     auto current = root_;
     for (const auto& part : parts) {
-        if (part.empty())
+        if (part.empty()) {
             continue;
+        }
 
         current = current->find_child(part);
         if (!current) {
@@ -202,8 +221,9 @@ std::shared_ptr<DocxTreeNode> DocxTree::find_or_create_node(const std::string& p
 
     for (size_t i = 0; i < parts.size(); ++i) {
         const auto& part = parts[i];
-        if (part.empty())
+        if (part.empty()) {
             continue;
+        }
 
         if (!current_path.empty()) {
             current_path += "/";
@@ -284,8 +304,9 @@ bool DocxTree::remove_node(const std::string& path) {
 void DocxTree::iterate_files(std::function<void(std::shared_ptr<DocxTreeNode>)> callback) const {
     std::function<void(std::shared_ptr<DocxTreeNode>)> traverse;
     traverse = [&traverse, &callback](const std::shared_ptr<DocxTreeNode>& node) {
-        if (!node || node->is_deleted)
+        if (!node || node->is_deleted) {
             return;
+        }
 
         if (node->is_file()) {
             callback(node);
@@ -302,8 +323,9 @@ void DocxTree::iterate_files(std::function<void(std::shared_ptr<DocxTreeNode>)> 
 void DocxTree::iterate_all(std::function<void(std::shared_ptr<DocxTreeNode>)> callback) const {
     std::function<void(std::shared_ptr<DocxTreeNode>)> traverse;
     traverse = [&traverse, &callback](const std::shared_ptr<DocxTreeNode>& node) {
-        if (!node || node->is_deleted)
+        if (!node || node->is_deleted) {
             return;
+        }
 
         callback(node);
 

@@ -10,7 +10,6 @@
 #include <cdocx/caption_generator.h>
 #include <cdocx/document.h>
 
-#include <algorithm>
 #include <cctype>
 
 namespace cdocx {
@@ -103,7 +102,7 @@ bool CaptionGenerator::is_figure_caption(pugi::xml_node para) {
         }
     }
 
-    // Trim whitespace
+    // trim whitespace
     size_t start = text.find_first_not_of(" \t\n\r");
     if (start == std::string::npos) {
         return false;

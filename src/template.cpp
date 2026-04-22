@@ -116,8 +116,9 @@ void Template::transition_to_collecting_state(PlaceholderContext& ctx,
 
 bool Template::try_replace_placeholder(const PlaceholderContext& ctx, Paragraph& p) {
     (void)p;
-    if (!ctx.first_run)
+    if (!ctx.first_run) {
         return false;
+    }
 
     size_t best_pos = std::string::npos;
     std::string best_value;
@@ -135,8 +136,9 @@ bool Template::try_replace_placeholder(const PlaceholderContext& ctx, Paragraph&
         }
     }
 
-    if (best_pos == std::string::npos)
+    if (best_pos == std::string::npos) {
         return false;
+    }
 
     size_t pattern_end = best_pos + best_pattern.length();
     std::string trailing = ctx.collected_text.substr(pattern_end);
@@ -236,25 +238,30 @@ bool Template::process_paragraph_legacy(Paragraph& para) {
 // ============================================================================
 
 bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
-    if (!run || !doc_)
+    if (!run || !doc_) {
         return false;
+    }
 
     std::string text = run->get_text();
     for (const auto& [key, image_path] : image_placeholders_) {
         std::string pattern = pattern_prefix_ + key + pattern_suffix_;
-        if (text != pattern)
+        if (text != pattern) {
             continue;
+        }
 
-        if (!std::filesystem::exists(image_path))
+        if (!std::filesystem::exists(image_path)) {
             continue;
+        }
 
         ImageSize size;
-        if (!detect_image_size(image_path, size))
+        if (!detect_image_size(image_path, size)) {
             continue;
+        }
 
         std::string rel_id = doc_->add_media_with_rel(image_path, nullptr);
-        if (rel_id.empty())
+        if (rel_id.empty()) {
             continue;
+        }
 
         run->set_text("");
 
@@ -318,8 +325,9 @@ bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
 }
 
 bool Template::replace_in_paragraph(const std::shared_ptr<Paragraph>& para) {
-    if (!para)
+    if (!para) {
         return false;
+    }
 
     bool replaced = false;
     // First pass: handle image placeholders (exact single-run match)
@@ -339,8 +347,9 @@ bool Template::replace_in_paragraph(const std::shared_ptr<Paragraph>& para) {
 }
 
 bool Template::replace_in_table(const std::shared_ptr<Table>& table) {
-    if (!table)
+    if (!table) {
         return false;
+    }
     bool replaced = false;
     for (auto& row_child : table->get_children()) {
         if (auto row = std::dynamic_pointer_cast<Row>(row_child)) {
@@ -361,8 +370,9 @@ bool Template::replace_in_table(const std::shared_ptr<Table>& table) {
 }
 
 void Template::replace_in_paragraphs() {
-    if (!doc_)
+    if (!doc_) {
         return;
+    }
     auto paragraphs = doc_->get_paragraphs();
     for (auto& para : paragraphs) {
         replace_in_paragraph(para);
@@ -370,8 +380,9 @@ void Template::replace_in_paragraphs() {
 }
 
 void Template::replace_in_tables() {
-    if (!doc_)
+    if (!doc_) {
         return;
+    }
     auto tables = doc_->get_tables();
     for (auto& table : tables) {
         replace_in_table(table);
@@ -388,15 +399,18 @@ void Template::replace_all() {
 }
 
 bool Template::replace_in_headers_footers() {
-    if (!doc_)
+    if (!doc_) {
         return false;
+    }
     bool replaced = false;
     for (auto& section : doc_->get_sections()) {
-        if (!section)
+        if (!section) {
             continue;
+        }
         for (auto& header : section->get_all_headers()) {
-            if (!header)
+            if (!header) {
                 continue;
+            }
             for (auto& para : header->get_paragraphs()) {
                 if (replace_in_paragraph(para)) {
                     replaced = true;
@@ -409,8 +423,9 @@ bool Template::replace_in_headers_footers() {
             }
         }
         for (auto& footer : section->get_all_footers()) {
-            if (!footer)
+            if (!footer) {
                 continue;
+            }
             for (auto& para : footer->get_paragraphs()) {
                 if (replace_in_paragraph(para)) {
                     replaced = true;
@@ -452,8 +467,9 @@ bool Template::replace_first() {
 }
 
 bool Template::replace_first_in_paragraph(const std::shared_ptr<Paragraph>& para) {
-    if (!para)
+    if (!para) {
         return false;
+    }
     // Check image placeholders first (single-run match)
     for (auto& child : para->get_children()) {
         if (auto run = std::dynamic_pointer_cast<Run>(child)) {
@@ -467,8 +483,9 @@ bool Template::replace_first_in_paragraph(const std::shared_ptr<Paragraph>& para
 }
 
 bool Template::replace_first_in_table(const std::shared_ptr<Table>& table) {
-    if (!table)
+    if (!table) {
         return false;
+    }
     for (auto& row_child : table->get_children()) {
         if (auto row = std::dynamic_pointer_cast<Row>(row_child)) {
             for (auto& cell_child : row->get_children()) {
@@ -488,14 +505,17 @@ bool Template::replace_first_in_table(const std::shared_ptr<Table>& table) {
 }
 
 bool Template::replace_first_in_headers_footers() {
-    if (!doc_)
+    if (!doc_) {
         return false;
+    }
     for (auto& section : doc_->get_sections()) {
-        if (!section)
+        if (!section) {
             continue;
+        }
         for (auto& header : section->get_all_headers()) {
-            if (!header)
+            if (!header) {
                 continue;
+            }
             for (auto& para : header->get_paragraphs()) {
                 if (replace_first_in_paragraph(para)) {
                     return true;
@@ -508,8 +528,9 @@ bool Template::replace_first_in_headers_footers() {
             }
         }
         for (auto& footer : section->get_all_footers()) {
-            if (!footer)
+            if (!footer) {
                 continue;
+            }
             for (auto& para : footer->get_paragraphs()) {
                 if (replace_first_in_paragraph(para)) {
                     return true;

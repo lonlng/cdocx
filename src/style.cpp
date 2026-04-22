@@ -17,8 +17,9 @@ void Style::remove() {
 }
 
 void Style::preserve_style_xml(pugi::xml_node style_node) {
-    if (!style_node)
+    if (!style_node) {
         return;
+    }
     preserved_style_xml_.reset();
     preserved_style_xml_.append_copy(style_node);
 }
@@ -37,24 +38,27 @@ bool Style::has_preserved_style_xml() const {
 
 std::shared_ptr<Style> StyleCollection::get_by_name(const std::string& name) const {
     for (const auto& s : styles_) {
-        if (s->get_name() == name)
+        if (s->get_name() == name) {
             return s;
+        }
     }
     return nullptr;
 }
 
 std::shared_ptr<Style> StyleCollection::get_by_style_id(const std::string& style_id) const {
     for (const auto& s : styles_) {
-        if (s->get_style_id() == style_id)
+        if (s->get_style_id() == style_id) {
             return s;
+        }
     }
     return nullptr;
 }
 
 std::shared_ptr<Style> StyleCollection::get_by_identifier(StyleIdentifier identifier) const {
     for (const auto& s : styles_) {
-        if (s->get_style_identifier() == identifier)
+        if (s->get_style_identifier() == identifier) {
             return s;
+        }
     }
     return nullptr;
 }
@@ -68,15 +72,17 @@ std::shared_ptr<Style> StyleCollection::add(StyleType type, const std::string& n
 }
 
 void StyleCollection::add(const std::shared_ptr<Style>& style) {
-    if (!style)
+    if (!style) {
         return;
+    }
     style->set_document(document_);
     styles_.push_back(style);
 }
 
 void StyleCollection::remove(const std::shared_ptr<Style>& style) {
-    if (!style)
+    if (!style) {
         return;
+    }
     styles_.erase(std::remove(styles_.begin(), styles_.end(), style), styles_.end());
 }
 

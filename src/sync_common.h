@@ -1,0 +1,97 @@
+/**
+ * @file sync_common.h
+ * @brief Internal shared declarations for DOM-Physical sync modules
+ * @internal Not part of the public API.
+ */
+
+#pragma once
+
+#include <cdocx/base.h>
+#include <cdocx/format.h>
+#include <cdocx/paragraph.h>
+#include <cdocx/style.h>
+
+#include <string>
+
+namespace cdocx {
+
+// ---------------------------------------------------------------------------
+// General helpers
+// ---------------------------------------------------------------------------
+void remove_managed_children(pugi::xml_node parent, std::initializer_list<const char*> names);
+
+const char* header_footer_type_to_string(HeaderFooterType type);
+HeaderFooterType string_to_header_footer_type(const char* val);
+
+std::string trim_whitespace(const std::string& str);
+
+pugi::xml_node walk_field_sequence(pugi::xml_node start_run,
+                                 std::string* out_instr_text,
+                                 std::string* out_resulttext);
+void parse_field_code_and_switches(const std::string& code, Field* field);
+
+void strip_whitespace_text_nodes(pugi::xml_node node);
+
+// ---------------------------------------------------------------------------
+// Time / property helpers
+// ---------------------------------------------------------------------------
+std::string time_to_w3cdtf(std::time_t t);
+std::time_t timegm_wrapper(std::tm* tm);
+std::time_t w3cdtf_to_time(const std::string& s);
+
+pugi::xml_node get_or_create_child(pugi::xml_node parent, const char* name);
+void set_text_child(pugi::xml_node parent, const char* name, const std::string& value);
+
+// ---------------------------------------------------------------------------
+// Lookup table accessors
+// ---------------------------------------------------------------------------
+const char* border_type_to_string(BorderType type);
+BorderType string_to_border_type(const char* str);
+
+const char* underline_type_to_string(UnderlineType type);
+UnderlineType string_to_underline_type(const char* str);
+
+const char* paragraph_alignment_to_string(ParagraphAlignment alignment);
+ParagraphAlignment string_to_paragraph_alignment(const char* str);
+
+const char* cell_vertical_alignment_to_string(CellVerticalAlignment alignment);
+CellVerticalAlignment string_to_cell_vertical_alignment(const char* str);
+
+const char* table_alignment_to_string(TableAlignment alignment);
+TableAlignment string_to_table_alignment(const char* str);
+
+const char* drop_cap_position_to_string(DropCapPosition position);
+DropCapPosition string_to_drop_cap_position(const char* str);
+
+const char* script_type_to_string(ScriptType type);
+ScriptType string_to_script_type(const char* str);
+
+const char* line_spacing_rule_to_string(LineSpacingRule rule);
+LineSpacingRule string_to_line_spacing_rule(const char* str);
+
+// ---------------------------------------------------------------------------
+// Shading
+// ---------------------------------------------------------------------------
+void serialize_shading_to_xml(pugi::xml_node parent, const Shading& shading);
+void parse_shading_from_xml(pugi::xml_node shd, Shading& shading);
+
+// ---------------------------------------------------------------------------
+// Border
+// ---------------------------------------------------------------------------
+void parse_border_from_xml(pugi::xml_node border_node, Border& border);
+void parse_borders_from_xml(pugi::xml_node borders_node, Borders& borders);
+void serialize_border_to_xml(pugi::xml_node parent, const char* name, const Border& border);
+void serialize_borders_to_xml(pugi::xml_node parent, const char* wrapper_name, const Borders& borders);
+
+// ---------------------------------------------------------------------------
+// Font / Run format (shared between serialize, deserialize, and style)
+// ---------------------------------------------------------------------------
+void serialize_font_to_rPr(pugi::xml_node rPr, const Font& font, bool add_sz_cs);
+void serialize_run_formatting_to_xml(pugi::xml_node run_xml, const Font& font, const Shading& shading);
+void parse_font_from_xml(pugi::xml_node rPr, Font& font);
+void parse_run_format_from_xml(Inline* run, pugi::xml_node run_node);
+void parse_paragraph_format_children_from_xml(pugi::xml_node pPr, ParagraphFormat& format);
+void serialize_paragraph_to_xml(pugi::xml_node parent, const Paragraph* para);
+void serialize_paragraph_format_children_to_xml(pugi::xml_node pPr, const ParagraphFormat& format);
+
+}  // namespace cdocx

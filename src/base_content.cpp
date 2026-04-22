@@ -285,14 +285,16 @@ bool Run::has_next() const {
 }
 
 std::string Run::get_text_xml() const {
-    if (!current_xml_)
+    if (!current_xml_) {
         return "";
+    }
     return current_xml_.child("w:t").text().get();
 }
 
 bool Run::set_text_xml(const std::string& text) const {
-    if (!current_xml_)
+    if (!current_xml_) {
         return false;
+    }
     return current_xml_.child("w:t").text().set(text.c_str());
 }
 
@@ -308,39 +310,44 @@ pugi::xml_node EnsureRPr(pugi::xml_node current_xml) {
 
 pugi::xml_attribute SetAttr(pugi::xml_node node, const char* name, const char* value) {
     auto attr = node.attribute(name);
-    if (!attr)
+    if (!attr) {
         attr = node.append_attribute(name);
+    }
     attr.set_value(value);
     return attr;
 }
 
 pugi::xml_attribute SetAttr(pugi::xml_node node, const char* name, int value) {
     auto attr = node.attribute(name);
-    if (!attr)
+    if (!attr) {
         attr = node.append_attribute(name);
+    }
     attr.set_value(value);
     return attr;
 }
 }  // namespace
 
 bool Run::set_color_xml(const std::string& color_hex) {
-    if (!current_xml_)
+    if (!current_xml_) {
         return false;
+    }
     auto rPr = EnsureRPr(current_xml_);
     if (color_hex.empty() || color_hex == "auto") {
         rPr.remove_child("w:color");
         return true;
     }
     auto color = rPr.child("w:color");
-    if (!color)
+    if (!color) {
         color = rPr.append_child("w:color");
+    }
     SetAttr(color, "w:val", color_hex.c_str());
     return true;
 }
 
 bool Run::set_font_size_xml(int size) {
-    if (!current_xml_)
+    if (!current_xml_) {
         return false;
+    }
     auto rPr = EnsureRPr(current_xml_);
     if (size <= 0) {
         rPr.remove_child("w:sz");
@@ -348,27 +355,31 @@ bool Run::set_font_size_xml(int size) {
         return true;
     }
     auto sz = rPr.child("w:sz");
-    if (!sz)
+    if (!sz) {
         sz = rPr.append_child("w:sz");
+    }
     SetAttr(sz, "w:val", size);
     auto szCs = rPr.child("w:szCs");
-    if (!szCs)
+    if (!szCs) {
         szCs = rPr.append_child("w:szCs");
+    }
     SetAttr(szCs, "w:val", size);
     return true;
 }
 
 bool Run::set_font_name_xml(const std::string& font_name) {
-    if (!current_xml_)
+    if (!current_xml_) {
         return false;
+    }
     auto rPr = EnsureRPr(current_xml_);
     if (font_name.empty()) {
         rPr.remove_child("w:rFonts");
         return true;
     }
     auto fonts = rPr.child("w:rFonts");
-    if (!fonts)
+    if (!fonts) {
         fonts = rPr.append_child("w:rFonts");
+    }
     SetAttr(fonts, "w:ascii", font_name.c_str());
     SetAttr(fonts, "w:hAnsi", font_name.c_str());
     SetAttr(fonts, "w:cs", font_name.c_str());
@@ -377,12 +388,14 @@ bool Run::set_font_name_xml(const std::string& font_name) {
 }
 
 bool Run::set_bold_xml(bool bold) {
-    if (!current_xml_)
+    if (!current_xml_) {
         return false;
+    }
     auto rPr = EnsureRPr(current_xml_);
     if (bold) {
-        if (!rPr.child("w:b"))
+        if (!rPr.child("w:b")) {
             rPr.append_child("w:b");
+        }
     } else {
         rPr.remove_child("w:b");
     }
@@ -390,12 +403,14 @@ bool Run::set_bold_xml(bool bold) {
 }
 
 bool Run::set_italic_xml(bool italic) {
-    if (!current_xml_)
+    if (!current_xml_) {
         return false;
+    }
     auto rPr = EnsureRPr(current_xml_);
     if (italic) {
-        if (!rPr.child("w:i"))
+        if (!rPr.child("w:i")) {
             rPr.append_child("w:i");
+        }
     } else {
         rPr.remove_child("w:i");
     }
@@ -403,13 +418,15 @@ bool Run::set_italic_xml(bool italic) {
 }
 
 bool Run::set_underline_xml(bool underline) {
-    if (!current_xml_)
+    if (!current_xml_) {
         return false;
+    }
     auto rPr = EnsureRPr(current_xml_);
     if (underline) {
         auto u = rPr.child("w:u");
-        if (!u)
+        if (!u) {
             u = rPr.append_child("w:u");
+        }
         SetAttr(u, "w:val", "single");
     } else {
         rPr.remove_child("w:u");
@@ -418,8 +435,9 @@ bool Run::set_underline_xml(bool underline) {
 }
 
 void Run::set_properties_xml(const TextProperties& props) {
-    if (!current_xml_)
+    if (!current_xml_) {
         return;
+    }
 
     if (props.font) {
         set_font_name_xml(props.font->ascii);
@@ -436,30 +454,34 @@ void Run::set_properties_xml(const TextProperties& props) {
         set_underline_style_xml(props.underline.style, props.underline.color);
     } else {
         auto rPr = current_xml_.child("w:rPr");
-        if (rPr)
+        if (rPr) {
             rPr.remove_child("w:u");
+        }
     }
     set_strike_xml(props.strike);
     if (props.highlight != TextProperties::Highlight::None) {
         set_highlight_xml(props.highlight);
     } else {
         auto rPr = current_xml_.child("w:rPr");
-        if (rPr)
+        if (rPr) {
             rPr.remove_child("w:highlight");
+        }
     }
     if (props.scale != 100) {
         set_scale_xml(props.scale);
     } else {
         auto rPr = current_xml_.child("w:rPr");
-        if (rPr)
+        if (rPr) {
             rPr.remove_child("w:w");
+        }
     }
     if (props.spacing.type != TextProperties::SpacingType::Normal) {
         set_spacing_xml(props.spacing.type, props.spacing.value);
     } else {
         auto rPr = current_xml_.child("w:rPr");
-        if (rPr)
+        if (rPr) {
             rPr.remove_child("w:spacing");
+        }
     }
     if (props.position.type != TextProperties::PositionType::Normal) {
         set_position_xml(props.position.type, props.position.value);
@@ -474,12 +496,14 @@ void Run::set_properties_xml(const TextProperties& props) {
 
 TextProperties Run::get_properties_xml() const {
     TextProperties props;
-    if (!current_xml_)
+    if (!current_xml_) {
         return props;
+    }
 
     auto rPr = current_xml_.child("w:rPr");
-    if (!rPr)
+    if (!rPr) {
         return props;
+    }
 
     // Font
     auto rFonts = rPr.child("w:rFonts");
@@ -513,43 +537,45 @@ TextProperties Run::get_properties_xml() const {
     if (u) {
         const char* uval = u.attribute("w:val").value();
         auto& ul = props.underline;
-        if (std::strcmp(uval, "words") == 0)
+        if (std::strcmp(uval, "words") == 0) {
             ul.style = TextProperties::UnderlineStyle::Words;
-        else if (std::strcmp(uval, "single") == 0)
+        } else if (std::strcmp(uval, "single") == 0) {
             ul.style = TextProperties::UnderlineStyle::Single;
-        else if (std::strcmp(uval, "double") == 0)
+        } else if (std::strcmp(uval, "double") == 0) {
             ul.style = TextProperties::UnderlineStyle::Double;
-        else if (std::strcmp(uval, "thick") == 0)
+        } else if (std::strcmp(uval, "thick") == 0) {
             ul.style = TextProperties::UnderlineStyle::Thick;
-        else if (std::strcmp(uval, "dotted") == 0)
+        } else if (std::strcmp(uval, "dotted") == 0) {
             ul.style = TextProperties::UnderlineStyle::Dotted;
-        else if (std::strcmp(uval, "dottedHeavy") == 0)
+        } else if (std::strcmp(uval, "dottedHeavy") == 0) {
             ul.style = TextProperties::UnderlineStyle::DottedHeavy;
-        else if (std::strcmp(uval, "dash") == 0)
+        } else if (std::strcmp(uval, "dash") == 0) {
             ul.style = TextProperties::UnderlineStyle::Dash;
-        else if (std::strcmp(uval, "dashedHeavy") == 0)
+        } else if (std::strcmp(uval, "dashedHeavy") == 0) {
             ul.style = TextProperties::UnderlineStyle::DashedHeavy;
-        else if (std::strcmp(uval, "dashLong") == 0)
+        } else if (std::strcmp(uval, "dashLong") == 0) {
             ul.style = TextProperties::UnderlineStyle::DashLong;
-        else if (std::strcmp(uval, "dashLongHeavy") == 0)
+        } else if (std::strcmp(uval, "dashLongHeavy") == 0) {
             ul.style = TextProperties::UnderlineStyle::DashLongHeavy;
-        else if (std::strcmp(uval, "dotDash") == 0)
+        } else if (std::strcmp(uval, "dotDash") == 0) {
             ul.style = TextProperties::UnderlineStyle::DotDash;
-        else if (std::strcmp(uval, "dashDotHeavy") == 0)
+        } else if (std::strcmp(uval, "dashDotHeavy") == 0) {
             ul.style = TextProperties::UnderlineStyle::DashDotHeavy;
-        else if (std::strcmp(uval, "dotDotDash") == 0)
+        } else if (std::strcmp(uval, "dotDotDash") == 0) {
             ul.style = TextProperties::UnderlineStyle::DotDotDash;
-        else if (std::strcmp(uval, "dashDotDotHeavy") == 0)
+        } else if (std::strcmp(uval, "dashDotDotHeavy") == 0) {
             ul.style = TextProperties::UnderlineStyle::DashDotDotHeavy;
-        else if (std::strcmp(uval, "wave") == 0)
+        } else if (std::strcmp(uval, "wave") == 0) {
             ul.style = TextProperties::UnderlineStyle::Wave;
-        else if (std::strcmp(uval, "wavyDouble") == 0)
+        } else if (std::strcmp(uval, "wavyDouble") == 0) {
             ul.style = TextProperties::UnderlineStyle::WavyDouble;
-        else if (std::strcmp(uval, "wavyHeavy") == 0)
+        } else if (std::strcmp(uval, "wavyHeavy") == 0) {
             ul.style = TextProperties::UnderlineStyle::WavyHeavy;
+        }
         auto ucolor = u.attribute("w:color");
-        if (ucolor)
+        if (ucolor) {
             ul.color = ucolor.value();
+        }
     }
 
     // Strike
@@ -563,38 +589,39 @@ TextProperties Run::get_properties_xml() const {
     auto hl = rPr.child("w:highlight");
     if (hl) {
         const char* hval = hl.attribute("w:val").value();
-        if (std::strcmp(hval, "black") == 0)
+        if (std::strcmp(hval, "black") == 0) {
             props.highlight = TextProperties::Highlight::Black;
-        else if (std::strcmp(hval, "white") == 0)
+        } else if (std::strcmp(hval, "white") == 0) {
             props.highlight = TextProperties::Highlight::White;
-        else if (std::strcmp(hval, "red") == 0)
+        } else if (std::strcmp(hval, "red") == 0) {
             props.highlight = TextProperties::Highlight::Red;
-        else if (std::strcmp(hval, "green") == 0)
+        } else if (std::strcmp(hval, "green") == 0) {
             props.highlight = TextProperties::Highlight::Green;
-        else if (std::strcmp(hval, "blue") == 0)
+        } else if (std::strcmp(hval, "blue") == 0) {
             props.highlight = TextProperties::Highlight::Blue;
-        else if (std::strcmp(hval, "yellow") == 0)
+        } else if (std::strcmp(hval, "yellow") == 0) {
             props.highlight = TextProperties::Highlight::Yellow;
-        else if (std::strcmp(hval, "cyan") == 0)
+        } else if (std::strcmp(hval, "cyan") == 0) {
             props.highlight = TextProperties::Highlight::Cyan;
-        else if (std::strcmp(hval, "magenta") == 0)
+        } else if (std::strcmp(hval, "magenta") == 0) {
             props.highlight = TextProperties::Highlight::Magenta;
-        else if (std::strcmp(hval, "darkRed") == 0)
+        } else if (std::strcmp(hval, "darkRed") == 0) {
             props.highlight = TextProperties::Highlight::DarkRed;
-        else if (std::strcmp(hval, "darkGreen") == 0)
+        } else if (std::strcmp(hval, "darkGreen") == 0) {
             props.highlight = TextProperties::Highlight::DarkGreen;
-        else if (std::strcmp(hval, "darkBlue") == 0)
+        } else if (std::strcmp(hval, "darkBlue") == 0) {
             props.highlight = TextProperties::Highlight::DarkBlue;
-        else if (std::strcmp(hval, "darkYellow") == 0)
+        } else if (std::strcmp(hval, "darkYellow") == 0) {
             props.highlight = TextProperties::Highlight::DarkYellow;
-        else if (std::strcmp(hval, "darkCyan") == 0)
+        } else if (std::strcmp(hval, "darkCyan") == 0) {
             props.highlight = TextProperties::Highlight::DarkCyan;
-        else if (std::strcmp(hval, "darkMagenta") == 0)
+        } else if (std::strcmp(hval, "darkMagenta") == 0) {
             props.highlight = TextProperties::Highlight::DarkMagenta;
-        else if (std::strcmp(hval, "darkGray") == 0)
+        } else if (std::strcmp(hval, "darkGray") == 0) {
             props.highlight = TextProperties::Highlight::DarkGray;
-        else if (std::strcmp(hval, "lightGray") == 0)
+        } else if (std::strcmp(hval, "lightGray") == 0) {
             props.highlight = TextProperties::Highlight::LightGray;
+        }
     }
 
     // Scale
@@ -635,8 +662,9 @@ TextProperties Run::get_properties_xml() const {
 }
 
 bool Run::set_highlight_xml(TextProperties::Highlight color) {
-    if (!current_xml_)
+    if (!current_xml_) {
         return false;
+    }
     auto rPr = EnsureRPr(current_xml_);
     if (color == TextProperties::Highlight::None) {
         rPr.remove_child("w:highlight");
@@ -696,15 +724,17 @@ bool Run::set_highlight_xml(TextProperties::Highlight color) {
             break;
     }
     auto hl = rPr.child("w:highlight");
-    if (!hl)
+    if (!hl) {
         hl = rPr.append_child("w:highlight");
+    }
     SetAttr(hl, "w:val", val);
     return true;
 }
 
 bool Run::set_underline_style_xml(TextProperties::UnderlineStyle style, const std::string& color) {
-    if (!current_xml_)
+    if (!current_xml_) {
         return false;
+    }
     auto rPr = EnsureRPr(current_xml_);
     if (style == TextProperties::UnderlineStyle::None) {
         rPr.remove_child("w:u");
@@ -767,8 +797,9 @@ bool Run::set_underline_style_xml(TextProperties::UnderlineStyle style, const st
             break;
     }
     auto u = rPr.child("w:u");
-    if (!u)
+    if (!u) {
         u = rPr.append_child("w:u");
+    }
     SetAttr(u, "w:val", val);
     if (!color.empty() && color != "auto") {
         SetAttr(u, "w:color", color.c_str());
@@ -777,8 +808,9 @@ bool Run::set_underline_style_xml(TextProperties::UnderlineStyle style, const st
 }
 
 bool Run::set_strike_xml(TextProperties::StrikeStyle style) {
-    if (!current_xml_)
+    if (!current_xml_) {
         return false;
+    }
     auto rPr = EnsureRPr(current_xml_);
     rPr.remove_child("w:strike");
     rPr.remove_child("w:dstrike");
@@ -791,39 +823,44 @@ bool Run::set_strike_xml(TextProperties::StrikeStyle style) {
 }
 
 bool Run::set_scale_xml(int percent) {
-    if (!current_xml_)
+    if (!current_xml_) {
         return false;
+    }
     auto rPr = EnsureRPr(current_xml_);
     if (percent <= 0 || percent == 100) {
         rPr.remove_child("w:w");
         return true;
     }
     auto w = rPr.child("w:w");
-    if (!w)
+    if (!w) {
         w = rPr.append_child("w:w");
+    }
     SetAttr(w, "w:val", percent);
     return true;
 }
 
 bool Run::set_spacing_xml(TextProperties::SpacingType type, int value) {
-    if (!current_xml_)
+    if (!current_xml_) {
         return false;
+    }
     auto rPr = EnsureRPr(current_xml_);
     if (type == TextProperties::SpacingType::Normal || value == 0) {
         rPr.remove_child("w:spacing");
         return true;
     }
     auto sp = rPr.child("w:spacing");
-    if (!sp)
+    if (!sp) {
         sp = rPr.append_child("w:spacing");
+    }
     int val = (type == TextProperties::SpacingType::Expanded) ? value : -value;
     SetAttr(sp, "w:val", val);
     return true;
 }
 
 bool Run::set_position_xml(TextProperties::PositionType type, int value) {
-    if (!current_xml_)
+    if (!current_xml_) {
         return false;
+    }
     auto rPr = EnsureRPr(current_xml_);
     if (type == TextProperties::PositionType::Normal) {
         rPr.remove_child("w:vertAlign");
@@ -833,13 +870,15 @@ bool Run::set_position_xml(TextProperties::PositionType type, int value) {
     const char* valign =
         (type == TextProperties::PositionType::Raised) ? "superscript" : "subscript";
     auto va = rPr.child("w:vertAlign");
-    if (!va)
+    if (!va) {
         va = rPr.append_child("w:vertAlign");
+    }
     SetAttr(va, "w:val", valign);
     if (value != 0) {
         auto pos = rPr.child("w:position");
-        if (!pos)
+        if (!pos) {
             pos = rPr.append_child("w:position");
+        }
         int val = (type == TextProperties::PositionType::Raised) ? value : -value;
         SetAttr(pos, "w:val", val);
     } else {
@@ -859,8 +898,9 @@ void RunCollection::add(const std::shared_ptr<Run>& run) {
 }
 
 void RunCollection::remove(const std::shared_ptr<Run>& run) {
-    if (!run)
+    if (!run) {
         return;
+    }
     for (auto it = runs_.begin(); it != runs_.end(); ++it) {
         if (*it == run) {
             runs_.erase(it);
@@ -969,8 +1009,9 @@ void Field::unlink() {
 }
 
 void Field::accept(DocumentVisitor* visitor) {
-    if (!visitor)
+    if (!visitor) {
         return;
+    }
     if (visitor->visit_field_start(*this) == VisitorAction::Continue) {
         visitor->visit_field_end(*this);
     }

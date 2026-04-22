@@ -50,11 +50,13 @@ static std::string escape_xml(const std::string& text) {
 
 static pugi::xml_node get_first_header_xml(Document* doc) {
     auto names = doc->get_header_names();
-    if (names.empty())
+    if (names.empty()) {
         return pugi::xml_node();
+    }
     pugi::xml_document* header_doc = doc->get_header(0);
-    if (!header_doc)
+    if (!header_doc) {
         return pugi::xml_node();
+    }
     return header_doc->child("w:hdr");
 }
 
@@ -116,8 +118,9 @@ void Watermark::set_text(const std::string& text) {
 }
 
 void Watermark::set_text(const std::string& text, const TextWatermarkOptions& options) {
-    if (!document_)
+    if (!document_) {
         return;
+    }
     remove();
     ensure_header_for_watermark();
     insert_text_watermark_into_header(text, options);
@@ -129,16 +132,18 @@ void Watermark::set_image(const std::string& image_path) {
 }
 
 void Watermark::set_image(const std::string& image_path, const ImageWatermarkOptions& options) {
-    if (!document_)
+    if (!document_) {
         return;
+    }
     remove();
     ensure_header_for_watermark();
     insert_image_watermark_into_header(image_path, options);
 }
 
 void Watermark::remove() {
-    if (!document_)
+    if (!document_) {
         return;
+    }
     pugi::xml_node header = get_first_header_xml(document_);
     if (header) {
         remove_watermark_nodes(header);
@@ -146,11 +151,13 @@ void Watermark::remove() {
 }
 
 bool Watermark::has_watermark() const {
-    if (!document_)
+    if (!document_) {
         return false;
+    }
     pugi::xml_node header = get_first_header_xml(document_);
-    if (!header)
+    if (!header) {
         return false;
+    }
     for (pugi::xml_node para = header.child("w:p"); para; para = para.next_sibling("w:p")) {
         for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
             for (pugi::xml_node pict = run.child("w:pict"); pict;
@@ -170,8 +177,9 @@ bool Watermark::has_watermark() const {
 
 void Watermark::ensure_header_for_watermark() {
     auto sect = document_->get_first_section();
-    if (!sect)
+    if (!sect) {
         return;
+    }
     if (!sect->has_header(HeaderFooterType::Default)) {
         sect->add_header(HeaderFooterType::Default);
     }
@@ -180,8 +188,9 @@ void Watermark::ensure_header_for_watermark() {
 void Watermark::insert_text_watermark_into_header(const std::string& text,
                                                   const TextWatermarkOptions& options) {
     pugi::xml_node header = get_first_header_xml(document_);
-    if (!header)
+    if (!header) {
         return;
+    }
 
     auto para = header.append_child("w:p");
     auto pPr = para.append_child("w:pPr");
@@ -269,18 +278,21 @@ void Watermark::insert_text_watermark_into_header(const std::string& text,
 
 void Watermark::insert_image_watermark_into_header(const std::string& image_path,
                                                    const ImageWatermarkOptions& options) {
-    if (!document_)
+    if (!document_) {
         return;
+    }
 
     // Read image file into memory
     std::ifstream file(image_path, std::ios::binary);
-    if (!file)
+    if (!file) {
         return;
+    }
     std::vector<uint8_t> data((std::istreambuf_iterator<char>(file)),
                               std::istreambuf_iterator<char>());
     file.close();
-    if (data.empty())
+    if (data.empty()) {
         return;
+    }
 
     // Determine media filename and ensure uniqueness
     std::string filename = std::filesystem::path(image_path).filename().string();
@@ -295,8 +307,9 @@ void Watermark::insert_image_watermark_into_header(const std::string& image_path
 
     // Find the first header and its rels path
     auto header_names = document_->get_header_names();
-    if (header_names.empty())
+    if (header_names.empty()) {
         return;
+    }
 
     std::string header_path = header_names[0];
     std::string rels_path;
@@ -312,12 +325,14 @@ void Watermark::insert_image_watermark_into_header(const std::string& image_path
         rels_path,
         "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image",
         "media/" + filename);
-    if (rel_id.empty())
+    if (rel_id.empty()) {
         return;
+    }
 
     pugi::xml_node header = get_first_header_xml(document_);
-    if (!header)
+    if (!header) {
         return;
+    }
 
     auto para = header.append_child("w:p");
     auto pPr = para.append_child("w:pPr");

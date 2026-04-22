@@ -196,7 +196,7 @@ class CompositeNode : public Node {
     // Node overrides
     bool is_composite() const override { return true; }
     std::string get_text() const override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
 
     // Accept visitor start/end (for nodes with children)
     virtual VisitorAction accept_start(DocumentVisitor* visitor) { return VisitorAction::Continue; }

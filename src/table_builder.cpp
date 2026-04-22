@@ -96,29 +96,29 @@ TableBuilder& TableBuilder::MergeCells(int start_row, int start_col, int row_spa
 }
 
 void TableBuilder::CreateTableStructure(pugi::xml_node tbl) const {
-    using namespace pugi;
+
 
     // Create tblPr (table properties)
-    xml_node tblPr = tbl.append_child("w:tblPr");
+    pugi::xml_node tblPr = tbl.append_child("w:tblPr");
 
     // Table width
-    xml_node tblW = tblPr.append_child("w:tblW");
+    pugi::xml_node tblW = tblPr.append_child("w:tblW");
     tblW.append_attribute("w:w").set_value(auto_width_ ? 0 : width_);
     tblW.append_attribute("w:type").set_value(auto_width_ ? "auto" : "dxa");
 
     // Table indentation
-    xml_node tblInd = tblPr.append_child("w:tblInd");
+    pugi::xml_node tblInd = tblPr.append_child("w:tblInd");
     tblInd.append_attribute("w:w").set_value(0);
     tblInd.append_attribute("w:type").set_value("dxa");
 
     // Borders
     if (borders_.top || borders_.left || borders_.bottom || borders_.right || borders_.inside_h ||
         borders_.inside_v) {
-        xml_node tblBorders = tblPr.append_child("w:tblBorders");
+        pugi::xml_node tblBorders = tblPr.append_child("w:tblBorders");
 
         auto add_border = [&](const char* name, bool enabled) {
             if (enabled) {
-                xml_node border = tblBorders.append_child(name);
+                pugi::xml_node border = tblBorders.append_child(name);
                 border.append_attribute("w:val").set_value("single");
                 border.append_attribute("w:color").set_value(borders_.color.c_str());
                 border.append_attribute("w:sz").set_value(borders_.size);
@@ -135,13 +135,13 @@ void TableBuilder::CreateTableStructure(pugi::xml_node tbl) const {
     }
 
     // Table layout
-    xml_node tblLayout = tblPr.append_child("w:tblLayout");
+    pugi::xml_node tblLayout = tblPr.append_child("w:tblLayout");
     tblLayout.append_attribute("w:type").set_value("autofit");
 
     // Cell margins
-    xml_node tblCellMar = tblPr.append_child("w:tblCellMar");
+    pugi::xml_node tblCellMar = tblPr.append_child("w:tblCellMar");
     auto add_margin = [&](const char* name, int value) {
-        xml_node m = tblCellMar.append_child(name);
+        pugi::xml_node m = tblCellMar.append_child(name);
         m.append_attribute("w:w").set_value(value);
         m.append_attribute("w:type").set_value("dxa");
     };
@@ -151,16 +151,16 @@ void TableBuilder::CreateTableStructure(pugi::xml_node tbl) const {
     add_margin("w:right", cell_margin_right_);
 
     // Create tblGrid (column definitions)
-    xml_node tblGrid = tbl.append_child("w:tblGrid");
+    pugi::xml_node tblGrid = tbl.append_child("w:tblGrid");
     int col_width = auto_width_ ? 2840 : (width_ / cols_);
     for (int c = 0; c < cols_; c++) {
-        xml_node gridCol = tblGrid.append_child("w:gridCol");
+        pugi::xml_node gridCol = tblGrid.append_child("w:gridCol");
         gridCol.append_attribute("w:w").set_value(col_width);
     }
 }
 
 void TableBuilder::CreateCell(pugi::xml_node tr, int row, int col) const {
-    using namespace pugi;
+
 
     const CellData& cell = cells_[row][col];
 
@@ -169,44 +169,44 @@ void TableBuilder::CreateCell(pugi::xml_node tr, int row, int col) const {
         return;
     }
 
-    xml_node tc = tr.append_child("w:tc");
+    pugi::xml_node tc = tr.append_child("w:tc");
 
     // Cell properties
-    xml_node tcPr = tc.append_child("w:tcPr");
+    pugi::xml_node tcPr = tc.append_child("w:tcPr");
 
     // Cell width
-    xml_node tcW = tcPr.append_child("w:tcW");
+    pugi::xml_node tcW = tcPr.append_child("w:tcW");
     tcW.append_attribute("w:w").set_value(2840);  // Default width
     tcW.append_attribute("w:type").set_value("dxa");
 
     // Horizontal merge (gridSpan)
     if (cell.col_span > 1) {
-        xml_node gridSpan = tcPr.append_child("w:gridSpan");
+        pugi::xml_node gridSpan = tcPr.append_child("w:gridSpan");
         gridSpan.append_attribute("w:val").set_value(cell.col_span);
     }
 
     // Vertical merge (vMerge)
     if (cell.row_span > 1) {
-        xml_node vMerge = tcPr.append_child("w:vMerge");
+        pugi::xml_node vMerge = tcPr.append_child("w:vMerge");
         vMerge.append_attribute("w:val").set_value("restart");
     }
 
     // Vertical alignment
     if (!cell.v_align.empty()) {
-        xml_node vAlign = tcPr.append_child("w:vAlign");
-        vAlign.append_attribute("w:val").set_value(cell.v_align.c_str());
+        pugi::xml_node v_align = tcPr.append_child("w:vAlign");
+        v_align.append_attribute("w:val").set_value(cell.v_align.c_str());
     }
 
     // Create paragraph with text
-    xml_node p = tc.append_child("w:p");
-    xml_node pPr = p.append_child("w:pPr");
+    pugi::xml_node p = tc.append_child("w:p");
+    pugi::xml_node pPr = p.append_child("w:pPr");
     pPr.append_child("w:rPr");
 
     if (!cell.text.empty()) {
-        xml_node r = p.append_child("w:r");
+        pugi::xml_node r = p.append_child("w:r");
 
         // Run properties
-        xml_node rPr = r.append_child("w:rPr");
+        pugi::xml_node rPr = r.append_child("w:rPr");
 
         if (cell.bold) {
             rPr.append_child("w:b");
@@ -215,14 +215,14 @@ void TableBuilder::CreateCell(pugi::xml_node tr, int row, int col) const {
             rPr.append_child("w:i");
         }
         if (cell.font_size > 0) {
-            xml_node sz = rPr.append_child("w:sz");
+            pugi::xml_node sz = rPr.append_child("w:sz");
             sz.append_attribute("w:val").set_value(cell.font_size);
-            xml_node szCs = rPr.append_child("w:szCs");
+            pugi::xml_node szCs = rPr.append_child("w:szCs");
             szCs.append_attribute("w:val").set_value(cell.font_size);
         }
 
         // Text
-        xml_node t = r.append_child("w:t");
+        pugi::xml_node t = r.append_child("w:t");
         t.text().set(cell.text.c_str());
     }
 }
@@ -286,89 +286,6 @@ bool TableBuilder::InsertAfterParagraph(Document& doc, Paragraph& para) {
 }
 
 // ============================================================================
-// Helper Functions
-// ============================================================================
-
-bool InsertSimpleTable(Document& doc,
-                       const std::string& bookmark_name,
-                       int rows,
-                       int cols,
-                       const std::vector<std::string>& headers,
-                       const std::vector<std::vector<std::string>>& data) {
-    TableBuilder builder(rows, cols);
-    builder.SetBorders(TableBorders::All());
-
-    // Add headers
-    if (!headers.empty()) {
-        for (size_t c = 0; c < headers.size() && c < static_cast<size_t>(cols); c++) {
-            builder.SetCellTextFormatted(0, static_cast<int>(c), headers[c], true, false, 24);
-        }
-    }
-
-    // Add data
-    int start_row = headers.empty() ? 0 : 1;
-    for (size_t r = 0; r < data.size() && static_cast<int>(r) + start_row < rows; r++) {
-        for (size_t c = 0; c < data[r].size() && c < static_cast<size_t>(cols); c++) {
-            builder.SetCellText(static_cast<int>(r) + start_row, static_cast<int>(c), data[r][c]);
-        }
-    }
-
-    return builder.InsertAtBookmark(doc, bookmark_name);
-}
-
-bool InsertTableWithCaption(Document& doc,
-                            const std::string& bookmark_name,
-                            TableBuilder& table_builder,
-                            const std::string& caption,
-                            bool caption_above) {
-    // Insert caption first if above
-    if (caption_above && !caption.empty()) {
-        BookmarkCollection bookmarks = doc.get_bookmarks();
-        auto bm = bookmarks.get(bookmark_name);
-        if (bm) {
-            auto paras = bm->get_covered_paragraphs();
-            if (!paras.empty()) {
-                int figure_num = CaptionGenerator::get_next_figure_number(&doc);
-                // Find paragraph before bookmark to insert caption
-                pugi::xml_node bookmark_para = paras[0];
-                pugi::xml_node prev_para = bookmark_para.previous_sibling("w:p");
-                if (prev_para) {
-                    CaptionGenerator::insert_figure_caption(&doc, prev_para, caption, figure_num);
-                } else {
-                    // If no previous paragraph, insert at document beginning
-                    // by finding the body and inserting before first paragraph
-                    CaptionGenerator::insert_figure_caption(
-                        &doc, bookmark_para, caption, figure_num);
-                }
-            }
-        }
-    }
-
-    // Insert table
-    bool result = table_builder.InsertAtBookmark(doc, bookmark_name);
-
-    // Insert caption after if below
-    if (!caption_above && !caption.empty() && result) {
-        BookmarkCollection bookmarks = doc.get_bookmarks();
-        auto bm = bookmarks.get(bookmark_name);
-        if (bm) {
-            auto paras = bm->get_covered_paragraphs();
-            if (!paras.empty()) {
-                int table_num = get_next_table_number(&doc);
-                // Find the table node that was just inserted (should be after bookmark paragraph)
-                pugi::xml_node bookmark_para = paras[0];
-                pugi::xml_node table_node = bookmark_para.next_sibling("w:tbl");
-                if (table_node) {
-                    insert_table_caption(&doc, table_node, caption, table_num);
-                }
-            }
-        }
-    }
-
-    return result;
-}
-
-// ============================================================================
 // Table Caption Functions
 // ============================================================================
 
@@ -415,7 +332,7 @@ bool is_table_caption(pugi::xml_node para) {
         }
     }
 
-    // Trim whitespace
+    // trim whitespace
     size_t start = text.find_first_not_of(" \t\n\r");
     if (start == std::string::npos) {
         return false;
@@ -449,9 +366,9 @@ bool is_table_caption(pugi::xml_node para) {
 }
 
 pugi::xml_node insert_table_caption(Document* doc,
-                                    pugi::xml_node after_node,
-                                    const std::string& description,
-                                    int table_number) {
+                                        pugi::xml_node after_node,
+                                        const std::string& description,
+                                        int table_number) {
     if (!doc) {
         return pugi::xml_node();
     }
@@ -527,9 +444,9 @@ pugi::xml_node insert_table_caption(Document* doc,
         if (sz) {
             sz.append_attribute("w:val").set_value(21);
         }
-        pugi::xml_node szCs = rPr.append_child("w:szCs");
-        if (szCs) {
-            szCs.append_attribute("w:val").set_value(21);
+        pugi::xml_node sz_cs = rPr.append_child("w:szCs");
+        if (sz_cs) {
+            sz_cs.append_attribute("w:val").set_value(21);
         }
     }
 

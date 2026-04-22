@@ -34,7 +34,7 @@ class CommentRangeStart : public Node {
     NodeType node_type() const override { return NodeType::CommentRangeStart; }
     std::string get_text() const override { return ""; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
 
   private:
     int id_ = 0;
@@ -57,7 +57,7 @@ class CommentRangeEnd : public Node {
     NodeType node_type() const override { return NodeType::CommentRangeEnd; }
     std::string get_text() const override { return ""; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
 
   private:
     int id_ = 0;
@@ -96,7 +96,7 @@ class Comment : public CompositeNode {
 
     NodeType node_type() const override { return NodeType::Comment; }
     void accept(DocumentVisitor* visitor) override;
-    std::shared_ptr<Node> clone(bool deep = true) const override;
+    std::shared_ptr<Node> clone(bool deep) const override;
 
     // Convenience: append paragraph with text
     std::shared_ptr<Paragraph> append_paragraph(const std::string& text = "");
