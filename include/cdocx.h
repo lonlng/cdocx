@@ -58,6 +58,7 @@
 #include "cdocx/table.h"
 #include "cdocx/table_builder.h"
 #include "cdocx/template.h"
+#include "cdocx/template_engine.h"
 #include "cdocx/watermark.h"
 
 // ============================================================================

@@ -200,7 +200,7 @@ void TableBuilder::CreateCell(pugi::xml_node tr, int row, int col) const {
     // Create paragraph with text
     xml_node p = tc.append_child("w:p");
     xml_node pPr = p.append_child("w:pPr");
-    xml_node rPr_para = pPr.append_child("w:rPr");
+    pPr.append_child("w:rPr");
 
     if (!cell.text.empty()) {
         xml_node r = p.append_child("w:r");

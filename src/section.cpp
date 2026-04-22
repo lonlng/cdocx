@@ -19,13 +19,6 @@ namespace cdocx {
 // ============================================================================
 
 /**
- * @brief Generate a unique relationship ID
- */
-static std::string generate_rel_id(int id) {
-    return "rId" + std::to_string(id);
-}
-
-/**
  * @brief Get header/footer type string for XML
  */
 static const char* get_header_footer_type_str(HeaderFooterType type) {
@@ -219,23 +212,22 @@ Paragraph* Section::add_paragraph(const std::string& text, formatting_flag flag)
 
     // Get the body element to append to
     pugi::xml_node body;
-    if (is_first_section_ && body_node_) {
+    if (body_node_) {
         body = body_node_;
-    } else {
-        // For subsequent sections, we need to find the body
-        // and insert before sectPr
+    } else if (sectPr_node_) {
         body = sectPr_node_.parent();
     }
 
     if (!body)
         return nullptr;
 
-    // Create paragraph before sectPr if not first section
+    // Always insert before sectPr when it exists so content stays inside the section;
+    // otherwise append to the body.
     pugi::xml_node p;
-    if (is_first_section_) {
-        p = body.append_child("w:p");
-    } else {
+    if (sectPr_node_) {
         p = body.insert_child_before("w:p", sectPr_node_);
+    } else {
+        p = body.append_child("w:p");
     }
 
     if (!p)
@@ -259,21 +251,22 @@ Table* Section::add_table(size_t rows, size_t cols) {
 
     // Get the body element
     pugi::xml_node body;
-    if (is_first_section_ && body_node_) {
+    if (body_node_) {
         body = body_node_;
-    } else {
+    } else if (sectPr_node_) {
         body = sectPr_node_.parent();
     }
 
     if (!body)
         return nullptr;
 
-    // Create table XML
+    // Always insert before sectPr when it exists so content stays inside the section;
+    // otherwise append to the body.
     pugi::xml_node tbl;
-    if (is_first_section_) {
-        tbl = body.append_child("w:tbl");
-    } else {
+    if (sectPr_node_) {
         tbl = body.insert_child_before("w:tbl", sectPr_node_);
+    } else {
+        tbl = body.append_child("w:tbl");
     }
 
     if (!tbl)
@@ -288,11 +281,11 @@ Table* Section::add_table(size_t rows, size_t cols) {
     // Create rows and cells
     for (size_t r = 0; r < rows; ++r) {
         auto tr = tbl.append_child("w:tr");
-        auto trPr = tr.append_child("w:trPr");
+        tr.append_child("w:trPr");
 
         for (size_t c = 0; c < cols; ++c) {
             auto tc = tr.append_child("w:tc");
-            auto tcPr = tc.append_child("w:tcPr");
+            tc.append_child("w:tcPr");
 
             // Add a paragraph to each cell
             auto p = tc.append_child("w:p");
@@ -319,8 +312,6 @@ std::shared_ptr<HeaderFooter> Section::add_header(HeaderFooterType type) {
     // Generate unique part name
     std::string part_name =
         "word/header" + std::to_string(document_->get_next_header_number()) + ".xml";
-    int rel_id_num = document_->generate_unique_bookmark_id();
-    std::string rel_id = generate_rel_id(rel_id_num);
 
     // Create header XML
     auto& header_doc = document_->create_xml_part(part_name);
@@ -336,8 +327,9 @@ std::shared_ptr<HeaderFooter> Section::add_header(HeaderFooterType type) {
     auto t = r.append_child("w:t");
     t.text().set("");
 
-    // Add relationship
-    document_->add_relationship(
+    // Add relationship and capture the generated ID so the sectPr reference
+    // and the relationship entry stay in sync.
+    std::string rel_id = document_->add_relationship(
         "word/_rels/document.xml.rels",
         "http://schemas.openxmlformats.org/officeDocument/2006/relationships/header",
         part_name.substr(5));  // Remove "word/" prefix
@@ -377,8 +369,6 @@ std::shared_ptr<HeaderFooter> Section::add_footer(HeaderFooterType type) {
     // Generate unique part name
     std::string part_name =
         "word/footer" + std::to_string(document_->get_next_footer_number()) + ".xml";
-    int rel_id_num = document_->generate_unique_bookmark_id();
-    std::string rel_id = generate_rel_id(rel_id_num);
 
     // Create footer XML
     auto& footer_doc = document_->create_xml_part(part_name);
@@ -394,8 +384,9 @@ std::shared_ptr<HeaderFooter> Section::add_footer(HeaderFooterType type) {
     auto t = r.append_child("w:t");
     t.text().set("");
 
-    // Add relationship
-    document_->add_relationship(
+    // Add relationship and capture the generated ID so the sectPr reference
+    // and the relationship entry stay in sync.
+    std::string rel_id = document_->add_relationship(
         "word/_rels/document.xml.rels",
         "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer",
         part_name.substr(5));
@@ -609,8 +600,6 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
                     std::string new_part = "word/header" +
                                            std::to_string(document_->get_next_header_number()) +
                                            ".xml";
-                    int rel_id_num = document_->generate_unique_bookmark_id();
-                    std::string new_rel_id = generate_rel_id(rel_id_num);
 
                     // Copy XML content from previous part
                     auto* prev_doc = document_->get_xml_part(prev_ref->part_path);
@@ -630,10 +619,12 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
                             "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
                     }
 
-                    document_->add_relationship("word/_rels/document.xml.rels",
-                                                "http://schemas.openxmlformats.org/officeDocument/"
-                                                "2006/relationships/header",
-                                                new_part.substr(5));
+                    // Add relationship and capture the generated ID.
+                    std::string new_rel_id = document_->add_relationship(
+                        "word/_rels/document.xml.rels",
+                        "http://schemas.openxmlformats.org/officeDocument/"
+                        "2006/relationships/header",
+                        new_part.substr(5));
 
                     remove_ref_from_node(sectPr_node_, type, true);
                     header_refs_.erase(
@@ -718,8 +709,6 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
                     std::string new_part = "word/footer" +
                                            std::to_string(document_->get_next_footer_number()) +
                                            ".xml";
-                    int rel_id_num = document_->generate_unique_bookmark_id();
-                    std::string new_rel_id = generate_rel_id(rel_id_num);
 
                     auto* prev_doc = document_->get_xml_part(prev_ref->part_path);
                     if (prev_doc) {
@@ -738,10 +727,12 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
                             "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
                     }
 
-                    document_->add_relationship("word/_rels/document.xml.rels",
-                                                "http://schemas.openxmlformats.org/officeDocument/"
-                                                "2006/relationships/footer",
-                                                new_part.substr(5));
+                    // Add relationship and capture the generated ID.
+                    std::string new_rel_id = document_->add_relationship(
+                        "word/_rels/document.xml.rels",
+                        "http://schemas.openxmlformats.org/officeDocument/"
+                        "2006/relationships/footer",
+                        new_part.substr(5));
 
                     remove_ref_from_node(sectPr_node_, type, false);
                     footer_refs_.erase(

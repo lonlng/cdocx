@@ -6,6 +6,7 @@
 #include <cdocx/document.h>
 #include <cdocx/numbering.h>
 
+#include <cstring>
 #include <sstream>
 
 namespace cdocx {
@@ -297,8 +298,7 @@ void NumberingManager::load_from_xml(pugi::xml_node numbering_root) {
             auto numFmt = lvl.child("w:numFmt");
             if (numFmt) {
                 const char* val = numFmt.attribute("w:val").value();
-                // Convert string to NumberStyle
-                // (simplified - would need full mapping)
+                levelDef.numberStyle = string_to_number_style(val);
             }
 
             // Parse level text
@@ -468,6 +468,34 @@ const char* number_style_to_string(NumberStyle style) {
         default:
             return "decimal";
     }
+}
+
+NumberStyle string_to_number_style(const char* val) {
+    if (!val || !*val)
+        return NumberStyle::Decimal;
+
+    if (std::strcmp(val, "bullet") == 0)
+        return NumberStyle::Bullet;
+    if (std::strcmp(val, "decimal") == 0)
+        return NumberStyle::Decimal;
+    if (std::strcmp(val, "upperRoman") == 0)
+        return NumberStyle::UpperRoman;
+    if (std::strcmp(val, "lowerRoman") == 0)
+        return NumberStyle::LowerRoman;
+    if (std::strcmp(val, "upperLetter") == 0)
+        return NumberStyle::UpperLetter;
+    if (std::strcmp(val, "lowerLetter") == 0)
+        return NumberStyle::LowerLetter;
+    if (std::strcmp(val, "ordinal") == 0)
+        return NumberStyle::OrdinalText;
+    if (std::strcmp(val, "cardinalText") == 0)
+        return NumberStyle::CardinalText;
+    if (std::strcmp(val, "chineseCounting") == 0)
+        return NumberStyle::ChineseCounting;
+    if (std::strcmp(val, "ideographEnchanted") == 0)
+        return NumberStyle::IdeographEnchanted;
+
+    return NumberStyle::Decimal;
 }
 
 int numbering_level_to_int(NumberingLevel level) {

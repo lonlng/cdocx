@@ -122,18 +122,39 @@ class Template {
 
     /**
      * @brief Replace placeholders in headers and footers
+     * @return true if any replacement was made
      */
-    void replace_in_headers_footers();
+    bool replace_in_headers_footers();
 
     /**
      * @brief Replace placeholders in a single paragraph
+     * @return true if any replacement was made
      */
-    void replace_in_paragraph(const std::shared_ptr<Paragraph>& para);
+    bool replace_in_paragraph(const std::shared_ptr<Paragraph>& para);
 
     /**
      * @brief Replace placeholders in a single table
+     * @return true if any replacement was made
      */
-    void replace_in_table(const std::shared_ptr<Table>& table);
+    bool replace_in_table(const std::shared_ptr<Table>& table);
+
+    /**
+     * @brief Replace only the first placeholder in a single paragraph
+     * @return true if a replacement was made
+     */
+    bool replace_first_in_paragraph(const std::shared_ptr<Paragraph>& para);
+
+    /**
+     * @brief Replace only the first placeholder in a single table
+     * @return true if a replacement was made
+     */
+    bool replace_first_in_table(const std::shared_ptr<Table>& table);
+
+    /**
+     * @brief Replace only the first placeholder in headers/footers
+     * @return true if a replacement was made
+     */
+    bool replace_first_in_headers_footers();
 
     /**
      * @brief Replace image placeholder in a single run
@@ -143,15 +164,18 @@ class Template {
     /**
      * @brief Legacy: Process a single paragraph for placeholders
      * @param[in,out] p Paragraph to process
+     * @param[in] stop_after_first If true, return after first successful replacement
+     * @return true if any replacement was made
      */
-    void process_paragraph(Paragraph& p);
+    bool process_paragraph(Paragraph& p, bool stop_after_first = false);
 
     /**
      * @brief Legacy: Try to replace placeholder in a single run
      * @param[in,out] r The run to process
+     * @param[in] first_only If true, replace only the first occurrence
      * @return true if replacement was successful
      */
-    bool try_replace_single_run(Run& r);
+    bool try_replace_single_run(Run& r, bool first_only = false);
 
     /**
      * @brief Legacy: Try to replace a collected placeholder
@@ -256,6 +280,15 @@ class Template {
      * @post All matching placeholders are replaced
      */
     void replace_all();
+
+    /**
+     * @brief Replace only the first placeholder found in the document
+     * @details Scans paragraphs, tables, and headers/footers in order,
+     *          replacing the first matching placeholder and stopping.
+     * @return true if a replacement was made
+     * @since 0.8.0
+     */
+    bool replace_first();
 
     /**
      * @brief Clear all placeholder values

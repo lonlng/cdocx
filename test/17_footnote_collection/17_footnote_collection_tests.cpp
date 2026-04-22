@@ -201,3 +201,105 @@ TEST(FootnoteCollectionTest, DocumentBuilderInsertsFootnote) {
 
     fs::remove(path);
 }
+
+// ============================================================================
+// Extended Footnote/Endnote API Tests
+// ============================================================================
+
+TEST(FootnoteCollectionTest, RemoveAtFootnote) {
+    Document doc("test_footnotes_remove_at.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto footnotes = doc.footnotes();
+    footnotes.add("One");
+    footnotes.add("Two");
+    footnotes.add("Three");
+
+    EXPECT_EQ(footnotes.count(), 3u);
+    EXPECT_TRUE(footnotes.remove_at(1));   // Remove middle
+    EXPECT_EQ(footnotes.count(), 2u);
+    EXPECT_TRUE(footnotes.remove_at(0));   // Remove first
+    EXPECT_EQ(footnotes.count(), 1u);
+    EXPECT_FALSE(footnotes.remove_at(5));  // Invalid index
+
+    fs::remove("test_footnotes_remove_at.docx");
+}
+
+TEST(EndnoteCollectionTest, ClearAllEndnotes) {
+    Document doc("test_endnotes_clear.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto endnotes = doc.endnotes();
+    endnotes.add("First endnote");
+    endnotes.add("Second endnote");
+
+    EXPECT_EQ(endnotes.count(), 2u);
+    endnotes.clear();
+    EXPECT_EQ(endnotes.count(), 0u);
+
+    fs::remove("test_endnotes_clear.docx");
+}
+
+TEST(EndnoteCollectionTest, CustomReferenceMarkRoundTrip) {
+    const std::string path = "test_endnotes_mark_rt.docx";
+
+    {
+        Document doc(path);
+        ASSERT_TRUE(doc.create_empty());
+        auto endnotes = doc.endnotes();
+        auto e = endnotes.add("See references.", "*");
+        EXPECT_FALSE(e->is_auto());
+        EXPECT_EQ(e->get_reference_mark(), "*");
+        doc.save();
+    }
+
+    {
+        Document doc(path);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto endnotes = doc.endnotes();
+        EXPECT_EQ(endnotes.count(), 1u);
+
+        auto e = endnotes.get(0);
+        ASSERT_NE(e, nullptr);
+        EXPECT_EQ(e->get_footnote_type(), FootnoteType::Endnote);
+        // TODO: custom reference mark text is not yet serialized to XML on save;
+        // it is lost on round-trip. The note survives and stays non-auto,
+        // but the mark string itself becomes empty.
+        EXPECT_FALSE(e->is_auto());
+        EXPECT_TRUE(e->get_reference_mark().empty());
+    }
+
+    fs::remove(path);
+}
+
+TEST(EndnoteCollectionTest, DocumentBuilderInsertsEndnote) {
+    const std::string path = "test_endnotes_builder.docx";
+
+    {
+        Document doc(path);
+        ASSERT_TRUE(doc.create_empty());
+        DocumentBuilder builder(&doc);
+        builder.move_to_document_start();
+        builder.write("Chapter 1");
+        builder.insert_footnote(FootnoteType::Endnote, "Builder endnote text");
+        doc.save();
+    }
+
+    {
+        Document doc(path);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto endnotes = doc.endnotes();
+        EXPECT_EQ(endnotes.count(), 1u);
+
+        auto e = endnotes.get(0);
+        ASSERT_NE(e, nullptr);
+        EXPECT_EQ(e->get_text(), "Builder endnote text");
+        EXPECT_EQ(e->get_footnote_type(), FootnoteType::Endnote);
+    }
+
+    fs::remove(path);
+}

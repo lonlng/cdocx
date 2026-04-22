@@ -108,3 +108,95 @@ TEST(StyleCollectionTest, XmlRoundTrip) {
     doc2.close();
     if (fs::exists("test_style_xml.docx")) fs::remove("test_style_xml.docx");
 }
+
+TEST(StyleCollectionTest, CharacterStyleRoundTrip) {
+    cdocx::Document doc("test_char_style.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto& styles = doc.styles();
+    auto style = styles.add(cdocx::StyleType::Character, "MyCharStyle");
+    style->set_style_id("MyCharStyleId");
+    style->get_font().set_names("Courier New");
+    style->get_font().size = 10;
+    style->get_font().bold = true;
+
+    doc.save();
+
+    cdocx::Document doc2("test_char_style.docx");
+    doc2.open();
+    ASSERT_TRUE(doc2.is_open());
+
+    auto* styles_xml = doc2.get_styles();
+    ASSERT_NE(styles_xml, nullptr);
+
+    bool found = false;
+    for (auto node = styles_xml->child("w:styles").child("w:style"); node;
+         node = node.next_sibling("w:style")) {
+        if (std::strcmp(node.attribute("w:styleId").value(), "MyCharStyleId") == 0) {
+            found = true;
+            EXPECT_STREQ(node.attribute("w:type").value(), "character");
+            break;
+        }
+    }
+    EXPECT_TRUE(found);
+
+    doc2.close();
+    if (fs::exists("test_char_style.docx")) fs::remove("test_char_style.docx");
+}
+
+TEST(StyleCollectionTest, GetByStyleId) {
+    cdocx::Document doc("test_by_id.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto& styles = doc.styles();
+    auto style = styles.add(cdocx::StyleType::Paragraph, "ByIdName");
+    style->set_style_id("UniqueId123");
+
+    EXPECT_NE(styles.get_by_style_id("UniqueId123"), nullptr);
+    EXPECT_EQ(styles.get_by_style_id("NonExistent"), nullptr);
+
+    doc.close();
+    if (fs::exists("test_by_id.docx")) fs::remove("test_by_id.docx");
+}
+
+TEST(StyleCollectionTest, DuplicateNameNotCreated) {
+    cdocx::Document doc("test_dup.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto& styles = doc.styles();
+    size_t initial = styles.get_count();
+
+    auto s1 = styles.add(cdocx::StyleType::Paragraph, "Duplicate");
+    EXPECT_EQ(styles.get_count(), initial + 1);
+
+    // Adding another with the same name increases count (collection allows duplicates)
+    auto s2 = styles.add(cdocx::StyleType::Paragraph, "Duplicate");
+    EXPECT_EQ(styles.get_count(), initial + 2);
+
+    // get_by_name returns the first match
+    auto found = styles.get_by_name("Duplicate");
+    ASSERT_NE(found, nullptr);
+    EXPECT_EQ(found, s1);
+
+    doc.close();
+    if (fs::exists("test_dup.docx")) fs::remove("test_dup.docx");
+}
+
+TEST(StyleCollectionTest, ClearRemovesAllStyles) {
+    cdocx::Document doc("test_clear.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto& styles = doc.styles();
+    size_t initial = styles.get_count();
+    EXPECT_GE(initial, 1);  // At least Normal
+
+    styles.add(cdocx::StyleType::Paragraph, "Extra1");
+    styles.add(cdocx::StyleType::Paragraph, "Extra2");
+    EXPECT_EQ(styles.get_count(), initial + 2);
+
+    styles.clear();
+    EXPECT_EQ(styles.get_count(), 0u);
+
+    doc.close();
+    if (fs::exists("test_clear.docx")) fs::remove("test_clear.docx");
+}

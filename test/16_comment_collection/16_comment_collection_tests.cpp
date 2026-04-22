@@ -142,3 +142,126 @@ TEST(CommentCollectionTest, RoundTripAfterSave) {
 
     fs::remove(path);
 }
+
+// ============================================================================
+// Extended Comment API Tests
+// ============================================================================
+
+TEST(CommentCollectionTest, ModifyCommentText) {
+    Document doc("test_comments_mod.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto comments = doc.get_comments();
+    auto c = comments.add("Author", "Original text");
+    ASSERT_NE(c, nullptr);
+    EXPECT_EQ(c->get_text(), "Original text");
+
+    c->set_text("Updated text");
+    EXPECT_EQ(c->get_text(), "Updated text");
+
+    fs::remove("test_comments_mod.docx");
+}
+
+TEST(CommentCollectionTest, CommentProperties) {
+    Document doc("test_comments_props.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto comments = doc.get_comments();
+    auto c = comments.add("Alice", "Property test");
+    c->set_initial("A");
+    c->set_done(true);
+    c->set_parent_comment_id(5);
+
+    auto now = std::chrono::system_clock::now();
+    c->set_date_time(now);
+
+    EXPECT_EQ(c->get_author(), "Alice");
+    EXPECT_EQ(c->get_initial(), "A");
+    EXPECT_TRUE(c->is_done());
+    EXPECT_EQ(c->get_parent_comment_id(), 5);
+    // Allow small tolerance for clock granularity
+    auto diff = std::chrono::duration_cast<std::chrono::seconds>(c->get_date_time() - now).count();
+    EXPECT_LE(std::abs(diff), 1);
+
+    fs::remove("test_comments_props.docx");
+}
+
+TEST(CommentCollectionTest, AppendParagraphToComment) {
+    Document doc("test_comments_para.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto comments = doc.get_comments();
+    auto c = comments.add("Reviewer", "First paragraph.");
+    auto para = c->append_paragraph("Second paragraph.");
+    ASSERT_NE(para, nullptr);
+
+    auto text = c->get_text();
+    EXPECT_NE(text.find("First paragraph."), std::string::npos);
+    EXPECT_NE(text.find("Second paragraph."), std::string::npos);
+
+    fs::remove("test_comments_para.docx");
+}
+
+TEST(CommentCollectionTest, RemoveInvalidIndex) {
+    Document doc("test_comments_bad_idx.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto comments = doc.get_comments();
+    comments.add("Author", "One");
+
+    EXPECT_EQ(comments.count(), 1u);
+    EXPECT_FALSE(comments.remove_at(5));   // Out of range
+    EXPECT_FALSE(comments.remove_at(1));   // Out of range
+    EXPECT_TRUE(comments.remove_at(0));    // Valid
+
+    fs::remove("test_comments_bad_idx.docx");
+}
+
+TEST(CommentCollectionTest, RemoveNonExistentId) {
+    Document doc("test_comments_bad_id.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto comments = doc.get_comments();
+    auto c = comments.add("Author", "One");
+    int real_id = c->get_id();
+
+    EXPECT_EQ(comments.count(), 1u);
+    EXPECT_FALSE(comments.remove(real_id + 999));
+    EXPECT_TRUE(comments.remove(real_id));
+
+    fs::remove("test_comments_bad_id.docx");
+}
+
+TEST(CommentCollectionTest, MultipleCommentsSameAuthor) {
+    const std::string path = "test_comments_same_author.docx";
+
+    {
+        Document doc(path);
+        ASSERT_TRUE(doc.create_empty());
+        auto comments = doc.get_comments();
+        comments.add("Alice", "Comment one");
+        comments.add("Alice", "Comment two");
+        comments.add("Bob", "Comment three");
+        doc.save();
+    }
+
+    {
+        Document doc(path);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto comments = doc.get_comments();
+        EXPECT_EQ(comments.count(), 3u);
+
+        int alice_count = 0;
+        int bob_count = 0;
+        for (const auto& c : comments) {
+            if (c->get_author() == "Alice") ++alice_count;
+            if (c->get_author() == "Bob") ++bob_count;
+        }
+        EXPECT_EQ(alice_count, 2);
+        EXPECT_EQ(bob_count, 1);
+    }
+
+    fs::remove(path);
+}

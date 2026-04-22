@@ -21,6 +21,7 @@
 #include <cstring>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <unordered_map>
 
@@ -2095,7 +2096,7 @@ bool DocumentBuilder::insert_image(const std::string& image_path, double width, 
     pugi::xml_node cnvPr = nvPicPr.append_child("pic:cNvPr");
     cnvPr.append_attribute("id").set_value(0);
     cnvPr.append_attribute("name").set_value(image_path.c_str());
-    pugi::xml_node cnvPicPr = nvPicPr.append_child("pic:cNvPicPr");
+    nvPicPr.append_child("pic:cNvPicPr");
 
     pugi::xml_node blipFill = pic.append_child("pic:blipFill");
     pugi::xml_node blip = blipFill.append_child("a:blip");

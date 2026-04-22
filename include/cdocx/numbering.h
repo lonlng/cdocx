@@ -399,6 +399,13 @@ class NumberingManager {
 const char* number_style_to_string(NumberStyle style);
 
 /**
+ * @brief Convert string representation to NumberStyle
+ * @param val String value from XML (e.g. "decimal", "bullet")
+ * @return Corresponding NumberStyle enum value; defaults to Decimal if unknown
+ */
+NumberStyle string_to_number_style(const char* val);
+
+/**
  * @brief Convert NumberingLevel to integer (0-8)
  * @param level Numbering level
  * @return Integer level value

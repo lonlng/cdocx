@@ -3,6 +3,9 @@
 #include <gtest/gtest.h>
 #include "cdocx.h"
 #include <iostream>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 // Helper function to check if a file exists
 bool file_exists(const std::string& filename) {
@@ -57,11 +60,7 @@ TEST(XmlPartsTest, DocumentLoadsCoreProperties) {
         pugi::xml_node core_props_node = core_props->child("cp:coreProperties");
         EXPECT_NE(core_props_node, nullptr);
 
-        // Core properties should have some standard elements
-        bool has_title = core_props_node.child("dc:title") != nullptr;
-        bool has_creator = core_props_node.child("dc:creator") != nullptr;
-
-        // Note: These may not exist in all test files, so we just check structure
+        // Core properties structure verified; specific elements may vary by test file
         std::cout << "Core properties loaded successfully" << std::endl;
     }
 }
@@ -409,4 +408,117 @@ TEST(XmlPartsTest, IteratingThroughAllAvailablePartsWorksCorrectly) {
 
     EXPECT_GT(parts.size(), 0);
     EXPECT_LE(xml_count, parts.size());
+}
+
+// Self-contained tests that do not depend on external files
+TEST(XmlPartsTest, CreateEmptyDocumentHasExpectedParts) {
+    cdocx::Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    EXPECT_TRUE(doc.has_xml_part("[Content_Types].xml"));
+    EXPECT_TRUE(doc.has_xml_part("_rels/.rels"));
+    EXPECT_TRUE(doc.has_xml_part("word/document.xml"));
+    EXPECT_TRUE(doc.has_xml_part("word/styles.xml"));
+    EXPECT_TRUE(doc.has_xml_part("word/settings.xml"));
+    EXPECT_TRUE(doc.has_xml_part("word/fontTable.xml"));
+    EXPECT_TRUE(doc.has_xml_part("word/theme/theme1.xml"));
+    EXPECT_TRUE(doc.has_xml_part("docProps/core.xml"));
+    EXPECT_TRUE(doc.has_xml_part("docProps/app.xml"));
+
+    // Nonexistent parts return false
+    EXPECT_FALSE(doc.has_xml_part("nonexistent.xml"));
+}
+
+TEST(XmlPartsTest, CreateAndRemoveXmlPart) {
+    cdocx::Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    // Create a new XML part
+    pugi::xml_document& new_part = doc.create_xml_part("word/test.xml");
+    auto root = new_part.append_child("w:test");
+    root.append_attribute("xmlns:w")
+        .set_value("http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+    root.append_child("w:item").text().set("test value");
+
+    EXPECT_TRUE(doc.has_xml_part("word/test.xml"));
+
+    // Remove it
+    doc.remove_xml_part("word/test.xml");
+    EXPECT_FALSE(doc.has_xml_part("word/test.xml"));
+}
+
+TEST(XmlPartsTest, GetXmlPartReturnsMutableDocument) {
+    cdocx::Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    pugi::xml_document* settings = doc.get_settings();
+    ASSERT_NE(settings, nullptr);
+
+    // Modify through the pointer (in-memory only)
+    auto root = settings->child("w:settings");
+    ASSERT_NE(root, pugi::xml_node());
+
+    // Remove any existing zoom node before adding our own
+    for (auto child = root.child("w:zoom"); child; child = root.child("w:zoom")) {
+        root.remove_child(child);
+    }
+
+    auto zoom = root.append_child("w:zoom");
+    zoom.append_attribute("w:percent").set_value("150");
+
+    // Verify modification persists in memory
+    auto found_zoom = root.child("w:zoom");
+    ASSERT_NE(found_zoom, pugi::xml_node());
+    EXPECT_STREQ(found_zoom.attribute("w:percent").value(), "150");
+
+    // Note: physical XML modifications are lost on save unless
+    // sync_from_physical_tree() is called first. This is documented
+    // behavior — DOM is the source of truth during serialization.
+}
+
+TEST(XmlPartsTest, GetPartCountReflectsDocumentState) {
+    cdocx::Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    size_t initial = doc.get_part_count();
+    EXPECT_GT(initial, 0);
+
+    // Add a new part
+    doc.create_xml_part("word/custom.xml");
+    EXPECT_EQ(doc.get_part_count(), initial + 1);
+
+    // Remove it
+    doc.remove_xml_part("word/custom.xml");
+    EXPECT_EQ(doc.get_part_count(), initial);
+}
+
+TEST(XmlPartsTest, NonexistentPartReturnsNullptr) {
+    cdocx::Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    EXPECT_EQ(doc.get_xml_part("does_not_exist.xml"), nullptr);
+    EXPECT_EQ(doc.get_xml_part(""), nullptr);
+}
+
+TEST(XmlPartsTest, MarkModifiedFlagsPartForSave) {
+    cdocx::Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    // Mark a part as modified
+    doc.mark_modified("word/settings.xml");
+
+    // The internal state is updated; we verify no crash and
+    // that the document can still be saved successfully.
+    const std::string test_file = "test_mark_modified.docx";
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    doc.save(test_file);
+    EXPECT_TRUE(fs::exists(test_file));
+
+    // Reopen and verify the document is still valid
+    cdocx::Document doc2(test_file);
+    doc2.open();
+    EXPECT_TRUE(doc2.is_open());
+
+    if (fs::exists(test_file)) fs::remove(test_file);
 }

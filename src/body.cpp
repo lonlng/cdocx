@@ -54,6 +54,18 @@ std::shared_ptr<Section> Body::get_parent_section() const {
 }
 
 std::shared_ptr<Paragraph> Body::append_paragraph(const std::string& text) {
+    // Remove the placeholder empty paragraph created by create_empty()
+    // when the body contains only that single unmodified placeholder.
+    auto children = get_children();
+    if (children.size() == 1 && children[0]->node_type() == NodeType::Paragraph) {
+        auto placeholder = std::static_pointer_cast<Paragraph>(children[0]);
+        auto para_children = placeholder->get_children();
+        if (para_children.size() == 1 && para_children[0]->node_type() == NodeType::Run &&
+            placeholder->get_text().empty()) {
+            remove_child(placeholder);
+        }
+    }
+
     auto para = std::make_shared<Paragraph>(get_document());
     if (!text.empty()) {
         para->append_run(text);

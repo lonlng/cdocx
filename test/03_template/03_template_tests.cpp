@@ -254,7 +254,7 @@ TEST(TemplateTest, ReplaceCrossRunPlaceholder) {
         auto paras = body->get_paragraphs();
         ASSERT_FALSE(paras.empty());
 
-        // The appended paragraph is the last one (create_empty leaves one empty paragraph)
+        // The appended paragraph is the only one (placeholder removed by append_paragraph)
         auto* target_para = paras.back().get();
         std::string para_text = target_para->get_text();
         EXPECT_NE(para_text.find("Tech Corp International"), std::string::npos);
@@ -313,7 +313,7 @@ TEST(TemplateTest, ReplaceCrossRunPlaceholderWithSurroundingText) {
         auto paras = body->get_paragraphs();
         ASSERT_FALSE(paras.empty());
 
-        // The appended paragraph is the last one (create_empty leaves one empty paragraph)
+        // The appended paragraph is the only one (placeholder removed by append_paragraph)
         auto* target_para = paras.back().get();
         std::string para_text = target_para->get_text();
         EXPECT_EQ(para_text, "Hello Tech Corp World");

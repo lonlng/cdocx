@@ -454,6 +454,11 @@ bool Document::create_empty(const std::string& filepath) {
         return false;
     }
 
+    // Load relationships into the in-memory map so that subsequent
+    // add_relationship() / update_relationships_xml() calls preserve
+    // the initial set instead of overwriting them.
+    load_all_relationships();
+
     is_open_ = true;
     sections_dirty_ = true;
 
@@ -1113,12 +1118,110 @@ std::string Document::add_media_with_rel(const std::string& image_path,
 }
 
 // ============================================================================
+// Thumbnail Management
+// ============================================================================
+
+bool Document::add_thumbnail(const std::string& image_path) {
+    if (!is_open()) {
+        return false;
+    }
+    if (!std::filesystem::exists(image_path)) {
+        return false;
+    }
+
+    std::string filename = std::filesystem::path(image_path).filename().string();
+    std::string thumb_path = "docProps/" + filename;
+
+    // Read image file
+    std::ifstream file(image_path, std::ios::binary);
+    if (!file) {
+        return false;
+    }
+
+    std::vector<uint8_t> data((std::istreambuf_iterator<char>(file)),
+                              std::istreambuf_iterator<char>());
+    file.close();
+
+    if (data.empty()) {
+        return false;
+    }
+
+    std::string ct = get_mime_type(filename);
+    return add_thumbnail_from_memory(data, ct);
+}
+
+bool Document::add_thumbnail_from_memory(const std::vector<uint8_t>& data,
+                                         const std::string& content_type) {
+    if (!is_open() || data.empty()) {
+        return false;
+    }
+
+    // Thumbnail is always stored as thumbnail.jpeg in docProps/
+    std::string thumb_path = "docProps/thumbnail.jpeg";
+
+    // Remove existing thumbnail first
+    remove_thumbnail();
+
+    // Add to tree
+    auto node = tree_.add_zip_entry(thumb_path, data);
+    if (!node) {
+        return false;
+    }
+
+    node->type = DocxNodeType::MediaFile;
+    node->content_type = content_type.empty() ? "image/jpeg" : content_type;
+    node->is_new = true;
+    node->is_modified = true;
+
+    // Register content type override
+    add_content_type_override("/" + thumb_path, node->content_type);
+
+    // Add relationship in package rels (_rels/.rels)
+    add_relationship("_rels/.rels",
+                     "http://schemas.openxmlformats.org/package/2006/relationships/metadata/"
+                     "thumbnail",
+                     "docProps/thumbnail.jpeg");
+
+    return true;
+}
+
+bool Document::remove_thumbnail() {
+    if (!is_open()) {
+        return false;
+    }
+
+    std::string thumb_path = "docProps/thumbnail.jpeg";
+    auto node = tree_.find_node(thumb_path);
+    if (!node) {
+        return false;
+    }
+
+    node->is_deleted = true;
+
+    // Remove relationship if exists
+    std::string rel_id = find_relationship_id("_rels/.rels", "docProps/thumbnail.jpeg");
+    if (!rel_id.empty()) {
+        remove_relationship("_rels/.rels", rel_id);
+    }
+
+    return true;
+}
+
+bool Document::has_thumbnail() const {
+    if (!is_open()) {
+        return false;
+    }
+
+    auto node = tree_.find_node("docProps/thumbnail.jpeg");
+    return node && !node->is_deleted;
+}
+
+// ============================================================================
 // Bookmark Management
 // ============================================================================
 
 BookmarkCollection Document::get_bookmarks() {
     sync_to_physical_tree();
-    sync_from_physical_tree();
     return BookmarkCollection(this);
 }
 
@@ -1940,6 +2043,25 @@ void Document::add_content_type_override(const std::string& part_name,
     modified_parts_.insert("[Content_Types].xml");
 }
 
+void Document::add_content_type_default(const std::string& extension,
+                                        const std::string& content_type) {
+    // Check if already exists
+    for (auto& ct : content_types_) {
+        if (ct.is_default && ct.extension == extension) {
+            ct.content_type = content_type;
+            return;
+        }
+    }
+
+    ContentType ct;
+    ct.extension = extension;
+    ct.content_type = content_type;
+    ct.is_default = true;
+    content_types_.push_back(ct);
+
+    modified_parts_.insert("[Content_Types].xml");
+}
+
 void Document::update_content_types_xml() {
     if (content_types_.empty())
         return;
@@ -2178,6 +2300,9 @@ bool Document::create_empty_document() {
         add_rel("rId4",
                 "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
                 "theme/theme1.xml");
+        add_rel("rId5",
+                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings",
+                "webSettings.xml");
     }
 
     // Create word/document.xml
@@ -2270,6 +2395,15 @@ bool Document::create_empty_document() {
         fmt_scheme.append_attribute("name").set_value("Office");
     }
 
+    // Create word/webSettings.xml
+    {
+        auto& doc = create_xml_part("word/webSettings.xml");
+        auto root = doc.append_child("w:webSettings");
+        root.append_attribute("xmlns:w").set_value(
+            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+        root.append_child("w:optimizeForBrowser");
+    }
+
     // Create docProps/core.xml
     {
         auto& doc = create_xml_part("docProps/core.xml");
@@ -2319,12 +2453,18 @@ bool Document::create_empty_document() {
     }
 
     // Register content types for all parts
+    add_content_type_default("rels", "application/vnd.openxmlformats-package.relationships+xml");
+    add_content_type_default("xml", "application/xml");
+
     add_content_type_override(
         "/word/styles.xml",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml");
     add_content_type_override(
         "/word/settings.xml",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml");
+    add_content_type_override(
+        "/word/webSettings.xml",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml");
     add_content_type_override(
         "/word/fontTable.xml",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml");
@@ -2342,13 +2482,103 @@ bool Document::create_empty_document() {
     // Initialize default styles in DOM
     if (styles_) {
         styles_->clear();
-        auto normal = std::make_shared<Style>(this, StyleType::Paragraph);
-        normal->set_name("Normal");
-        normal->set_style_id("Normal");
-        normal->set_style_identifier(StyleIdentifier::Normal);
-        normal->set_is_built_in(true);
+
+        auto add_builtin_style = [this](StyleType type,
+                                        const char* style_id,
+                                        const char* name,
+                                        StyleIdentifier identifier) {
+            auto style = std::make_shared<Style>(this, type);
+            style->set_style_id(style_id);
+            style->set_name(name);
+            style->set_style_identifier(identifier);
+            style->set_is_built_in(true);
+            return style;
+        };
+
+        // Normal - default paragraph style
+        auto normal =
+            add_builtin_style(StyleType::Paragraph, "Normal", "Normal", StyleIdentifier::Normal);
         normal->set_is_default(true);
         styles_->add(normal);
+
+        // Heading 1-9 - paragraph styles with outline levels
+        struct HeadingDef {
+            const char* style_id;
+            const char* name;
+            StyleIdentifier identifier;
+            double font_size;
+            OutlineLevel outline_level;
+            double space_before;
+        };
+        static const HeadingDef kHeadings[] = {
+            {"Heading1", "heading 1", StyleIdentifier::Heading1, 16, OutlineLevel::Level1, 24},
+            {"Heading2", "heading 2", StyleIdentifier::Heading2, 14, OutlineLevel::Level2, 18},
+            {"Heading3", "heading 3", StyleIdentifier::Heading3, 12, OutlineLevel::Level3, 12},
+            {"Heading4", "heading 4", StyleIdentifier::Heading4, 12, OutlineLevel::Level4, 12},
+            {"Heading5", "heading 5", StyleIdentifier::Heading5, 11, OutlineLevel::Level5, 12},
+            {"Heading6", "heading 6", StyleIdentifier::Heading6, 11, OutlineLevel::Level6, 12},
+            {"Heading7", "heading 7", StyleIdentifier::Heading7, 11, OutlineLevel::Level7, 12},
+            {"Heading8", "heading 8", StyleIdentifier::Heading8, 11, OutlineLevel::Level8, 12},
+            {"Heading9", "heading 9", StyleIdentifier::Heading9, 11, OutlineLevel::Level9, 12},
+        };
+        for (const auto& def : kHeadings) {
+            auto heading =
+                add_builtin_style(StyleType::Paragraph, def.style_id, def.name, def.identifier);
+            heading->set_base_style_name("Normal");
+            heading->get_font().bold = true;
+            heading->get_font().size = def.font_size;
+            heading->get_paragraph_format().space_before = def.space_before;
+            heading->get_paragraph_format().space_after = 6;
+            heading->get_paragraph_format().keep_with_next = true;
+            heading->get_paragraph_format().keep_together = true;
+            heading->get_paragraph_format().outline_level = def.outline_level;
+            styles_->add(heading);
+        }
+
+        // Title
+        auto title =
+            add_builtin_style(StyleType::Paragraph, "Title", "Title", StyleIdentifier::Title);
+        title->set_base_style_name("Normal");
+        title->get_font().size = 28;
+        title->get_paragraph_format().alignment = ParagraphAlignment::Center;
+        title->get_paragraph_format().space_after = 0;
+        styles_->add(title);
+
+        // Subtitle
+        auto subtitle = add_builtin_style(
+            StyleType::Paragraph, "Subtitle", "Subtitle", StyleIdentifier::Subtitle);
+        subtitle->set_base_style_name("Normal");
+        subtitle->get_font().size = 24;
+        subtitle->get_paragraph_format().alignment = ParagraphAlignment::Center;
+        subtitle->get_paragraph_format().space_after = 0;
+        styles_->add(subtitle);
+
+        // List Paragraph
+        auto list_para = add_builtin_style(StyleType::Paragraph,
+                                           "ListParagraph",
+                                           "List Paragraph",
+                                           StyleIdentifier::ListParagraph);
+        list_para->set_base_style_name("Normal");
+        styles_->add(list_para);
+
+        // Strong - character style
+        auto strong =
+            add_builtin_style(StyleType::Character, "Strong", "Strong", StyleIdentifier::Strong);
+        strong->get_font().bold = true;
+        styles_->add(strong);
+
+        // Emphasis - character style
+        auto emphasis = add_builtin_style(
+            StyleType::Character, "Emphasis", "Emphasis", StyleIdentifier::Emphasis);
+        emphasis->get_font().italic = true;
+        styles_->add(emphasis);
+
+        // Hyperlink - character style
+        auto hyperlink = add_builtin_style(
+            StyleType::Character, "Hyperlink", "Hyperlink", StyleIdentifier::Hyperlink);
+        hyperlink->get_font().color = Color::from_rgb(0x00, 0x00, 0xFF);
+        hyperlink->get_font().underline = UnderlineType::Single;
+        styles_->add(hyperlink);
     }
 
     return true;
@@ -2405,6 +2635,17 @@ void Document::save_numbering() {
 
     if (!doc)
         return;
+
+    // Ensure document.xml.rels has a relationship to numbering.xml
+    std::string rels_path = "word/_rels/document.xml.rels";
+    std::string numbering_target = "numbering.xml";
+    if (find_relationship_id(rels_path, numbering_target).empty()) {
+        add_relationship(
+            rels_path,
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering",
+            numbering_target);
+    }
+
     auto root = doc->append_child("w:numbering");
     numbering_manager_->save_to_xml(root);
 }

@@ -625,4 +625,59 @@ TEST(DocumentBookmarksTest, BookmarkCollectionAddDuplicateReturnsExisting) {
     if (fs::exists(test_file)) fs::remove(test_file);
 }
 
+TEST(BookmarkInserterTest, BatchSortsByLengthDescendingToAvoidSubstringHiding) {
+    const std::string test_file = "test_bmk_inserter_substring.docx";
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        cdocx::Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+
+        auto body = doc.get_first_section()->get_body();
+        // Paragraph 1 contains the longer text.
+        // Paragraph 2 contains the shorter text standalone.
+        // If SHORT is inserted first, it would match the substring inside
+        // paragraph 1 (because insert scans in document order), split the run,
+        // and leave LONG unfindable. Sorting by length descending prevents this.
+        body->append_paragraph("YK52+320~YK52+470");
+        body->append_paragraph("YK52+320");
+
+        // Sync DOM to physical tree so BookmarkInserter can find the text.
+        doc.sync_to_physical_tree();
+
+        cdocx::BookmarkInserter inserter(&doc);
+
+        std::map<std::string, std::string> fields = {
+            {"SHORT", "YK52+320"},
+            {"LONG", "YK52+320~YK52+470"},
+        };
+
+        int inserted = inserter.insert_batch(fields);
+        EXPECT_EQ(inserted, 2);
+
+        // Rebuild DOM from physical tree so bookmarks survive the save/sync cycle.
+        doc.sync_from_physical_tree();
+
+        doc.save();
+    }
+
+    {
+        cdocx::Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto bookmarks = doc.get_bookmarks();
+        EXPECT_EQ(bookmarks.count(), 2u);
+        EXPECT_TRUE(bookmarks.contains("SHORT"));
+        EXPECT_TRUE(bookmarks.contains("LONG"));
+
+        auto long_bm = bookmarks.get("LONG");
+        ASSERT_TRUE(long_bm.has_value());
+        EXPECT_EQ(long_bm->get_text(), "YK52+320~YK52+470");
+    }
+
+    if (fs::exists(test_file)) fs::remove(test_file);
+}
+
 /** @} */

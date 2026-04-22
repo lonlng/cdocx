@@ -13,6 +13,75 @@ using namespace cdocx;
 namespace fs = std::filesystem;
 
 // ============================================================================
+// NumberStyle String Round-Trip Tests
+// ============================================================================
+
+TEST(SectionAndListTest, NumberStyleStringRoundTrip) {
+    // Verify every NumberStyle enum value round-trips through
+    // number_style_to_string() and string_to_number_style().
+    std::vector<std::pair<NumberStyle, const char*>> cases = {
+        {NumberStyle::Bullet, "bullet"},
+        {NumberStyle::Decimal, "decimal"},
+        {NumberStyle::UpperRoman, "upperRoman"},
+        {NumberStyle::LowerRoman, "lowerRoman"},
+        {NumberStyle::UpperLetter, "upperLetter"},
+        {NumberStyle::LowerLetter, "lowerLetter"},
+        {NumberStyle::OrdinalText, "ordinal"},
+        {NumberStyle::CardinalText, "cardinalText"},
+        {NumberStyle::ChineseCounting, "chineseCounting"},
+        {NumberStyle::IdeographEnchanted, "ideographEnchanted"},
+    };
+
+    for (const auto& [style, expected_str] : cases) {
+        EXPECT_STREQ(number_style_to_string(style), expected_str)
+            << "number_style_to_string failed for enum value";
+        EXPECT_EQ(string_to_number_style(expected_str), style)
+            << "string_to_number_style failed for: " << expected_str;
+    }
+
+    // Unknown strings should default to Decimal
+    EXPECT_EQ(string_to_number_style("unknown"), NumberStyle::Decimal);
+    EXPECT_EQ(string_to_number_style(nullptr), NumberStyle::Decimal);
+    EXPECT_EQ(string_to_number_style(""), NumberStyle::Decimal);
+}
+
+TEST(SectionAndListTest, NumberStyleRoundTripInDocument) {
+    Document doc("test_numbering_style_rt.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto num_id = doc.add_numbered_list_definition(NumberStyle::UpperRoman);
+    EXPECT_GT(num_id, 0);
+
+    auto sect = doc.get_first_section();
+    ASSERT_NE(sect, nullptr);
+
+    auto* para = sect->add_paragraph("Roman numeral item");
+    para->set_numbering(num_id, NumberingLevel::Level1);
+
+    doc.save();
+
+    // Re-open and verify the numbering style survived the round-trip
+    Document doc2("test_numbering_style_rt.docx");
+    doc2.open();
+    ASSERT_TRUE(doc2.is_open());
+
+    auto* numbering = doc2.get_numbering_xml();
+    ASSERT_NE(numbering, nullptr);
+
+    auto abstract_num = numbering->child("w:numbering").child("w:abstractNum");
+    ASSERT_NE(abstract_num, pugi::xml_node());
+
+    auto lvl = abstract_num.child("w:lvl");
+    ASSERT_NE(lvl, pugi::xml_node());
+
+    auto numFmt = lvl.child("w:numFmt");
+    ASSERT_NE(numFmt, pugi::xml_node());
+    EXPECT_STREQ(numFmt.attribute("w:val").value(), "upperRoman");
+
+    fs::remove("test_numbering_style_rt.docx");
+}
+
+// ============================================================================
 // Section Management Tests
 // ============================================================================
 

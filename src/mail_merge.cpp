@@ -7,6 +7,7 @@
 #include <cdocx/mail_merge.h>
 #include <cdocx/node.h>
 #include <cdocx/paragraph.h>
+#include <iostream>  // DEBUG
 
 #include <algorithm>
 #include <cctype>

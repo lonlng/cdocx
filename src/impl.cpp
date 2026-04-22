@@ -312,9 +312,6 @@ bool DocumentImpl::load_tree_parallel(LoadStatistics& stats) {
     }
 
     // Process files in parallel
-    size_t num_threads = load_config_.max_threads > 0 ? load_config_.max_threads
-                                                      : std::thread::hardware_concurrency();
-
     std::atomic<size_t> processed{0};
     std::atomic<size_t> errors{0};
     std::mutex tree_mutex;

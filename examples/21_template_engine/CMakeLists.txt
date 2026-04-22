@@ -1,0 +1,3 @@
+add_executable(21_template_engine main.cpp)
+target_link_libraries(21_template_engine PRIVATE cdocx)
+set_target_properties(21_template_engine PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/examples)

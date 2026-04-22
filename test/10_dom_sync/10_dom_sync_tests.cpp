@@ -38,12 +38,14 @@ TEST(DomSyncTest, PreOrderTraversal) {
         current = current->get_next_node_in_document();
     }
 
-    ASSERT_GE(order.size(), 6u);
+    ASSERT_GE(order.size(), 7u);
     EXPECT_EQ(order[0], NodeType::Body);
     EXPECT_EQ(order[1], NodeType::Paragraph);
     EXPECT_EQ(order[2], NodeType::Run);
-    EXPECT_EQ(order[3], NodeType::Paragraph);
-    EXPECT_EQ(order[4], NodeType::Run);
+    EXPECT_EQ(order[3], NodeType::Run);
+    EXPECT_EQ(order[4], NodeType::Paragraph);
+    EXPECT_EQ(order[5], NodeType::Run);
+    EXPECT_EQ(order[6], NodeType::Run);
 
     fs::remove("test_traversal.docx");
 }
@@ -294,4 +296,177 @@ TEST(DomSyncTest, PreserveUnknownXmlNodes) {
     }
 
     fs::remove("test_unknown.docx");
+}
+
+// ============================================================================
+// Enum Mapping Round-Trip Tests
+// ============================================================================
+
+TEST(DomSyncTest, CellVerticalAlignmentRoundTrip) {
+    const std::string test_file = "test_cell_valign.docx";
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+
+        auto table = doc.get_first_section()->get_body()->append_table(1, 3);
+        table->get_cell(0, 0)->get_cell_format().vertical_alignment = CellVerticalAlignment::Top;
+        table->get_cell(0, 1)->get_cell_format().vertical_alignment = CellVerticalAlignment::Center;
+        table->get_cell(0, 2)->get_cell_format().vertical_alignment = CellVerticalAlignment::Bottom;
+
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto table = doc.get_first_section()->get_body()->get_first_table();
+        ASSERT_NE(table, nullptr);
+
+        EXPECT_EQ(table->get_cell(0, 0)->get_cell_format().vertical_alignment,
+                  CellVerticalAlignment::Top);
+        EXPECT_EQ(table->get_cell(0, 1)->get_cell_format().vertical_alignment,
+                  CellVerticalAlignment::Center);
+        EXPECT_EQ(table->get_cell(0, 2)->get_cell_format().vertical_alignment,
+                  CellVerticalAlignment::Bottom);
+    }
+
+    fs::remove(test_file);
+}
+
+TEST(DomSyncTest, TableAlignmentRoundTrip) {
+    const std::string test_file = "test_tbl_align.docx";
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+
+        auto t1 = doc.get_first_section()->get_body()->append_table(1, 1);
+        t1->get_table_format().alignment = TableAlignment::Left;
+
+        auto t2 = doc.get_first_section()->get_body()->append_table(1, 1);
+        t2->get_table_format().alignment = TableAlignment::Center;
+
+        auto t3 = doc.get_first_section()->get_body()->append_table(1, 1);
+        t3->get_table_format().alignment = TableAlignment::Right;
+
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto body = doc.get_first_section()->get_body();
+        auto children = body->get_children();
+        ASSERT_GE(children.size(), 3u);
+
+        // Find tables among children (body may contain placeholder paragraphs)
+        std::vector<std::shared_ptr<Table>> tables;
+        for (const auto& child : children) {
+            if (auto tbl = std::dynamic_pointer_cast<Table>(child)) {
+                tables.push_back(tbl);
+            }
+        }
+        ASSERT_EQ(tables.size(), 3u);
+
+        EXPECT_EQ(tables[0]->get_table_format().alignment, TableAlignment::Left);
+        EXPECT_EQ(tables[1]->get_table_format().alignment, TableAlignment::Center);
+        EXPECT_EQ(tables[2]->get_table_format().alignment, TableAlignment::Right);
+    }
+
+    fs::remove(test_file);
+}
+
+TEST(DomSyncTest, ScriptTypeRoundTrip) {
+    const std::string test_file = "test_script.docx";
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+
+        auto para = doc.get_first_section()->get_body()->append_paragraph();
+        auto run1 = para->append_run("Normal");
+        run1->get_font().script_type = ScriptType::Normal;
+
+        auto run2 = para->append_run("Superscript");
+        run2->get_font().script_type = ScriptType::Superscript;
+
+        auto run3 = para->append_run("Subscript");
+        run3->get_font().script_type = ScriptType::Subscript;
+
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto para = doc.get_first_section()->get_body()->get_last_paragraph();
+        ASSERT_NE(para, nullptr);
+
+        auto runs = para->get_runs();
+        ASSERT_EQ(runs.get_count(), 3u);
+
+        EXPECT_EQ(runs[0]->get_font().script_type, ScriptType::Normal);
+        EXPECT_EQ(runs[1]->get_font().script_type, ScriptType::Superscript);
+        EXPECT_EQ(runs[2]->get_font().script_type, ScriptType::Subscript);
+    }
+
+    fs::remove(test_file);
+}
+
+TEST(DomSyncTest, LineSpacingRuleRoundTrip) {
+    const std::string test_file = "test_line_rule.docx";
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+
+        auto p1 = doc.get_first_section()->get_body()->append_paragraph("Auto");
+        p1->get_paragraph_format().line_spacing_rule = LineSpacingRule::Auto;
+        p1->get_paragraph_format().line_spacing = 1.5;
+
+        auto p2 = doc.get_first_section()->get_body()->append_paragraph("Exact");
+        p2->get_paragraph_format().line_spacing_rule = LineSpacingRule::Exact;
+        p2->get_paragraph_format().line_spacing = 20.0;
+
+        auto p3 = doc.get_first_section()->get_body()->append_paragraph("AtLeast");
+        p3->get_paragraph_format().line_spacing_rule = LineSpacingRule::AtLeast;
+        p3->get_paragraph_format().line_spacing = 24.0;
+
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto body = doc.get_first_section()->get_body();
+        auto children = body->get_children();
+        ASSERT_GE(children.size(), 3u);
+
+        auto p1 = std::dynamic_pointer_cast<Paragraph>(children[0]);
+        auto p2 = std::dynamic_pointer_cast<Paragraph>(children[1]);
+        auto p3 = std::dynamic_pointer_cast<Paragraph>(children[2]);
+
+        ASSERT_NE(p1, nullptr);
+        ASSERT_NE(p2, nullptr);
+        ASSERT_NE(p3, nullptr);
+
+        EXPECT_EQ(p1->get_paragraph_format().line_spacing_rule, LineSpacingRule::Auto);
+        EXPECT_EQ(p2->get_paragraph_format().line_spacing_rule, LineSpacingRule::Exact);
+        EXPECT_EQ(p3->get_paragraph_format().line_spacing_rule, LineSpacingRule::AtLeast);
+    }
+
+    fs::remove(test_file);
 }

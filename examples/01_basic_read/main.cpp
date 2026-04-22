@@ -126,8 +126,8 @@ bool create_sample_document(const std::string& doc_path) {
     auto& p6 = p5.insert_paragraph_after("This is a test");
     
     // Paragraph 7 - End
-    auto& p7 = p6.insert_paragraph_after("okay?");
-    
+    p6.insert_paragraph_after("okay?");
+
     doc.save(doc_path);
     std::cout << "  Created: " << doc_path << std::endl;
     return true;

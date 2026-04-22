@@ -28,9 +28,9 @@ Run::Run(Document* doc, const std::string& text) : text_(text) {
 
 Run::Run(const Run& other)
     : Inline(other),
-      text_(other.text_),
       parent_xml_(other.parent_xml_),
-      current_xml_(other.current_xml_) {
+      current_xml_(other.current_xml_),
+      text_(other.text_) {
     for (auto child = other.preserved_children_.first_child(); child;
          child = child.next_sibling()) {
         preserved_children_.append_copy(child);

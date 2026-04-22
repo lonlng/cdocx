@@ -144,8 +144,17 @@ int BookmarkInserter::insert_all(const std::string& bookmark_name, const std::st
 }
 
 int BookmarkInserter::insert_batch(const std::map<std::string, std::string>& mappings) {
+    // Sort by text length descending so longer strings are bookmarked before
+    // shorter substrings. This prevents a short value like "YK52+320" from
+    // being hidden by the internal _cdocx_bmk marker of a longer value like
+    // "YK52+320~YK52+470".
+    std::vector<std::pair<std::string, std::string>> sorted(mappings.begin(), mappings.end());
+    std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
+        return a.second.size() > b.second.size();
+    });
+
     int success = 0;
-    for (const auto& pair : mappings) {
+    for (const auto& pair : sorted) {
         if (insert(pair.first, pair.second)) {
             ++success;
         }

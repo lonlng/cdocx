@@ -56,6 +56,9 @@ list(APPEND CDOCX_EXAMPLES 18_new_features)
 # v0.7.0: MailMerge example
 list(APPEND CDOCX_EXAMPLES 19_mail_merge)
 
+# v0.8.0: TemplateEngine unified API example
+list(APPEND CDOCX_EXAMPLES 21_template_engine)
+
 # DOM sync validation
 list(APPEND CDOCX_EXAMPLES test_dom_sync)
 

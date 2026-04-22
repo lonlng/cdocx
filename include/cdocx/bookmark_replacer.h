@@ -148,6 +148,15 @@ class BookmarkReplacer {
     bool replace_text(const std::string& bookmark_name, const std::string& new_text);
 
     /**
+     * @brief Replace bookmark text using an existing Bookmark object
+     * @param[in] bookmark Bookmark to replace
+     * @param[in] new_text New text content
+     * @return true if replacement was successful
+     * @since 0.8.0
+     */
+    bool replace_text(Bookmark& bookmark, const std::string& new_text);
+
+    /**
      * @brief Replace multiple bookmarks in batch
      * @param[in] replacements Map of bookmark_name -> new_text
      * @return Number of successful replacements
@@ -213,6 +222,18 @@ class BookmarkReplacer {
                                   const std::string& new_text,
                                   const BookmarkFormat& format);
 
+    /**
+     * @brief Replace text with explicit format control using an existing Bookmark
+     * @param[in] bookmark Bookmark to replace
+     * @param[in] new_text New text content
+     * @param[in] format Format specification to apply
+     * @return true if replacement was successful
+     * @since 0.8.0
+     */
+    bool replace_text_with_format(Bookmark& bookmark,
+                                  const std::string& new_text,
+                                  const BookmarkFormat& format);
+
     // ========================================================================
     // Image Replacement
     // ========================================================================
@@ -226,6 +247,18 @@ class BookmarkReplacer {
      * @details Image is centered by default. Caption is auto-generated if provided.
      */
     bool replace_with_image(const std::string& bookmark_name,
+                            const std::string& image_path,
+                            const std::string& caption = "");
+
+    /**
+     * @brief Replace bookmark with image using an existing Bookmark
+     * @param[in] bookmark Bookmark to replace
+     * @param[in] image_path Path to image file (PNG, JPG, etc.)
+     * @param[in] caption Optional caption text
+     * @return true if replacement was successful
+     * @since 0.8.0
+     */
+    bool replace_with_image(Bookmark& bookmark,
                             const std::string& image_path,
                             const std::string& caption = "");
 
@@ -245,6 +278,22 @@ class BookmarkReplacer {
                                      ImageAlignment align = ImageAlignment::Center);
 
     /**
+     * @brief Replace bookmark with image (advanced version) using an existing Bookmark
+     * @param[in] bookmark Bookmark to replace
+     * @param[in] image_path Path to image file
+     * @param[in] size Image dimensions in points
+     * @param[in] caption Optional caption text
+     * @param[in] align Image alignment (Left, Center, Right)
+     * @return true if replacement was successful
+     * @since 0.8.0
+     */
+    bool replace_with_image_advanced(Bookmark& bookmark,
+                                     const std::string& image_path,
+                                     const ImageSize& size,
+                                     const std::string& caption = "",
+                                     ImageAlignment align = ImageAlignment::Center);
+
+    /**
      * @brief Replace bookmark with image from memory
      * @param[in] bookmark_name Name of the bookmark
      * @param[in] image_data Binary image data
@@ -255,6 +304,24 @@ class BookmarkReplacer {
      * @return true if replacement was successful
      */
     bool replace_with_image_from_memory(const std::string& bookmark_name,
+                                        const std::vector<uint8_t>& image_data,
+                                        const std::string& image_name,
+                                        const ImageSize& size,
+                                        const std::string& caption = "",
+                                        ImageAlignment align = ImageAlignment::Center);
+
+    /**
+     * @brief Replace bookmark with image from memory using an existing Bookmark
+     * @param[in] bookmark Bookmark to replace
+     * @param[in] image_data Binary image data
+     * @param[in] image_name Name for the image in document
+     * @param[in] size Image dimensions
+     * @param[in] caption Optional caption
+     * @param[in] align Image alignment
+     * @return true if replacement was successful
+     * @since 0.8.0
+     */
+    bool replace_with_image_from_memory(Bookmark& bookmark,
                                         const std::vector<uint8_t>& image_data,
                                         const std::string& image_name,
                                         const ImageSize& size,

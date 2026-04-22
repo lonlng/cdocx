@@ -614,8 +614,13 @@ bool Paragraph::set_underline(bool underline) {
 // ============================================================================
 
 bool Paragraph::set_numbering(NumberingId numId, NumberingLevel level) {
+    // Always update the DOM list_format_ so sync_to_physical_tree() preserves it.
+    list_format_.list_id = numId;
+    list_format_.level = level;
+
+    // If this paragraph is backed by physical XML, update it as well.
     if (!current_) {
-        return false;
+        return true;
     }
 
     pugi::xml_node pPr = get_or_create_pPr(current_);
@@ -641,24 +646,33 @@ bool Paragraph::set_numbering(NumberingId numId, NumberingLevel level) {
 }
 
 bool Paragraph::remove_numbering() {
+    // Always clear the DOM list_format_.
+    bool had_dom_numbering = list_format_.is_list_item();
+    list_format_.remove_list_format();
+
     if (!current_) {
-        return false;
+        return had_dom_numbering;
     }
 
     pugi::xml_node pPr = current_.child("w:pPr");
     if (!pPr) {
-        return false;
+        return had_dom_numbering;
     }
 
     pugi::xml_node numPr = pPr.child("w:numPr");
     if (!numPr) {
-        return false;
+        return had_dom_numbering;
     }
 
     return pPr.remove_child(numPr);
 }
 
 bool Paragraph::has_numbering() const {
+    // Prefer DOM state over physical XML.
+    if (list_format_.is_list_item()) {
+        return true;
+    }
+
     if (!current_) {
         return false;
     }
@@ -672,6 +686,11 @@ bool Paragraph::has_numbering() const {
 }
 
 NumberingId Paragraph::get_numbering_id() const {
+    // Prefer DOM state over physical XML.
+    if (list_format_.is_list_item()) {
+        return list_format_.list_id;
+    }
+
     if (!current_) {
         return 0;
     }
@@ -695,6 +714,11 @@ NumberingId Paragraph::get_numbering_id() const {
 }
 
 NumberingLevel Paragraph::get_numbering_level() const {
+    // Prefer DOM state over physical XML.
+    if (list_format_.is_list_item()) {
+        return list_format_.level;
+    }
+
     if (!current_) {
         return NumberingLevel::Level1;
     }
@@ -723,18 +747,21 @@ NumberingLevel Paragraph::get_numbering_level() const {
 }
 
 bool Paragraph::set_list_level(NumberingLevel level) {
+    // Always update the DOM list_format_.
+    list_format_.level = level;
+
     if (!current_) {
-        return false;
+        return list_format_.is_list_item();
     }
 
     pugi::xml_node pPr = current_.child("w:pPr");
     if (!pPr) {
-        return false;
+        return list_format_.is_list_item();
     }
 
     pugi::xml_node numPr = pPr.child("w:numPr");
     if (!numPr) {
-        return false;
+        return list_format_.is_list_item();
     }
 
     pugi::xml_node ilvl = numPr.child("w:ilvl");

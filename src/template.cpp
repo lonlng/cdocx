@@ -82,8 +82,21 @@ bool Template::try_replace_in_text(std::string& text) {
 // FSM-based Cross-Run Placeholder Replacement
 // ============================================================================
 
-bool Template::try_replace_single_run(Run& r) {
+bool Template::try_replace_single_run(Run& r, bool first_only) {
     std::string text = r.get_text();
+    if (first_only) {
+        // Replace only the first occurrence across all keys
+        for (const auto& [key, value] : placeholders_) {
+            std::string pattern = pattern_prefix_ + key + pattern_suffix_;
+            size_t pos = text.find(pattern);
+            if (pos != std::string::npos) {
+                text.replace(pos, pattern.length(), value);
+                r.set_text(text);
+                return true;
+            }
+        }
+        return false;
+    }
     if (try_replace_in_text(text)) {
         r.set_text(text);
         return true;
@@ -145,7 +158,7 @@ void Template::delete_collected_runs(const PlaceholderContext& ctx, Paragraph& p
     }
 }
 
-void Template::process_paragraph(Paragraph& p) {
+bool Template::process_paragraph(Paragraph& p, bool stop_after_first) {
     PlaceholderContext ctx;
     ctx.clear();
 
@@ -165,7 +178,10 @@ void Template::process_paragraph(Paragraph& p) {
 
         if (!ctx.first_run) {
             // Idle state: try single-run replacement first
-            if (try_replace_single_run(*run)) {
+            if (try_replace_single_run(*run, stop_after_first)) {
+                if (stop_after_first) {
+                    return true;
+                }
                 text = run->get_text();
             }
 
@@ -193,6 +209,9 @@ void Template::process_paragraph(Paragraph& p) {
 
             if (try_replace_placeholder(ctx, p)) {
                 delete_collected_runs(ctx, p);
+                if (stop_after_first) {
+                    return true;
+                }
                 ctx.clear();
                 i = 0;
                 continue;
@@ -204,6 +223,7 @@ void Template::process_paragraph(Paragraph& p) {
     if (ctx.first_run) {
         ctx.clear();
     }
+    return false;
 }
 
 bool Template::process_paragraph_legacy(Paragraph& para) {
@@ -297,37 +317,47 @@ bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
     return false;
 }
 
-void Template::replace_in_paragraph(const std::shared_ptr<Paragraph>& para) {
+bool Template::replace_in_paragraph(const std::shared_ptr<Paragraph>& para) {
     if (!para)
-        return;
+        return false;
 
+    bool replaced = false;
     // First pass: handle image placeholders (exact single-run match)
     for (auto& child : para->get_children()) {
         if (auto run = std::dynamic_pointer_cast<Run>(child)) {
-            replace_image_in_run(run);
+            if (replace_image_in_run(run)) {
+                replaced = true;
+            }
         }
     }
 
     // Second pass: handle text placeholders with FSM (cross-run support)
-    process_paragraph(*para);
+    if (process_paragraph(*para)) {
+        replaced = true;
+    }
+    return replaced;
 }
 
-void Template::replace_in_table(const std::shared_ptr<Table>& table) {
+bool Template::replace_in_table(const std::shared_ptr<Table>& table) {
     if (!table)
-        return;
+        return false;
+    bool replaced = false;
     for (auto& row_child : table->get_children()) {
         if (auto row = std::dynamic_pointer_cast<Row>(row_child)) {
             for (auto& cell_child : row->get_children()) {
                 if (auto cell = std::dynamic_pointer_cast<Cell>(cell_child)) {
                     for (auto& para_child : cell->get_children()) {
                         if (auto para = std::dynamic_pointer_cast<Paragraph>(para_child)) {
-                            replace_in_paragraph(para);
+                            if (replace_in_paragraph(para)) {
+                                replaced = true;
+                            }
                         }
                     }
                 }
             }
         }
     }
+    return replaced;
 }
 
 void Template::replace_in_paragraphs() {
@@ -357,9 +387,10 @@ void Template::replace_all() {
     replace_in_headers_footers();
 }
 
-void Template::replace_in_headers_footers() {
+bool Template::replace_in_headers_footers() {
     if (!doc_)
-        return;
+        return false;
+    bool replaced = false;
     for (auto& section : doc_->get_sections()) {
         if (!section)
             continue;
@@ -367,23 +398,131 @@ void Template::replace_in_headers_footers() {
             if (!header)
                 continue;
             for (auto& para : header->get_paragraphs()) {
-                replace_in_paragraph(para);
+                if (replace_in_paragraph(para)) {
+                    replaced = true;
+                }
             }
             for (auto& table : header->get_tables()) {
-                replace_in_table(table);
+                if (replace_in_table(table)) {
+                    replaced = true;
+                }
             }
         }
         for (auto& footer : section->get_all_footers()) {
             if (!footer)
                 continue;
             for (auto& para : footer->get_paragraphs()) {
-                replace_in_paragraph(para);
+                if (replace_in_paragraph(para)) {
+                    replaced = true;
+                }
             }
             for (auto& table : footer->get_tables()) {
-                replace_in_table(table);
+                if (replace_in_table(table)) {
+                    replaced = true;
+                }
             }
         }
     }
+    return replaced;
+}
+
+bool Template::replace_first() {
+    if (!doc_ || !doc_->is_open()) {
+        return false;
+    }
+    // Try paragraphs first
+    auto paragraphs = doc_->get_paragraphs();
+    for (auto& para : paragraphs) {
+        if (replace_first_in_paragraph(para)) {
+            return true;
+        }
+    }
+    // Then tables
+    auto tables = doc_->get_tables();
+    for (auto& table : tables) {
+        if (replace_first_in_table(table)) {
+            return true;
+        }
+    }
+    // Then headers/footers
+    if (replace_first_in_headers_footers()) {
+        return true;
+    }
+    return false;
+}
+
+bool Template::replace_first_in_paragraph(const std::shared_ptr<Paragraph>& para) {
+    if (!para)
+        return false;
+    // Check image placeholders first (single-run match)
+    for (auto& child : para->get_children()) {
+        if (auto run = std::dynamic_pointer_cast<Run>(child)) {
+            if (replace_image_in_run(run)) {
+                return true;
+            }
+        }
+    }
+    // Then text placeholders with FSM, stopping after first match
+    return process_paragraph(*para, true);
+}
+
+bool Template::replace_first_in_table(const std::shared_ptr<Table>& table) {
+    if (!table)
+        return false;
+    for (auto& row_child : table->get_children()) {
+        if (auto row = std::dynamic_pointer_cast<Row>(row_child)) {
+            for (auto& cell_child : row->get_children()) {
+                if (auto cell = std::dynamic_pointer_cast<Cell>(cell_child)) {
+                    for (auto& para_child : cell->get_children()) {
+                        if (auto para = std::dynamic_pointer_cast<Paragraph>(para_child)) {
+                            if (replace_first_in_paragraph(para)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool Template::replace_first_in_headers_footers() {
+    if (!doc_)
+        return false;
+    for (auto& section : doc_->get_sections()) {
+        if (!section)
+            continue;
+        for (auto& header : section->get_all_headers()) {
+            if (!header)
+                continue;
+            for (auto& para : header->get_paragraphs()) {
+                if (replace_first_in_paragraph(para)) {
+                    return true;
+                }
+            }
+            for (auto& table : header->get_tables()) {
+                if (replace_first_in_table(table)) {
+                    return true;
+                }
+            }
+        }
+        for (auto& footer : section->get_all_footers()) {
+            if (!footer)
+                continue;
+            for (auto& para : footer->get_paragraphs()) {
+                if (replace_first_in_paragraph(para)) {
+                    return true;
+                }
+            }
+            for (auto& table : footer->get_tables()) {
+                if (replace_first_in_table(table)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }
 
 bool Template::has_placeholders() const {

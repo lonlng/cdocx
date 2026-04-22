@@ -37,14 +37,16 @@ bool BookmarkReplacer::replace_text(const std::string& bookmark_name, const std:
         stats_.fail_count++;
         return false;
     }
+    return replace_text(*bm, new_text);
+}
 
-    bool result = bm->set_text_keep_format(new_text);
+bool BookmarkReplacer::replace_text(Bookmark& bookmark, const std::string& new_text) {
+    bool result = bookmark.set_text_keep_format(new_text);
     if (result) {
         stats_.success_count++;
     } else {
         stats_.fail_count++;
     }
-
     return result;
 }
 
@@ -68,14 +70,18 @@ bool BookmarkReplacer::replace_text_with_format(const std::string& bookmark_name
         stats_.fail_count++;
         return false;
     }
+    return replace_text_with_format(*bm, new_text, format);
+}
 
-    bool result = bm->set_text_formatted(new_text, format);
+bool BookmarkReplacer::replace_text_with_format(Bookmark& bookmark,
+                                                const std::string& new_text,
+                                                const BookmarkFormat& format) {
+    bool result = bookmark.set_text_formatted(new_text, format);
     if (result) {
         stats_.success_count++;
     } else {
         stats_.fail_count++;
     }
-
     return result;
 }
 
@@ -86,15 +92,21 @@ bool BookmarkReplacer::replace_text_with_format(const std::string& bookmark_name
 bool BookmarkReplacer::replace_with_image(const std::string& bookmark_name,
                                           const std::string& image_path,
                                           const std::string& caption) {
-    // Try to auto-detect image size
+    auto bm = get_bookmark(bookmark_name);
+    if (!bm) {
+        return false;
+    }
+    return replace_with_image(*bm, image_path, caption);
+}
+
+bool BookmarkReplacer::replace_with_image(Bookmark& bookmark,
+                                          const std::string& image_path,
+                                          const std::string& caption) {
     ImageSize size;
     if (!detect_image_size(image_path, size)) {
-        // Use default size if detection fails
         size = ImageSize(400, 300);
     }
-
-    return replace_with_image_advanced(
-        bookmark_name, image_path, size, caption, ImageAlignment::Center);
+    return replace_with_image_advanced(bookmark, image_path, size, caption, ImageAlignment::Center);
 }
 
 bool BookmarkReplacer::replace_with_image_advanced(const std::string& bookmark_name,
@@ -107,7 +119,14 @@ bool BookmarkReplacer::replace_with_image_advanced(const std::string& bookmark_n
         stats_.fail_count++;
         return false;
     }
+    return replace_with_image_advanced(*bm, image_path, size, caption, align);
+}
 
+bool BookmarkReplacer::replace_with_image_advanced(Bookmark& bookmark,
+                                                   const std::string& image_path,
+                                                   const ImageSize& size,
+                                                   const std::string& caption,
+                                                   ImageAlignment align) {
     // Validate image file exists
     std::ifstream file(image_path, std::ios::binary);
     if (!file) {
@@ -128,7 +147,6 @@ bool BookmarkReplacer::replace_with_image_advanced(const std::string& bookmark_n
     std::string image_name = "image_" + std::to_string(generate_image_id()) + "." + ext;
 
     // Add media file to document with relationship
-    // This ensures the relationship ID is properly synchronized with document.xml.rels
     std::string rel_id = doc_->add_media_with_rel(image_path, &image_name);
     if (rel_id.empty()) {
         stats_.fail_count++;
@@ -136,13 +154,13 @@ bool BookmarkReplacer::replace_with_image_advanced(const std::string& bookmark_n
     }
 
     // Clear bookmark content
-    if (!clear_bookmark_content(*bm)) {
+    if (!clear_bookmark_content(bookmark)) {
         stats_.fail_count++;
         return false;
     }
 
     // Insert image at bookmark location
-    if (!insert_image_at_bookmark(*bm, image_path, size, align, rel_id)) {
+    if (!insert_image_at_bookmark(bookmark, image_path, size, align, rel_id)) {
         stats_.fail_count++;
         return false;
     }
@@ -150,9 +168,9 @@ bool BookmarkReplacer::replace_with_image_advanced(const std::string& bookmark_n
     // Add caption if provided
     if (!caption.empty()) {
         int figure_number = CaptionGenerator::get_next_figure_number(doc_);
-        pugi::xml_node bookmark_para = bm->get_covered_paragraphs().empty()
+        pugi::xml_node bookmark_para = bookmark.get_covered_paragraphs().empty()
                                            ? pugi::xml_node()
-                                           : bm->get_covered_paragraphs()[0];
+                                           : bookmark.get_covered_paragraphs()[0];
         if (bookmark_para) {
             CaptionGenerator::insert_figure_caption(doc_, bookmark_para, caption, figure_number);
         }
@@ -173,7 +191,15 @@ bool BookmarkReplacer::replace_with_image_from_memory(const std::string& bookmar
         stats_.fail_count++;
         return false;
     }
+    return replace_with_image_from_memory(*bm, image_data, image_name, size, caption, align);
+}
 
+bool BookmarkReplacer::replace_with_image_from_memory(Bookmark& bookmark,
+                                                      const std::vector<uint8_t>& image_data,
+                                                      const std::string& image_name,
+                                                      const ImageSize& size,
+                                                      const std::string& caption,
+                                                      ImageAlignment align) {
     // Get content type from extension
     std::string ext = get_file_extension(image_name);
     std::string content_type = get_content_type(ext);
@@ -182,7 +208,6 @@ bool BookmarkReplacer::replace_with_image_from_memory(const std::string& bookmar
     }
 
     // Add media from memory and create relationship
-    // This returns the proper relationship ID that matches document.xml.rels
     std::string rel_id = doc_->add_media_from_memory_with_rel(image_name, image_data, content_type);
     if (rel_id.empty()) {
         stats_.fail_count++;
@@ -190,13 +215,13 @@ bool BookmarkReplacer::replace_with_image_from_memory(const std::string& bookmar
     }
 
     // Clear bookmark content
-    if (!clear_bookmark_content(*bm)) {
+    if (!clear_bookmark_content(bookmark)) {
         stats_.fail_count++;
         return false;
     }
 
     // Insert image at bookmark location using the relationship ID
-    if (!insert_image_at_bookmark(*bm, image_name, size, align, rel_id)) {
+    if (!insert_image_at_bookmark(bookmark, image_name, size, align, rel_id)) {
         stats_.fail_count++;
         return false;
     }
@@ -204,9 +229,9 @@ bool BookmarkReplacer::replace_with_image_from_memory(const std::string& bookmar
     // Add caption if provided
     if (!caption.empty()) {
         int figure_number = CaptionGenerator::get_next_figure_number(doc_);
-        pugi::xml_node bookmark_para = bm->get_covered_paragraphs().empty()
+        pugi::xml_node bookmark_para = bookmark.get_covered_paragraphs().empty()
                                            ? pugi::xml_node()
-                                           : bm->get_covered_paragraphs()[0];
+                                           : bookmark.get_covered_paragraphs()[0];
         if (bookmark_para) {
             CaptionGenerator::insert_figure_caption(doc_, bookmark_para, caption, figure_number);
         }
@@ -460,7 +485,7 @@ bool BookmarkReplacer::insert_image_at_bookmark(Bookmark& bookmark,
         pugi::xml_node cnvPr = nvPicPr.append_child("pic:cNvPr");
         cnvPr.append_attribute("id").set_value(0);
         cnvPr.append_attribute("name").set_value(image_path.c_str());
-        pugi::xml_node cnvPicPr = nvPicPr.append_child("pic:cNvPicPr");
+        nvPicPr.append_child("pic:cNvPicPr");
 
         // Blip fill
         pugi::xml_node blipFill = pic.append_child("pic:blipFill");
@@ -533,7 +558,7 @@ bool BookmarkReplacer::insert_image_at_bookmark(Bookmark& bookmark,
         pugi::xml_node cnvPr = nvPicPr.append_child("pic:cNvPr");
         cnvPr.append_attribute("id").set_value(0);
         cnvPr.append_attribute("name").set_value(image_path.c_str());
-        pugi::xml_node cnvPicPr = nvPicPr.append_child("pic:cNvPicPr");
+        nvPicPr.append_child("pic:cNvPicPr");
 
         pugi::xml_node blipFill = pic.append_child("pic:blipFill");
         pugi::xml_node blip = blipFill.append_child("a:blip");

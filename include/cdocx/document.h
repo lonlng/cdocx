@@ -413,6 +413,13 @@ class Document : public CompositeNode {
     std::string add_media_with_rel(const std::string& image_path,
                                    const std::string* image_name = nullptr);
 
+    // Thumbnail management (opt-in, for file preview in Windows Explorer)
+    bool add_thumbnail(const std::string& image_path);
+    bool add_thumbnail_from_memory(const std::vector<uint8_t>& data,
+                                   const std::string& content_type = "image/jpeg");
+    bool remove_thumbnail();
+    bool has_thumbnail() const;
+
     // Bookmark management
     BookmarkCollection get_bookmarks();
     int generate_unique_bookmark_id();
@@ -577,6 +584,7 @@ class Document : public CompositeNode {
     std::string get_relationship_target(const std::string& rels_path,
                                         const std::string& rel_id) const;
     void add_content_type_override(const std::string& part_name, const std::string& content_type);
+    void add_content_type_default(const std::string& extension, const std::string& content_type);
 
     // Save operations
     bool save_to_zip(const std::string& output_path);

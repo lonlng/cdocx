@@ -1,0 +1,1039 @@
+/**
+ * @file template_engine.cpp
+ * @brief TemplateEngine implementation
+ * @author lonlng
+ * @copyright MIT License
+ * @date 2026
+ * @version 0.1.0
+ */
+
+#include <cdocx/bookmark_replacer.h>
+#include <cdocx/document.h>
+#include <cdocx/template.h>
+#include <cdocx/template_engine.h>
+
+#include <filesystem>
+
+namespace cdocx {
+
+// ============================================================================
+// TemplateFormat
+// ============================================================================
+
+TemplateFormat& TemplateFormat::bold(bool value) {
+    bold_ = value;
+    return *this;
+}
+
+TemplateFormat& TemplateFormat::italic(bool value) {
+    italic_ = value;
+    return *this;
+}
+
+TemplateFormat& TemplateFormat::underline(bool value) {
+    underline_ = value;
+    return *this;
+}
+
+TemplateFormat& TemplateFormat::Strikethrough(bool value) {
+    strikethrough_ = value;
+    return *this;
+}
+
+TemplateFormat& TemplateFormat::Size(int half_points) {
+    size_ = half_points;
+    return *this;
+}
+
+TemplateFormat& TemplateFormat::font(const std::string& name) {
+    font_ = name;
+    font_ascii_ = name;
+    font_far_east_ = name;
+    return *this;
+}
+
+TemplateFormat& TemplateFormat::font_ascii(const std::string& name) {
+    font_ascii_ = name;
+    return *this;
+}
+
+TemplateFormat& TemplateFormat::font_far_east(const std::string& name) {
+    font_far_east_ = name;
+    return *this;
+}
+
+TemplateFormat& TemplateFormat::color(const std::string& hex) {
+    color_ = hex;
+    return *this;
+}
+
+TemplateFormat& TemplateFormat::alignment(const std::string& align) {
+    alignment_ = align;
+    return *this;
+}
+
+TemplateFormat& TemplateFormat::line_spacing(int twips) {
+    line_spacing_ = twips;
+    return *this;
+}
+
+TemplateFormat& TemplateFormat::space_before(int twips) {
+    space_before_ = twips;
+    return *this;
+}
+
+TemplateFormat& TemplateFormat::space_after(int twips) {
+    space_after_ = twips;
+    return *this;
+}
+
+BookmarkFormat TemplateFormat::to_bookmark_format() const {
+    BookmarkFormat fmt;
+    if (font_ascii_) fmt.font_ascii = *font_ascii_;
+    if (font_far_east_) fmt.font_far_east = *font_far_east_;
+    if (size_) fmt.font_size = *size_;
+    if (color_) fmt.color = *color_;
+    if (bold_) fmt.bold = *bold_;
+    if (italic_) fmt.italic = *italic_;
+    if (underline_) fmt.underline = *underline_;
+    if (strikethrough_) fmt.strikethrough = *strikethrough_;
+    if (alignment_) fmt.alignment = *alignment_;
+    if (line_spacing_) fmt.line_spacing = *line_spacing_;
+    if (space_before_) fmt.space_before = *space_before_;
+    if (space_after_) fmt.space_after = *space_after_;
+    return fmt;
+}
+
+bool TemplateFormat::is_empty() const {
+    return !bold_.has_value() && !italic_.has_value() && !underline_.has_value() &&
+           !strikethrough_.has_value() && !size_.has_value() && !font_.has_value() &&
+           !font_ascii_.has_value() && !font_far_east_.has_value() && !color_.has_value() &&
+           !alignment_.has_value() && !line_spacing_.has_value() && !space_before_.has_value() &&
+           !space_after_.has_value();
+}
+
+// ============================================================================
+// TemplateValue
+// ============================================================================
+
+TemplateValue::TemplateValue(TextData data)
+    : type_(TemplateValueType::Text), data_(std::move(data)) {}
+
+TemplateValue::TemplateValue(ImageData data)
+    : type_(TemplateValueType::Image), data_(std::move(data)) {}
+
+TemplateValue TemplateValue::Text(const std::string& content) {
+    return TemplateValue(TextData{content, TemplateFormat()});
+}
+
+TemplateValue TemplateValue::Text(const std::string& content, const TemplateFormat& format) {
+    return TemplateValue(TextData{content, format});
+}
+
+TemplateValue TemplateValue::Image(const std::string& path) {
+    return TemplateValue(ImageData{path, ImageSize(), "", ImageAlignment::Center});
+}
+
+TemplateValue TemplateValue::Image(const std::string& path, double width, double height) {
+    return TemplateValue(ImageData{path, ImageSize(width, height), "", ImageAlignment::Center});
+}
+
+TemplateValue& TemplateValue::with_format(const TemplateFormat& format) {
+    if (std::holds_alternative<TextData>(data_)) {
+        std::get<TextData>(data_).format = format;
+    }
+    return *this;
+}
+
+TemplateValue& TemplateValue::sized(double width_pt, double height_pt) {
+    if (std::holds_alternative<ImageData>(data_)) {
+        std::get<ImageData>(data_).size = ImageSize(width_pt, height_pt);
+    }
+    return *this;
+}
+
+TemplateValue& TemplateValue::sized(const ImageSize& size) {
+    if (std::holds_alternative<ImageData>(data_)) {
+        std::get<ImageData>(data_).size = size;
+    }
+    return *this;
+}
+
+TemplateValue& TemplateValue::centered() {
+    if (std::holds_alternative<ImageData>(data_)) {
+        std::get<ImageData>(data_).align = ImageAlignment::Center;
+    }
+    return *this;
+}
+
+TemplateValue& TemplateValue::left_aligned() {
+    if (std::holds_alternative<ImageData>(data_)) {
+        std::get<ImageData>(data_).align = ImageAlignment::Left;
+    }
+    return *this;
+}
+
+TemplateValue& TemplateValue::right_aligned() {
+    if (std::holds_alternative<ImageData>(data_)) {
+        std::get<ImageData>(data_).align = ImageAlignment::Right;
+    }
+    return *this;
+}
+
+TemplateValue& TemplateValue::with_caption(const std::string& caption) {
+    if (std::holds_alternative<ImageData>(data_)) {
+        std::get<ImageData>(data_).caption = caption;
+    }
+    return *this;
+}
+
+TemplateValue& TemplateValue::with_alignment(ImageAlignment align) {
+    if (std::holds_alternative<ImageData>(data_)) {
+        std::get<ImageData>(data_).align = align;
+    }
+    return *this;
+}
+
+const std::string& TemplateValue::text_content() const {
+    return std::get<TextData>(data_).content;
+}
+
+const TemplateFormat& TemplateValue::text_format() const {
+    return std::get<TextData>(data_).format;
+}
+
+const std::string& TemplateValue::image_path() const {
+    return std::get<ImageData>(data_).path;
+}
+
+const ImageSize& TemplateValue::image_size() const {
+    return std::get<ImageData>(data_).size;
+}
+
+const std::string& TemplateValue::image_caption() const {
+    return std::get<ImageData>(data_).caption;
+}
+
+ImageAlignment TemplateValue::image_alignment() const {
+    return std::get<ImageData>(data_).align;
+}
+
+// ============================================================================
+// TemplateEngine::Setter
+// ============================================================================
+
+TemplateEngine::Setter::Setter(TemplateEngine* engine, std::string key)
+    : engine_(engine), key_(std::move(key)) {}
+
+TemplateEngine::Setter& TemplateEngine::Setter::operator=(const TemplateValue& value) {
+    engine_->set(key_, value);
+    return *this;
+}
+
+TemplateEngine::Setter& TemplateEngine::Setter::operator=(const std::string& text) {
+    engine_->set(key_, text);
+    return *this;
+}
+
+TemplateEngine::Setter& TemplateEngine::Setter::operator=(const char* text) {
+    engine_->set(key_, text);
+    return *this;
+}
+
+// ============================================================================
+// TemplateEngine
+// ============================================================================
+
+TemplateEngine::TemplateEngine(Document* doc) : doc_(doc) {}
+
+TemplateEngine::Setter TemplateEngine::operator[](const std::string& key) {
+    return {this, key};
+}
+
+TemplateEngine& TemplateEngine::set(const std::string& key, const TemplateValue& value) {
+    queue_[key] = value;
+    return *this;
+}
+
+TemplateEngine& TemplateEngine::set(const std::string& key, const std::string& text) {
+    queue_[key] = TemplateValue::Text(text);
+    return *this;
+}
+
+TemplateEngine& TemplateEngine::set(const std::string& key, const char* text) {
+    queue_[key] = TemplateValue::Text(text ? std::string(text) : std::string());
+    return *this;
+}
+
+TemplateEngine& TemplateEngine::set_batch(const std::map<std::string, TemplateValue>& data) {
+    for (const auto& [key, value] : data) {
+        queue_[key] = value;
+    }
+    return *this;
+}
+
+TemplateEngine& TemplateEngine::set_batch(const std::map<std::string, std::string>& data) {
+    for (const auto& [key, text] : data) {
+        queue_[key] = TemplateValue::Text(text);
+    }
+    return *this;
+}
+
+TemplateEngine& TemplateEngine::with_action(TemplateAction action) {
+    default_action_ = action;
+    return *this;
+}
+
+TemplateEngine& TemplateEngine::with_scope(TemplateScope scope) {
+    default_scope_ = scope;
+    return *this;
+}
+
+TemplateEngine& TemplateEngine::with_target(TemplateTarget target) {
+    default_target_ = target;
+    return *this;
+}
+
+TemplateEngine& TemplateEngine::with_format_policy(FormatPolicy policy) {
+    default_format_policy_ = policy;
+    return *this;
+}
+
+TemplateEngine& TemplateEngine::with_default_format(const TemplateFormat& format) {
+    default_format_ = format;
+    return *this;
+}
+
+TemplateEngine& TemplateEngine::with_delimiters(const std::string& prefix,
+                                               const std::string& suffix) {
+    delimiter_prefix_ = prefix;
+    delimiter_suffix_ = suffix;
+    return *this;
+}
+
+bool TemplateEngine::has(const std::string& key) const {
+    return queue_.find(key) != queue_.end();
+}
+
+TemplateEngine& TemplateEngine::remove(const std::string& key) {
+    queue_.erase(key);
+    return *this;
+}
+
+TemplateEngine& TemplateEngine::clear() {
+    queue_.clear();
+    return *this;
+}
+
+size_t TemplateEngine::size() const {
+    return queue_.size();
+}
+
+// ============================================================================
+// Execution
+// ============================================================================
+
+// ============================================================================
+// Target Resolution
+// ============================================================================
+
+static TemplateTarget ResolveTarget(Document* doc,
+                                     const std::string& key,
+                                     TemplateTarget preferred,
+                                     const std::string& /*prefix*/,
+                                     const std::string& /*suffix*/) {
+    switch (preferred) {
+        case TemplateTarget::Auto: {
+            // Check if bookmark exists
+            BookmarkReplacer replacer(doc);
+            if (replacer.has_bookmark(key)) {
+                return TemplateTarget::BookmarkTarget;
+            }
+            return TemplateTarget::Placeholder;
+        }
+        case TemplateTarget::BookmarkTarget:
+            return TemplateTarget::BookmarkTarget;
+        case TemplateTarget::Placeholder:
+            return TemplateTarget::Placeholder;
+    }
+    return preferred;
+}
+
+// ============================================================================
+// Insert Mode Helpers (Physical XML)
+// ============================================================================
+
+static pugi::xml_node FindBookmarkStart(pugi::xml_node para) {
+    for (pugi::xml_node child = para.first_child(); child; child = child.next_sibling()) {
+        if (std::string(child.name()) == "w:bookmarkStart") {
+            return child;
+        }
+    }
+    return pugi::xml_node();
+}
+
+static bool InsertFormattedRunAfter(pugi::xml_node para,
+                                        pugi::xml_node after_node,
+                                        const std::string& text,
+                                        const BookmarkFormat& format) {
+    pugi::xml_node run = para.insert_child_after("w:r", after_node);
+    if (!run) {
+        return false;
+    }
+
+    if (format.is_valid() || format.bold || format.italic || format.underline ||
+        format.strikethrough) {
+        pugi::xml_node run_props = run.append_child("w:run_props");
+
+        if (!format.font_ascii.empty() || !format.font_far_east.empty()) {
+            pugi::xml_node run_fonts = run_props.append_child("w:run_fonts");
+            if (!format.font_ascii.empty()) {
+                run_fonts.append_attribute("w:ascii").set_value(format.font_ascii.c_str());
+            }
+            if (!format.font_far_east.empty()) {
+                run_fonts.append_attribute("w:eastAsia").set_value(format.font_far_east.c_str());
+            }
+        }
+
+        if (format.font_size > 0) {
+            pugi::xml_node sz = run_props.append_child("w:sz");
+            sz.append_attribute("w:val").set_value(format.font_size);
+            pugi::xml_node sz_cs = run_props.append_child("w:sz_cs");
+            sz_cs.append_attribute("w:val").set_value(format.font_size);
+        }
+
+        if (!format.color.empty()) {
+            pugi::xml_node color = run_props.append_child("w:color");
+            color.append_attribute("w:val").set_value(format.color.c_str());
+        }
+
+        if (format.bold) {
+            run_props.append_child("w:b");
+        }
+        if (format.italic) {
+            run_props.append_child("w:i");
+        }
+        if (format.underline) {
+            pugi::xml_node u = run_props.append_child("w:u");
+            u.append_attribute("w:val").set_value("single");
+        }
+        if (format.strikethrough) {
+            run_props.append_child("w:strike");
+        }
+    }
+
+    pugi::xml_node t = run.append_child("w:t");
+    t.text().set(text.c_str());
+    return true;
+}
+
+static bool InsertImageRunAfter(pugi::xml_node para,
+                                    pugi::xml_node after_node,
+                                    const ImageSize& size,
+                                    ImageAlignment align,
+                                    const std::string& rel_id,
+                                    int image_id) {
+    pugi::xml_node run = para.insert_child_after("w:r", after_node);
+    if (!run) {
+        return false;
+    }
+
+    pugi::xml_node drawing = run.append_child("w:drawing");
+
+    if (align == ImageAlignment::Center) {
+        pugi::xml_node inline_node = drawing.append_child("wp:inline");
+        inline_node.append_attribute("distT").set_value(0);
+        inline_node.append_attribute("distB").set_value(0);
+        inline_node.append_attribute("distL").set_value(0);
+        inline_node.append_attribute("distR").set_value(0);
+
+        pugi::xml_node extent = inline_node.append_child("wp:extent");
+        extent.append_attribute("cx").set_value(size.width_emu());
+        extent.append_attribute("cy").set_value(size.height_emu());
+
+        pugi::xml_node doc_props = inline_node.append_child("wp:doc_props");
+        doc_props.append_attribute("id").set_value(image_id);
+        doc_props.append_attribute("name").set_value("Picture");
+
+        pugi::xml_node graphic = inline_node.append_child("a:graphic");
+        graphic.append_attribute("xmlns:a").set_value(
+            "http://schemas.openxmlformats.org/drawingml/2006/main");
+
+        pugi::xml_node graphic_data = graphic.append_child("a:graphicData");
+        graphic_data.append_attribute("uri").set_value(
+            "http://schemas.openxmlformats.org/drawingml/2006/picture");
+
+        pugi::xml_node pic = graphic_data.append_child("pic:pic");
+        pic.append_attribute("xmlns:pic")
+            .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
+
+        pugi::xml_node nv_pic_pr = pic.append_child("pic:nv_pic_pr");
+        pugi::xml_node cnv_pr = nv_pic_pr.append_child("pic:cNvPr");
+        cnv_pr.append_attribute("id").set_value(0);
+        cnv_pr.append_attribute("name").set_value("image");
+        nv_pic_pr.append_child("pic:cNvPicPr");
+
+        pugi::xml_node blip_fill = pic.append_child("pic:blip_fill");
+        pugi::xml_node blip = blip_fill.append_child("a:blip");
+        blip.append_attribute("r:embed").set_value(rel_id.c_str());
+        pugi::xml_node stretch = blip_fill.append_child("a:stretch");
+        stretch.append_child("a:fillRect");
+
+        pugi::xml_node sp_props = pic.append_child("pic:sp_props");
+        pugi::xml_node xfrm = sp_props.append_child("a:xfrm");
+        pugi::xml_node ext = xfrm.append_child("a:ext");
+        ext.append_attribute("cx").set_value(size.width_emu());
+        ext.append_attribute("cy").set_value(size.height_emu());
+        pugi::xml_node prst_geom = sp_props.append_child("a:prst_geom");
+        prst_geom.append_attribute("prst").set_value("rect");
+        prst_geom.append_child("a:avLst");
+    } else {
+        pugi::xml_node anchor = drawing.append_child("wp:anchor");
+        anchor.append_attribute("simple_pos").set_value(0);
+        anchor.append_attribute("relativeHeight").set_value(251658240);
+        anchor.append_attribute("behindDoc").set_value(0);
+        anchor.append_attribute("locked").set_value(0);
+        anchor.append_attribute("layoutInCell").set_value(1);
+        anchor.append_attribute("allowOverlap").set_value(1);
+
+        pugi::xml_node simple_pos = anchor.append_child("wp:simple_pos");
+        simple_pos.append_attribute("x").set_value(0);
+        simple_pos.append_attribute("y").set_value(0);
+
+        pugi::xml_node position_h = anchor.append_child("wp:position_h");
+        position_h.append_attribute("relativeFrom").set_value("column");
+        pugi::xml_node align_node = position_h.append_child("wp:align");
+        align_node.text().set(align == ImageAlignment::Left ? "left" : "right");
+
+        pugi::xml_node position_v = anchor.append_child("wp:position_v");
+        position_v.append_attribute("relativeFrom").set_value("paragraph");
+        pugi::xml_node pos_v_align = position_v.append_child("wp:align");
+        pos_v_align.text().set("top");
+
+        pugi::xml_node extent = anchor.append_child("wp:extent");
+        extent.append_attribute("cx").set_value(size.width_emu());
+        extent.append_attribute("cy").set_value(size.height_emu());
+
+        pugi::xml_node doc_props = anchor.append_child("wp:doc_props");
+        doc_props.append_attribute("id").set_value(image_id);
+        doc_props.append_attribute("name").set_value("Picture");
+
+        pugi::xml_node graphic = anchor.append_child("a:graphic");
+        graphic.append_attribute("xmlns:a").set_value(
+            "http://schemas.openxmlformats.org/drawingml/2006/main");
+
+        pugi::xml_node graphic_data = graphic.append_child("a:graphicData");
+        graphic_data.append_attribute("uri").set_value(
+            "http://schemas.openxmlformats.org/drawingml/2006/picture");
+
+        pugi::xml_node pic = graphic_data.append_child("pic:pic");
+        pic.append_attribute("xmlns:pic")
+            .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
+
+        pugi::xml_node nv_pic_pr = pic.append_child("pic:nv_pic_pr");
+        pugi::xml_node cnv_pr = nv_pic_pr.append_child("pic:cNvPr");
+        cnv_pr.append_attribute("id").set_value(0);
+        cnv_pr.append_attribute("name").set_value("image");
+        nv_pic_pr.append_child("pic:cNvPicPr");
+
+        pugi::xml_node blip_fill = pic.append_child("pic:blip_fill");
+        pugi::xml_node blip = blip_fill.append_child("a:blip");
+        blip.append_attribute("r:embed").set_value(rel_id.c_str());
+        pugi::xml_node stretch = blip_fill.append_child("a:stretch");
+        stretch.append_child("a:fillRect");
+
+        pugi::xml_node sp_props = pic.append_child("pic:sp_props");
+        pugi::xml_node xfrm = sp_props.append_child("a:xfrm");
+        pugi::xml_node ext = xfrm.append_child("a:ext");
+        ext.append_attribute("cx").set_value(size.width_emu());
+        ext.append_attribute("cy").set_value(size.height_emu());
+        pugi::xml_node prst_geom = sp_props.append_child("a:prst_geom");
+        prst_geom.append_attribute("prst").set_value("rect");
+        prst_geom.append_child("a:avLst");
+    }
+
+    return true;
+}
+
+// ============================================================================
+// Execution
+// ============================================================================
+
+TemplateEngine::Result TemplateEngine::apply() {
+    last_result_ = Result();
+    if (!doc_ || !doc_->is_open() || queue_.empty()) {
+        return last_result_;
+    }
+
+    // Two-phase execution to handle DOM/physical XML sync correctly:
+    // Phase 1: placeholder replacements (DOM modification)
+    // Phase 2: bookmark replacements (physical XML modification)
+
+    std::vector<std::pair<std::string, TemplateValue>> placeholders;
+    std::vector<std::pair<std::string, TemplateValue>> bookmarks;
+
+    for (const auto& [key, value] : queue_) {
+        if (value.is_text() && value.text_content().empty()) {
+            last_result_.skipped++;
+            continue;
+        }
+        if (value.is_image() && value.image_path().empty()) {
+            last_result_.skipped++;
+            continue;
+        }
+        auto actual = ResolveTarget(doc_, key, default_target_,
+                                     delimiter_prefix_, delimiter_suffix_);
+        if (actual == TemplateTarget::Placeholder) {
+            placeholders.emplace_back(key, value);
+        } else {
+            bookmarks.emplace_back(key, value);
+        }
+    }
+
+    // Phase 1: DOM modifications (Template placeholder replacement)
+    if (!placeholders.empty()) {
+        for (const auto& [key, value] : placeholders) {
+            auto r = apply_placeholder(key, value);
+            last_result_.success += r.success;
+            last_result_.failed += r.failed;
+        }
+        // Flush DOM changes to physical XML before physical manipulation
+        doc_->sync_to_physical_tree();
+    }
+
+    // Phase 2: Physical XML modifications (Bookmark replacement)
+    if (!bookmarks.empty()) {
+        // Pre-sync DOM to physical once before all physical modifications.
+        // Then collect all bookmarks into a single collection so that
+        // individual replacements do not trigger intermediate syncs that
+        // would overwrite earlier physical changes.
+        doc_->sync_to_physical_tree();
+        auto collection = doc_->get_bookmarks();
+
+        for (const auto& [key, value] : bookmarks) {
+            auto bm_opt = collection.get(key);
+            if (!bm_opt) {
+                last_result_.failed++;
+                continue;
+            }
+            if (value.is_text()) {
+                bool ok = apply_text_to_bookmark(*bm_opt, value.text_content(),
+                                                 value.text_format(), default_format_policy_);
+                if (ok) {
+                    last_result_.success++;
+                } else {
+                    last_result_.failed++;
+                }
+            } else if (value.is_image()) {
+                bool ok = apply_image_to_bookmark(*bm_opt, value);
+                if (ok) {
+                    last_result_.success++;
+                } else {
+                    last_result_.failed++;
+                }
+            }
+        }
+        // Capture physical XML changes into DOM so save() preserves them
+        doc_->sync_from_physical_tree();
+    }
+
+    return last_result_;
+}
+
+TemplateEngine::Result TemplateEngine::apply(const std::string& key) {
+    last_result_ = Result();
+    if (!doc_ || !doc_->is_open()) {
+        return last_result_;
+    }
+
+    auto it = queue_.find(key);
+    if (it == queue_.end()) {
+        return last_result_;
+    }
+
+    const auto& value = it->second;
+    if (value.is_text() && value.text_content().empty()) {
+        last_result_.skipped++;
+        return last_result_;
+    }
+    if (value.is_image() && value.image_path().empty()) {
+        last_result_.skipped++;
+        return last_result_;
+    }
+
+    auto actual = ResolveTarget(doc_, key, default_target_,
+                                 delimiter_prefix_, delimiter_suffix_);
+    if (actual == TemplateTarget::Placeholder) {
+        last_result_ = apply_placeholder(key, value);
+    } else {
+        last_result_ = apply_bookmark(key, value);
+        doc_->sync_from_physical_tree();
+    }
+    return last_result_;
+}
+
+TemplateEngine::Result TemplateEngine::apply_if(
+    const std::function<bool(const std::string&)>& predicate) {
+    last_result_ = Result();
+    if (!doc_ || !doc_->is_open() || queue_.empty()) {
+        return last_result_;
+    }
+
+    std::vector<std::pair<std::string, TemplateValue>> placeholders;
+    std::vector<std::pair<std::string, TemplateValue>> bookmarks;
+
+    for (const auto& [key, value] : queue_) {
+        if (!predicate(key)) {
+            last_result_.skipped++;
+            continue;
+        }
+        if (value.is_text() && value.text_content().empty()) {
+            last_result_.skipped++;
+            continue;
+        }
+        if (value.is_image() && value.image_path().empty()) {
+            last_result_.skipped++;
+            continue;
+        }
+        auto actual = ResolveTarget(doc_, key, default_target_,
+                                     delimiter_prefix_, delimiter_suffix_);
+        if (actual == TemplateTarget::Placeholder) {
+            placeholders.emplace_back(key, value);
+        } else {
+            bookmarks.emplace_back(key, value);
+        }
+    }
+
+    if (!placeholders.empty()) {
+        for (const auto& [key, value] : placeholders) {
+            auto r = apply_placeholder(key, value);
+            last_result_.success += r.success;
+            last_result_.failed += r.failed;
+        }
+        doc_->sync_to_physical_tree();
+    }
+
+    if (!bookmarks.empty()) {
+        doc_->sync_to_physical_tree();
+        auto collection = doc_->get_bookmarks();
+
+        for (const auto& [key, value] : bookmarks) {
+            auto bm_opt = collection.get(key);
+            if (!bm_opt) {
+                last_result_.failed++;
+                continue;
+            }
+            if (value.is_text()) {
+                bool ok = apply_text_to_bookmark(*bm_opt, value.text_content(),
+                                                 value.text_format(), default_format_policy_);
+                if (ok) {
+                    last_result_.success++;
+                } else {
+                    last_result_.failed++;
+                }
+            } else if (value.is_image()) {
+                bool ok = apply_image_to_bookmark(*bm_opt, value);
+                if (ok) {
+                    last_result_.success++;
+                } else {
+                    last_result_.failed++;
+                }
+            }
+        }
+        doc_->sync_from_physical_tree();
+    }
+
+    return last_result_;
+}
+
+// ============================================================================
+// Internal Execution
+// ============================================================================
+
+TemplateEngine::Result TemplateEngine::apply_single(const std::string& key,
+                                                   const TemplateValue& value,
+                                                   TemplateTarget target) {
+    Result r;
+
+    if (value.is_text() && value.text_content().empty()) {
+        r.skipped++;
+        return r;
+    }
+    if (value.is_image() && value.image_path().empty()) {
+        r.skipped++;
+        return r;
+    }
+
+    switch (target) {
+        case TemplateTarget::Auto: {
+            // Try bookmark first, then placeholder
+            r = apply_bookmark(key, value);
+            if (r.success == 0 && r.failed == 0) {
+                r = apply_placeholder(key, value);
+            }
+            break;
+        }
+        case TemplateTarget::BookmarkTarget:
+            r = apply_bookmark(key, value);
+            break;
+        case TemplateTarget::Placeholder:
+            r = apply_placeholder(key, value);
+            break;
+    }
+
+    return r;
+}
+
+TemplateEngine::Result TemplateEngine::apply_bookmark(const std::string& key,
+                                                     const TemplateValue& value) {
+    Result r;
+    BookmarkReplacer replacer(doc_);
+
+    if (!replacer.has_bookmark(key)) {
+        return r;  // Not found - return empty result for fallback
+    }
+
+    if (value.is_text()) {
+        bool ok = apply_text_to_bookmark(key, value.text_content(), value.text_format(),
+                                         default_format_policy_);
+        if (ok) {
+            r.success++;
+        } else {
+            r.failed++;
+        }
+    } else if (value.is_image()) {
+        bool ok = apply_image_to_bookmark(key, value);
+        if (ok) {
+            r.success++;
+        } else {
+            r.failed++;
+        }
+    }
+
+    return r;
+}
+
+TemplateEngine::Result TemplateEngine::apply_bookmark(Bookmark& bookmark,
+                                                     const TemplateValue& value) {
+    Result r;
+
+    if (value.is_text()) {
+        bool ok = apply_text_to_bookmark(bookmark, value.text_content(), value.text_format(),
+                                         default_format_policy_);
+        if (ok) {
+            r.success++;
+        } else {
+            r.failed++;
+        }
+    } else if (value.is_image()) {
+        bool ok = apply_image_to_bookmark(bookmark, value);
+        if (ok) {
+            r.success++;
+        } else {
+            r.failed++;
+        }
+    }
+
+    return r;
+}
+
+TemplateEngine::Result TemplateEngine::apply_placeholder(const std::string& key,
+                                                        const TemplateValue& value) {
+    Result r;
+    Template tmpl(doc_, delimiter_prefix_, delimiter_suffix_);
+
+    if (value.is_text()) {
+        bool ok = apply_text_to_placeholder(key, value.text_content());
+        if (ok) {
+            r.success++;
+        } else {
+            r.failed++;
+        }
+    } else if (value.is_image()) {
+        bool ok = apply_image_to_placeholder(key, value);
+        if (ok) {
+            r.success++;
+        } else {
+            r.failed++;
+        }
+    }
+
+    return r;
+}
+
+bool TemplateEngine::apply_text_to_bookmark(const std::string& name,
+                                           const std::string& text,
+                                           const TemplateFormat& format,
+                                           FormatPolicy policy) {
+    auto collection = doc_->get_bookmarks();
+    auto bm_opt = collection.get(name);
+    if (!bm_opt) {
+        return false;
+    }
+    return apply_text_to_bookmark(*bm_opt, text, format, policy);
+}
+
+bool TemplateEngine::apply_text_to_bookmark(Bookmark& bookmark,
+                                           const std::string& text,
+                                           const TemplateFormat& format,
+                                           FormatPolicy policy) {
+    if (default_action_ == TemplateAction::Insert) {
+        if (!bookmark.is_valid()) {
+            return false;
+        }
+
+        auto paras = bookmark.get_covered_paragraphs();
+        if (paras.empty()) {
+            return false;
+        }
+
+        pugi::xml_node bookmark_start = FindBookmarkStart(paras[0]);
+        if (!bookmark_start) {
+            return false;
+        }
+
+        BookmarkFormat bmf;
+        if (policy == FormatPolicy::Preserve) {
+            bmf = bookmark.get_format();
+        } else {
+            TemplateFormat effective = format;
+            if (effective.is_empty() && !default_format_.is_empty()) {
+                effective = default_format_;
+            }
+            if (!effective.is_empty()) {
+                bmf = effective.to_bookmark_format();
+            } else if (policy == FormatPolicy::Custom) {
+                bmf = bookmark.get_format();
+            }
+        }
+
+        return InsertFormattedRunAfter(paras[0], bookmark_start, text, bmf);
+    }
+
+    // Replace mode
+    BookmarkReplacer replacer(doc_);
+
+    switch (policy) {
+        case FormatPolicy::Preserve:
+            return replacer.replace_text(bookmark, text);
+
+        case FormatPolicy::Override:
+        case FormatPolicy::Custom: {
+            if (format.is_empty() && policy == FormatPolicy::Custom) {
+                return replacer.replace_text(bookmark, text);
+            }
+            TemplateFormat effective = format;
+            if (effective.is_empty() && !default_format_.is_empty()) {
+                effective = default_format_;
+            }
+            if (effective.is_empty()) {
+                return replacer.replace_text(bookmark, text);
+            }
+            return replacer.replace_text_with_format(bookmark, text,
+                                                     effective.to_bookmark_format());
+        }
+    }
+    return false;
+}
+
+bool TemplateEngine::apply_image_to_bookmark(const std::string& name,
+                                            const TemplateValue& value) {
+    auto collection = doc_->get_bookmarks();
+    auto bm_opt = collection.get(name);
+    if (!bm_opt) {
+        return false;
+    }
+    return apply_image_to_bookmark(*bm_opt, value);
+}
+
+bool TemplateEngine::apply_image_to_bookmark(Bookmark& bookmark,
+                                            const TemplateValue& value) {
+    if (default_action_ == TemplateAction::Insert) {
+        if (!bookmark.is_valid()) {
+            return false;
+        }
+
+        auto paras = bookmark.get_covered_paragraphs();
+        if (paras.empty()) {
+            return false;
+        }
+
+        pugi::xml_node bookmark_start = FindBookmarkStart(paras[0]);
+        if (!bookmark_start) {
+            return false;
+        }
+
+        const auto& path = value.image_path();
+        const auto& size = value.image_size();
+        auto align = value.image_alignment();
+
+        if (!std::filesystem::exists(path)) {
+            return false;
+        }
+
+        ImageSize actual_size = size;
+        if (!actual_size.is_valid()) {
+            if (!detect_image_size(path, actual_size)) {
+                actual_size = ImageSize(400, 300);
+            }
+        }
+
+        std::string rel_id = doc_->add_media_with_rel(path, nullptr);
+        if (rel_id.empty()) {
+            return false;
+        }
+
+        static int image_counter = 1;
+        return InsertImageRunAfter(paras[0], bookmark_start, actual_size, align, rel_id,
+                                      image_counter++);
+    }
+
+    // Replace mode
+    BookmarkReplacer replacer(doc_);
+    const auto& path = value.image_path();
+    const auto& size = value.image_size();
+    const auto& caption = value.image_caption();
+    auto align = value.image_alignment();
+
+    if (!std::filesystem::exists(path)) {
+        return false;
+    }
+
+    if (size.is_valid()) {
+        return replacer.replace_with_image_advanced(bookmark, path, size, caption, align);
+    } else {
+        return replacer.replace_with_image(bookmark, path, caption);
+    }
+}
+
+bool TemplateEngine::apply_text_to_placeholder(const std::string& key,
+                                              const std::string& text) {
+    Template tmpl(doc_, delimiter_prefix_, delimiter_suffix_);
+    if (default_action_ == TemplateAction::Insert) {
+        std::string pattern = delimiter_prefix_ + key + delimiter_suffix_;
+        tmpl.set(key, text + pattern);
+    } else {
+        tmpl.set(key, text);
+    }
+    if (default_scope_ == TemplateScope::First) {
+        return tmpl.replace_first();
+    }
+    tmpl.replace_all();
+    return true;
+}
+
+bool TemplateEngine::apply_image_to_placeholder(const std::string& key,
+                                               const TemplateValue& value) {
+    if (default_action_ == TemplateAction::Insert) {
+        return false;
+    }
+    Template tmpl(doc_, delimiter_prefix_, delimiter_suffix_);
+    tmpl.set_image(key, value.image_path());
+    if (default_scope_ == TemplateScope::First) {
+        return tmpl.replace_first();
+    }
+    tmpl.replace_all();
+    return true;
+}
+
+}  // namespace cdocx
