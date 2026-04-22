@@ -548,9 +548,18 @@ static std::string time_to_w3cdtf(std::time_t t) {
     return buf;
 }
 
+static std::time_t TimeGM(std::tm* tm) {
+#ifdef _WIN32
+    return _mkgmtime(tm);
+#else
+    return timegm(tm);
+#endif
+}
+
 static std::time_t w3cdtf_to_time(const std::string& s) {
-    if (s.empty())
+    if (s.empty()) {
         return 0;
+    }
     std::tm utc = {};
     std::sscanf(s.c_str(),
                 "%d-%d-%dT%d:%d:%d",
@@ -562,7 +571,7 @@ static std::time_t w3cdtf_to_time(const std::string& s) {
                 &utc.tm_sec);
     utc.tm_year -= 1900;
     utc.tm_mon -= 1;
-    return timegm(&utc);
+    return TimeGM(&utc);
 }
 
 static pugi::xml_node get_or_create_child(pugi::xml_node parent, const char* name) {
