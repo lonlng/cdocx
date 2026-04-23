@@ -194,6 +194,11 @@ TEST(TemplateEngineTest, PlaceholderTextReplacement) {
 
         EXPECT_EQ(result.success, 1);
         EXPECT_EQ(result.failed, 0);
+
+        // Debug output
+        auto debug_paras = doc.get_first_section()->get_body()->get_paragraphs();
+        std::cout << "[DEBUG] after apply text='" << debug_paras[0]->get_text() << "'" << std::endl;
+
         doc.save();
     }
 

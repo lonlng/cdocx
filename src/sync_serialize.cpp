@@ -202,10 +202,13 @@ void Document::sync_sections_to_physical() {
             }
         }
     }
-    // If XML has more content than DOM, legacy API or DocumentBuilder may have
-    // modified XML directly. Use merge when DocumentBuilder is involved to
-    // preserve DOM-only content; otherwise fall back to full sync.
-    if (xml_child_count > dom_child_count) {
+    // If XML has more content than DOM, physical XML may have been modified
+    // directly (legacy API, DocumentBuilder). We only sync from physical when
+    // the XML child count has INCREASED since the last sync — that indicates
+    // new content was added to physical XML outside the DOM. If the count is
+    // unchanged, the DOM intentionally deleted content and we must trust it.
+    if (xml_child_count > dom_child_count &&
+        xml_child_count > last_synced_xml_child_count_) {
         if (!dirty_xml_paragraphs_.empty()) {
             merge_sections_from_physical();
         } else {
@@ -241,6 +244,17 @@ void Document::sync_sections_to_physical() {
     for (auto child = preserved_doc.first_child(); child; child = child.next_sibling()) {
         body.append_copy(child);
     }
+
+    // Record the synced child count so future calls can detect physical-only
+    // additions (e.g. legacy API direct XML manipulation).
+    int synced_count = 0;
+    for (auto child = body.first_child(); child; child = child.next_sibling()) {
+        const char* name = child.name();
+        if (std::strcmp(name, "w:p") == 0 || std::strcmp(name, "w:tbl") == 0) {
+            ++synced_count;
+        }
+    }
+    last_synced_xml_child_count_ = synced_count;
 
     mark_modified("word/document.xml");
 }

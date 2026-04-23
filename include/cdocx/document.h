@@ -514,6 +514,11 @@ class Document : public CompositeNode {
     // XML paragraphs modified by DocumentBuilder or legacy API
     std::set<pugi::xml_node> dirty_xml_paragraphs_;
 
+    // Tracks the paragraph/table child count in physical XML at the time of the
+    // last successful sync_to_physical_tree(). Used to detect whether physical
+    // XML was modified directly (count increased) vs. DOM deleted content.
+    int last_synced_xml_child_count_ = 0;
+
     // Numbering
     std::unique_ptr<NumberingManager> numbering_manager_;
 

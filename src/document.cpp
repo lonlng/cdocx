@@ -222,6 +222,10 @@ LoadResult Document::open_with_config(const std::string& filepath, const LoadCon
     // Load document tree with full result
     auto result = load_tree_with_result();
 
+    // All data is now in memory; close the read handle so the file
+    // is not locked on Windows (which prevents deletion/rename).
+    close_zip();
+
     if (!result.is_usable() && !config.allow_partial_load) {
         close();
         return result;
@@ -267,6 +271,7 @@ void Document::close() {
 
     is_open_ = false;
     sections_dirty_ = true;
+    last_synced_xml_child_count_ = 0;
 }
 
 void Document::save() {

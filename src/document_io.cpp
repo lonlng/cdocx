@@ -10,6 +10,7 @@
 #include <atomic>
 #include <chrono>
 #include <cstring>
+#include <iostream>
 #include <thread>
 #include <vector>
 
@@ -461,9 +462,23 @@ void Document::build_caches_from_tree() {
 // ============================================================================
 
 bool Document::save_to_zip(const std::string& output_path) {
+    // On Windows, opening a file for writing while it is already open
+    // for reading fails. Close our read handle first if we are about
+    // to overwrite the same file.
+    if (output_path == filepath_ && zip_handle_) {
+        close_zip();
+    }
+
     zip_t* zip = zip_open(output_path.c_str(), 9, 'w');
     if (!zip) {
-        return false;
+        // Windows may need a brief moment to fully release the file handle
+        // after close_zip(). Retry once after a short delay.
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        zip = zip_open(output_path.c_str(), 9, 'w');
+        if (!zip) {
+            std::cerr << "[cdocx debug] zip_open failed for: " << output_path << std::endl;
+            return false;
+        }
     }
 
     const bool success = save_tree_to_zip(zip);

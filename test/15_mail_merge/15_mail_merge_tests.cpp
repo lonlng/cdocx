@@ -262,9 +262,12 @@ TEST(MailMergeTest, CleanupOptionsRemoveEmptyParagraphs) {
     std::map<std::string, std::string> data = {{"EmptyValue", ""}};
     mail_merge.execute(data);
 
+    // Re-obtain body after execute() because the round-trip sync rebuilds the DOM.
+    auto fresh_body = doc.get_first_section()->get_body();
+    auto dom_paras = fresh_body->get_paragraphs();
+
     // The field is replaced with a Run containing empty text, so the paragraph
     // should be considered empty and removed by cleanup.
-    auto dom_paras = body->get_paragraphs();
     EXPECT_EQ(dom_paras.size(), 1u);
     EXPECT_EQ(dom_paras[0]->get_text(), "Remaining text");
 
