@@ -46,8 +46,8 @@ void Document::sync_sections_from_physical() {
 
     // Collect section boundaries
     struct SectionRange {
-        pugi::xml_node begin;
-        pugi::xml_node end;  // points to w:sectPr
+        pugi::xml_node begin_node;
+        pugi::xml_node end_node;  // points to w:sect_pr
     };
     std::vector<SectionRange> ranges;
 
@@ -59,7 +59,7 @@ void Document::sync_sections_from_physical() {
         }
     }
 
-    // If no sectPr found, the entire body is one section
+    // If no sect_pr found, the entire body is one section
     if (ranges.empty() && body.first_child()) {
         ranges.push_back({body.first_child(), pugi::xml_node()});
     }
@@ -75,22 +75,22 @@ void Document::sync_sections_from_physical() {
         auto sect_body = std::make_shared<Body>(this);
 
         // Parse content nodes
-        parse_content_children(this, range.begin, range.end, sect_body.get());
+        parse_content_children(this, range.begin_node, range.end_node, sect_body.get());
 
         // Load section properties
-        if (range.end) {
-            section->set_sectPr_node(range.end);
+        if (range.end_node) {
+            section->set_sect_pr_node(range.end_node);
             section->load_properties();
 
             // Parse header/footer references
-            for (auto ref = range.end.child("w:headerReference"); ref;
+            for (auto ref = range.end_node.child("w:headerReference"); ref;
                  ref = ref.next_sibling("w:headerReference")) {
                 HeaderFooterRef hf_ref;
                 hf_ref.relationship_id = ref.attribute("r:id").value();
                 hf_ref.type = string_to_header_footer_type(ref.attribute("w:type").value());
                 section->add_header_ref(hf_ref);
             }
-            for (auto ref = range.end.child("w:footerReference"); ref;
+            for (auto ref = range.end_node.child("w:footerReference"); ref;
                  ref = ref.next_sibling("w:footerReference")) {
                 HeaderFooterRef hf_ref;
                 hf_ref.relationship_id = ref.attribute("r:id").value();
@@ -126,8 +126,8 @@ void parse_run_format_from_xml(Inline* run, pugi::xml_node run_node) {
         return;
     }
 
-    auto rPr = run_node.child("w:rPr");
-    if (!rPr) {
+    auto r_pr = run_node.child("w:rPr");
+    if (!r_pr) {
         // No explicit formatting: set font to empty so defaults aren't serialized
         Font empty_font;
         empty_font.size = 0;
@@ -138,17 +138,17 @@ void parse_run_format_from_xml(Inline* run, pugi::xml_node run_node) {
         return;
     }
 
-    // Preserve the original rPr for round-trip fidelity of unmanaged properties
-    run->preserve_rPr(rPr);
+    // Preserve the original r_pr for round-trip fidelity of unmanaged properties
+    run->preserve_r_pr(r_pr);
 
     Font font;
-    parse_font_from_xml(rPr, font);
+    parse_font_from_xml(r_pr, font);
 
-    if (auto sp = rPr.child("w:spacing")) {
+    if (auto sp = r_pr.child("w:spacing")) {
         font.spacing = sp.attribute("w:val").as_int() / 20.0;
     }
 
-    if (auto w = rPr.child("w:w")) {
+    if (auto w = r_pr.child("w:w")) {
         font.scale = w.attribute("w:val").as_int(100);
     }
 
@@ -186,33 +186,33 @@ std::shared_ptr<Run> Document::parse_run_from_xml(pugi::xml_node run_node) {
     return run;
 }
 
-void parse_paragraph_format_children_from_xml(pugi::xml_node pPr, ParagraphFormat& format) {
-    parse_shading_from_xml(pPr.child("w:shd"), format.shading);
+void parse_paragraph_format_children_from_xml(pugi::xml_node p_pr, ParagraphFormat& format) {
+    parse_shading_from_xml(p_pr.child("w:shd"), format.shading);
 
-    auto dropCap = pPr.child("w:dropCap");
-    if (dropCap) {
-        format.lines_to_drop = dropCap.attribute("w:lines").as_int(1);
-        format.drop_cap_position = string_to_drop_cap_position(dropCap.attribute("w:type").value());
+    auto drop_cap = p_pr.child("w:dropCap");
+    if (drop_cap) {
+        format.lines_to_drop = drop_cap.attribute("w:lines").as_int(1);
+        format.drop_cap_position = string_to_drop_cap_position(drop_cap.attribute("w:type").value());
     }
 
-    auto jc = pPr.child("w:jc");
+    auto jc = p_pr.child("w:jc");
     if (jc) {
         format.alignment = string_to_paragraph_alignment(jc.attribute("w:val").value());
     }
 
-    auto ind = pPr.child("w:ind");
+    auto ind = p_pr.child("w:ind");
     if (ind) {
         format.left_indent = ind.attribute("w:left").as_int() / 20.0;
         format.right_indent = ind.attribute("w:right").as_int() / 20.0;
         format.first_line_indent = ind.attribute("w:firstLine").as_int() / 20.0;
     }
 
-    auto spacing = pPr.child("w:spacing");
+    auto spacing = p_pr.child("w:spacing");
     if (spacing) {
         format.space_before = spacing.attribute("w:before").as_int() / 20.0;
         format.space_after = spacing.attribute("w:after").as_int() / 20.0;
         const char* line_rule = spacing.attribute("w:lineRule").value();
-        int line_value = spacing.attribute("w:line").as_int();
+        const int line_value = spacing.attribute("w:line").as_int();
         if (line_value != 0) {
             format.line_spacing_rule = string_to_line_spacing_rule(line_rule);
             if (format.line_spacing_rule == LineSpacingRule::Exact ||
@@ -224,22 +224,22 @@ void parse_paragraph_format_children_from_xml(pugi::xml_node pPr, ParagraphForma
         }
     }
 
-    if (pPr.child("w:keepNext")) {
+    if (p_pr.child("w:keepNext")) {
         format.keep_with_next = true;
     }
-    if (pPr.child("w:keepLines")) {
+    if (p_pr.child("w:keepLines")) {
         format.keep_together = true;
     }
-    if (pPr.child("w:pageBreakBefore")) {
+    if (p_pr.child("w:pageBreakBefore")) {
         format.page_break_before = true;
     }
-    auto widow_control = pPr.child("w:widow_control");
+    auto widow_control = p_pr.child("w:widowControl");
     if (widow_control) {
         format.widow_control = widow_control.attribute("w:val").as_int(1) != 0;
     }
-    auto outlineLvl = pPr.child("w:outlineLvl");
-    if (outlineLvl) {
-        int level = outlineLvl.attribute("w:val").as_int(9);
+    auto outline_lvl = p_pr.child("w:outlineLvl");
+    if (outline_lvl) {
+        const int level = outline_lvl.attribute("w:val").as_int(9);
         if (level >= 0 && level <= 8) {
             format.outline_level = static_cast<OutlineLevel>(level);
         } else {
@@ -261,7 +261,7 @@ std::string trim_whitespace(const std::string& str) {
 }
 
 // Walks a field sequence starting from the given run (which should be the begin run).
-// Returns the node containing w:fldChar[end], or empty node if not found.
+// Returns the node containing w:fld_char[end], or empty node if not found.
 pugi::xml_node walk_field_sequence(pugi::xml_node start_run,
                                        std::string* out_instr_text,
                                        std::string* out_resulttext) {
@@ -296,7 +296,7 @@ pugi::xml_node walk_field_sequence(pugi::xml_node start_run,
             *out_resulttext += text_node.text().get();
         }
     }
-    return pugi::xml_node();
+    return pugi::xml_node{};
 }
 
 void parse_field_code_and_switches(const std::string& code, Field* field) {
@@ -338,12 +338,13 @@ void parse_field_code_and_switches(const std::string& code, Field* field) {
 
 static void parse_hyperlink_from_xml(Document* doc,
                                      pugi::xml_node hyperlink_node,
-                                     std::shared_ptr<Paragraph> para) {
+                                     const std::shared_ptr<Paragraph>& para) {
     auto hyperlink = std::make_shared<Hyperlink>(doc);
 
     const char* rel_id = hyperlink_node.attribute("r:id").value();
     if (rel_id && *rel_id) {
-        std::string target = doc->get_relationship_target("word/_rels/document.xml.rels", rel_id);
+        const std::string target =
+            doc->get_relationship_target("word/_rels/document.xml.rels", rel_id);
         if (!target.empty()) {
             hyperlink->set_address(target);
         }
@@ -416,22 +417,22 @@ std::shared_ptr<Paragraph> Document::parse_paragraph_from_xml(pugi::xml_node par
     para->set_current(para_node);
 
     // Parse paragraph properties
-    auto pPr = para_node.child("w:pPr");
-    if (pPr) {
-        para->preserve_pPr(pPr);
-        parse_paragraph_format_children_from_xml(pPr, para->get_paragraph_format());
+    auto p_pr = para_node.child("w:pPr");
+    if (p_pr) {
+        para->preserve_p_pr(p_pr);
+        parse_paragraph_format_children_from_xml(p_pr, para->get_paragraph_format());
 
-        auto pStyle = pPr.child("w:pStyle");
-        if (pStyle) {
-            para->get_paragraph_format().style_name = pStyle.attribute("w:val").value();
+        auto p_style = p_pr.child("w:pStyle");
+        if (p_style) {
+            para->get_paragraph_format().style_name = p_style.attribute("w:val").value();
         }
 
-        auto numPr = pPr.child("w:numPr");
-        if (numPr) {
-            auto ilvl = numPr.child("w:ilvl");
-            auto numId = numPr.child("w:numId");
-            if (numId) {
-                para->get_list_format().list_id = numId.attribute("w:val").as_uint();
+        auto num_pr = p_pr.child("w:numPr");
+        if (num_pr) {
+            auto ilvl = num_pr.child("w:ilvl");
+            auto num_id = num_pr.child("w:numId");
+            if (num_id) {
+                para->get_list_format().list_id = num_id.attribute("w:val").as_uint();
                 para->get_list_format().level =
                     ilvl ? static_cast<NumberingLevel>(ilvl.attribute("w:val").as_int())
                          : NumberingLevel::Level1;
@@ -450,12 +451,12 @@ std::shared_ptr<Paragraph> Document::parse_paragraph_from_xml(pugi::xml_node par
                 auto ff_data = fld_char.child("w:ffData");
                 if (ff_data) {
                     FormFieldType fftype = FormFieldType::TextInput;
-                    auto ff_textInput = ff_data.child("w:textInput");
-                    auto ff_checkBox = ff_data.child("w:checkBox");
-                    auto ff_ddList = ff_data.child("w:ddList");
-                    if (ff_checkBox) {
+                    auto ff_text_input = ff_data.child("w:textInput");
+                    auto ff_check_box = ff_data.child("w:checkBox");
+                    auto ff_dd_list = ff_data.child("w:ddList");
+                    if (ff_check_box) {
                         fftype = FormFieldType::CheckBox;
-                    } else if (ff_ddList) {
+                    } else if (ff_dd_list) {
                         fftype = FormFieldType::ComboBox;
                     }
 
@@ -476,8 +477,8 @@ std::shared_ptr<Paragraph> Document::parse_paragraph_from_xml(pugi::xml_node par
                         form_field->set_calculate_on_exit(ff_calc.attribute("w:val").as_int() != 0);
                     }
 
-                    if (ff_textInput) {
-                        auto ttype = ff_textInput.child("w:type");
+                    if (ff_text_input) {
+                        auto ttype = ff_text_input.child("w:type");
                         if (ttype) {
                             const char* tv = ttype.attribute("w:val").value();
                             if (std::strcmp(tv, "number") == 0) {
@@ -492,29 +493,29 @@ std::shared_ptr<Paragraph> Document::parse_paragraph_from_xml(pugi::xml_node par
                                 form_field->set_text_input_type(TextFormFieldType::Calculated);
                             }
                         }
-                        auto tdef = ff_textInput.child("w:default");
+                        auto tdef = ff_text_input.child("w:default");
                         if (tdef) {
                             form_field->set_text_input_default(tdef.attribute("w:val").value());
                         }
-                        auto tmax = ff_textInput.child("w:maxLength");
+                        auto tmax = ff_text_input.child("w:maxLength");
                         if (tmax) {
                             form_field->set_max_length(tmax.attribute("w:val").as_int());
                         }
-                        auto tfmt = ff_textInput.child("w:format");
+                        auto tfmt = ff_text_input.child("w:format");
                         if (tfmt) {
                             form_field->set_text_input_format(tfmt.attribute("w:val").value());
                         }
-                    } else if (ff_checkBox) {
-                        auto cb_default = ff_checkBox.child("w:default");
+                    } else if (ff_check_box) {
+                        auto cb_default = ff_check_box.child("w:default");
                         if (cb_default) {
                             form_field->set_default_value(cb_default.attribute("w:val").as_int() !=
                                                           0);
                         }
-                        auto cb_checked = ff_checkBox.child("w:checked");
+                        auto cb_checked = ff_check_box.child("w:checked");
                         if (cb_checked) {
                             form_field->set_checked(cb_checked.attribute("w:val").as_int() != 0);
                         }
-                        auto cb_size = ff_checkBox.child("w:size");
+                        auto cb_size = ff_check_box.child("w:size");
                         if (cb_size) {
                             form_field->set_is_check_box_exact_size(true);
                             form_field->set_check_box_size(cb_size.attribute("w:val").as_int() /
@@ -522,14 +523,14 @@ std::shared_ptr<Paragraph> Document::parse_paragraph_from_xml(pugi::xml_node par
                         } else {
                             form_field->set_is_check_box_exact_size(false);
                         }
-                    } else if (ff_ddList) {
+                    } else if (ff_dd_list) {
                         std::vector<std::string> items;
-                        for (auto entry = ff_ddList.child("w:listEntry"); entry;
+                        for (auto entry = ff_dd_list.child("w:listEntry"); entry;
                              entry = entry.next_sibling("w:listEntry")) {
-                            items.push_back(entry.attribute("w:val").value());
+                            items.emplace_back(entry.attribute("w:val").value());
                         }
                         form_field->set_drop_down_items(items);
-                        auto dd_default = ff_ddList.child("w:default");
+                        auto dd_default = ff_dd_list.child("w:default");
                         if (dd_default) {
                             form_field->set_drop_down_selected_index(
                                 dd_default.attribute("w:val").as_int());
@@ -614,34 +615,34 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
     auto table = std::make_shared<Table>(this);
 
     // Parse table properties
-    auto tblPr = table_node.child("w:tblPr");
-    if (tblPr) {
-        table->preserve_tblPr(tblPr);
-        auto jc = tblPr.child("w:jc");
+    auto tbl_pr = table_node.child("w:tblPr");
+    if (tbl_pr) {
+        table->preserve_tbl_pr(tbl_pr);
+        auto jc = tbl_pr.child("w:jc");
         if (jc) {
             table->get_table_format().alignment =
                 string_to_table_alignment(jc.attribute("w:val").value());
         }
-        auto tblInd = tblPr.child("w:tblInd");
-        if (tblInd) {
-            table->get_table_format().left_indent = tblInd.attribute("w:w").as_int() / 20.0;
+        auto tbl_ind = tbl_pr.child("w:tblInd");
+        if (tbl_ind) {
+            table->get_table_format().left_indent = tbl_ind.attribute("w:w").as_int() / 20.0;
         }
-        auto tblStyle = tblPr.child("w:tblStyle");
-        if (tblStyle) {
-            table->set_style(tblStyle.attribute("w:val").value());
+        auto tbl_style = tbl_pr.child("w:tblStyle");
+        if (tbl_style) {
+            table->set_style(tbl_style.attribute("w:val").value());
         }
-        parse_shading_from_xml(tblPr.child("w:shd"), table->get_table_format().shading);
-        parse_borders_from_xml(tblPr.child("w:tblBorders"), table->get_table_format().borders);
-        auto tblLayout = tblPr.child("w:tblLayout");
-        if (tblLayout) {
-            const char* layout_type = tblLayout.attribute("w:type").value();
+        parse_shading_from_xml(tbl_pr.child("w:shd"), table->get_table_format().shading);
+        parse_borders_from_xml(tbl_pr.child("w:tblBorders"), table->get_table_format().borders);
+        auto tbl_layout = tbl_pr.child("w:tblLayout");
+        if (tbl_layout) {
+            const char* layout_type = tbl_layout.attribute("w:type").value();
             if (std::strcmp(layout_type, "fixed") == 0) {
                 table->get_table_format().auto_fit_behavior = AutoFitBehavior::FixedColumnWidth;
                 table->get_table_format().allow_auto_fit = false;
             } else {
-                auto tblW = tblPr.child("w:tblW");
-                if (tblW) {
-                    const char* width_type = tblW.attribute("w:type").value();
+                auto tbl_w = tbl_pr.child("w:tblW");
+                if (tbl_w) {
+                    const char* width_type = tbl_w.attribute("w:type").value();
                     if (std::strcmp(width_type, "pct") == 0) {
                         table->get_table_format().auto_fit_behavior =
                             AutoFitBehavior::AutoFitToWindow;
@@ -659,27 +660,27 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
     }
 
     // Preserve table grid for round-trip fidelity
-    auto tblGrid = table_node.child("w:tblGrid");
-    if (tblGrid) {
-        table->preserve_tblGrid(tblGrid);
+    auto tbl_grid = table_node.child("w:tblGrid");
+    if (tbl_grid) {
+        table->preserve_tbl_grid(tbl_grid);
     }
 
     for (auto tr = table_node.child("w:tr"); tr; tr = tr.next_sibling("w:tr")) {
         auto row = std::make_shared<Row>(this);
 
         // Parse row properties
-        auto trPr = tr.child("w:trPr");
-        if (trPr) {
-            auto trHeight = trPr.child("w:trHeight");
-            if (trHeight) {
-                row->get_row_format().height = trHeight.attribute("w:val").as_int() / 20.0;
-                const char* rule = trHeight.attribute("w:hRule").value();
+        auto tr_pr = tr.child("w:trPr");
+        if (tr_pr) {
+            auto tr_height = tr_pr.child("w:trHeight");
+            if (tr_height) {
+                row->get_row_format().height = tr_height.attribute("w:val").as_int() / 20.0;
+                const char* rule = tr_height.attribute("w:hRule").value();
                 row->get_row_format().height_rule_exact = (std::strcmp(rule, "exact") == 0);
             }
-            if (trPr.child("w:tblHeader")) {
+            if (tr_pr.child("w:tblHeader")) {
                 row->get_row_format().heading = true;
             }
-            if (trPr.child("w:cantSplit")) {
+            if (tr_pr.child("w:cantSplit")) {
                 row->get_row_format().allow_break_across_pages = false;
             }
         }
@@ -688,36 +689,35 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
             auto cell = std::make_shared<Cell>(this);
 
             // Parse cell properties
-            auto tcPr = tc.child("w:tcPr");
-            if (tcPr) {
-                auto tcW = tcPr.child("w:tcW");
-                if (tcW) {
-                    cell->get_cell_format().width = tcW.attribute("w:w").as_int() / 20.0;
-                    const char* typeval = tcW.attribute("w:type").value();
+            auto tc_pr = tc.child("w:tcPr");
+            if (tc_pr) {
+                auto tc_w = tc_pr.child("w:tcW");
+                if (tc_w) {
+                    cell->get_cell_format().width = tc_w.attribute("w:w").as_int() / 20.0;
+                    const char* typeval = tc_w.attribute("w:type").value();
                     cell->get_cell_format().preferred_width = (std::strcmp(typeval, "pct") == 0);
                 }
-                auto vAlign = tcPr.child("w:vAlign");
-                if (vAlign) {
+                auto v_align = tc_pr.child("w:vAlign");
+                if (v_align) {
                     cell->get_cell_format().vertical_alignment =
-                        string_to_cell_vertical_alignment(vAlign.attribute("w:val").value());
+                        string_to_cell_vertical_alignment(v_align.attribute("w:val").value());
                 }
-                auto gridSpan = tcPr.child("w:gridSpan");
-                if (gridSpan) {
+                auto grid_span = tc_pr.child("w:gridSpan");
+                if (grid_span) {
                     cell->get_cell_format().horizontal_merge =
-                        gridSpan.attribute("w:val").as_int(1);
-                    if (cell->get_cell_format().horizontal_merge < 1) {
-                        cell->get_cell_format().horizontal_merge = 1;
-                    }
+                        grid_span.attribute("w:val").as_int(1);
+                    cell->get_cell_format().horizontal_merge =
+                        std::max(1, cell->get_cell_format().horizontal_merge);
                 }
-                auto vMerge = tcPr.child("w:vMerge");
-                if (vMerge) {
+                auto v_merge = tc_pr.child("w:vMerge");
+                if (v_merge) {
                     cell->get_cell_format().vertical_merge = true;
-                    const char* vmerge_val = vMerge.attribute("w:val").value();
+                    const char* vmerge_val = v_merge.attribute("w:val").value();
                     cell->get_cell_format().vertical_merge_start =
                         (std::strcmp(vmerge_val, "restart") == 0);
                 }
-                parse_shading_from_xml(tcPr.child("w:shd"), cell->get_cell_format().shading);
-                parse_borders_from_xml(tcPr.child("w:tcBorders"), cell->get_cell_format().borders);
+                parse_shading_from_xml(tc_pr.child("w:shd"), cell->get_cell_format().shading);
+                parse_borders_from_xml(tc_pr.child("w:tcBorders"), cell->get_cell_format().borders);
             }
 
             // Parse cell content
@@ -740,7 +740,7 @@ std::shared_ptr<Body> Document::parse_body_from_xml(pugi::xml_node body_node) {
 
     auto body = std::make_shared<Body>(this);
 
-    // Parse paragraphs and tables (stop at sectPr)
+    // Parse paragraphs and tables (stop at sect_pr)
     for (auto node = body_node.first_child(); node; node = node.next_sibling()) {
         const char* name = node.name();
         if (std::strcmp(name, "w:p") == 0) {

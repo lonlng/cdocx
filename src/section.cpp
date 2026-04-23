@@ -32,15 +32,15 @@ static const char* get_header_footer_typestr(HeaderFooterType type) {
     }
 }
 
-static void remove_ref_from_node(pugi::xml_node sectPr, HeaderFooterType type, bool is_header) {
-    if (!sectPr) {
+static void remove_ref_from_node(pugi::xml_node sect_pr, HeaderFooterType type, bool is_header) {
+    if (!sect_pr) {
         return;
     }
-    const char* node_name = is_header ? "w:headerReference" : "w:footerReference";
+    const char* node_name = is_header ? "w:header_reference" : "w:footer_reference";
     const char* typestr = get_header_footer_typestr(type);
-    for (auto child = sectPr.child(node_name); child; child = child.next_sibling(node_name)) {
+    for (auto child = sect_pr.child(node_name); child; child = child.next_sibling(node_name)) {
         if (std::strcmp(child.attribute("w:type").value(), typestr) == 0) {
-            sectPr.remove_child(child);
+            sect_pr.remove_child(child);
             break;
         }
     }
@@ -48,12 +48,10 @@ static void remove_ref_from_node(pugi::xml_node sectPr, HeaderFooterType type, b
 
 static bool has_header_footer(const std::vector<std::shared_ptr<HeaderFooter>>& collection,
                             HeaderFooterType type) {
-    for (const auto& hf : collection) {
-        if (hf && hf->get_header_footer_type() == type) {
-            return true;
-        }
-    }
-    return false;
+    return std::any_of(collection.begin(), collection.end(),
+                       [type](const auto& hf) {
+                           return hf && hf->get_header_footer_type() == type;
+                       });
 }
 
 static std::shared_ptr<HeaderFooter> get_header_footer(
@@ -80,7 +78,7 @@ static std::vector<std::shared_ptr<HeaderFooter>> get_all_header_footer(
 static void remove_header_footer(HeaderFooterType type,
                                std::vector<std::shared_ptr<HeaderFooter>>& collection,
                                std::vector<HeaderFooterRef>& refs,
-                               pugi::xml_node sectPr,
+                               pugi::xml_node sect_pr,
                                bool is_header) {
     collection.erase(std::remove_if(collection.begin(),
                                     collection.end(),
@@ -88,7 +86,7 @@ static void remove_header_footer(HeaderFooterType type,
                                         return hf && hf->get_header_footer_type() == type;
                                     }),
                      collection.end());
-    remove_ref_from_node(sectPr, type, is_header);
+    remove_ref_from_node(sect_pr, type, is_header);
     refs.erase(
         std::remove_if(
             refs.begin(), refs.end(), [type](const HeaderFooterRef& r) { return r.type == type; }),
@@ -99,20 +97,20 @@ static void remove_header_footer(HeaderFooterType type,
 // Section Implementation
 // ============================================================================
 
-Section::Section() : CompositeNode(), document_(nullptr), is_first_section_(false) {
+Section::Section() : CompositeNode() {
 }
 
-Section::Section(Document* doc) : CompositeNode(), document_(doc), is_first_section_(false) {
+Section::Section(Document* doc) : CompositeNode(), document_(doc) {
     set_document(doc);
 }
 
-Section::Section(pugi::xml_node sectPr, pugi::xml_node body, Document* doc, bool is_first)
+Section::Section(pugi::xml_node sect_pr, pugi::xml_node body, Document* doc, bool is_first)
     : CompositeNode(),
       document_(doc),
       is_first_section_(is_first),
-      sectPr_node_(sectPr),
+      sect_pr_node_(sect_pr),
       body_node_(body) {
-    if (sectPr_node_) {
+    if (sect_pr_node_) {
         load_properties();
     }
 }
@@ -214,7 +212,7 @@ std::shared_ptr<class Table> Section::append_table(int rows, int cols) {
     return body->append_table(rows, cols);
 }
 
-Paragraph* Section::add_paragraph(const std::string& text, formatting_flag flag) {
+Paragraph* Section::add_paragraph(const std::string& text, FormattingFlag flag) {
     if (!document_) {
         return nullptr;
     }
@@ -223,19 +221,19 @@ Paragraph* Section::add_paragraph(const std::string& text, formatting_flag flag)
     pugi::xml_node body;
     if (body_node_) {
         body = body_node_;
-    } else if (sectPr_node_) {
-        body = sectPr_node_.parent();
+    } else if (sect_pr_node_) {
+        body = sect_pr_node_.parent();
     }
 
     if (!body) {
         return nullptr;
     }
 
-    // Always insert before sectPr when it exists so content stays inside the section;
+    // Always insert before sect_pr when it exists so content stays inside the section;
     // otherwise append to the body.
     pugi::xml_node p;
-    if (sectPr_node_) {
-        p = body.insert_child_before("w:p", sectPr_node_);
+    if (sect_pr_node_) {
+        p = body.insert_child_before("w:p", sect_pr_node_);
     } else {
         p = body.append_child("w:p");
     }
@@ -265,19 +263,19 @@ Table* Section::add_table(size_t rows, size_t cols) {
     pugi::xml_node body;
     if (body_node_) {
         body = body_node_;
-    } else if (sectPr_node_) {
-        body = sectPr_node_.parent();
+    } else if (sect_pr_node_) {
+        body = sect_pr_node_.parent();
     }
 
     if (!body) {
         return nullptr;
     }
 
-    // Always insert before sectPr when it exists so content stays inside the section;
+    // Always insert before sect_pr when it exists so content stays inside the section;
     // otherwise append to the body.
     pugi::xml_node tbl;
-    if (sectPr_node_) {
-        tbl = body.insert_child_before("w:tbl", sectPr_node_);
+    if (sect_pr_node_) {
+        tbl = body.insert_child_before("w:tbl", sect_pr_node_);
     } else {
         tbl = body.append_child("w:tbl");
     }
@@ -287,10 +285,10 @@ Table* Section::add_table(size_t rows, size_t cols) {
     }
 
     // Add table properties
-    auto tblPr = tbl.append_child("w:tblPr");
-    auto tblW = tblPr.append_child("w:tblW");
-    tblW.append_attribute("w:w").set_value("0");
-    tblW.append_attribute("w:type").set_value("auto");
+    auto tbl_pr = tbl.append_child("w:tblPr");
+    auto tbl_w = tbl_pr.append_child("w:tblW");
+    tbl_w.append_attribute("w:w").set_value("0");
+    tbl_w.append_attribute("w:type").set_value("auto");
 
     // Create rows and cells
     for (size_t r = 0; r < rows; ++r) {
@@ -303,8 +301,8 @@ Table* Section::add_table(size_t rows, size_t cols) {
 
             // Add a paragraph to each cell
             auto p = tc.append_child("w:p");
-            auto rPr = p.append_child("w:r");
-            auto t = rPr.append_child("w:t");
+            auto r_pr = p.append_child("w:r");
+            auto t = r_pr.append_child("w:t");
             t.text().set("");
         }
     }
@@ -325,7 +323,7 @@ std::shared_ptr<HeaderFooter> Section::add_header(HeaderFooterType type) {
     }
 
     // Generate unique part name
-    std::string part_name =
+    const std::string part_name =
         "word/header" + std::to_string(document_->get_next_header_number()) + ".xml";
 
     // Create header XML
@@ -342,18 +340,18 @@ std::shared_ptr<HeaderFooter> Section::add_header(HeaderFooterType type) {
     auto t = r.append_child("w:t");
     t.text().set("");
 
-    // Add relationship and capture the generated ID so the sectPr reference
+    // Add relationship and capture the generated ID so the sect_pr reference
     // and the relationship entry stay in sync.
-    std::string rel_id = document_->add_relationship(
+    const std::string rel_id = document_->add_relationship(
         "word/_rels/document.xml.rels",
         "http://schemas.openxmlformats.org/officeDocument/2006/relationships/header",
         part_name.substr(5));  // Remove "word/" prefix
 
     // Add header reference to section properties if node exists
-    if (sectPr_node_) {
-        auto headerRef = sectPr_node_.append_child("w:headerReference");
-        headerRef.append_attribute("r:id").set_value(rel_id.c_str());
-        headerRef.append_attribute("w:type").set_value(get_header_footer_typestr(type));
+    if (sect_pr_node_) {
+        auto header_ref = sect_pr_node_.append_child("w:header_reference");
+        header_ref.append_attribute("r:id").set_value(rel_id.c_str());
+        header_ref.append_attribute("w:type").set_value(get_header_footer_typestr(type));
     }
 
     // Create HeaderFooter object
@@ -383,7 +381,7 @@ std::shared_ptr<HeaderFooter> Section::add_footer(HeaderFooterType type) {
     }
 
     // Generate unique part name
-    std::string part_name =
+    const std::string part_name =
         "word/footer" + std::to_string(document_->get_next_footer_number()) + ".xml";
 
     // Create footer XML
@@ -400,18 +398,18 @@ std::shared_ptr<HeaderFooter> Section::add_footer(HeaderFooterType type) {
     auto t = r.append_child("w:t");
     t.text().set("");
 
-    // Add relationship and capture the generated ID so the sectPr reference
+    // Add relationship and capture the generated ID so the sect_pr reference
     // and the relationship entry stay in sync.
-    std::string rel_id = document_->add_relationship(
+    const std::string rel_id = document_->add_relationship(
         "word/_rels/document.xml.rels",
         "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer",
         part_name.substr(5));
 
     // Add footer reference to section properties if node exists
-    if (sectPr_node_) {
-        auto footerRef = sectPr_node_.append_child("w:footerReference");
-        footerRef.append_attribute("r:id").set_value(rel_id.c_str());
-        footerRef.append_attribute("w:type").set_value(get_header_footer_typestr(type));
+    if (sect_pr_node_) {
+        auto footer_ref = sect_pr_node_.append_child("w:footer_reference");
+        footer_ref.append_attribute("r:id").set_value(rel_id.c_str());
+        footer_ref.append_attribute("w:type").set_value(get_header_footer_typestr(type));
     }
 
     // Create HeaderFooter object
@@ -447,11 +445,11 @@ bool Section::has_footer(HeaderFooterType type) const {
 }
 
 void Section::remove_header(HeaderFooterType type) {
-    remove_header_footer(type, headers_, header_refs_, sectPr_node_, true);
+    remove_header_footer(type, headers_, header_refs_, sect_pr_node_, true);
 }
 
 void Section::remove_footer(HeaderFooterType type) {
-    remove_header_footer(type, footers_, footer_refs_, sectPr_node_, false);
+    remove_header_footer(type, footers_, footer_refs_, sect_pr_node_, false);
 }
 
 std::vector<std::shared_ptr<HeaderFooter>> Section::get_all_headers() const {
@@ -463,24 +461,24 @@ std::vector<std::shared_ptr<HeaderFooter>> Section::get_all_footers() const {
 }
 
 void Section::apply_properties() {
-    if (!sectPr_node_) {
+    if (!sect_pr_node_) {
         return;
     }
 
-    properties_.applyTo(sectPr_node_);
+    properties_.apply_to(sect_pr_node_);
 }
 
 void Section::load_properties() {
-    if (!sectPr_node_) {
+    if (!sect_pr_node_) {
         return;
     }
 
     // Load from XML into prop structure
-    auto pgSz = sectPr_node_.child("w:pgSz");
-    if (pgSz) {
-        properties_.pageSize.width = pgSz.attribute("w:w").as_int();
-        properties_.pageSize.height = pgSz.attribute("w:h").as_int();
-        const char* orient = pgSz.attribute("w:orient").value();
+    auto pg_sz = sect_pr_node_.child("w:pgSz");
+    if (pg_sz) {
+        properties_.page_size.width = pg_sz.attribute("w:w").as_int();
+        properties_.page_size.height = pg_sz.attribute("w:h").as_int();
+        const char* orient = pg_sz.attribute("w:orient").value();
         if (std::strcmp(orient, "landscape") == 0) {
             properties_.orientation = SectionProperties::Orientation::Landscape;
         } else {
@@ -488,17 +486,17 @@ void Section::load_properties() {
         }
     }
 
-    auto pgMar = sectPr_node_.child("w:pgMar");
-    if (pgMar) {
-        properties_.pageMargins.top = pgMar.attribute("w:top").as_int();
-        properties_.pageMargins.right = pgMar.attribute("w:right").as_int();
-        properties_.pageMargins.bottom = pgMar.attribute("w:bottom").as_int();
-        properties_.pageMargins.left = pgMar.attribute("w:left").as_int();
-        properties_.pageMargins.header = pgMar.attribute("w:header").as_int(720);
-        properties_.pageMargins.footer = pgMar.attribute("w:footer").as_int(720);
+    auto pg_mar = sect_pr_node_.child("w:pgMar");
+    if (pg_mar) {
+        properties_.page_margins.top = pg_mar.attribute("w:top").as_int();
+        properties_.page_margins.right = pg_mar.attribute("w:right").as_int();
+        properties_.page_margins.bottom = pg_mar.attribute("w:bottom").as_int();
+        properties_.page_margins.left = pg_mar.attribute("w:left").as_int();
+        properties_.page_margins.header = pg_mar.attribute("w:header").as_int(720);
+        properties_.page_margins.footer = pg_mar.attribute("w:footer").as_int(720);
     }
 
-    auto cols = sectPr_node_.child("w:cols");
+    auto cols = sect_pr_node_.child("w:cols");
     if (cols) {
         properties_.columns.count = cols.attribute("w:num").as_int(1);
         properties_.columns.space = cols.attribute("w:space").as_int(720);
@@ -509,7 +507,7 @@ void Section::load_properties() {
 void Section::add_header_ref(const HeaderFooterRef& ref) {
     header_refs_.push_back(ref);
     if (document_ && !ref.relationship_id.empty()) {
-        std::string target =
+        const std::string target =
             document_->get_relationship_target("word/_rels/document.xml.rels", ref.relationship_id);
         if (!target.empty()) {
             auto header = std::make_shared<HeaderFooter>(document_, ref.type, true);
@@ -523,7 +521,7 @@ void Section::add_header_ref(const HeaderFooterRef& ref) {
 void Section::add_footer_ref(const HeaderFooterRef& ref) {
     footer_refs_.push_back(ref);
     if (document_ && !ref.relationship_id.empty()) {
-        std::string target =
+        const std::string target =
             document_->get_relationship_target("word/_rels/document.xml.rels", ref.relationship_id);
         if (!target.empty()) {
             auto footer = std::make_shared<HeaderFooter>(document_, ref.type, false);
@@ -561,8 +559,8 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
 
     // Handle header
     {
-        auto* prev_ref = find_ref(prev->get_header_refs(), type);
-        auto* curr_ref = find_ref(header_refs_, type);
+        const auto* prev_ref = find_ref(prev->get_header_refs(), type);
+        const auto* curr_ref = find_ref(header_refs_, type);
         if (is_link_to_previous) {
             if (curr_ref) {
                 // Already has a header; if it's already linked, nothing to do
@@ -570,17 +568,17 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
                     // already linked
                 } else if (prev_ref) {
                     // Link to previous
-                    remove_ref_from_node(sectPr_node_, type, true);
+                    remove_ref_from_node(sect_pr_node_, type, true);
                     header_refs_.erase(
                         std::remove_if(header_refs_.begin(),
                                        header_refs_.end(),
                                        [type](const HeaderFooterRef& r) { return r.type == type; }),
                         header_refs_.end());
                     remove_header(type);
-                    HeaderFooterRef new_ref = *prev_ref;
-                    auto headerRef = sectPr_node_.append_child("w:headerReference");
-                    headerRef.append_attribute("r:id").set_value(new_ref.relationship_id.c_str());
-                    headerRef.append_attribute("w:type").set_value(
+                    const HeaderFooterRef new_ref = *prev_ref;
+                    auto header_ref = sect_pr_node_.append_child("w:header_reference");
+                    header_ref.append_attribute("r:id").set_value(new_ref.relationship_id.c_str());
+                    header_ref.append_attribute("w:type").set_value(
                         get_header_footer_typestr(type));
                     header_refs_.push_back(new_ref);
                     auto header = std::make_shared<HeaderFooter>(document_, type, true);
@@ -589,7 +587,7 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
                     headers_.push_back(header);
                 } else {
                     // Previous has no header of this type; remove current to inherit
-                    remove_ref_from_node(sectPr_node_, type, true);
+                    remove_ref_from_node(sect_pr_node_, type, true);
                     header_refs_.erase(
                         std::remove_if(header_refs_.begin(),
                                        header_refs_.end(),
@@ -600,10 +598,10 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
             } else {
                 // Current has no header; link to previous if previous has one
                 if (prev_ref) {
-                    HeaderFooterRef new_ref = *prev_ref;
-                    auto headerRef = sectPr_node_.append_child("w:headerReference");
-                    headerRef.append_attribute("r:id").set_value(new_ref.relationship_id.c_str());
-                    headerRef.append_attribute("w:type").set_value(
+                    const HeaderFooterRef new_ref = *prev_ref;
+                    auto header_ref = sect_pr_node_.append_child("w:header_reference");
+                    header_ref.append_attribute("r:id").set_value(new_ref.relationship_id.c_str());
+                    header_ref.append_attribute("w:type").set_value(
                         get_header_footer_typestr(type));
                     header_refs_.push_back(new_ref);
                     auto header = std::make_shared<HeaderFooter>(document_, type, true);
@@ -615,12 +613,12 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
         } else {
             // Unlink: copy previous header to a new part if needed
             if (prev_ref) {
-                bool need_copy = (!curr_ref) || (curr_ref->part_path == prev_ref->part_path);
+                const bool need_copy = (!curr_ref) || (curr_ref->part_path == prev_ref->part_path);
                 if (need_copy) {
                     // Generate new part name
-                    std::string new_part = "word/header" +
-                                           std::to_string(document_->get_next_header_number()) +
-                                           ".xml";
+                    const std::string new_part =
+                        "word/header" + std::to_string(document_->get_next_header_number()) +
+                        ".xml";
 
                     // Copy XML content from previous part
                     auto* prev_doc = document_->get_xml_part(prev_ref->part_path);
@@ -641,13 +639,13 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
                     }
 
                     // Add relationship and capture the generated ID.
-                    std::string new_rel_id = document_->add_relationship(
+                    const std::string new_rel_id = document_->add_relationship(
                         "word/_rels/document.xml.rels",
                         "http://schemas.openxmlformats.org/officeDocument/"
                         "2006/relationships/header",
                         new_part.substr(5));
 
-                    remove_ref_from_node(sectPr_node_, type, true);
+                    remove_ref_from_node(sect_pr_node_, type, true);
                     header_refs_.erase(
                         std::remove_if(header_refs_.begin(),
                                        header_refs_.end(),
@@ -655,9 +653,9 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
                         header_refs_.end());
                     remove_header(type);
 
-                    auto headerRef = sectPr_node_.append_child("w:headerReference");
-                    headerRef.append_attribute("r:id").set_value(new_rel_id.c_str());
-                    headerRef.append_attribute("w:type").set_value(
+                    auto header_ref = sect_pr_node_.append_child("w:header_reference");
+                    header_ref.append_attribute("r:id").set_value(new_rel_id.c_str());
+                    header_ref.append_attribute("w:type").set_value(
                         get_header_footer_typestr(type));
 
                     HeaderFooterRef ref;
@@ -676,24 +674,24 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
 
     // Handle footer (mirror of header logic)
     {
-        auto* prev_ref = find_ref(prev->get_footer_refs(), type);
-        auto* curr_ref = find_ref(footer_refs_, type);
+        const auto* prev_ref = find_ref(prev->get_footer_refs(), type);
+        const auto* curr_ref = find_ref(footer_refs_, type);
         if (is_link_to_previous) {
             if (curr_ref) {
                 if (prev_ref && curr_ref->part_path == prev_ref->part_path) {
                     // already linked
                 } else if (prev_ref) {
-                    remove_ref_from_node(sectPr_node_, type, false);
+                    remove_ref_from_node(sect_pr_node_, type, false);
                     footer_refs_.erase(
                         std::remove_if(footer_refs_.begin(),
                                        footer_refs_.end(),
                                        [type](const HeaderFooterRef& r) { return r.type == type; }),
                         footer_refs_.end());
                     remove_footer(type);
-                    HeaderFooterRef new_ref = *prev_ref;
-                    auto footerRef = sectPr_node_.append_child("w:footerReference");
-                    footerRef.append_attribute("r:id").set_value(new_ref.relationship_id.c_str());
-                    footerRef.append_attribute("w:type").set_value(
+                    const HeaderFooterRef new_ref = *prev_ref;
+                    auto footer_ref = sect_pr_node_.append_child("w:footer_reference");
+                    footer_ref.append_attribute("r:id").set_value(new_ref.relationship_id.c_str());
+                    footer_ref.append_attribute("w:type").set_value(
                         get_header_footer_typestr(type));
                     footer_refs_.push_back(new_ref);
                     auto footer = std::make_shared<HeaderFooter>(document_, type, false);
@@ -701,7 +699,7 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
                     footer->set_relationship_id(new_ref.relationship_id);
                     footers_.push_back(footer);
                 } else {
-                    remove_ref_from_node(sectPr_node_, type, false);
+                    remove_ref_from_node(sect_pr_node_, type, false);
                     footer_refs_.erase(
                         std::remove_if(footer_refs_.begin(),
                                        footer_refs_.end(),
@@ -711,10 +709,10 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
                 }
             } else {
                 if (prev_ref) {
-                    HeaderFooterRef new_ref = *prev_ref;
-                    auto footerRef = sectPr_node_.append_child("w:footerReference");
-                    footerRef.append_attribute("r:id").set_value(new_ref.relationship_id.c_str());
-                    footerRef.append_attribute("w:type").set_value(
+                    const HeaderFooterRef new_ref = *prev_ref;
+                    auto footer_ref = sect_pr_node_.append_child("w:footer_reference");
+                    footer_ref.append_attribute("r:id").set_value(new_ref.relationship_id.c_str());
+                    footer_ref.append_attribute("w:type").set_value(
                         get_header_footer_typestr(type));
                     footer_refs_.push_back(new_ref);
                     auto footer = std::make_shared<HeaderFooter>(document_, type, false);
@@ -725,11 +723,11 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
             }
         } else {
             if (prev_ref) {
-                bool need_copy = (!curr_ref) || (curr_ref->part_path == prev_ref->part_path);
+                const bool need_copy = (!curr_ref) || (curr_ref->part_path == prev_ref->part_path);
                 if (need_copy) {
-                    std::string new_part = "word/footer" +
-                                           std::to_string(document_->get_next_footer_number()) +
-                                           ".xml";
+                    const std::string new_part =
+                        "word/footer" + std::to_string(document_->get_next_footer_number()) +
+                        ".xml";
 
                     auto* prev_doc = document_->get_xml_part(prev_ref->part_path);
                     if (prev_doc) {
@@ -749,13 +747,13 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
                     }
 
                     // Add relationship and capture the generated ID.
-                    std::string new_rel_id = document_->add_relationship(
+                    const std::string new_rel_id = document_->add_relationship(
                         "word/_rels/document.xml.rels",
                         "http://schemas.openxmlformats.org/officeDocument/"
                         "2006/relationships/footer",
                         new_part.substr(5));
 
-                    remove_ref_from_node(sectPr_node_, type, false);
+                    remove_ref_from_node(sect_pr_node_, type, false);
                     footer_refs_.erase(
                         std::remove_if(footer_refs_.begin(),
                                        footer_refs_.end(),
@@ -763,9 +761,9 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
                         footer_refs_.end());
                     remove_footer(type);
 
-                    auto footerRef = sectPr_node_.append_child("w:footerReference");
-                    footerRef.append_attribute("r:id").set_value(new_rel_id.c_str());
-                    footerRef.append_attribute("w:type").set_value(
+                    auto footer_ref = sect_pr_node_.append_child("w:footer_reference");
+                    footer_ref.append_attribute("r:id").set_value(new_rel_id.c_str());
+                    footer_ref.append_attribute("w:type").set_value(
                         get_header_footer_typestr(type));
 
                     HeaderFooterRef ref;
@@ -816,7 +814,7 @@ bool Section::is_linked_to_previous(HeaderFooterType type) const {
 // HeaderFooter Implementation
 // ============================================================================
 
-HeaderFooter::HeaderFooter() : CompositeNode(), type_(HeaderFooterType::Default), is_header_(true) {
+HeaderFooter::HeaderFooter() : CompositeNode() {
 }
 
 HeaderFooter::HeaderFooter(Document* doc, HeaderFooterType type, bool is_header)
@@ -896,7 +894,7 @@ std::vector<std::shared_ptr<class Table>> HeaderFooter::get_tables() const {
 }
 
 std::shared_ptr<Section> HeaderFooter::get_parent_section() const {
-    Section* sect = get_ancestor<Section>();
+    auto* sect = get_ancestor<Section>();
     if (sect) {
         return std::static_pointer_cast<Section>(sect->shared_from_this());
     }

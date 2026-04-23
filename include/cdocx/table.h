@@ -318,7 +318,7 @@ class Table : public CompositeNode {
 
     // Column operations
     void insert_column(int index);
-    void delete_column(int index);
+    void delete_column(int index) const;
 
     // Dimensions
     int get_row_count() const;
@@ -338,7 +338,7 @@ class Table : public CompositeNode {
     // Merge cells
     std::shared_ptr<Cell> merge_cells(const std::shared_ptr<Cell>& start_cell,
                                       const std::shared_ptr<Cell>& end_cell);
-    std::shared_ptr<Cell> merge_cells(int start_row, int start_col, int end_row, int end_col);
+    std::shared_ptr<Cell> merge_cells(int start_row, int start_col, int end_row, int end_col) const;
 
     // Split cell
     void split_cell(const std::shared_ptr<Cell>& cell, int row_count, int col_count);
@@ -375,28 +375,26 @@ class Table : public CompositeNode {
     TableRow rows_legacy();
 
     // Legacy cell access (convenience)
-    TableCell cellAt(size_t row, size_t col) const;
-    TableCell cellAtUnsafe(size_t row, size_t col) const;
-    size_t getRowCount() const;
-    size_t getColumnCount() const;
-    TableCell merge(size_t startRow, size_t startCol, size_t rowCount, size_t colCount);
+    TableCell cell_at(size_t row, size_t col) const;
+    TableCell cell_at_unsafe(size_t row, size_t col) const;
+    TableCell merge(size_t start_row, size_t start_col, size_t row_count, size_t col_count);
     void split(size_t row, size_t col);
-    void dumpStructure() const;
+    void dump_structure() const;
     void set_properties(const TableProperties& props);
 
-    // Preserve original tblPr and tblGrid for round-trip fidelity
-    void preserve_tblPr(pugi::xml_node tblPr);
-    pugi::xml_node get_preserved_tblPr() const;
-    bool has_preserved_tblPr() const;
+    // Preserve original tbl_pr and tbl_grid for round-trip fidelity
+    void preserve_tbl_pr(pugi::xml_node tbl_pr);
+    pugi::xml_node get_preserved_tbl_pr() const;
+    bool has_preserved_tbl_pr() const;
 
-    void preserve_tblGrid(pugi::xml_node tblGrid);
-    pugi::xml_node get_preserved_tblGrid() const;
-    bool has_preserved_tblGrid() const;
+    void preserve_tbl_grid(pugi::xml_node tbl_grid);
+    pugi::xml_node get_preserved_tbl_grid() const;
+    bool has_preserved_tbl_grid() const;
 
   private:
     TableFormat format_;
-    pugi::xml_document preserved_tblPr_;
-    pugi::xml_document preserved_tblGrid_;
+    pugi::xml_document preserved_tbl_pr_;
+    pugi::xml_document preserved_tbl_grid_;
 };
 
 // ============================================================================

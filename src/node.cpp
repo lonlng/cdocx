@@ -68,7 +68,7 @@ std::shared_ptr<Node> Node::get_previous_node_in_document() const {
 std::shared_ptr<Node> Node::get_next_node_in_document() const {
     // Pre-order: first child, then next sibling, then ancestor's next sibling
     if (is_composite()) {
-        auto composite = dynamic_cast<const CompositeNode*>(this);
+        const auto* composite = dynamic_cast<const CompositeNode*>(this);
         if (composite && composite->has_children()) {
             return composite->get_first_child();
         }
@@ -77,7 +77,7 @@ std::shared_ptr<Node> Node::get_next_node_in_document() const {
     if (next) {
         return next;
     }
-    auto current = parent_;
+    auto* current = parent_;
     while (current) {
         if (current->get_next_sibling()) {
             return current->get_next_sibling();
@@ -234,7 +234,7 @@ std::string CompositeNode::get_text() const {
     return result;
 }
 
-std::shared_ptr<Node> CompositeNode::clone(bool deep) const {
+std::shared_ptr<Node> CompositeNode::clone(bool /*deep*/) const {
     // Base implementation - derived classes should override
     return nullptr;
 }

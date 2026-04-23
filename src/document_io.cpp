@@ -87,7 +87,7 @@ bool Document::load_tree_from_zip() {
         return false;
     }
 
-    int n = zip_entries_total(zip_handle_);
+    const int n = zip_entries_total(zip_handle_);
     if (n < 0) {
         return false;
     }
@@ -105,8 +105,8 @@ bool Document::load_tree_from_zip() {
             continue;
         }
 
-        std::string entry_name(name);
-        bool is_dir = zip_entry_isdir(zip_handle_);
+        const std::string entry_name(name);
+        const bool is_dir = zip_entry_isdir(zip_handle_);
 
         if (is_dir) {
             zip_entry_close(zip_handle_);
@@ -133,7 +133,7 @@ bool Document::load_tree_from_zip() {
             node->type = DocxNodeType::XmlFile;
             node->xml_doc = std::make_shared<pugi::xml_document>();
 
-            pugi::xml_parse_result result = node->xml_doc->load_buffer(
+            const pugi::xml_parse_result result = node->xml_doc->load_buffer(
                 data.data(),
                 data.size(),
                 pugi::parse_default | pugi::parse_declaration | pugi::parse_ws_pcdata);
@@ -167,7 +167,7 @@ LoadResult Document::load_tree_with_result() {
         return result;
     }
 
-    int n = zip_entries_total(zip_handle_);
+    const int n = zip_entries_total(zip_handle_);
     if (n < 0) {
         result.success = false;
         result.errors.emplace_back(
@@ -183,12 +183,12 @@ LoadResult Document::load_tree_with_result() {
     tree_.clear();
 
     // Use parallel loading when enabled and threshold is met
-    bool use_parallel = load_config_.enable_parallel_loading &&
-                        static_cast<size_t>(n) >= load_config_.parallel_threshold &&
-                        std::thread::hardware_concurrency() > 1;
+    const bool use_parallel = load_config_.enable_parallel_loading &&
+                              static_cast<size_t>(n) >= load_config_.parallel_threshold &&
+                              std::thread::hardware_concurrency() > 1;
 
     if (use_parallel) {
-        bool parallel_ok = load_tree_parallel(last_load_stats_);
+        const bool parallel_ok = load_tree_parallel(last_load_stats_);
         if (parallel_ok) {
             last_load_stats_.end_time = std::chrono::high_resolution_clock::now();
             result.success = last_load_stats_.xml_files > 0;
@@ -223,7 +223,7 @@ LoadResult Document::load_tree_with_result() {
             continue;
         }
 
-        std::string entry_name(name);
+        const std::string entry_name(name);
 
         if (zip_entry_isdir(zip_handle_)) {
             zip_entry_close(zip_handle_);
@@ -252,7 +252,7 @@ LoadResult Document::load_tree_with_result() {
             node->type = DocxNodeType::XmlFile;
             node->xml_doc = std::make_shared<pugi::xml_document>();
 
-            pugi::xml_parse_result parse_result = node->xml_doc->load_buffer(
+            const pugi::xml_parse_result parse_result = node->xml_doc->load_buffer(
                 data.data(),
                 data.size(),
                 pugi::parse_default | pugi::parse_declaration | pugi::parse_ws_pcdata);
@@ -277,7 +277,7 @@ LoadResult Document::load_tree_with_result() {
 
         // Report progress
         if (load_config_.progress_callback) {
-            int percent = static_cast<int>((i + 1) * 100 / n);
+            const int percent = ((i + 1) * 100 / n);
             load_config_.progress_callback(percent, entry_name);
         }
 
@@ -308,7 +308,7 @@ bool Document::load_tree_parallel(LoadStatistics& stats) {
         return false;
     }
 
-    int total_entries = zip_entries_total(zip_handle_);
+    const int total_entries = zip_entries_total(zip_handle_);
     if (total_entries < 0) {
         return false;
     }
@@ -354,9 +354,7 @@ bool Document::load_tree_parallel(LoadStatistics& stats) {
     if (num_threads == 0) {
         num_threads = 2;
     }
-    if (num_threads > files_to_load.size()) {
-        num_threads = files_to_load.size();
-    }
+    num_threads = std::min(num_threads, files_to_load.size());
 
     std::atomic<size_t> processed{0};
     std::atomic<size_t> error_count{0};
@@ -364,12 +362,12 @@ bool Document::load_tree_parallel(LoadStatistics& stats) {
     std::atomic<size_t> media_count{0};
     std::atomic<size_t> binary_count{0};
 
-    size_t batch_size = (files_to_load.size() + num_threads - 1) / num_threads;
+    const size_t batch_size = (files_to_load.size() + num_threads - 1) / num_threads;
     std::vector<std::thread> threads;
 
     for (size_t t = 0; t < num_threads; ++t) {
-        size_t start = t * batch_size;
-        size_t end = std::min(start + batch_size, files_to_load.size());
+        const size_t start = t * batch_size;
+        const size_t end = std::min(start + batch_size, files_to_load.size());
         if (start >= end) {
             break;
         }
@@ -419,11 +417,11 @@ bool Document::load_tree_parallel(LoadStatistics& stats) {
                     ++binary_count;
                 }
 
-                size_t current = ++processed;
+                const size_t current = ++processed;
 
                 // Throttled progress reporting
                 if (load_config_.progress_callback && current % 10 == 0) {
-                    int percent = static_cast<int>((current * 100) / files_to_load.size());
+                    const int percent = static_cast<int>((current * 100) / files_to_load.size());
                     load_config_.progress_callback(percent, entry.name);
                 }
             }
@@ -468,7 +466,7 @@ bool Document::save_to_zip(const std::string& output_path) {
         return false;
     }
 
-    bool success = save_tree_to_zip(zip);
+    const bool success = save_tree_to_zip(zip);
 
     zip_close(zip);
     return success;
@@ -510,7 +508,7 @@ bool Document::save_tree_to_zip(zip_t* zip) {
     return true;
 }
 
-bool Document::write_tree_node(zip_t* zip, const std::shared_ptr<DocxTreeNode>& node) {
+bool Document::write_tree_node(zip_t* /*zip*/, const std::shared_ptr<DocxTreeNode>& /*node*/) {
     // This method is now integrated into save_tree_to_zip
     return true;
 }

@@ -8,6 +8,8 @@
 #include <cdocx/document.h>
 #include <cdocx/paragraph.h>
 
+#include <utility>
+
 namespace cdocx {
 
 // ============================================================================
@@ -71,8 +73,8 @@ Comment::Comment(Document* doc) {
     date_time_ = std::chrono::system_clock::now();
 }
 
-Comment::Comment(Document* doc, const std::string& author, const std::string& text)
-    : author_(author) {
+Comment::Comment(Document* doc, std::string author, const std::string& text)
+    : author_(std::move(author)) {
     set_document(doc);
     date_time_ = std::chrono::system_clock::now();
     if (!text.empty()) {
@@ -118,7 +120,7 @@ void Comment::accept(DocumentVisitor* visitor) {
         return;
     }
     if (visitor->visit_comment(*this) == VisitorAction::Continue) {
-        for (auto& child : get_children()) {
+        for (const auto& child : get_children()) {
             child->accept(visitor);
         }
     }
@@ -213,8 +215,8 @@ bool CommentCollection::remove_at(size_t index) {
     if (index >= comments_.size()) {
         return false;
     }
-    int id = comments_[index]->get_id();
-    bool result = doc_->remove_comment(id);
+    const int id = comments_[index]->get_id();
+    const bool result = doc_->remove_comment(id);
     if (result) {
         collected_ = false;
     }
@@ -222,7 +224,7 @@ bool CommentCollection::remove_at(size_t index) {
 }
 
 bool CommentCollection::remove(int id) {
-    bool result = doc_->remove_comment(id);
+    const bool result = doc_->remove_comment(id);
     if (result) {
         collected_ = false;
     }

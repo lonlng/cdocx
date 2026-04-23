@@ -20,7 +20,7 @@ namespace {
 std::string collect_text_from_runs(pugi::xml_node para) {
     std::string result;
     for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
-        pugi::xml_node t = run.child("w:t");
+        const pugi::xml_node t = run.child("w:t");
         if (t) {
             result += t.text().get();
         }
@@ -67,7 +67,7 @@ bool Range::replace(const std::string& old_text, const std::string& new_text) {
                 continue;
             }
             std::string para_text = para->get_text();
-            size_t pos = para_text.find(old_text);
+            const size_t pos = para_text.find(old_text);
             if (pos != std::string::npos) {
                 para_text.replace(pos, old_text.size(), new_text);
                 para->set_text(para_text);
@@ -81,7 +81,7 @@ bool Range::replace(const std::string& old_text, const std::string& new_text) {
     while (current) {
         std::string para_text = collect_text_from_runs(current);
 
-        size_t pos = para_text.find(old_text);
+        const size_t pos = para_text.find(old_text);
         if (pos != std::string::npos) {
             para_text.replace(pos, old_text.size(), new_text);
 
@@ -89,7 +89,7 @@ bool Range::replace(const std::string& old_text, const std::string& new_text) {
             pugi::xml_node first_run;
             pugi::xml_node run = current.child("w:r");
             while (run) {
-                pugi::xml_node next = run.next_sibling("w:r");
+                const pugi::xml_node next = run.next_sibling("w:r");
                 if (!first_run) {
                     first_run = run;
                     // Clear existing text nodes
@@ -178,7 +178,7 @@ int Range::replace_all(const std::string& old_text, const std::string& new_text)
             pugi::xml_node first_run;
             pugi::xml_node run = current.child("w:r");
             while (run) {
-                pugi::xml_node next = run.next_sibling("w:r");
+                const pugi::xml_node next = run.next_sibling("w:r");
                 if (!first_run) {
                     first_run = run;
                     for (pugi::xml_node t = run.child("w:t"); t; t = t.next_sibling("w:t")) {
@@ -225,7 +225,7 @@ bool Range::delete_content() {
         // Remove all run elements
         pugi::xml_node run = current.child("w:r");
         while (run) {
-            pugi::xml_node next = run.next_sibling("w:r");
+            const pugi::xml_node next = run.next_sibling("w:r");
             current.remove_child(run);
             run = next;
         }
@@ -293,7 +293,7 @@ bool TableOperations::merge_cells_horizontal(Row& row, size_t start, size_t end)
     if (!table) {
         return false;
     }
-    int row_index = row.get_row_index();
+    const int row_index = row.get_row_index();
     if (row_index < 0) {
         return false;
     }

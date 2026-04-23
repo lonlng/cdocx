@@ -8,7 +8,7 @@
  *
  * @par Usage Example:
  * @code
- * auto info = cdocx::FileFormatUtil::DetectFileFormat("document.docx");
+ * auto info = cdocx::FileFormatUtil::detect_file_format("document.docx");
  * if (info->load_format() == cdocx::LoadFormat::Docx) {
  *     std::cout << "It's a DOCX file!" << std::endl;
  * }
@@ -81,36 +81,36 @@ class FileFormatUtil {
      * @param file_name Path to the file
      * @return FileFormatInfo containing detected information
      */
-    static std::shared_ptr<FileFormatInfo> DetectFileFormat(const std::string& file_name);
+    static std::shared_ptr<FileFormatInfo> detect_file_format(const std::string& file_name);
 
     /**
      * @brief Detects and returns information about a format from a stream
      * @param stream Input stream positioned at the beginning
      * @return FileFormatInfo containing detected information
      */
-    static std::shared_ptr<FileFormatInfo> DetectFileFormat(std::istream& stream);
+    static std::shared_ptr<FileFormatInfo> detect_file_format(std::istream& stream);
 
     /**
      * @brief Detects and returns information about a format from a byte buffer
      * @param data Byte buffer containing document data
      * @return FileFormatInfo containing detected information
      */
-    static std::shared_ptr<FileFormatInfo> DetectFileFormat(const std::vector<uint8_t>& data);
+    static std::shared_ptr<FileFormatInfo> detect_file_format(const std::vector<uint8_t>& data);
 
     /// Converts a load format enumerated value into a file extension
-    static std::string LoadFormatToExtension(LoadFormat load_format);
+    static std::string load_format_to_extension(LoadFormat load_format);
 
     /// Converts a save format enumerated value into a file extension
-    static std::string SaveFormatToExtension(SaveFormat save_format);
+    static std::string save_format_to_extension(SaveFormat save_format);
 
     /// Converts a file name extension into a SaveFormat value
-    static SaveFormat ExtensionToSaveFormat(const std::string& extension);
+    static SaveFormat extension_to_save_format(const std::string& extension);
 
     /// Converts a SaveFormat value to a LoadFormat value if possible
-    static LoadFormat SaveFormatToLoadFormat(SaveFormat save_format);
+    static LoadFormat save_format_to_load_format(SaveFormat save_format);
 
     /// Converts a LoadFormat value to a SaveFormat value if possible
-    static SaveFormat LoadFormatToSaveFormat(LoadFormat load_format);
+    static SaveFormat load_format_to_save_format(LoadFormat load_format);
 };
 
 }  // namespace cdocx

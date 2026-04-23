@@ -29,7 +29,7 @@ std::shared_ptr<Document> CDocx::load_document(const std::string& path) {
     return doc;
 }
 
-bool CDocx::save_document(std::shared_ptr<Document> doc, const std::string& path) {
+bool CDocx::save_document(const std::shared_ptr<Document>& doc, const std::string& path) {
     if (!doc || !doc->is_open()) {
         return false;
     }

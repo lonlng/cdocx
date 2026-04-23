@@ -91,35 +91,35 @@ bool create_sample_document(const std::string& doc_path) {
     
     // Paragraph 2 - Multiple runs with different formatting
     auto& p2 = p.insert_paragraph_after("This document contains ");
-    p2.add_run("bold text, ", cdocx::bold);
-    p2.add_run("italic text, ", cdocx::italic);
-    p2.add_run("and ", cdocx::none);
-    p2.add_run("underlined text", cdocx::underline);
-    p2.add_run(". It demonstrates text formatting.", cdocx::none);
+    p2.add_run("bold text, ", cdocx::kBold);
+    p2.add_run("italic text, ", cdocx::kItalic);
+    p2.add_run("and ", cdocx::kNone);
+    p2.add_run("underlined text", cdocx::kUnderline);
+    p2.add_run(". It demonstrates text formatting.", cdocx::kNone);
     
     // Paragraph 3 - Mixed content
     auto& p3 = p2.insert_paragraph_after("Second paragraph with ");
-    p3.add_run("superscript", cdocx::superscript);
+    p3.add_run("superscript", cdocx::kSuperscript);
     p3.add_run(" and ");
-    p3.add_run("subscript", cdocx::subscript);
+    p3.add_run("subscript", cdocx::kSubscript);
     p3.add_run(" formatting.");
     
     // Paragraph 4 - More variety
     auto& p4 = p3.insert_paragraph_after("Additional features include ");
-    p4.add_run("strikethrough", cdocx::strikethrough);
+    p4.add_run("strikethrough", cdocx::kStrikethrough);
     p4.add_run(", ");
-    p4.add_run("small caps", cdocx::smallcaps);
+    p4.add_run("small caps", cdocx::kSmallCaps);
     p4.add_run(", and ");
-    p4.add_run("shadow effects", cdocx::shadow);
+    p4.add_run("shadow effects", cdocx::kShadow);
     p4.add_run(".");
     
     // Paragraph 5 - Combined formatting
     auto& p5 = p4.insert_paragraph_after("You can also combine multiple formats: ");
-    p5.add_run("bold italic", static_cast<cdocx::formatting_flag>(cdocx::bold | cdocx::italic));
+    p5.add_run("bold italic", static_cast<cdocx::FormattingFlag>(cdocx::kBold | cdocx::kItalic));
     p5.add_run(", ");
-    p5.add_run("bold underline", static_cast<cdocx::formatting_flag>(cdocx::bold | cdocx::underline));
+    p5.add_run("bold underline", static_cast<cdocx::FormattingFlag>(cdocx::kBold | cdocx::kUnderline));
     p5.add_run(", and ");
-    p5.add_run("italic underline", static_cast<cdocx::formatting_flag>(cdocx::italic | cdocx::underline));
+    p5.add_run("italic underline", static_cast<cdocx::FormattingFlag>(cdocx::kItalic | cdocx::kUnderline));
     p5.add_run(".");
     
     // Paragraph 6 - Simple test paragraph

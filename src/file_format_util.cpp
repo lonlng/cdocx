@@ -24,39 +24,39 @@ FileFormatInfo::FileFormatInfo() = default;
 // Helpers
 // ============================================================================
 
-static std::string ToLower(std::string s) {
+static std::string to_lower(std::string s) {
     for (auto& c : s) {
         c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
     }
     return s;
 }
 
-static bool StartsWith(const std::vector<uint8_t>& data, const char* prefix, size_t len) {
+static bool starts_with(const std::vector<uint8_t>& data, const char* prefix, size_t len) {
     if (data.size() < len) {
         return false;
     }
     return std::memcmp(data.data(), prefix, len) == 0;
 }
 
-static bool StartsWithString(const std::vector<uint8_t>& data, const char* prefix) {
-    size_t len = std::strlen(prefix);
+static bool starts_with_string(const std::vector<uint8_t>& data, const char* prefix) {
+    const size_t len = std::strlen(prefix);
     if (data.size() < len) {
         return false;
     }
     return std::memcmp(data.data(), prefix, len) == 0;
 }
 
-static bool Contains(const std::string& haystack, const std::string& needle) {
+static bool contains(const std::string& haystack, const std::string& needle) {
     return haystack.find(needle) != std::string::npos;
 }
 
-static std::string ReadZipEntry(zip_t* za, const std::string& entry_name) {
+static std::string read_zip_entry(zip_t* za, const std::string& entry_name) {
     if (zip_entry_open(za, entry_name.c_str()) != 0) {
         return "";
     }
     void* buf = nullptr;
     size_t bufsize = 0;
-    ssize_t read = zip_entry_read(za, &buf, &bufsize);
+    const ssize_t read = zip_entry_read(za, &buf, &bufsize);
     zip_entry_close(za);
     if (read <= 0 || !buf) {
         return "";
@@ -66,48 +66,48 @@ static std::string ReadZipEntry(zip_t* za, const std::string& entry_name) {
     return result;
 }
 
-static std::shared_ptr<FileFormatInfo> DetectFromZip(zip_t* za) {
+static std::shared_ptr<FileFormatInfo> detect_from_zip(zip_t* za) {
     auto info = std::make_shared<FileFormatInfo>();
 
-    std::string content_types = ReadZipEntry(za, "[Content_Types].xml");
+    const std::string content_types = read_zip_entry(za, "[Content_Types].xml");
     if (content_types.empty()) {
         info->set_load_format(LoadFormat::Unknown);
         return info;
     }
 
-    const std::string ct_lower = ToLower(content_types);
+    const std::string ct_lower = to_lower(content_types);
 
     // Detect macros
-    if (Contains(ct_lower, "macros") || Contains(ct_lower, "vnd.ms-office.vba")) {
+    if (contains(ct_lower, "macros") || contains(ct_lower, "vnd.ms-office.vba")) {
         info->set_has_macros(true);
     }
 
     // Detect digital signatures
-    if (Contains(ct_lower, "digital-signature") || Contains(ct_lower, "office.digitalsignature")) {
+    if (contains(ct_lower, "digital-signature") || contains(ct_lower, "office.digitalsignature")) {
         info->set_has_digital_signature(true);
     }
 
     // Detect encryption
-    if (Contains(ct_lower, "encrypted-package") || Contains(ct_lower, "encryption")) {
+    if (contains(ct_lower, "encrypted-package") || contains(ct_lower, "encryption")) {
         info->set_is_encrypted(true);
     }
 
     // Determine exact Word format
-    if (Contains(ct_lower, "wordprocessingml.document.macroenabled.main+xml")) {
+    if (contains(ct_lower, "wordprocessingml.document.macroenabled.main+xml")) {
         info->set_load_format(LoadFormat::Docm);
-    } else if (Contains(ct_lower, "wordprocessingml.template.macroenabled.main+xml")) {
+    } else if (contains(ct_lower, "wordprocessingml.template.macroenabled.main+xml")) {
         info->set_load_format(LoadFormat::Dotm);
-    } else if (Contains(ct_lower, "wordprocessingml.template.main+xml")) {
+    } else if (contains(ct_lower, "wordprocessingml.template.main+xml")) {
         info->set_load_format(LoadFormat::Dotx);
-    } else if (Contains(ct_lower, "wordprocessingml.document.main+xml")) {
+    } else if (contains(ct_lower, "wordprocessingml.document.main+xml")) {
         info->set_load_format(LoadFormat::Docx);
-    } else if (Contains(ct_lower, "spreadsheetml") || Contains(ct_lower, "presentationml")) {
+    } else if (contains(ct_lower, "spreadsheetml") || contains(ct_lower, "presentationml")) {
         info->set_load_format(LoadFormat::Unknown);
     } else {
         // Could be ODT - check mimetype
-        std::string mimetype = ReadZipEntry(za, "mimetype");
-        const std::string mime_lower = ToLower(mimetype);
-        if (Contains(mime_lower, "application/vnd.oasis.opendocument.text")) {
+        const std::string mimetype = read_zip_entry(za, "mimetype");
+        const std::string mime_lower = to_lower(mimetype);
+        if (contains(mime_lower, "application/vnd.oasis.opendocument.text")) {
             info->set_load_format(LoadFormat::Odt);
         } else {
             info->set_load_format(LoadFormat::Unknown);
@@ -121,15 +121,15 @@ static std::shared_ptr<FileFormatInfo> DetectFromZip(zip_t* za) {
 // FileFormatUtil
 // ============================================================================
 
-std::shared_ptr<FileFormatInfo> FileFormatUtil::DetectFileFormat(const std::string& file_name) {
+std::shared_ptr<FileFormatInfo> FileFormatUtil::detect_file_format(const std::string& file_name) {
     std::ifstream file(file_name, std::ios::binary);
     if (!file) {
         return std::make_shared<FileFormatInfo>();
     }
-    return DetectFileFormat(file);
+    return detect_file_format(file);
 }
 
-std::shared_ptr<FileFormatInfo> FileFormatUtil::DetectFileFormat(std::istream& stream) {
+std::shared_ptr<FileFormatInfo> FileFormatUtil::detect_file_format(std::istream& stream) {
     auto info = std::make_shared<FileFormatInfo>();
 
     // Remember position
@@ -137,9 +137,9 @@ std::shared_ptr<FileFormatInfo> FileFormatUtil::DetectFileFormat(std::istream& s
 
     // Read first 8KB for sniffing
     std::vector<uint8_t> buffer(8192);
-    stream.read(reinterpret_cast<char*>(buffer.data()),
+    stream.read(reinterpret_cast<char*>(buffer.data()),  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
                 static_cast<std::streamsize>(buffer.size()));
-    std::streamsize bytes_read = stream.gcount();
+    const std::streamsize bytes_read = stream.gcount();
     buffer.resize(static_cast<size_t>(bytes_read));
 
     // Restore position
@@ -150,42 +150,44 @@ std::shared_ptr<FileFormatInfo> FileFormatUtil::DetectFileFormat(std::istream& s
     }
 
     // ZIP-based formats (DOCX, DOTX, DOCM, DOTM, ODT)
-    if (StartsWith(buffer, "PK\x03\x04", 4) || StartsWith(buffer, "PK\x05\x06", 4)) {
+    if (starts_with(buffer, "PK\x03\x04", 4) || starts_with(buffer, "PK\x05\x06", 4)) {
         zip_t* za =
-            zip_stream_open(reinterpret_cast<const char*>(buffer.data()), buffer.size(), 0, 'r');
+            zip_stream_open(reinterpret_cast<const char*>(buffer.data()),  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+                            buffer.size(), 0, 'r');
         if (za) {
-            info = DetectFromZip(za);
+            info = detect_from_zip(za);
             zip_stream_close(za);
         }
         return info;
     }
 
     // RTF
-    if (StartsWithString(buffer, "{\\rtf")) {
+    if (starts_with_string(buffer, "{\\rtf")) {
         info->set_load_format(LoadFormat::Rtf);
         return info;
     }
 
     // HTML
     {
-        std::string head(buffer.begin(),
-                         buffer.begin() + std::min(static_cast<size_t>(256), buffer.size()));
-        std::string lower = ToLower(head);
-        if (StartsWithString(buffer, "<!doctype html") || Contains(lower, "<html") ||
-            Contains(lower, "<head")) {
+        auto count = std::min(static_cast<std::ptrdiff_t>(buffer.size()),
+                              static_cast<std::ptrdiff_t>(256));
+        const std::string head(buffer.begin(), buffer.begin() + count);
+        std::string lower = to_lower(head);
+        if (starts_with_string(buffer, "<!doctype html") || contains(lower, "<html") ||
+            contains(lower, "<head")) {
             info->set_load_format(LoadFormat::Html);
             // Try to detect encoding from meta tag
-            size_t charset_pos = lower.find("charset=");
+            const size_t charset_pos = lower.find("charset=");
             if (charset_pos != std::string::npos) {
-                size_t start = charset_pos + 8;
+                const size_t start = charset_pos + 8;
                 if (start < lower.size() && (lower[start] == '"' || lower[start] == '\'')) {
-                    char quote = lower[start];
-                    size_t end = lower.find(quote, start + 1);
+                    const char quote = lower[start];
+                    const size_t end = lower.find(quote, start + 1);
                     if (end != std::string::npos) {
                         info->set_encoding(head.substr(start + 1, end - start - 1));
                     }
                 } else {
-                    size_t end = lower.find_first_of(" ;\">\r\n", start);
+                    const size_t end = lower.find_first_of(" ;\">\r\n", start);
                     if (end != std::string::npos) {
                         info->set_encoding(head.substr(start, end - start));
                     }
@@ -196,18 +198,19 @@ std::shared_ptr<FileFormatInfo> FileFormatUtil::DetectFileFormat(std::istream& s
     }
 
     // XML
-    if (StartsWithString(buffer, "<?xml")) {
+    if (starts_with_string(buffer, "<?xml")) {
         info->set_load_format(LoadFormat::Xml);
         return info;
     }
 
     // Markdown - look for common markers in first few lines
     {
-        std::string head(buffer.begin(),
-                         buffer.begin() + std::min(static_cast<size_t>(512), buffer.size()));
-        std::string lower = ToLower(head);
-        if (Contains(lower, "# ") || Contains(lower, "## ") || Contains(lower, "**") ||
-            Contains(lower, "__") || Contains(lower, "-") || Contains(lower, "|")) {
+        auto count = std::min(static_cast<std::ptrdiff_t>(buffer.size()),
+                              static_cast<std::ptrdiff_t>(512));
+        const std::string head(buffer.begin(), buffer.begin() + count);
+        const std::string lower = to_lower(head);
+        if (contains(lower, "# ") || contains(lower, "## ") || contains(lower, "**") ||
+            contains(lower, "__") || contains(lower, "-") || contains(lower, "|")) {
             info->set_load_format(LoadFormat::Markdown);
             return info;
         }
@@ -216,7 +219,7 @@ std::shared_ptr<FileFormatInfo> FileFormatUtil::DetectFileFormat(std::istream& s
     // Plain text - if no null bytes and mostly printable
     bool has_null = false;
     size_t printable = 0;
-    for (uint8_t b : buffer) {
+    for (const uint8_t b : buffer) {
         if (b == 0) {
             has_null = true;
         }
@@ -227,7 +230,7 @@ std::shared_ptr<FileFormatInfo> FileFormatUtil::DetectFileFormat(std::istream& s
             printable++;
         }
     }
-    if (!has_null && printable > buffer.size() * 0.8) {
+    if (!has_null && static_cast<double>(printable) > static_cast<double>(buffer.size()) * 0.8) {
         info->set_load_format(LoadFormat::Text);
         return info;
     }
@@ -235,12 +238,12 @@ std::shared_ptr<FileFormatInfo> FileFormatUtil::DetectFileFormat(std::istream& s
     return info;
 }
 
-std::shared_ptr<FileFormatInfo> FileFormatUtil::DetectFileFormat(const std::vector<uint8_t>& data) {
+std::shared_ptr<FileFormatInfo> FileFormatUtil::detect_file_format(const std::vector<uint8_t>& data) {
     std::stringstream ss(std::string(data.begin(), data.end()));
-    return DetectFileFormat(ss);
+    return detect_file_format(ss);
 }
 
-std::string FileFormatUtil::LoadFormatToExtension(LoadFormat load_format) {
+std::string FileFormatUtil::load_format_to_extension(LoadFormat load_format) {
     switch (load_format) {
         case LoadFormat::Docx:
             return ".docx";
@@ -269,7 +272,7 @@ std::string FileFormatUtil::LoadFormatToExtension(LoadFormat load_format) {
     }
 }
 
-std::string FileFormatUtil::SaveFormatToExtension(SaveFormat save_format) {
+std::string FileFormatUtil::save_format_to_extension(SaveFormat save_format) {
     switch (save_format) {
         case SaveFormat::Docx:
             return ".docx";
@@ -298,8 +301,8 @@ std::string FileFormatUtil::SaveFormatToExtension(SaveFormat save_format) {
     }
 }
 
-SaveFormat FileFormatUtil::ExtensionToSaveFormat(const std::string& extension) {
-    std::string ext = ToLower(extension);
+SaveFormat FileFormatUtil::extension_to_save_format(const std::string& extension) {
+    std::string ext = to_lower(extension);
     if (!ext.empty() && ext[0] != '.') {
         ext = "." + ext;
     }
@@ -339,7 +342,7 @@ SaveFormat FileFormatUtil::ExtensionToSaveFormat(const std::string& extension) {
     return SaveFormat::Unknown;
 }
 
-LoadFormat FileFormatUtil::SaveFormatToLoadFormat(SaveFormat save_format) {
+LoadFormat FileFormatUtil::save_format_to_load_format(SaveFormat save_format) {
     switch (save_format) {
         case SaveFormat::Docx:
             return LoadFormat::Docx;
@@ -368,7 +371,7 @@ LoadFormat FileFormatUtil::SaveFormatToLoadFormat(SaveFormat save_format) {
     }
 }
 
-SaveFormat FileFormatUtil::LoadFormatToSaveFormat(LoadFormat load_format) {
+SaveFormat FileFormatUtil::load_format_to_save_format(LoadFormat load_format) {
     switch (load_format) {
         case LoadFormat::Docx:
             return SaveFormat::Docx;

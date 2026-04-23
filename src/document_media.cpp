@@ -47,8 +47,8 @@ bool Document::add_media(const std::string& image_path, const std::string* image
         return false;
     }
 
-    std::vector<uint8_t> data((std::istreambuf_iterator<char>(file)),
-                              std::istreambuf_iterator<char>());
+    const std::vector<uint8_t> data((std::istreambuf_iterator<char>(file)),
+                                    std::istreambuf_iterator<char>());
     file.close();
 
     if (data.empty()) {
@@ -83,7 +83,7 @@ bool Document::add_media_from_memory(const std::string& name,
         return false;
     }
 
-    std::string media_path = "word/media/" + name;
+    const std::string media_path = "word/media/" + name;
 
     auto node = tree_.add_zip_entry(media_path, data);
     if (!node) {
@@ -119,7 +119,7 @@ bool Document::delete_media(const std::string& image_name) {
         return false;
     }
 
-    std::string media_path = "word/media/" + image_name;
+    const std::string media_path = "word/media/" + image_name;
     auto node = tree_.find_node(media_path);
     if (!node) {
         return false;
@@ -128,8 +128,8 @@ bool Document::delete_media(const std::string& image_name) {
     node->is_deleted = true;
 
     // Remove relationship if exists
-    std::string target = "media/" + image_name;
-    std::string rel_id = find_relationship_id("word/_rels/document.xml.rels", target);
+    const std::string target = "media/" + image_name;
+    const std::string rel_id = find_relationship_id("word/_rels/document.xml.rels", target);
     if (!rel_id.empty()) {
         remove_relationship("word/_rels/document.xml.rels", rel_id);
     }
@@ -147,7 +147,7 @@ bool Document::replace_media(const std::string& image_name, const std::string& n
         return false;
     }
 
-    std::string media_path = "word/media/" + image_name;
+    const std::string media_path = "word/media/" + image_name;
     auto node = tree_.find_node(media_path);
     if (!node) {
         return false;
@@ -178,7 +178,7 @@ bool Document::has_media(const std::string& image_name) const {
     if (!is_open()) {
         return false;
     }
-    std::string media_path = "word/media/" + image_name;
+    const std::string media_path = "word/media/" + image_name;
     auto node = tree_.find_node(media_path);
     return node && !node->is_deleted;
 }
@@ -187,7 +187,7 @@ std::vector<std::string> Document::list_media() const {
     std::vector<std::string> result;
     tree_.iterate_files([&result](const std::shared_ptr<DocxTreeNode>& node) {
         if (node->type == DocxNodeType::MediaFile && !node->is_deleted) {
-            std::string name = node->full_path;
+            const std::string name = node->full_path;
             if (name.substr(0, 11) == "word/media/") {
                 result.push_back(name.substr(11));
             }
@@ -201,7 +201,7 @@ bool Document::export_media(const std::string& image_name, const std::string& ou
         return false;
     }
 
-    std::string media_path = "word/media/" + image_name;
+    const std::string media_path = "word/media/" + image_name;
     auto node = tree_.find_node(media_path);
     if (!node || node->is_deleted) {
         return false;
@@ -223,7 +223,7 @@ std::vector<uint8_t> Document::get_media_data(const std::string& image_name) con
         return result;
     }
 
-    std::string media_path = "word/media/" + image_name;
+    const std::string media_path = "word/media/" + image_name;
     auto node = tree_.find_node(media_path);
     if (node && !node->is_deleted) {
         result = node->binary_data;
@@ -237,9 +237,9 @@ std::string Document::add_media_with_rel(const std::string& image_path,
         return "";
     }
 
-    std::string name = (image_name && !image_name->empty())
-                           ? *image_name
-                           : std::filesystem::path(image_path).filename().string();
+    const std::string name = (image_name && !image_name->empty())
+                                 ? *image_name
+                                 : std::filesystem::path(image_path).filename().string();
 
     return add_relationship(
         "word/_rels/document.xml.rels",
@@ -259,8 +259,7 @@ bool Document::add_thumbnail(const std::string& image_path) {
         return false;
     }
 
-    std::string filename = std::filesystem::path(image_path).filename().string();
-    std::string thumb_path = "docProps/" + filename;
+    const std::string filename = std::filesystem::path(image_path).filename().string();
 
     // Read image file
     std::ifstream file(image_path, std::ios::binary);
@@ -268,15 +267,15 @@ bool Document::add_thumbnail(const std::string& image_path) {
         return false;
     }
 
-    std::vector<uint8_t> data((std::istreambuf_iterator<char>(file)),
-                              std::istreambuf_iterator<char>());
+    const std::vector<uint8_t> data((std::istreambuf_iterator<char>(file)),
+                                    std::istreambuf_iterator<char>());
     file.close();
 
     if (data.empty()) {
         return false;
     }
 
-    std::string ct = get_mime_type(filename);
+    const std::string ct = get_mime_type(filename);
     return add_thumbnail_from_memory(data, ct);
 }
 
@@ -287,7 +286,7 @@ bool Document::add_thumbnail_from_memory(const std::vector<uint8_t>& data,
     }
 
     // Thumbnail is always stored as thumbnail.jpeg in docProps/
-    std::string thumb_path = "docProps/thumbnail.jpeg";
+    const std::string thumb_path = "docProps/thumbnail.jpeg";
 
     // Remove existing thumbnail first
     remove_thumbnail();
@@ -320,7 +319,7 @@ bool Document::remove_thumbnail() {
         return false;
     }
 
-    std::string thumb_path = "docProps/thumbnail.jpeg";
+    const std::string thumb_path = "docProps/thumbnail.jpeg";
     auto node = tree_.find_node(thumb_path);
     if (!node) {
         return false;
@@ -329,7 +328,7 @@ bool Document::remove_thumbnail() {
     node->is_deleted = true;
 
     // Remove relationship if exists
-    std::string rel_id = find_relationship_id("_rels/.rels", "docProps/thumbnail.jpeg");
+    const std::string rel_id = find_relationship_id("_rels/.rels", "docProps/thumbnail.jpeg");
     if (!rel_id.empty()) {
         remove_relationship("_rels/.rels", rel_id);
     }
@@ -360,7 +359,7 @@ std::string Document::get_mime_type(const std::string& filename) const {
         c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
     }
 
-    static const std::map<std::string, std::string> mime_map = {
+    static const std::map<std::string, std::string> kMimeMap = {
         {"png", "image/png"},
         {"jpg", "image/jpeg"},
         {"jpeg", "image/jpeg"},
@@ -373,15 +372,15 @@ std::string Document::get_mime_type(const std::string& filename) const {
         {"svg", "image/svg+xml"},
     };
 
-    auto it = mime_map.find(ext);
-    if (it != mime_map.end()) {
+    auto it = kMimeMap.find(ext);
+    if (it != kMimeMap.end()) {
         return it->second;
     }
     return "application/octet-stream";
 }
 
 std::string Document::get_extension_from_mime(const std::string& mime_type) const {
-    static const std::map<std::string, std::string> ext_map = {
+    static const std::map<std::string, std::string> kExtMap = {
         {"image/png", ".png"},
         {"image/jpeg", ".jpg"},
         {"image/gif", ".gif"},
@@ -392,17 +391,17 @@ std::string Document::get_extension_from_mime(const std::string& mime_type) cons
         {"image/svg+xml", ".svg"},
     };
 
-    auto it = ext_map.find(mime_type);
-    if (it != ext_map.end()) {
+    auto it = kExtMap.find(mime_type);
+    if (it != kExtMap.end()) {
         return it->second;
     }
     return "";
 }
 
-std::string Document::generate_unique_image_name(const std::string& base_name) {
-    std::filesystem::path path(base_name);
-    std::string stem = path.stem().string();
-    std::string ext = path.extension().string();
+std::string Document::generate_unique_image_name(const std::string& base_name) const {
+    const std::filesystem::path path(base_name);
+    const std::string stem = path.stem().string();
+    const std::string ext = path.extension().string();
 
     std::string name = base_name;
     int counter = 1;

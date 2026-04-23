@@ -31,9 +31,9 @@ int main() {
     // Create rich text with TextProperties
     cdocx::TextProperties rich_props;
     rich_props.font = cdocx::TextProperties::Font{"Arial", "SimHei"};
-    rich_props.fontSize = 36;  // 18pt
+    rich_props.font_size = 36;  // 18pt
     rich_props.color = "FF0000";  // Red
-    rich_props.fontStyle.bold = true;
+    rich_props.font_style.bold = true;
     rich_props.highlight = cdocx::TextProperties::Highlight::Yellow;
     
     auto run1 = para1.add_run("Bold Red Text with Yellow Highlight");
@@ -128,13 +128,13 @@ int main() {
     // ===================================================================
     std::cout << "7. Page break control..." << std::endl;
     
-    auto para7a = doc.paragraphs().insert_paragraph_after("This paragraph has keepNext enabled");
+    auto para7a = doc.paragraphs().insert_paragraph_after("This paragraph has keep_next enabled");
     para7a.set_keep_next(true);
     
-    auto para7b = doc.paragraphs().insert_paragraph_after("This paragraph has keepLines enabled");
+    auto para7b = doc.paragraphs().insert_paragraph_after("This paragraph has keep_lines enabled");
     para7b.set_keep_lines(true);
     
-    auto para7c = doc.paragraphs().insert_paragraph_after("This paragraph has pageBreakBefore");
+    auto para7c = doc.paragraphs().insert_paragraph_after("This paragraph has page_break_before");
     para7c.set_page_break_before(true);
     
     // ===================================================================
@@ -144,7 +144,7 @@ int main() {
     
     cdocx::ParagraphProperties para_props;
     para_props.align = cdocx::ParagraphProperties::Alignment::Centered;
-    para_props.outlineLevel = cdocx::ParagraphProperties::OutlineLevel::Level1;
+    para_props.outline_level = cdocx::ParagraphProperties::OutlineLevel::Level1;
     
     // Indentation
     cdocx::ParagraphProperties::Indentation indent;
@@ -157,8 +157,8 @@ int main() {
     cdocx::ParagraphProperties::Spacing spacing;
     spacing.before.value = 240;  // 0.5 inch
     spacing.after.value = 120;   // 0.25 inch
-    spacing.lineSpacing.type = cdocx::ParagraphProperties::Spacing::LineSpacingType::Lines;
-    spacing.lineSpacing.value = 360;  // 1.5 lines
+    spacing.line_spacing.type = cdocx::ParagraphProperties::Spacing::LineSpacingType::Lines;
+    spacing.line_spacing.value = 360;  // 1.5 lines
     para_props.spacing = spacing;
     
     auto para8 = doc.paragraphs().insert_paragraph_after("Paragraph with comprehensive properties");
@@ -191,7 +191,7 @@ int main() {
     auto para10 = doc.paragraphs().insert_paragraph_after("");
     
     // First apply some basic formatting
-    auto run10 = para10.add_run("Combined Formatting", cdocx::bold | cdocx::italic);
+    auto run10 = para10.add_run("Combined Formatting", cdocx::kBold | cdocx::kItalic);
     
     // Then apply TextProperties for advanced features
     cdocx::TextProperties combined_props;

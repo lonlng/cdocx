@@ -52,13 +52,13 @@ int main() {
             "Text can be displayed in various colors: "
         );
         
-        auto r1 = p.add_run("Red ", cdocx::bold);
+        auto r1 = p.add_run("Red ", cdocx::kBold);
         r1.set_color("FF0000");
         
-        auto r2 = p.add_run("Blue ", cdocx::bold);
+        auto r2 = p.add_run("Blue ", cdocx::kBold);
         r2.set_color("0070C0");
         
-        auto r3 = p.add_run("Green ", cdocx::bold);
+        auto r3 = p.add_run("Green ", cdocx::kBold);
         r3.set_color("00B050");
         
         auto r4 = p.add_run("Orange ");

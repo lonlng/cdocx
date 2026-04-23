@@ -224,7 +224,7 @@ class Template {
      * @param[in] prefix Placeholder start pattern (e.g., "<%")
      * @param[in] suffix Placeholder end pattern (e.g., "%>")
      */
-    Template(Document* document, const std::string& prefix, const std::string& suffix);
+    Template(Document* document, std::string prefix, std::string suffix);
 
     /**
      * @brief Set a text placeholder value

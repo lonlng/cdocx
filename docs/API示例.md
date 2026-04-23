@@ -537,7 +537,7 @@ int count = cdocx::DocumentSearch::replace_all(doc, "old", "new");
 // 替换并应用格式（粗体）
 cdocx::DocumentSearch::replace_with_formatting(
     doc, "warning", "WARNING",
-    static_cast<cdocx::formatting_flag>(cdocx::bold)
+    static_cast<cdocx::FormattingFlag>(cdocx::kBold)
 );
 
 // 查找并处理（回调）
@@ -661,7 +661,7 @@ int main() {
 | 设置对齐 | `para.set_alignment("center");` | `para->get_paragraph_format().set_alignment(ParagraphAlignment::Center);` |
 | 设置字体 | `run.set_font_name("Arial");` | `run->get_font().set_name("Arial");` |
 | 添加表格 | `doc.tables().add(3, 4);` | `doc->get_body()->append_table(3, 4);` |
-| 获取单元格 | `table.cellAt(row, col)` | `table->get_cell(row, col)` |
+| 获取单元格 | `table.cell_at(row, col)` | `table->get_cell(row, col)` |
 | 保存 | `doc.save();` | `doc->save("file.docx");` |
 
 新版 API 更加类型安全、直观，并且支持链式调用。

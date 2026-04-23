@@ -33,12 +33,12 @@ std::string get_run_text(pugi::xml_node run) {
 
 // Copy <w:rPr> from source run to destination run.
 void copy_run_properties(pugi::xml_node dst_run, pugi::xml_node src_run) {
-    pugi::xml_node rpr = src_run.child("w:rPr");
+    const pugi::xml_node rpr = src_run.child("w:rPr");
     if (!rpr) {
         return;
     }
-    // Remove any existing rPr in dst.
-    pugi::xml_node existing = dst_run.child("w:rPr");
+    // Remove any existing r_pr in dst.
+    const pugi::xml_node existing = dst_run.child("w:rPr");
     if (existing) {
         dst_run.remove_child(existing);
     }
@@ -54,8 +54,8 @@ BookmarkInserter::BookmarkInserter(Document* doc) : doc_(doc) {
         if (xml) {
             int max_id = 0;
             for (const pugi::xpath_node& xn : xml->select_nodes("//w:bookmarkStart")) {
-                pugi::xml_node bm = xn.node();
-                pugi::xml_attribute id_attr = bm.attribute("w:id");
+                const pugi::xml_node bm = xn.node();
+                const pugi::xml_attribute id_attr = bm.attribute("w:id");
                 if (id_attr) {
                     max_id = std::max(max_id, id_attr.as_int(0));
                 }
@@ -80,14 +80,14 @@ bool BookmarkInserter::insert(const std::string& bookmark_name, const std::strin
     }
 
     // Search all paragraphs in document.xml body (including inside tables).
-    pugi::xml_node body = xml->child("w:document").child("w:body");
+    const pugi::xml_node body = xml->child("w:document").child("w:body");
     if (!body) {
         return false;
     }
 
     std::function<bool(pugi::xml_node)> search = [&](pugi::xml_node node) -> bool {
         for (pugi::xml_node child = node.first_child(); child; child = child.next_sibling()) {
-            std::string tag = child.name();
+            const std::string tag = child.name();
             if (tag == "w:p") {
                 if (insert_in_paragraph(child, bookmark_name, text)) {
                     return true;
@@ -114,7 +114,7 @@ int BookmarkInserter::insert_all(const std::string& bookmark_name, const std::st
         return 0;
     }
 
-    pugi::xml_node body = xml->child("w:document").child("w:body");
+    const pugi::xml_node body = xml->child("w:document").child("w:body");
     if (!body) {
         return 0;
     }
@@ -174,17 +174,17 @@ bool BookmarkInserter::insert_in_paragraph(pugi::xml_node paragraph,
     std::vector<RunInfo> runs;
     std::string paragraph_text;
     for (pugi::xml_node run = paragraph.child("w:r"); run; run = run.next_sibling("w:r")) {
-        std::string t = get_run_text(run);
+        const std::string t = get_run_text(run);
         runs.push_back({run, t});
         paragraph_text += t;
     }
 
-    std::size_t pos = paragraph_text.find(text);
+    const std::size_t pos = paragraph_text.find(text);
     if (pos == std::string::npos) {
         return false;
     }
 
-    std::size_t end_pos = pos + text.length();
+    const std::size_t end_pos = pos + text.length();
 
     // Determine which runs cover [pos, end_pos).
     std::size_t current_pos = 0;
@@ -192,8 +192,8 @@ bool BookmarkInserter::insert_in_paragraph(pugi::xml_node paragraph,
     std::size_t end_run_idx = runs.size();
 
     for (std::size_t i = 0; i < runs.size(); ++i) {
-        std::size_t run_start = current_pos;
-        std::size_t run_end = current_pos + runs[i].text.length();
+        const std::size_t run_start = current_pos;
+        const std::size_t run_end = current_pos + runs[i].text.length();
 
         if (run_start <= pos && pos < run_end) {
             start_run_idx = i;
@@ -217,7 +217,7 @@ bool BookmarkInserter::insert_in_paragraph(pugi::xml_node paragraph,
     for (std::size_t i = 0; i < start_run_idx; ++i) {
         current += runs[i].text.length();
     }
-    std::size_t match_start_in_first = pos - current;
+    const std::size_t match_start_in_first = pos - current;
     std::size_t match_end_in_last = 0;
     {
         std::size_t tmp = current;
@@ -233,7 +233,7 @@ bool BookmarkInserter::insert_in_paragraph(pugi::xml_node paragraph,
     auto clear_run_text_nodes = [](pugi::xml_node run) {
         pugi::xml_node t = run.child("w:t");
         while (t) {
-            pugi::xml_node next = t.next_sibling("w:t");
+            const pugi::xml_node next = t.next_sibling("w:t");
             run.remove_child(t);
             t = next;
         }
@@ -267,6 +267,7 @@ bool BookmarkInserter::insert_in_paragraph(pugi::xml_node paragraph,
         pugi::xml_node start_run = runs[start_run_idx].run;
         if (match_start_in_first > 0) {
             pugi::xml_node prefix_run = paragraph.insert_child_before("w:r", start_run);
+            // NOLINTNEXTLINE(readability-suspicious-call-argument)
             copy_run_properties(prefix_run, start_run);
             prefix_run.append_child("w:t").text().set(
                 runs[start_run_idx].text.substr(0, match_start_in_first).c_str());
@@ -308,7 +309,7 @@ bool BookmarkInserter::insert_in_paragraph(pugi::xml_node paragraph,
         }
     }
 
-    int bm_id = allocate_bookmark_id();
+    const int bm_id = allocate_bookmark_id();
 
     pugi::xml_node bm_start = paragraph.insert_child_before("w:bookmarkStart", first_marked_run);
     bm_start.append_attribute("w:id").set_value(bm_id);

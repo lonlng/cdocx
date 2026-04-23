@@ -116,7 +116,7 @@ TEST(CreateEmptyTest, CreatedEmptyDocumentCanHaveContentAdded) {
         EXPECT_NE(p.get_current_node(), pugi::xml_node());
 
         // Add a run with formatting
-        p.add_run(" Bold text", cdocx::bold);
+        p.add_run(" Bold text", cdocx::kBold);
 
         doc.save();
     }

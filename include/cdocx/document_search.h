@@ -38,7 +38,7 @@ class DocumentSearch {
     static bool replace_with_formatting(Document& doc,
                                         const std::string& old_text,
                                         const std::string& new_text,
-                                        formatting_flag flag);
+                                        FormattingFlag flag);
     static int find_and_process(Document& doc,
                                 const std::string& pattern,
                                 const SearchCallback& callback);

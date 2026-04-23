@@ -94,7 +94,7 @@ class TextFormatContext {
      * @param[in] run The w:r element
      * @return The w:rPr element (created if didn't exist)
      */
-    static pugi::xml_node get_or_create_rPr(pugi::xml_node run);
+    static pugi::xml_node get_or_create_r_pr(pugi::xml_node run);
 };
 
 }  // namespace cdocx

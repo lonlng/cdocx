@@ -81,17 +81,17 @@ void parse_shading_from_xml(pugi::xml_node shd, Shading& shading);
 void parse_border_from_xml(pugi::xml_node border_node, Border& border);
 void parse_borders_from_xml(pugi::xml_node borders_node, Borders& borders);
 void serialize_border_to_xml(pugi::xml_node parent, const char* name, const Border& border);
-void serialize_borders_to_xml(pugi::xml_node parent, const char* wrapper_name, const Borders& borders);
+void serialize_borders_to_xml(pugi::xml_node parent, const char* container_name, const Borders& borders);
 
 // ---------------------------------------------------------------------------
 // Font / Run format (shared between serialize, deserialize, and style)
 // ---------------------------------------------------------------------------
-void serialize_font_to_rPr(pugi::xml_node rPr, const Font& font, bool add_sz_cs);
+void serialize_font_to_r_pr(pugi::xml_node r_pr, const Font& font, bool add_sz_cs);
 void serialize_run_formatting_to_xml(pugi::xml_node run_xml, const Font& font, const Shading& shading);
-void parse_font_from_xml(pugi::xml_node rPr, Font& font);
+void parse_font_from_xml(pugi::xml_node r_pr, Font& font);
 void parse_run_format_from_xml(Inline* run, pugi::xml_node run_node);
-void parse_paragraph_format_children_from_xml(pugi::xml_node pPr, ParagraphFormat& format);
+void parse_paragraph_format_children_from_xml(pugi::xml_node p_pr, ParagraphFormat& format);
 void serialize_paragraph_to_xml(pugi::xml_node parent, const Paragraph* para);
-void serialize_paragraph_format_children_to_xml(pugi::xml_node pPr, const ParagraphFormat& format);
+void serialize_paragraph_format_children_to_xml(pugi::xml_node p_pr, const ParagraphFormat& format);
 
 }  // namespace cdocx

@@ -67,20 +67,20 @@ int main() {
     cdocx::TemplateEngine engine(&filled);
 
     // --- Dictionary style ---
-    engine["company"] = cdocx::TemplateValue::Text("Acme Inc.");
+    engine["company"] = cdocx::TemplateValue::text("Acme Inc.");
     engine["date"]    = "2025-04-21";
 
     // --- Custom format ---
-    engine["title"] = cdocx::TemplateValue::Text("Annual Report")
-        .with_format(cdocx::TemplateFormat().bold().Size(24).color("FF0000"));
+    engine["title"] = cdocx::TemplateValue::text("Annual Report")
+        .with_format(cdocx::TemplateFormat().bold().size(24).color("FF0000"));
 
     // --- Bookmark targets (Auto mode will find these) ---
-    engine["AUTHOR"]    = cdocx::TemplateValue::Text("Jane Doe");
-    engine["SIGNATURE"] = cdocx::TemplateValue::Text("APPROVED");
+    engine["AUTHOR"]    = cdocx::TemplateValue::text("Jane Doe");
+    engine["SIGNATURE"] = cdocx::TemplateValue::text("APPROVED");
 
     // --- Image placeholder (if sample image exists) ---
     if (std::filesystem::exists("sample_logo.png")) {
-        engine["logo"] = cdocx::TemplateValue::Image("sample_logo.png")
+        engine["logo"] = cdocx::TemplateValue::image("sample_logo.png")
             .sized(200, 100)
             .centered();
     }

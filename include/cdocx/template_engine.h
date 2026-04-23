@@ -2,8 +2,8 @@
  * @file template_engine.h
  * @brief Unified template engine for DOCX documents
  * @details Provides a dictionary-style API for template population:
- *          engine["key"] = TemplateValue::Text("hello");
- *          engine.set("logo", TemplateValue::Image("logo.png"));
+ *          engine["key"] = TemplateValue::text("hello");
+ *          engine.set("logo", TemplateValue::image("logo.png"));
  *          Supports text, image, custom format, preserve/original format,
  *          replace/insert modes, first/all match scope.
  *
@@ -22,14 +22,14 @@
  * cdocx::TemplateEngine engine(&doc);
  *
  * // Dictionary style
- * engine["company"] = cdocx::TemplateValue::Text("Acme Inc.");
- * engine["date"]    = cdocx::TemplateValue::Text("2025-04-21");
- * engine["logo"]    = cdocx::TemplateValue::Image("logo.png")
+ * engine["company"] = cdocx::TemplateValue::text("Acme Inc.");
+ * engine["date"]    = cdocx::TemplateValue::text("2025-04-21");
+ * engine["logo"]    = cdocx::TemplateValue::image("logo.png")
  *                                      .sized(400, 300)
  *                                      .centered();
  *
  * // With custom format
- * engine["title"] = cdocx::TemplateValue::Text("Annual Report")
+ * engine["title"] = cdocx::TemplateValue::text("Annual Report")
  *     .with_format(cdocx::TemplateFormat().bold().size(24).color("FF0000"));
  *
  * // Batch from map
@@ -61,7 +61,6 @@
 #include <optional>
 #include <string>
 #include <variant>
-#include <vector>
 
 namespace cdocx {
 
@@ -175,8 +174,8 @@ class TemplateFormat {
     TemplateFormat& bold(bool value = true);
     TemplateFormat& italic(bool value = true);
     TemplateFormat& underline(bool value = true);
-    TemplateFormat& Strikethrough(bool value = true);
-    TemplateFormat& Size(int half_points);
+    TemplateFormat& strikethrough(bool value = true);
+    TemplateFormat& size(int half_points);
     TemplateFormat& font(const std::string& name);
     TemplateFormat& font_ascii(const std::string& name);
     TemplateFormat& font_far_east(const std::string& name);
@@ -232,10 +231,10 @@ class TemplateFormat {
  *
  * @par Usage:
  * @code
- * auto text = cdocx::TemplateValue::Text("Hello World")
+ * auto text = cdocx::TemplateValue::text("Hello World")
  *     .with_format(cdocx::TemplateFormat().bold().size(24));
  *
- * auto img = cdocx::TemplateValue::Image("chart.png")
+ * auto img = cdocx::TemplateValue::image("chart.png")
  *     .sized(400, 300)
  *     .centered()
  *     .with_caption("Figure 1");
@@ -261,7 +260,7 @@ class TemplateValue {
      * @param content Text content
      * @return TemplateValue configured as text
      */
-    static TemplateValue Text(const std::string& content);
+    static TemplateValue text(const std::string& content);
 
     /**
      * @brief Create a text value with format
@@ -269,14 +268,14 @@ class TemplateValue {
      * @param format Format specification
      * @return TemplateValue configured as text
      */
-    static TemplateValue Text(const std::string& content, const TemplateFormat& format);
+    static TemplateValue text(const std::string& content, const TemplateFormat& format);
 
     /**
      * @brief Create an image value
      * @param path Path to image file
      * @return TemplateValue configured as image
      */
-    static TemplateValue Image(const std::string& path);
+    static TemplateValue image(const std::string& path);
 
     /**
      * @brief Create an image value with explicit size
@@ -285,7 +284,7 @@ class TemplateValue {
      * @param height Height in points
      * @return TemplateValue configured as image
      */
-    static TemplateValue Image(const std::string& path, double width, double height);
+    static TemplateValue image(const std::string& path, double width, double height);
 
     // ===================================================================
     // Chainable Configuration
@@ -364,15 +363,15 @@ class TemplateValue {
  * @par Dictionary Style:
  * @code
  * cdocx::TemplateEngine engine(&doc);
- * engine["name"] = cdocx::TemplateValue::Text("John");
- * engine["logo"] = cdocx::TemplateValue::Image("logo.png");
+ * engine["name"] = cdocx::TemplateValue::text("John");
+ * engine["logo"] = cdocx::TemplateValue::image("logo.png");
  * engine.apply();
  * @endcode
  *
  * @par Programmatic Style:
  * @code
  * engine.set("name", "John")
- *       .set("logo", cdocx::TemplateValue::Image("logo.png"))
+ *       .set("logo", cdocx::TemplateValue::image("logo.png"))
  *       .with_scope(cdocx::TemplateScope::All)
  *       .apply();
  * @endcode
@@ -460,7 +459,7 @@ class TemplateEngine {
      *
      * @par Usage:
      * @code
-     * engine["company"] = cdocx::TemplateValue::Text("Acme");
+     * engine["company"] = cdocx::TemplateValue::text("Acme");
      * engine["date"]    = "2025-04-21";  // auto-wrapped
      * @endcode
      */

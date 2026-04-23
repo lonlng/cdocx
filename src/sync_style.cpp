@@ -43,12 +43,12 @@ static StyleType string_to_style_type(const char* str) {
     return StyleType::Paragraph;
 }
 
-static void serialize_style_paragraph_format_to_xml(pugi::xml_node pPr, const ParagraphFormat& format) {
-    serialize_paragraph_format_children_to_xml(pPr, format);
+static void serialize_style_paragraph_format_to_xml(pugi::xml_node p_pr, const ParagraphFormat& format) {
+    serialize_paragraph_format_children_to_xml(p_pr, format);
 }
 
-void parse_font_from_xml(pugi::xml_node rPr, Font& font) {
-    if (!rPr) {
+void parse_font_from_xml(pugi::xml_node r_pr, Font& font) {
+    if (!r_pr) {
         return;
     }
 
@@ -58,51 +58,51 @@ void parse_font_from_xml(pugi::xml_node rPr, Font& font) {
     font.name_far_east = "";
     font.color = Color::auto_color();
 
-    if (rPr.child("w:b")) {
+    if (r_pr.child("w:b")) {
         font.bold = true;
     }
-    if (rPr.child("w:i")) {
+    if (r_pr.child("w:i")) {
         font.italic = true;
     }
-    if (rPr.child("w:strike")) {
+    if (r_pr.child("w:strike")) {
         font.strikethrough = true;
     }
 
-    if (auto u = rPr.child("w:u")) {
+    if (auto u = r_pr.child("w:u")) {
         font.underline = string_to_underline_type(u.attribute("w:val").value());
     }
 
-    if (auto sz = rPr.child("w:sz")) {
+    if (auto sz = r_pr.child("w:sz")) {
         font.size = sz.attribute("w:val").as_int() / 2.0;
     }
 
-    auto rFonts = rPr.child("w:rFonts");
-    if (rFonts) {
-        font.name = rFonts.attribute("w:ascii").value();
+    auto r_fonts = r_pr.child("w:rFonts");
+    if (r_fonts) {
+        font.name = r_fonts.attribute("w:ascii").value();
         if (font.name.empty()) {
-            font.name = rFonts.attribute("w:hAnsi").value();
+            font.name = r_fonts.attribute("w:hAnsi").value();
         }
-        font.name_far_east = rFonts.attribute("w:eastAsia").value();
+        font.name_far_east = r_fonts.attribute("w:eastAsia").value();
     }
 
-    auto color = rPr.child("w:color");
+    auto color = r_pr.child("w:color");
     if (color) {
         font.color = Color::from_hex(color.attribute("w:val").value());
     }
 
-    auto vAlign = rPr.child("w:vertAlign");
-    if (vAlign) {
-        font.script_type = string_to_script_type(vAlign.attribute("w:val").value());
+    auto v_align = r_pr.child("w:vertAlign");
+    if (v_align) {
+        font.script_type = string_to_script_type(v_align.attribute("w:val").value());
     }
 
-    parse_shading_from_xml(rPr.child("w:shd"), font.shading);
+    parse_shading_from_xml(r_pr.child("w:shd"), font.shading);
 }
 
-static void parse_style_paragraph_format_from_xml(pugi::xml_node pPr, ParagraphFormat& format) {
-    if (!pPr) {
+static void parse_style_paragraph_format_from_xml(pugi::xml_node p_pr, ParagraphFormat& format) {
+    if (!p_pr) {
         return;
     }
-    parse_paragraph_format_children_from_xml(pPr, format);
+    parse_paragraph_format_children_from_xml(p_pr, format);
 }
 
 static void serialize_style_to_xml(pugi::xml_node styles_root, const Style& style) {
@@ -144,14 +144,14 @@ static void serialize_style_to_xml(pugi::xml_node styles_root, const Style& styl
         }
 
         // Update basedOn
-        auto basedOn_node = style_xml.child("w:basedOn");
+        auto based_on_node = style_xml.child("w:basedOn");
         if (!style.get_base_style_name().empty()) {
-            if (!basedOn_node) {
-                basedOn_node = style_xml.prepend_child("w:basedOn");
+            if (!based_on_node) {
+                based_on_node = style_xml.prepend_child("w:basedOn");
             }
-            basedOn_node.attribute("w:val").set_value(style.get_base_style_name().c_str());
-        } else if (basedOn_node) {
-            style_xml.remove_child(basedOn_node);
+            based_on_node.attribute("w:val").set_value(style.get_base_style_name().c_str());
+        } else if (based_on_node) {
+            style_xml.remove_child(based_on_node);
         }
     } else {
         // No preserved XML: build from scratch (programmatically created style)
@@ -172,20 +172,20 @@ static void serialize_style_to_xml(pugi::xml_node styles_root, const Style& styl
         }
 
         if (!style.get_base_style_name().empty()) {
-            auto basedOn = style_xml.append_child("w:basedOn");
-            basedOn.append_attribute("w:val").set_value(style.get_base_style_name().c_str());
+            auto based_on = style_xml.append_child("w:basedOn");
+            based_on.append_attribute("w:val").set_value(style.get_base_style_name().c_str());
         }
     }
 
     // Determine if DOM has explicit font/paragraph formatting
     const Font& font = style.get_font();
-    bool has_font_formatting = font.bold || font.italic || font.strikethrough ||
-                               font.underline != UnderlineType::None || font.size > 0 ||
-                               !font.name.empty() || font.color != Color::auto_color() ||
-                               font.script_type != ScriptType::Normal;
+    const bool has_font_formatting = font.bold || font.italic || font.strikethrough ||
+                                     font.underline != UnderlineType::None || font.size > 0 ||
+                                     !font.name.empty() || font.color != Color::auto_color() ||
+                                     font.script_type != ScriptType::Normal;
 
     const ParagraphFormat& para_format = style.get_paragraph_format();
-    bool has_para_format =
+    const bool has_para_format =
         para_format.alignment != ParagraphAlignment::Left || para_format.left_indent != 0 ||
         para_format.right_indent != 0 || para_format.first_line_indent != 0 ||
         para_format.space_before != 0 || para_format.space_after != 0 ||
@@ -194,16 +194,16 @@ static void serialize_style_to_xml(pugi::xml_node styles_root, const Style& styl
         para_format.outline_level != OutlineLevel::BodyText;
 
     // Merge w:rPr: preserve unknown children, overlay managed ones
-    auto rPr = style_xml.child("w:rPr");
+    auto r_pr = style_xml.child("w:rPr");
     if (has_font_formatting) {
-        if (!rPr) {
-            rPr = style_xml.append_child("w:rPr");
+        if (!r_pr) {
+            r_pr = style_xml.append_child("w:rPr");
         }
-        // Check if original rPr had szCs before we remove anything
-        bool original_had_sz_cs = rPr.child("w:szCs") != nullptr;
+        // Check if original r_pr had szCs before we remove anything
+        const bool original_had_sz_cs = r_pr.child("w:szCs") != nullptr;
 
         // Remove managed children that we will re-serialize
-        remove_managed_children(rPr,
+        remove_managed_children(r_pr,
                                 {"w:b",
                                  "w:i",
                                  "w:strike",
@@ -216,19 +216,19 @@ static void serialize_style_to_xml(pugi::xml_node styles_root, const Style& styl
                                  "w:spacing",
                                  "w:w",
                                  "w:shd"});
-        // Serialize current DOM font formatting directly into the existing rPr
-        serialize_font_to_rPr(rPr, font, original_had_sz_cs);
+        // Serialize current DOM font formatting directly into the existing r_pr
+        serialize_font_to_r_pr(r_pr, font, original_had_sz_cs);
     }
 
     // Merge w:pPr: preserve unknown children, overlay managed ones
-    auto pPr = style_xml.child("w:pPr");
+    auto p_pr = style_xml.child("w:pPr");
     if (has_para_format) {
-        if (!pPr) {
-            pPr = style_xml.append_child("w:pPr");
+        if (!p_pr) {
+            p_pr = style_xml.append_child("w:pPr");
         }
         // Remove managed children that we will re-serialize
-        remove_managed_children(pPr, {"w:jc", "w:ind", "w:spacing", "w:shd", "w:dropCap"});
-        serialize_style_paragraph_format_to_xml(pPr, para_format);
+        remove_managed_children(p_pr, {"w:jc", "w:ind", "w:spacing", "w:shd", "w:dropCap"});
+        serialize_style_paragraph_format_to_xml(p_pr, para_format);
     }
 }
 
@@ -250,18 +250,18 @@ static std::shared_ptr<Style> parse_style_from_xml(pugi::xml_node style_node, Do
         style->set_name(style->get_style_id());
     }
 
-    auto basedOn = style_node.child("w:basedOn");
-    if (basedOn) {
-        style->set_base_style_name(basedOn.attribute("w:val").value());
+    auto based_on = style_node.child("w:basedOn");
+    if (based_on) {
+        style->set_base_style_name(based_on.attribute("w:val").value());
     }
 
-    auto rPr = style_node.child("w:rPr");
-    if (rPr) {
+    auto r_pr = style_node.child("w:rPr");
+    if (r_pr) {
         Font font;
-        parse_font_from_xml(rPr, font);
+        parse_font_from_xml(r_pr, font);
         style->set_font(font);
     } else {
-        // No explicit rPr: set font to empty so defaults aren't serialized
+        // No explicit r_pr: set font to empty so defaults aren't serialized
         Font empty_font;
         empty_font.size = 0;
         empty_font.name = "";
@@ -270,10 +270,10 @@ static std::shared_ptr<Style> parse_style_from_xml(pugi::xml_node style_node, Do
         style->set_font(empty_font);
     }
 
-    auto pPr = style_node.child("w:pPr");
-    if (pPr) {
+    auto p_pr = style_node.child("w:pPr");
+    if (p_pr) {
         ParagraphFormat format;
-        parse_style_paragraph_format_from_xml(pPr, format);
+        parse_style_paragraph_format_from_xml(p_pr, format);
         style->set_paragraph_format(format);
     } else {
         // No explicit pPr: set paragraph format to defaults so they aren't serialized

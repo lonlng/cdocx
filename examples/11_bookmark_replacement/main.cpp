@@ -229,7 +229,7 @@ bool create_template_with_bookmarks(const std::string& doc_path) {
     
     // Title bookmark - using add_run_with_bookmark() to create a bookmark around text
     auto p1 = doc.paragraphs().insert_paragraph_after("");
-    auto r1 = p1.add_run_with_bookmark(doc, "[TITLE_PLACEHOLDER]", "TITLE", cdocx::bold);
+    auto r1 = p1.add_run_with_bookmark(doc, "[TITLE_PLACEHOLDER]", "TITLE", cdocx::kBold);
     r1.set_font_size(36);  // 18pt
     
     // Empty paragraph

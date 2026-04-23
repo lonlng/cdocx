@@ -26,20 +26,20 @@ int main() {
             std::cout << "  - Found default section" << std::endl;
             
             // Set A4 portrait
-            sect1->get_properties().pageSize.width = 12240;
-            sect1->get_properties().pageSize.height = 15840;
+            sect1->get_properties().page_size.width = 12240;
+            sect1->get_properties().page_size.height = 15840;
             sect1->get_properties().orientation = cdocx::SectionProperties::Orientation::Portrait;
             
             // Set margins (1 inch)
-            sect1->get_properties().pageMargins.top = 1440;
-            sect1->get_properties().pageMargins.right = 1440;
-            sect1->get_properties().pageMargins.bottom = 1440;
-            sect1->get_properties().pageMargins.left = 1440;
+            sect1->get_properties().page_margins.top = 1440;
+            sect1->get_properties().page_margins.right = 1440;
+            sect1->get_properties().page_margins.bottom = 1440;
+            sect1->get_properties().page_margins.left = 1440;
             
             std::cout << "  - Section configured with A4 portrait" << std::endl;
             
             // Add content
-            auto* para = sect1->add_paragraph("First Section Content", cdocx::bold);
+            auto* para = sect1->add_paragraph("First Section Content", cdocx::kBold);
             if (para) {
                 std::cout << "  - Added paragraph to section" << std::endl;
             }
@@ -52,8 +52,8 @@ int main() {
             
             // Set landscape
             sect2->get_properties().orientation = cdocx::SectionProperties::Orientation::Landscape;
-            sect2->get_properties().pageSize.width = 15840;
-            sect2->get_properties().pageSize.height = 12240;
+            sect2->get_properties().page_size.width = 15840;
+            sect2->get_properties().page_size.height = 12240;
             
             sect2->add_paragraph("Second Section - Landscape");
             std::cout << "  - Second section set to landscape" << std::endl;
@@ -77,7 +77,7 @@ int main() {
         // Add list items using paragraphs and apply numbering
         auto para = doc2.paragraphs();
         
-        para.add_run("Project Goals:", cdocx::bold);
+        para.add_run("Project Goals:", cdocx::kBold);
         para.next();  // Move to next paragraph
         
         auto p1 = para.insert_paragraph_after("Define project scope");
@@ -117,7 +117,7 @@ int main() {
         
         // Add decimal list items
         auto para3 = doc3.paragraphs();
-        para3.add_run("Installation Steps:", cdocx::bold);
+        para3.add_run("Installation Steps:", cdocx::kBold);
         
         auto d1 = para3.insert_paragraph_after("Download the software");
         d1.set_numbering(decimal_list, cdocx::NumberingLevel::Level1);
@@ -150,12 +150,12 @@ int main() {
         // Get the definition to show structure
         auto* def = doc4.get_numbering_definition(outline_list);
         if (def) {
-            std::cout << "  - Abstract definition ID: " << def->abstractId << std::endl;
+            std::cout << "  - Abstract definition ID: " << def->abstract_id << std::endl;
         }
         
         // Create outline structure
         auto para4 = doc4.paragraphs();
-        para4.add_run("Document Outline:", cdocx::bold);
+        para4.add_run("Document Outline:", cdocx::kBold);
         
         auto o1 = para4.insert_paragraph_after("Introduction");
         o1.set_numbering(outline_list, cdocx::NumberingLevel::Level1);
@@ -195,7 +195,7 @@ int main() {
         std::cout << "  - Created Chinese numbered list (ID: " << chinese_list << ")" << std::endl;
         
         auto para5 = doc5.paragraphs();
-        para5.add_run("工作计划:", cdocx::bold);
+        para5.add_run("工作计划:", cdocx::kBold);
         
         auto c1 = para5.insert_paragraph_after("需求分析");
         c1.set_numbering(chinese_list, cdocx::NumberingLevel::Level1);
@@ -225,7 +225,7 @@ int main() {
         auto multi_list = doc6.add_numbered_list_definition();
         
         auto para6 = doc6.paragraphs();
-        para6.add_run("Multi-level List Demo:", cdocx::bold);
+        para6.add_run("Multi-level List Demo:", cdocx::kBold);
         
         // Create list and manipulate levels
         auto l1 = para6.insert_paragraph_after("Main Topic 1");

@@ -71,7 +71,7 @@ class Comment : public CompositeNode {
   public:
     Comment();
     explicit Comment(Document* doc);
-    Comment(Document* doc, const std::string& author, const std::string& text);
+    Comment(Document* doc, std::string author, const std::string& text);
 
     int get_id() const { return id_; }
     void set_id(int id) { id_ = id; }

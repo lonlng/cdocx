@@ -80,8 +80,8 @@ int main() {
     
     // Add formatted paragraph
     auto& para = doc.paragraphs();
-    para.add_run("Hello, ", cdocx::bold);
-    para.add_run("World!", cdocx::italic | cdocx::underline);
+    para.add_run("Hello, ", cdocx::kBold);
+    para.add_run("World!", cdocx::kItalic | cdocx::kUnderline);
     
     // Create a table
     auto* table = doc.tables().add(3, 2);
@@ -105,11 +105,11 @@ int main() {
     // Configure section
     Section* section = doc.get_first_section();
     section->properties().orientation = SectionProperties::Orientation::Landscape;
-    section->properties().pageSize.width = 15840;
-    section->properties().pageSize.height = 12240;
+    section->properties().page_size.width = 15840;
+    section->properties().page_size.height = 12240;
     
     // Add content
-    section->add_paragraph("Landscape content", cdocx::bold);
+    section->add_paragraph("Landscape content", cdocx::kBold);
     
     doc.save();
     return 0;

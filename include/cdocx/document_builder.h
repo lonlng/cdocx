@@ -89,7 +89,7 @@ class DocumentBuilder {
     std::shared_ptr<Document> build();
 
   private:
-    std::shared_ptr<Document> doc_sptr;
+    std::shared_ptr<Document> doc_sptr_;
 
   private:
     Document* doc_ = nullptr;
@@ -118,12 +118,12 @@ class DocumentBuilder {
 
     std::shared_ptr<FormField> insert_form_field_impl(const std::shared_ptr<FormField>& field);
     void ensure_paragraph();
-    void apply_formatting(pugi::xml_node run);
+    void apply_formatting(pugi::xml_node run) const;
     pugi::xml_node get_body();
 
   public:
     explicit DocumentBuilder(Document* doc);
-    explicit DocumentBuilder(std::shared_ptr<Document> doc);
+    explicit DocumentBuilder(const std::shared_ptr<Document>& doc);
 
     // Navigation
     DocumentBuilder& move_to_document_start();

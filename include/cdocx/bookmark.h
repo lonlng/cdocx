@@ -99,7 +99,7 @@ class Bookmark {
 
   public:
     Bookmark();
-    Bookmark(Document* doc, const std::string& name, pugi::xml_node start, pugi::xml_node end);
+    Bookmark(Document* doc, std::string name, pugi::xml_node start, pugi::xml_node end);
 
     std::string get_name() const;
     void set_name(const std::string& name);
@@ -137,7 +137,7 @@ class BookmarkCollection {
     void collect_bookmarks() const;
 
   public:
-    BookmarkCollection() : doc_(nullptr), collected_(true) {}
+    BookmarkCollection() : collected_(true) {}
     explicit BookmarkCollection(Document* doc);
 
     size_t count() const;

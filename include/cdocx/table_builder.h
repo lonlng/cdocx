@@ -41,7 +41,7 @@ struct TableBorders {
     /**
      * @brief No borders preset
      */
-    static TableBorders None() {
+    static TableBorders none() {
         TableBorders b;
         b.top = b.left = b.bottom = b.right = b.inside_h = b.inside_v = false;
         return b;
@@ -50,12 +50,12 @@ struct TableBorders {
     /**
      * @brief All borders preset (default)
      */
-    static TableBorders All() { return TableBorders(); }
+    static TableBorders all() { return {}; }
 
     /**
      * @brief Outside borders only preset
      */
-    static TableBorders OutsideOnly() {
+    static TableBorders outside_only() {
         TableBorders b;
         b.inside_h = b.inside_v = false;
         return b;
@@ -118,7 +118,7 @@ class TableBuilder {
      * @param borders Border configuration
      * @return Reference to this builder for chaining
      */
-    TableBuilder& SetBorders(const TableBorders& borders);
+    TableBuilder& set_borders(const TableBorders& borders);
 
     /**
      * @brief Set table width
@@ -126,7 +126,7 @@ class TableBuilder {
      * @param auto_width true for auto width
      * @return Reference to this builder for chaining
      */
-    TableBuilder& SetWidth(int width, bool auto_width = false);
+    TableBuilder& set_width(int width, bool auto_width = false);
 
     /**
      * @brief Set cell margins
@@ -136,7 +136,7 @@ class TableBuilder {
      * @param right Right margin in twips
      * @return Reference to this builder for chaining
      */
-    TableBuilder& SetCellMargins(int top, int left, int bottom, int right);
+    TableBuilder& set_cell_margins(int top, int left, int bottom, int right);
 
     // ========================================================================
     // Cell Content
@@ -149,7 +149,7 @@ class TableBuilder {
      * @param text Text content
      * @return Reference to this builder for chaining
      */
-    TableBuilder& SetCellText(int row, int col, const std::string& text);
+    TableBuilder& set_cell_text(int row, int col, const std::string& text);
 
     /**
      * @brief Set cell text with format
@@ -161,7 +161,7 @@ class TableBuilder {
      * @param font_size Font size in half-points
      * @return Reference to this builder for chaining
      */
-    TableBuilder& SetCellTextFormatted(
+    TableBuilder& set_cell_text_formatted(
         int row, int col, const std::string& text, bool bold, bool italic, int font_size);
 
     /**
@@ -171,7 +171,7 @@ class TableBuilder {
      * @param align Alignment ("top", "center", "bottom")
      * @return Reference to this builder for chaining
      */
-    TableBuilder& SetCellVerticalAlign(int row, int col, const std::string& align);
+    TableBuilder& set_cell_vertical_align(int row, int col, const std::string& align);
 
     // ========================================================================
     // Cell Merging
@@ -179,21 +179,21 @@ class TableBuilder {
 
     /**
      * @brief Merge cells horizontally
-     * @param row Row index
-     * @param col Starting column index
-     * @param span Number of columns to merge
+     * @param start_row Row index
+     * @param start_col Starting column index
+     * @param col_span Number of columns to merge
      * @return Reference to this builder for chaining
      */
-    TableBuilder& MergeCellsHorizontal(int row, int col, int span);
+    TableBuilder& merge_cells_horizontal(int start_row, int start_col, int col_span);
 
     /**
      * @brief Merge cells vertically
-     * @param col Column index
-     * @param row Starting row index
-     * @param span Number of rows to merge
+     * @param start_col Column index
+     * @param start_row Starting row index
+     * @param row_span Number of rows to merge
      * @return Reference to this builder for chaining
      */
-    TableBuilder& MergeCellsVertical(int col, int row, int span);
+    TableBuilder& merge_cells_vertical(int start_col, int start_row, int row_span);
 
     /**
      * @brief Merge cells in a rectangle
@@ -203,7 +203,7 @@ class TableBuilder {
      * @param col_span Number of columns
      * @return Reference to this builder for chaining
      */
-    TableBuilder& MergeCells(int start_row, int start_col, int row_span, int col_span);
+    TableBuilder& merge_cells(int start_row, int start_col, int row_span, int col_span);
 
     // ========================================================================
     // Insertion
@@ -215,7 +215,7 @@ class TableBuilder {
      * @param bookmark_name Name of the bookmark
      * @return true if successful
      */
-    bool InsertAtBookmark(Document& doc, const std::string& bookmark_name);
+    bool insert_at_bookmark(Document& doc, const std::string& bookmark_name) const;
 
     /**
      * @brief Insert table after a paragraph
@@ -223,14 +223,14 @@ class TableBuilder {
      * @param para Paragraph to insert after
      * @return true if successful
      */
-    bool InsertAfterParagraph(Document& doc, Paragraph& para);
+    bool insert_after_paragraph(Document& doc, Paragraph& para);
 
     /**
      * @brief Build the table XML node
      * @param doc_xml Document XML to create nodes in
      * @return Created table node
      */
-    pugi::xml_node Build(pugi::xml_document& doc_xml) const;
+    pugi::xml_node build(pugi::xml_document& doc_xml) const;
 
   private:
     int rows_;
@@ -256,48 +256,9 @@ class TableBuilder {
     };
     std::vector<std::vector<CellData>> cells_;
 
-    void CreateTableStructure(pugi::xml_node tbl) const;
-    void CreateCell(pugi::xml_node tr, int row, int col) const;
+    void create_table_structure(pugi::xml_node tbl) const;
+    void create_cell(pugi::xml_node tr, int row, int col) const;
 };
-
-/**
- * @brief Insert a simple table at bookmark location
- * @param doc Target document
- * @param bookmark_name Bookmark name
- * @param rows Number of rows
- * @param cols Number of columns
- * @param headers Optional header row texts
- * @param data Table data (row by row)
- * @return true if successful
- *
- * @par Example:
- * @code
- * InsertSimpleTable(doc, "TABLE_BOOKMARK", 3, 2,
- *                   {"Name", "Value"},
- *                   {{"Item1", "100"}, {"Item2", "200"}});
- * @endcode
- */
-bool InsertSimpleTable(Document& doc,
-                       const std::string& bookmark_name,
-                       int rows,
-                       int cols,
-                       const std::vector<std::string>& headers,
-                       const std::vector<std::vector<std::string>>& data);
-
-/**
- * @brief Insert table with caption
- * @param doc Target document
- * @param bookmark_name Bookmark name
- * @param table_builder Configured table builder
- * @param caption Table caption text
- * @param caption_above true for caption above table, false for below
- * @return true if successful
- */
-bool InsertTableWithCaption(Document& doc,
-                            const std::string& bookmark_name,
-                            TableBuilder& table_builder,
-                            const std::string& caption,
-                            bool caption_above = true);
 
 // ============================================================================
 // Table Caption Functions

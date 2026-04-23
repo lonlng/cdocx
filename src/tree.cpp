@@ -25,8 +25,8 @@ namespace {
  * @brief Custom XML writer for serializing pugi::xml_document to string.
  * @internal Only used by DocxTreeNode::serialize_xml_to_binary().
  */
-struct xml_string_writer : pugi::xml_writer {
-    std::string result{};
+struct XmlStringWriter : pugi::xml_writer {
+    std::string result;
 
     void write(const void* data, size_t size) override {
         result.append(static_cast<const char*>(data), size);
@@ -46,7 +46,7 @@ std::vector<uint8_t> DocxTreeNode::serialize_xml_to_binary() const {
         return {};
     }
 
-    xml_string_writer writer;
+    XmlStringWriter writer;
     xml_doc->save(writer, "  ");
 
     std::vector<uint8_t> result(writer.result.size());
@@ -89,7 +89,7 @@ std::shared_ptr<DocxTreeNode> DocxTreeNode::add_file(const std::string& file_nam
         return existing;
     }
 
-    std::string full_path = name.empty() ? file_name : this->full_path + "/" + file_name;
+    const std::string full_path = name.empty() ? file_name : this->full_path + "/" + file_name;
 
     auto node = std::make_shared<DocxTreeNode>(file_name, file_type, this);
     node->full_path = full_path;
@@ -126,7 +126,7 @@ DocxTree::DocxTree() {
 DocxTree::~DocxTree() = default;
 
 DocxTree::DocxTree(DocxTree&& other) noexcept
-    : root_(std::move(other.root_)), path_map_(std::move(other.path_map_)), path_map_mutex_() {
+    : root_(std::move(other.root_)), path_map_(std::move(other.path_map_)) {
     // Note: shared_mutex cannot be moved, so we leave it default-constructed
     // The path_map_ is already moved, and the mutex is unlocked in the new object
 }
@@ -136,7 +136,7 @@ DocxTree& DocxTree::operator=(DocxTree&& other) noexcept {
         // Clear current state (need to lock both mutexes to avoid deadlock)
         root_.reset();
         {
-            std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
+            const std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
             path_map_.clear();
         }
 
@@ -149,19 +149,19 @@ DocxTree& DocxTree::operator=(DocxTree&& other) noexcept {
 }
 
 bool DocxTree::is_critical_part(const std::string& path) const {
-    static const std::set<std::string> critical_parts = {"[Content_Types].xml",
+    static const std::set<std::string> kCriticalParts = {"[Content_Types].xml",
                                                          "_rels/.rels",
                                                          "word/_rels/document.xml.rels",
                                                          "word/document.xml",
                                                          "word/styles.xml",
                                                          "word/settings.xml"};
-    return critical_parts.find(path) != critical_parts.end();
+    return kCriticalParts.find(path) != kCriticalParts.end();
 }
 
 std::shared_ptr<DocxTreeNode> DocxTree::find_node(const std::string& path) const {
     // Try path map first for O(1) lookup
     {
-        std::shared_lock<std::shared_mutex> lock(path_map_mutex_);
+        const std::shared_lock<std::shared_mutex> lock(path_map_mutex_);
         auto it = path_map_.find(path);
         if (it != path_map_.end()) {
             auto node = it->second.lock();
@@ -235,14 +235,14 @@ std::shared_ptr<DocxTreeNode> DocxTree::find_or_create_node(const std::string& p
             node->full_path = current_path;
             node->is_critical = is_critical_part(current_path);
 
-            std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
+            const std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
             path_map_[current_path] = node;
             return node;
         } else {
             current = current->find_or_create_directory(part);
             current->full_path = current_path;
 
-            std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
+            const std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
             path_map_[current_path] = current;
         }
     }
@@ -258,9 +258,8 @@ std::shared_ptr<DocxTreeNode> DocxTree::add_zip_entry(const std::string& entry_p
     if (entry_path.find("word/media/") != std::string::npos) {
         type = DocxNodeType::MediaFile;
     } else if (entry_path.size() > 4) {
-        if (entry_path.substr(entry_path.size() - 4) == ".xml") {
-            type = DocxNodeType::XmlFile;
-        } else if (entry_path.size() > 5 && entry_path.substr(entry_path.size() - 5) == ".rels") {
+        if (entry_path.substr(entry_path.size() - 4) == ".xml" ||
+            (entry_path.size() > 5 && entry_path.substr(entry_path.size() - 5) == ".rels")) {
             type = DocxNodeType::XmlFile;
         }
     }
@@ -274,7 +273,7 @@ std::shared_ptr<DocxTreeNode> DocxTree::add_zip_entry(const std::string& entry_p
     // Store data immediately
     if (type == DocxNodeType::XmlFile) {
         node->xml_doc = std::make_shared<pugi::xml_document>();
-        pugi::xml_parse_result result = node->xml_doc->load_buffer(
+        const pugi::xml_parse_result result = node->xml_doc->load_buffer(
             data.data(), data.size(), pugi::parse_full, pugi::encoding_utf8);
 
         if (!result) {
@@ -295,7 +294,7 @@ bool DocxTree::remove_node(const std::string& path) {
 
     node->is_deleted = true;
 
-    std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
+    const std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
     path_map_.erase(path);
 
     return true;
@@ -358,7 +357,7 @@ std::vector<std::shared_ptr<DocxTreeNode>> DocxTree::get_all_media_files() const
 }
 
 void DocxTree::rebuild_path_map() {
-    std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
+    const std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
     path_map_.clear();
 
     iterate_all([this](const std::shared_ptr<DocxTreeNode>& node) {
@@ -370,7 +369,7 @@ void DocxTree::rebuild_path_map() {
 
 void DocxTree::clear() {
     {
-        std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
+        const std::unique_lock<std::shared_mutex> lock(path_map_mutex_);
         path_map_.clear();
     }
     root_->children.clear();

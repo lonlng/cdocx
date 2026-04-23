@@ -381,7 +381,7 @@ std::shared_ptr<Run> run = para.append_run("Hello");
 run->set_bold(true);
 
 // Legacy API
-Run& r = para.add_run("Hello", cdocx::bold | cdocx::italic);
+Run& r = para.add_run("Hello", cdocx::kBold | cdocx::kItalic);
 bool ok = para.set_numbering(bullet_list_id, NumberingLevel::Level1);
 ```
 

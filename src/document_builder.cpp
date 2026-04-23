@@ -15,7 +15,6 @@
 #include <filesystem>
 #include <fstream>
 #include <map>
-#include <unordered_map>
 #include <vector>
 
 namespace cdocx {
@@ -23,22 +22,20 @@ namespace cdocx {
 // DocumentBuilder Implementation
 // ============================================================================
 
-DocumentBuilder::DocumentBuilder(Document* doc) : doc_(doc) {
-    target_xml_doc_ = doc ? doc->get_document_xml() : nullptr;
-}
+DocumentBuilder::DocumentBuilder(Document* doc)
+    : doc_(doc), target_xml_doc_(doc ? doc->get_document_xml() : nullptr) {}
 
-DocumentBuilder::DocumentBuilder(std::shared_ptr<Document> doc) : doc_sptr(doc), doc_(doc.get()) {
-    target_xml_doc_ = doc_ ? doc_->get_document_xml() : nullptr;
-}
+DocumentBuilder::DocumentBuilder(const std::shared_ptr<Document>& doc)
+    : doc_sptr_(doc), doc_(doc.get()), target_xml_doc_(doc.get() ? doc->get_document_xml() : nullptr) {}
 
 DocumentBuilder::~DocumentBuilder() = default;
 
 void DocumentBuilder::ensure_paragraph() {
     if (!current_paragraph_ || std::strcmp(current_paragraph_.name(), "w:p") != 0) {
         pugi::xml_node body = get_body();
-        pugi::xml_node sectPr = body.child("w:sectPr");
-        if (sectPr) {
-            current_paragraph_ = body.insert_child_before("w:p", sectPr);
+        const pugi::xml_node sect_pr = body.child("w:sectPr");
+        if (sect_pr) {
+            current_paragraph_ = body.insert_child_before("w:p", sect_pr);
         } else {
             current_paragraph_ = body.append_child("w:p");
         }
@@ -52,11 +49,11 @@ void DocumentBuilder::ensure_paragraph() {
 pugi::xml_node DocumentBuilder::get_body() {
     pugi::xml_document* doc_xml = target_xml_doc_ ? target_xml_doc_ : doc_->get_document_xml();
     if (!doc_xml) {
-        return pugi::xml_node();
+        return pugi::xml_node{};
     }
     pugi::xml_node root = doc_xml->first_child();
     if (!root) {
-        return pugi::xml_node();
+        return pugi::xml_node{};
     }
     // document.xml has w:document -> w:body, header/footer XML has w:hdr/w:ftr directly
     if (std::strcmp(root.name(), "w:document") == 0) {
@@ -65,61 +62,61 @@ pugi::xml_node DocumentBuilder::get_body() {
     if (std::strcmp(root.name(), "w:hdr") == 0 || std::strcmp(root.name(), "w:ftr") == 0) {
         return root;
     }
-    return pugi::xml_node();
+    return pugi::xml_node{};
 }
 
-void DocumentBuilder::apply_formatting(pugi::xml_node run) {
+void DocumentBuilder::apply_formatting(pugi::xml_node run) const {
     if (!run) {
         return;
     }
 
-    pugi::xml_node rPr = run.child("w:rPr");
-    if (!rPr) {
-        rPr = run.prepend_child("w:rPr");
+    pugi::xml_node r_pr = run.child("w:rPr");
+    if (!r_pr) {
+        r_pr = run.prepend_child("w:rPr");
     }
 
     // Apply formatting flags
     if (format_.bold) {
-        if (!rPr.child("w:b")) {
-            rPr.append_child("w:b");
+        if (!r_pr.child("w:b")) {
+            r_pr.append_child("w:b");
         }
     }
     if (format_.italic) {
-        if (!rPr.child("w:i")) {
-            rPr.append_child("w:i");
+        if (!r_pr.child("w:i")) {
+            r_pr.append_child("w:i");
         }
     }
     if (format_.underline) {
-        pugi::xml_node u = rPr.child("w:u");
+        pugi::xml_node u = r_pr.child("w:u");
         if (!u) {
-            u = rPr.append_child("w:u");
+            u = r_pr.append_child("w:u");
         }
         u.append_attribute("w:val").set_value("single");
     }
     if (format_.strikethrough) {
-        if (!rPr.child("w:strike")) {
-            rPr.append_child("w:strike");
+        if (!r_pr.child("w:strike")) {
+            r_pr.append_child("w:strike");
         }
     }
     if (!format_.font_name.empty()) {
-        pugi::xml_node rFonts = rPr.child("w:rFonts");
-        if (!rFonts) {
-            rFonts = rPr.append_child("w:rFonts");
+        pugi::xml_node r_fonts = r_pr.child("w:rFonts");
+        if (!r_fonts) {
+            r_fonts = r_pr.append_child("w:rFonts");
         }
-        rFonts.append_attribute("w:ascii").set_value(format_.font_name.c_str());
-        rFonts.append_attribute("w:hAnsi").set_value(format_.font_name.c_str());
+        r_fonts.append_attribute("w:ascii").set_value(format_.font_name.c_str());
+        r_fonts.append_attribute("w:hAnsi").set_value(format_.font_name.c_str());
     }
     if (format_.font_size > 0) {
-        pugi::xml_node sz = rPr.child("w:sz");
+        pugi::xml_node sz = r_pr.child("w:sz");
         if (!sz) {
-            sz = rPr.append_child("w:sz");
+            sz = r_pr.append_child("w:sz");
         }
         sz.append_attribute("w:val").set_value(format_.font_size * 2);
     }
     if (!format_.color.empty()) {
-        pugi::xml_node color = rPr.child("w:color");
+        pugi::xml_node color = r_pr.child("w:color");
         if (!color) {
-            color = rPr.append_child("w:color");
+            color = r_pr.append_child("w:color");
         }
         color.append_attribute("w:val").set_value(format_.color.c_str());
     }
@@ -127,14 +124,14 @@ void DocumentBuilder::apply_formatting(pugi::xml_node run) {
 
 // Navigation
 DocumentBuilder& DocumentBuilder::move_to_document_start() {
-    pugi::xml_node body = get_body();
+    const pugi::xml_node body = get_body();
     current_paragraph_ = body.child("w:p");
     current_node_ = current_paragraph_;
     return *this;
 }
 
 DocumentBuilder& DocumentBuilder::move_to_document_end() {
-    pugi::xml_node body = get_body();
+    const pugi::xml_node body = get_body();
     // Find the last w:p node, not just any last child
     pugi::xml_node last_para;
     for (pugi::xml_node para = body.child("w:p"); para; para = para.next_sibling("w:p")) {
@@ -152,7 +149,7 @@ DocumentBuilder& DocumentBuilder::move_to_paragraph(size_t index) {
 
 DocumentBuilder& DocumentBuilder::move_to_paragraph(size_t paragraph_index,
                                                     size_t character_index) {
-    pugi::xml_node body = get_body();
+    const pugi::xml_node body = get_body();
     size_t count = 0;
 
     for (pugi::xml_node para = body.child("w:p"); para; para = para.next_sibling("w:p")) {
@@ -161,9 +158,9 @@ DocumentBuilder& DocumentBuilder::move_to_paragraph(size_t paragraph_index,
             // Find run containing the character index
             size_t char_count = 0;
             for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
-                pugi::xml_node t = run.child("w:t");
+                const pugi::xml_node t = run.child("w:t");
                 if (t) {
-                    size_t text_len = std::strlen(t.text().get());
+                    const size_t text_len = std::strlen(t.text().get());
                     if (char_count + text_len >= character_index) {
                         current_node_ = run;
                         return *this;
@@ -185,7 +182,7 @@ DocumentBuilder& DocumentBuilder::move_to_section(size_t index) {
         return *this;
     }
 
-    auto body = sections[index]->get_body();
+    auto body = sections[static_cast<int>(index)]->get_body();
     if (!body) {
         return *this;
     }
@@ -195,7 +192,7 @@ DocumentBuilder& DocumentBuilder::move_to_section(size_t index) {
         return *this;
     }
 
-    pugi::xml_node xml_body = doc_xml->child("w:document").child("w:body");
+    const pugi::xml_node xml_body = doc_xml->child("w:document").child("w:body");
     size_t sect_count = 0;
     for (pugi::xml_node para = xml_body.child("w:p"); para; para = para.next_sibling("w:p")) {
         if (sect_count == index) {
@@ -208,7 +205,7 @@ DocumentBuilder& DocumentBuilder::move_to_section(size_t index) {
         if (para.child("w:sectPr")) {
             sect_count++;
             if (sect_count == index) {
-                pugi::xml_node next = para.next_sibling();
+                const pugi::xml_node next = para.next_sibling();
                 if (next && std::strcmp(next.name(), "w:p") == 0) {
                     current_paragraph_ = next;
                     current_node_ = next;
@@ -240,7 +237,7 @@ DocumentBuilder& DocumentBuilder::move_to_bookmark(const std::string& name) {
          para = para.next_sibling("w:p")) {
         for (pugi::xml_node bm = para.child("w:bookmarkStart"); bm;
              bm = bm.next_sibling("w:bookmarkStart")) {
-            pugi::xml_attribute name_attr = bm.attribute("w:name");
+            const pugi::xml_attribute name_attr = bm.attribute("w:name");
             if (name_attr && name_attr.value() == name) {
                 target_xml_doc_ = doc_xml;
                 current_paragraph_ = para;
@@ -252,7 +249,7 @@ DocumentBuilder& DocumentBuilder::move_to_bookmark(const std::string& name) {
         for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
             for (pugi::xml_node bm = run.child("w:bookmarkStart"); bm;
                  bm = bm.next_sibling("w:bookmarkStart")) {
-                pugi::xml_attribute name_attr = bm.attribute("w:name");
+                const pugi::xml_attribute name_attr = bm.attribute("w:name");
                 if (name_attr && name_attr.value() == name) {
                     target_xml_doc_ = doc_xml;
                     current_paragraph_ = para;
@@ -271,25 +268,25 @@ bool DocumentBuilder::move_to_merge_field(const std::string& field_name) {
         return false;
     }
 
-    std::string target_code = "MERGEFIELD " + field_name;
+    const std::string target_code = "MERGEFIELD " + field_name;
 
     for (pugi::xml_node para = doc_xml->child("w:document").child("w:body").child("w:p"); para;
          para = para.next_sibling("w:p")) {
         for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
-            pugi::xml_node fldChar = run.child("w:fldChar");
-            if (fldChar && std::strcmp(fldChar.attribute("w:fldCharType").value(), "begin") == 0) {
-                // Found start of a field, look for instrText in following runs
+            const pugi::xml_node fld_char = run.child("w:fldChar");
+            if (fld_char && std::strcmp(fld_char.attribute("w:fldCharType").value(), "begin") == 0) {
+                // Found start of a field, look for instr_text in following runs
                 for (pugi::xml_node instr_run = run.next_sibling("w:r"); instr_run;
                      instr_run = instr_run.next_sibling("w:r")) {
-                    pugi::xml_node instrText = instr_run.child("w:instrText");
-                    if (instrText) {
-                        std::string code = instrText.text().get();
+                    const pugi::xml_node instr_text = instr_run.child("w:instrText");
+                    if (instr_text) {
+                        std::string code = instr_text.text().get();
                         // trim leading space if present
                         size_t start = 0;
                         while (start < code.size() && std::isspace(code[start])) {
                             start++;
                         }
-                        std::string trimmed = code.substr(start);
+                        const std::string trimmed = code.substr(start);
                         if (trimmed.find(target_code) == 0) {
                             target_xml_doc_ = doc_xml;
                             current_paragraph_ = para;
@@ -297,8 +294,8 @@ bool DocumentBuilder::move_to_merge_field(const std::string& field_name) {
                             return true;
                         }
                     }
-                    pugi::xml_node end_fldChar = instr_run.child("w:fldChar");
-                    if (end_fldChar && std::strcmp(end_fldChar.attribute("w:fldCharType").value(),
+                    const pugi::xml_node end_fld_char = instr_run.child("w:fldChar");
+                    if (end_fld_char && std::strcmp(end_fld_char.attribute("w:fldCharType").value(),
                                                    "separate") == 0) {
                         break;
                     }
@@ -317,7 +314,7 @@ DocumentBuilder& DocumentBuilder::move_to_cell(size_t table_index,
         return *this;
     }
 
-    pugi::xml_node body = doc_xml->child("w:document").child("w:body");
+    const pugi::xml_node body = doc_xml->child("w:document").child("w:body");
     size_t t_idx = 0;
     for (pugi::xml_node tbl = body.child("w:tbl"); tbl; tbl = tbl.next_sibling("w:tbl")) {
         if (t_idx == table_index) {
@@ -396,7 +393,7 @@ DocumentBuilder& DocumentBuilder::write(const std::string& text) {
     pugi::xml_node run = current_paragraph_.append_child("w:r");
     apply_formatting(run);
 
-    pugi::xml_node t = run.append_child("w:t");
+    const pugi::xml_node t = run.append_child("w:t");
     t.text().set(text.c_str());
 
     if (doc_) {
@@ -418,9 +415,9 @@ DocumentBuilder& DocumentBuilder::writeln() {
 
 Paragraph* DocumentBuilder::insert_paragraph() {
     pugi::xml_node body = get_body();
-    pugi::xml_node sectPr = body.child("w:sectPr");
-    if (sectPr) {
-        current_paragraph_ = body.insert_child_before("w:p", sectPr);
+    const pugi::xml_node sect_pr = body.child("w:sectPr");
+    if (sect_pr) {
+        current_paragraph_ = body.insert_child_before("w:p", sect_pr);
     } else {
         current_paragraph_ = body.append_child("w:p");
     }
@@ -429,9 +426,7 @@ Paragraph* DocumentBuilder::insert_paragraph() {
     // Return pointer to a new Paragraph object
     // Note: This creates a memory management issue - needs proper handling
     static Paragraph* para = nullptr;
-    if (para) {
-        delete para;
-    }
+    delete para;
     para = new Paragraph();
     para->set_current(current_paragraph_);
     return para;
@@ -446,9 +441,9 @@ DocumentBuilder& DocumentBuilder::insert_break(BreakType break_type) {
     switch (break_type) {
         case BreakType::ParagraphBreak: {
             pugi::xml_node body = get_body();
-            pugi::xml_node sectPr = body.child("w:sectPr");
-            if (sectPr) {
-                current_paragraph_ = body.insert_child_before("w:p", sectPr);
+            const pugi::xml_node sect_pr = body.child("w:sectPr");
+            if (sect_pr) {
+                current_paragraph_ = body.insert_child_before("w:p", sect_pr);
             } else {
                 current_paragraph_ = body.append_child("w:p");
             }
@@ -528,7 +523,7 @@ std::shared_ptr<Footnote> DocumentBuilder::insert_footnote(FootnoteType type,
         return nullptr;
     }
 
-    int id = footnote->get_id();
+    const int id = footnote->get_id();
 
     // Insert footnote reference in current paragraph
     pugi::xml_node run = current_paragraph_.append_child("w:r");
@@ -538,7 +533,7 @@ std::shared_ptr<Footnote> DocumentBuilder::insert_footnote(FootnoteType type,
     if (!reference_mark.empty()) {
         ref.append_attribute("w:customMarkFollows").set_value("1");
         pugi::xml_node mark_run = current_paragraph_.append_child("w:r");
-        pugi::xml_node mark_t = mark_run.append_child("w:t");
+        const pugi::xml_node mark_t = mark_run.append_child("w:t");
         mark_t.text().set(reference_mark.c_str());
     }
 
@@ -592,31 +587,10 @@ std::string field_type_to_code(FieldType type) {
 std::string field_type_to_result(FieldType type) {
     switch (type) {
         case FieldType::Page:
-            return "1";
         case FieldType::NumPages:
             return "1";
-        case FieldType::Date:
-            return "";
-        case FieldType::Time:
-            return "";
-        case FieldType::CreateDate:
-            return "";
-        case FieldType::SaveDate:
-            return "";
-        case FieldType::Author:
-            return "";
-        case FieldType::Title:
-            return "";
-        case FieldType::Subject:
-            return "";
-        case FieldType::Keywords:
-            return "";
-        case FieldType::FileName:
-            return "";
         case FieldType::FileSize:
-            return "0";
         case FieldType::NumWords:
-            return "0";
         case FieldType::NumChars:
             return "0";
         default:
@@ -656,31 +630,31 @@ std::shared_ptr<Field> DocumentBuilder::insert_field_node(const std::shared_ptr<
     }
 
     pugi::xml_node run_start = current_paragraph_.append_child("w:r");
-    pugi::xml_node fldChar_start = run_start.append_child("w:fldChar");
-    fldChar_start.append_attribute("w:fldCharType").set_value("begin");
+    pugi::xml_node fld_char_start = run_start.append_child("w:fldChar");
+    fld_char_start.append_attribute("w:fldCharType").set_value("begin");
 
-    std::string full_code = field->get_full_field_code();
+    const std::string full_code = field->get_full_field_code();
     if (!full_code.empty()) {
         pugi::xml_node run_instr = current_paragraph_.append_child("w:r");
-        pugi::xml_node instrText = run_instr.append_child("w:instrText");
-        instrText.append_attribute("xml:space").set_value("preserve");
-        instrText.text().set((" " + full_code + " \\* MERGEFORMAT").c_str());
+        pugi::xml_node instr_text = run_instr.append_child("w:instrText");
+        instr_text.append_attribute("xml:space").set_value("preserve");
+        instr_text.text().set((" " + full_code + " \\* MERGEFORMAT").c_str());
     }
 
     pugi::xml_node run_sep = current_paragraph_.append_child("w:r");
-    pugi::xml_node fldChar_sep = run_sep.append_child("w:fldChar");
-    fldChar_sep.append_attribute("w:fldCharType").set_value("separate");
+    pugi::xml_node fld_char_sep = run_sep.append_child("w:fldChar");
+    fld_char_sep.append_attribute("w:fldCharType").set_value("separate");
 
-    std::string result = field->get_result();
+    const std::string result = field->get_result();
     if (!result.empty()) {
         pugi::xml_node run_result = current_paragraph_.append_child("w:r");
-        pugi::xml_node t = run_result.append_child("w:t");
+        const pugi::xml_node t = run_result.append_child("w:t");
         t.text().set(result.c_str());
     }
 
     pugi::xml_node run_end = current_paragraph_.append_child("w:r");
-    pugi::xml_node fldChar_end = run_end.append_child("w:fldChar");
-    fldChar_end.append_attribute("w:fldCharType").set_value("end");
+    pugi::xml_node fld_char_end = run_end.append_child("w:fldChar");
+    fld_char_end.append_attribute("w:fldCharType").set_value("end");
 
     if (doc_) {
         doc_->mark_xml_paragraph_dirty(current_paragraph_);
@@ -742,28 +716,28 @@ std::shared_ptr<Field> DocumentBuilder::insert_table_of_contents(const std::stri
         field->add_switch(switches);
     }
 
-    std::string full_code = field->get_full_field_code();
+    const std::string full_code = field->get_full_field_code();
 
     pugi::xml_node run_start = current_paragraph_.append_child("w:r");
-    pugi::xml_node fldChar_start = run_start.append_child("w:fldChar");
-    fldChar_start.append_attribute("w:fldCharType").set_value("begin");
+    pugi::xml_node fld_char_start = run_start.append_child("w:fldChar");
+    fld_char_start.append_attribute("w:fldCharType").set_value("begin");
 
     pugi::xml_node run_instr = current_paragraph_.append_child("w:r");
-    pugi::xml_node instrText = run_instr.append_child("w:instrText");
-    instrText.append_attribute("xml:space").set_value("preserve");
-    instrText.text().set((" " + full_code + " \\h").c_str());
+    pugi::xml_node instr_text = run_instr.append_child("w:instrText");
+    instr_text.append_attribute("xml:space").set_value("preserve");
+    instr_text.text().set((" " + full_code + " \\h").c_str());
 
     pugi::xml_node run_sep = current_paragraph_.append_child("w:r");
-    pugi::xml_node fldChar_sep = run_sep.append_child("w:fldChar");
-    fldChar_sep.append_attribute("w:fldCharType").set_value("separate");
+    pugi::xml_node fld_char_sep = run_sep.append_child("w:fldChar");
+    fld_char_sep.append_attribute("w:fldCharType").set_value("separate");
 
     pugi::xml_node run_result = current_paragraph_.append_child("w:r");
-    pugi::xml_node t = run_result.append_child("w:t");
+    const pugi::xml_node t = run_result.append_child("w:t");
     t.text().set(field->get_result().c_str());
 
     pugi::xml_node run_end = current_paragraph_.append_child("w:r");
-    pugi::xml_node fldChar_end = run_end.append_child("w:fldChar");
-    fldChar_end.append_attribute("w:fldCharType").set_value("end");
+    pugi::xml_node fld_char_end = run_end.append_child("w:fldChar");
+    fld_char_end.append_attribute("w:fldCharType").set_value("end");
 
     if (doc_) {
         doc_->mark_xml_paragraph_dirty(current_paragraph_);
@@ -813,19 +787,19 @@ DocumentBuilder& DocumentBuilder::clear_formatting() {
 // Table Building
 DocumentBuilder& DocumentBuilder::start_table() {
     pugi::xml_node body = get_body();
-    pugi::xml_node sectPr = body.child("w:sectPr");
-    if (sectPr) {
-        current_table_ = body.insert_child_before("w:tbl", sectPr);
+    const pugi::xml_node sect_pr = body.child("w:sectPr");
+    if (sect_pr) {
+        current_table_ = body.insert_child_before("w:tbl", sect_pr);
     } else {
         current_table_ = body.append_child("w:tbl");
     }
     in_table_ = true;
 
     // Add table properties
-    pugi::xml_node tblPr = current_table_.append_child("w:tblPr");
-    pugi::xml_node tblW = tblPr.append_child("w:tblW");
-    tblW.append_attribute("w:w").set_value("5000");
-    tblW.append_attribute("w:type").set_value("pct");
+    pugi::xml_node tbl_pr = current_table_.append_child("w:tblPr");
+    pugi::xml_node tbl_w = tbl_pr.append_child("w:tblW");
+    tbl_w.append_attribute("w:w").set_value("5000");
+    tbl_w.append_attribute("w:type").set_value("pct");
     return *this;
 }
 
@@ -852,10 +826,10 @@ DocumentBuilder& DocumentBuilder::insert_cell() {
     current_cell_ = current_row_.append_child("w:tc");
 
     // Add cell properties
-    pugi::xml_node tcPr = current_cell_.append_child("w:tcPr");
-    pugi::xml_node tcW = tcPr.append_child("w:tcW");
-    tcW.append_attribute("w:w").set_value("0");
-    tcW.append_attribute("w:type").set_value("auto");
+    pugi::xml_node tc_pr = current_cell_.append_child("w:tcPr");
+    pugi::xml_node tc_w = tc_pr.append_child("w:tcW");
+    tc_w.append_attribute("w:w").set_value("0");
+    tc_w.append_attribute("w:type").set_value("auto");
 
     // Add empty paragraph
     current_paragraph_ = current_cell_.append_child("w:p");
@@ -896,7 +870,7 @@ DocumentBuilder& DocumentBuilder::insert_hyperlink(const std::string& text,
     pugi::xml_node run = hyperlink.append_child("w:r");
     apply_formatting(run);
 
-    pugi::xml_node t = run.append_child("w:t");
+    const pugi::xml_node t = run.append_child("w:t");
     t.text().set(text.c_str());
     if (doc_) {
         doc_->mark_xml_paragraph_dirty(current_paragraph_);
@@ -913,12 +887,12 @@ DocumentBuilder& DocumentBuilder::start_bookmark(const std::string& name) {
     ensure_paragraph();
 
     // Generate unique bookmark ID
-    int bookmark_id = doc_->generate_unique_bookmark_id();
+    const int bookmark_id = doc_->generate_unique_bookmark_id();
 
     // Store bookmark ID for later matching with end_bookmark
     bookmark_stack_[name] = bookmark_id;
 
-    // Create bookmarkStart element
+    // Create bookmark_start element
     pugi::xml_node bookmark_start = current_paragraph_.append_child("w:bookmarkStart");
     bookmark_start.append_attribute("w:id").set_value(bookmark_id);
     bookmark_start.append_attribute("w:name").set_value(name.c_str());
@@ -939,10 +913,10 @@ DocumentBuilder& DocumentBuilder::end_bookmark(const std::string& name) {
         return *this;
     }
 
-    int bookmark_id = it->second;
+    const int bookmark_id = it->second;
     bookmark_stack_.erase(it);
 
-    // Create bookmarkEnd element
+    // Create bookmark_end element
     pugi::xml_node bookmark_end = current_paragraph_.append_child("w:bookmarkEnd");
     bookmark_end.append_attribute("w:id").set_value(bookmark_id);
     return *this;
@@ -970,7 +944,7 @@ bool DocumentBuilder::insert_image(const std::string& image_path, double width, 
     }
 
     // Add media and get relationship
-    std::string rel_id = doc_->add_media_with_rel(image_path, nullptr);
+    const std::string rel_id = doc_->add_media_with_rel(image_path, nullptr);
     if (rel_id.empty()) {
         return false;
     }
@@ -992,10 +966,10 @@ bool DocumentBuilder::insert_image(const std::string& image_path, double width, 
     extent.append_attribute("cx").set_value(size.width_emu());
     extent.append_attribute("cy").set_value(size.height_emu());
 
-    pugi::xml_node docPr = inline_node.append_child("wp:docPr");
+    pugi::xml_node doc_pr = inline_node.append_child("wp:docPr");
     static int image_id_counter = 1;
-    docPr.append_attribute("id").set_value(image_id_counter++);
-    docPr.append_attribute("name").set_value("Picture");
+    doc_pr.append_attribute("id").set_value(image_id_counter++);
+    doc_pr.append_attribute("name").set_value("Picture");
 
     pugi::xml_node graphic = inline_node.append_child("a:graphic");
     graphic.append_attribute("xmlns:a").set_value(
@@ -1009,26 +983,26 @@ bool DocumentBuilder::insert_image(const std::string& image_path, double width, 
     pic.append_attribute("xmlns:pic")
         .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
 
-    pugi::xml_node nvPicPr = pic.append_child("pic:nvPicPr");
-    pugi::xml_node cnvPr = nvPicPr.append_child("pic:cNvPr");
-    cnvPr.append_attribute("id").set_value(0);
-    cnvPr.append_attribute("name").set_value(image_path.c_str());
-    nvPicPr.append_child("pic:cNvPicPr");
+    pugi::xml_node nv_pic_pr = pic.append_child("pic:nvPicPr");
+    pugi::xml_node cnv_pr = nv_pic_pr.append_child("pic:cNvPr");
+    cnv_pr.append_attribute("id").set_value(0);
+    cnv_pr.append_attribute("name").set_value(image_path.c_str());
+    nv_pic_pr.append_child("pic:cNvPicPr");
 
-    pugi::xml_node blipFill = pic.append_child("pic:blipFill");
-    pugi::xml_node blip = blipFill.append_child("a:blip");
+    pugi::xml_node blip_fill = pic.append_child("pic:blipFill");
+    pugi::xml_node blip = blip_fill.append_child("a:blip");
     blip.append_attribute("r:embed").set_value(rel_id.c_str());
-    pugi::xml_node stretch = blipFill.append_child("a:stretch");
+    pugi::xml_node stretch = blip_fill.append_child("a:stretch");
     stretch.append_child("a:fillRect");
 
-    pugi::xml_node spPr = pic.append_child("pic:spPr");
-    pugi::xml_node xfrm = spPr.append_child("a:xfrm");
+    pugi::xml_node sp_pr = pic.append_child("pic:spPr");
+    pugi::xml_node xfrm = sp_pr.append_child("a:xfrm");
     pugi::xml_node ext = xfrm.append_child("a:ext");
     ext.append_attribute("cx").set_value(size.width_emu());
     ext.append_attribute("cy").set_value(size.height_emu());
-    pugi::xml_node prstGeom = spPr.append_child("a:prstGeom");
-    prstGeom.append_attribute("prst").set_value("rect");
-    prstGeom.append_child("a:avLst");
+    pugi::xml_node prst_geom = sp_pr.append_child("a:prstGeom");
+    prst_geom.append_attribute("prst").set_value("rect");
+    prst_geom.append_child("a:avLst");
 
     if (doc_) {
         doc_->mark_xml_paragraph_dirty(current_paragraph_);
@@ -1179,7 +1153,7 @@ std::shared_ptr<FormField> DocumentBuilder::insert_form_field_impl(
         bm_start.append_attribute("w:name").set_value(field->get_name().c_str());
     }
 
-    // Begin fldChar with ffData
+    // Begin fld_char with ffData
     pugi::xml_node begin_run = para.append_child("w:r");
     pugi::xml_node fld_char = begin_run.append_child("w:fldChar");
     fld_char.append_attribute("w:fldCharType").set_value("begin");
@@ -1198,7 +1172,7 @@ std::shared_ptr<FormField> DocumentBuilder::insert_form_field_impl(
 
     // Instruction text
     pugi::xml_node instr_run = para.append_child("w:r");
-    pugi::xml_node instr_text = instr_run.append_child("w:instrText");
+    const pugi::xml_node instr_text = instr_run.append_child("w:instrText");
     const char* instr = "FORMTEXT";
     if (field->get_form_field_type() == FormFieldType::CheckBox) {
         instr = "FORMCHECKBOX";
@@ -1218,7 +1192,7 @@ std::shared_ptr<FormField> DocumentBuilder::insert_form_field_impl(
             result = field->get_checked() ? "\u2611" : "\u2610";  // ballot box symbols
         } else if (field->get_form_field_type() == FormFieldType::ComboBox) {
             const auto& items = field->get_drop_down_items();
-            int idx = field->get_drop_down_selected_index();
+            const int idx = field->get_drop_down_selected_index();
             if (idx >= 0 && idx < static_cast<int>(items.size())) {
                 result = items[idx];
             }
@@ -1226,7 +1200,7 @@ std::shared_ptr<FormField> DocumentBuilder::insert_form_field_impl(
     }
     if (!result.empty()) {
         pugi::xml_node res_run = para.append_child("w:r");
-        pugi::xml_node text_node = res_run.append_child("w:t");
+        const pugi::xml_node text_node = res_run.append_child("w:t");
         text_node.text().set(result.c_str());
     }
 
@@ -1349,7 +1323,7 @@ bool read_jpeg_dimensions(const std::vector<uint8_t>& data, int& width, int& hei
         if (pos >= data.size()) {
             break;
         }
-        uint8_t marker = data[pos++];
+        const uint8_t marker = data[pos++];
         if (marker == 0xC0 || marker == 0xC2) {  // SOF0 or SOF2
             if (pos + 9 >= data.size()) {
                 return false;
@@ -1364,7 +1338,7 @@ bool read_jpeg_dimensions(const std::vector<uint8_t>& data, int& width, int& hei
         if (pos + 2 > data.size()) {
             break;
         }
-        uint16_t len = (data[pos] << 8) | data[pos + 1];
+        const uint16_t len = (data[pos] << 8) | data[pos + 1];
         pos += len;
     }
     return false;
@@ -1385,16 +1359,20 @@ bool read_bmp_dimensions(const std::vector<uint8_t>& data, int& width, int& heig
     if (data.size() < 26) {
         return false;
     }
-    uint32_t dib_size = *reinterpret_cast<const uint32_t*>(&data[14]);
+    // DIB header size at offset 14 (little-endian uint32_t)
+    const uint32_t dib_size = data[14] | (data[15] << 8) | (data[16] << 16) | (data[17] << 24);
     if (dib_size == 12) {  // BITMAPCOREHEADER
         if (data.size() < 22) {
             return false;
         }
-        width = *reinterpret_cast<const uint16_t*>(&data[18]);
-        height = *reinterpret_cast<const uint16_t*>(&data[20]);
+        width = data[18] | (data[19] << 8);
+        height = data[20] | (data[21] << 8);
     } else {  // BITMAPINFOHEADER or later
-        width = *reinterpret_cast<const int32_t*>(&data[18]);
-        height = std::abs(*reinterpret_cast<const int32_t*>(&data[22]));
+        width = data[18] | (data[19] << 8) | (data[20] << 16) |
+                (data[21] << 24);
+        auto h = static_cast<int32_t>(data[22] | (data[23] << 8) | (data[24] << 16) |
+                                      (data[25] << 24));
+        height = std::abs(h);
     }
     return width > 0 && height > 0 && width < 100000 && height < 100000;
 }
@@ -1409,8 +1387,9 @@ bool detect_image_size(const std::string& image_path, ImageSize& size) {
 
     // Read file header
     std::vector<uint8_t> data(65536);  // Read up to 64KB
-    file.read(reinterpret_cast<char*>(data.data()), data.size());
-    size_t bytes_read = file.gcount();
+    file.read(reinterpret_cast<char*>(data.data()),  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+              static_cast<std::streamsize>(data.size()));
+    const size_t bytes_read = file.gcount();
     data.resize(bytes_read);
 
     return detect_image_size_from_memory(data, size);
@@ -1454,17 +1433,18 @@ ImageFormatInfo validate_image_format_detailed(const std::string& image_path) {
 
     // Check file size
     file.seekg(0, std::ios::end);
-    size_t file_size = file.tellg();
+    const size_t file_size = file.tellg();
     file.seekg(0);
 
-    if (file_size > 50 * 1024 * 1024) {
+    if (file_size > static_cast<size_t>(50) * 1024 * 1024) {
         info.error_message = "File too large (max 50MB)";
         return info;
     }
 
     // Read header
     std::vector<uint8_t> data(65536);
-    file.read(reinterpret_cast<char*>(data.data()), data.size());
+    file.read(reinterpret_cast<char*>(data.data()),  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+              static_cast<std::streamsize>(data.size()));
     data.resize(file.gcount());
 
     // Detect format

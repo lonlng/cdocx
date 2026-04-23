@@ -6,9 +6,9 @@
 #   - Allows #pragma once (disabled llvm-header-guard check)
 #   - 4-space indentation compatible
 #
-# Naming conventions (Google style):
+# Naming conventions (cdocx customized):
 #   - Types: CamelCase
-#   - Functions/Methods: CamelCase
+#   - Functions/Methods: snake_case
 #   - Variables: snake_case
 #   - Members: snake_case_
 #   - Constants: kCamelCase
@@ -151,11 +151,7 @@ CheckOptions:
   - key: readability-identifier-naming.GlobalVariableCase
     value: lower_case
   
-  # Class members: snake_case_ (trailing underscore)
-  - key: readability-identifier-naming.MemberCase
-    value: lower_case
-  - key: readability-identifier-naming.MemberSuffix
-    value: _
+  # Private/Protected/Class members: snake_case_ (trailing underscore)
   - key: readability-identifier-naming.PrivateMemberCase
     value: lower_case
   - key: readability-identifier-naming.PrivateMemberSuffix
@@ -168,26 +164,41 @@ CheckOptions:
     value: lower_case
   - key: readability-identifier-naming.ClassMemberSuffix
     value: _
+  # Public members (struct fields): snake_case (no suffix)
+  - key: readability-identifier-naming.PublicMemberCase
+    value: lower_case
+  - key: readability-identifier-naming.PublicMemberSuffix
+    value: ""
   
+  # Enum constants: CamelCase (standard C++ convention, matches public API)
+  - key: readability-identifier-naming.EnumConstantCase
+    value: CamelCase
+
   # Constants: kCamelCase (kMaxSize)
   - key: readability-identifier-naming.ConstantCase
-    value: camelBack
+    value: CamelCase
   - key: readability-identifier-naming.ConstantPrefix
     value: k
   - key: readability-identifier-naming.ConstexprVariableCase
-    value: camelBack
+    value: CamelCase
   - key: readability-identifier-naming.ConstexprVariablePrefix
     value: k
   - key: readability-identifier-naming.StaticConstantCase
-    value: camelBack
+    value: CamelCase
   - key: readability-identifier-naming.StaticConstantPrefix
     value: k
   
-  # Functions: CamelCase (MyFunction)
+  # Local constants: lower_case (no prefix) — overrides ConstantCase for block scope
+  - key: readability-identifier-naming.LocalConstantCase
+    value: lower_case
+  - key: readability-identifier-naming.LocalConstantPrefix
+    value: ""
+
+  # Functions: snake_case (my_function)
   - key: readability-identifier-naming.FunctionCase
-    value: CamelCase
+    value: lower_case
   - key: readability-identifier-naming.MethodCase
-    value: CamelCase
+    value: lower_case
   
   # Macros: UPPER_CASE
   - key: readability-identifier-naming.MacroDefinitionCase
@@ -196,7 +207,13 @@ CheckOptions:
   # Namespaces: lower_case
   - key: readability-identifier-naming.NamespaceCase
     value: lower_case
-  
+
+  # Exceptions: standard library type aliases
+  - key: readability-identifier-naming.TypeAliasIgnoredRegexp
+    value: '^(iterator|const_iterator|reverse_iterator|const_reverse_iterator)$'
+  - key: readability-identifier-naming.TypedefIgnoredRegexp
+    value: '^(iterator|const_iterator|reverse_iterator|const_reverse_iterator)$'
+
   # --------------------------------------------------------------------------
   # Function complexity
   # --------------------------------------------------------------------------

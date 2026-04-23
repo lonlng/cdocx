@@ -117,11 +117,11 @@ TEST(SectionAndListTest, SectionProperties) {
 
     // Set properties
     sect->get_properties().orientation = SectionProperties::Orientation::Landscape;
-    sect->get_properties().pageSize.width = 15840;
-    sect->get_properties().pageSize.height = 12240;
+    sect->get_properties().page_size.width = 15840;
+    sect->get_properties().page_size.height = 12240;
 
     EXPECT_EQ(sect->get_properties().orientation, SectionProperties::Orientation::Landscape);
-    EXPECT_EQ(sect->get_properties().pageSize.width, 15840);
+    EXPECT_EQ(sect->get_properties().page_size.width, 15840);
 
     doc.save();
     EXPECT_TRUE(fs::exists("test_section.docx"));
@@ -156,7 +156,7 @@ TEST(SectionAndListTest, AddBulletedListDefinition) {
 
     auto def = doc.get_numbering_definition(id);
     EXPECT_NE(def, nullptr);
-    EXPECT_GE(def->abstractId, 0);
+    EXPECT_GE(def->abstract_id, 0);
 
     doc.save();
     EXPECT_TRUE(fs::exists("test_numbering.docx"));
@@ -338,7 +338,7 @@ TEST(SectionAndListTest, SectionLoadingFromXml) {
         ASSERT_NE(sect, nullptr);
 
         sect->get_properties().orientation = SectionProperties::Orientation::Landscape;
-        sect->get_properties().pageMargins.left = 2000;
+        sect->get_properties().page_margins.left = 2000;
 
         doc.save();
     }

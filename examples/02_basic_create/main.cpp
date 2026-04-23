@@ -22,26 +22,26 @@ int main() {
     );
     
     // Add runs with different formatting
-    p.add_run("bold text, ", cdocx::bold);
-    p.add_run("italic text, ", cdocx::italic);
-    p.add_run("underlined text, ", cdocx::underline);
-    p.add_run("strikethrough text, ", cdocx::strikethrough);
-    p.add_run("superscript", cdocx::superscript);
+    p.add_run("bold text, ", cdocx::kBold);
+    p.add_run("italic text, ", cdocx::kItalic);
+    p.add_run("underlined text, ", cdocx::kUnderline);
+    p.add_run("strikethrough text, ", cdocx::kStrikethrough);
+    p.add_run("superscript", cdocx::kSuperscript);
     p.add_run(" or ");
-    p.add_run("subscript, ", cdocx::subscript);
-    p.add_run("small caps, ", cdocx::smallcaps);
-    p.add_run("and shadow effects. ", cdocx::shadow);
+    p.add_run("subscript, ", cdocx::kSubscript);
+    p.add_run("small caps, ", cdocx::kSmallCaps);
+    p.add_run("and shadow effects. ", cdocx::kShadow);
     
     // Add a run with combined formatting
     p.add_run("You can also combine them!", 
-              static_cast<cdocx::formatting_flag>(cdocx::bold | cdocx::italic | cdocx::underline));
+              static_cast<cdocx::FormattingFlag>(cdocx::kBold | cdocx::kItalic | cdocx::kUnderline));
     
     // Add another paragraph
     cdocx::Paragraph p2 = doc.paragraphs().insert_paragraph_after(
         "\nThis is a second paragraph with "
     );
     p2.add_run("colored and styled text", 
-               static_cast<cdocx::formatting_flag>(cdocx::bold | cdocx::italic));
+               static_cast<cdocx::FormattingFlag>(cdocx::kBold | cdocx::kItalic));
     p2.add_run(" to show more formatting options.");
     
     // Save the document

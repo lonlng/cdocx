@@ -60,7 +60,7 @@ void Footnote::accept(DocumentVisitor* visitor) {
         return;
     }
     if (visitor->visit_footnote_start(*this) == VisitorAction::Continue) {
-        for (auto& child : get_children()) {
+        for (const auto& child : get_children()) {
             child->accept(visitor);
         }
         visitor->visit_footnote_end(*this);
@@ -202,8 +202,8 @@ bool FootnoteCollection::remove_at(size_t index) {
     if (index >= footnotes_.size()) {
         return false;
     }
-    int id = footnotes_[index]->get_id();
-    bool result = doc_->remove_footnote(id);
+    const int id = footnotes_[index]->get_id();
+    const bool result = doc_->remove_footnote(id);
     if (result) {
         collected_ = false;
     }
@@ -211,7 +211,7 @@ bool FootnoteCollection::remove_at(size_t index) {
 }
 
 bool FootnoteCollection::remove(int id) {
-    bool result = doc_->remove_footnote(id);
+    const bool result = doc_->remove_footnote(id);
     if (result) {
         collected_ = false;
     }
@@ -313,8 +313,8 @@ bool EndnoteCollection::remove_at(size_t index) {
     if (index >= endnotes_.size()) {
         return false;
     }
-    int id = endnotes_[index]->get_id();
-    bool result = doc_->remove_endnote(id);
+    const int id = endnotes_[index]->get_id();
+    const bool result = doc_->remove_endnote(id);
     if (result) {
         collected_ = false;
     }
@@ -322,7 +322,7 @@ bool EndnoteCollection::remove_at(size_t index) {
 }
 
 bool EndnoteCollection::remove(int id) {
-    bool result = doc_->remove_endnote(id);
+    const bool result = doc_->remove_endnote(id);
     if (result) {
         collected_ = false;
     }

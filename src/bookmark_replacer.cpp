@@ -22,7 +22,7 @@ namespace cdocx {
 // Constructor
 // ============================================================================
 
-BookmarkReplacer::BookmarkReplacer(Document* doc) : doc_(doc), next_image_id_(1) {
+BookmarkReplacer::BookmarkReplacer(Document* doc) : doc_(doc) {
 }
 
 // ============================================================================
@@ -39,7 +39,7 @@ bool BookmarkReplacer::replace_text(const std::string& bookmark_name, const std:
 }
 
 bool BookmarkReplacer::replace_text(Bookmark& bookmark, const std::string& new_text) {
-    bool result = bookmark.set_text_keep_format(new_text);
+    const bool result = bookmark.set_text_keep_format(new_text);
     if (result) {
         stats_.success_count++;
     } else {
@@ -74,7 +74,7 @@ bool BookmarkReplacer::replace_text_with_format(const std::string& bookmark_name
 bool BookmarkReplacer::replace_text_with_format(Bookmark& bookmark,
                                                 const std::string& new_text,
                                                 const BookmarkFormat& format) {
-    bool result = bookmark.set_text_formatted(new_text, format);
+    const bool result = bookmark.set_text_formatted(new_text, format);
     if (result) {
         stats_.success_count++;
     } else {
@@ -134,18 +134,18 @@ bool BookmarkReplacer::replace_with_image_advanced(Bookmark& bookmark,
     file.close();
 
     // Get file extension and determine content type
-    std::string ext = get_file_extension(image_path);
-    std::string content_type = get_content_type(ext);
+    const std::string ext = get_file_extension(image_path);
+    const std::string content_type = get_content_type(ext);
     if (content_type.empty()) {
         stats_.fail_count++;
         return false;
     }
 
     // Generate unique image name
-    std::string image_name = "image_" + std::to_string(generate_image_id()) + "." + ext;
+    const std::string image_name = "image_" + std::to_string(generate_image_id()) + "." + ext;
 
     // Add media file to document with relationship
-    std::string rel_id = doc_->add_media_with_rel(image_path, &image_name);
+    const std::string rel_id = doc_->add_media_with_rel(image_path, &image_name);
     if (rel_id.empty()) {
         stats_.fail_count++;
         return false;
@@ -165,10 +165,10 @@ bool BookmarkReplacer::replace_with_image_advanced(Bookmark& bookmark,
 
     // Add caption if provided
     if (!caption.empty()) {
-        int figure_number = CaptionGenerator::get_next_figure_number(doc_);
-        pugi::xml_node bookmark_para = bookmark.get_covered_paragraphs().empty()
-                                           ? pugi::xml_node()
-                                           : bookmark.get_covered_paragraphs()[0];
+        const int figure_number = CaptionGenerator::get_next_figure_number(doc_);
+        const pugi::xml_node bookmark_para = bookmark.get_covered_paragraphs().empty()
+                                                 ? pugi::xml_node()
+                                                 : bookmark.get_covered_paragraphs()[0];
         if (bookmark_para) {
             CaptionGenerator::insert_figure_caption(doc_, bookmark_para, caption, figure_number);
         }
@@ -199,14 +199,15 @@ bool BookmarkReplacer::replace_with_image_from_memory(Bookmark& bookmark,
                                                       const std::string& caption,
                                                       ImageAlignment align) {
     // Get content type from extension
-    std::string ext = get_file_extension(image_name);
+    const std::string ext = get_file_extension(image_name);
     std::string content_type = get_content_type(ext);
     if (content_type.empty()) {
         content_type = "image/png";  // Default
     }
 
     // Add media from memory and create relationship
-    std::string rel_id = doc_->add_media_from_memory_with_rel(image_name, image_data, content_type);
+    const std::string rel_id =
+        doc_->add_media_from_memory_with_rel(image_name, image_data, content_type);
     if (rel_id.empty()) {
         stats_.fail_count++;
         return false;
@@ -226,10 +227,10 @@ bool BookmarkReplacer::replace_with_image_from_memory(Bookmark& bookmark,
 
     // Add caption if provided
     if (!caption.empty()) {
-        int figure_number = CaptionGenerator::get_next_figure_number(doc_);
-        pugi::xml_node bookmark_para = bookmark.get_covered_paragraphs().empty()
-                                           ? pugi::xml_node()
-                                           : bookmark.get_covered_paragraphs()[0];
+        const int figure_number = CaptionGenerator::get_next_figure_number(doc_);
+        const pugi::xml_node bookmark_para = bookmark.get_covered_paragraphs().empty()
+                                                 ? pugi::xml_node()
+                                                 : bookmark.get_covered_paragraphs()[0];
         if (bookmark_para) {
             CaptionGenerator::insert_figure_caption(doc_, bookmark_para, caption, figure_number);
         }
@@ -251,7 +252,7 @@ bool BookmarkReplacer::replace_if(const std::string& bookmark_name,
         return false;
     }
 
-    std::string old_text = bm->get_text();
+    const std::string old_text = bm->get_text();
     std::string new_text;
 
     if (!callback(bookmark_name, old_text, new_text)) {
@@ -264,7 +265,7 @@ bool BookmarkReplacer::replace_if(const std::string& bookmark_name,
 
 bool BookmarkReplacer::replace_and_remove(const std::string& bookmark_name,
                                           const std::string& new_text) {
-    bool result = replace_text(bookmark_name, new_text);
+    const bool result = replace_text(bookmark_name, new_text);
     if (result) {
         auto bm = get_bookmark(bookmark_name);
         if (bm) {
@@ -277,7 +278,7 @@ bool BookmarkReplacer::replace_and_remove(const std::string& bookmark_name,
 bool BookmarkReplacer::replace_with_image_and_remove(const std::string& bookmark_name,
                                                      const std::string& image_path,
                                                      const std::string& caption) {
-    bool result = replace_with_image(bookmark_name, image_path, caption);
+    const bool result = replace_with_image(bookmark_name, image_path, caption);
     if (result) {
         auto bm = get_bookmark(bookmark_name);
         if (bm) {
@@ -341,7 +342,8 @@ bool BookmarkReplacer::clear_bookmark_content(Bookmark& bookmark) {
     pugi::xml_node end_para = paras.back();
 
     // Find bookmark start and end markers
-    pugi::xml_node bookmark_start, bookmark_end;
+    pugi::xml_node bookmark_start;
+    pugi::xml_node bookmark_end;
     std::string bookmark_id;
 
     for (pugi::xml_node child = start_para.first_child(); child; child = child.next_sibling()) {
@@ -366,21 +368,21 @@ bool BookmarkReplacer::clear_bookmark_content(Bookmark& bookmark) {
         return bookmark.set_text("");
     }
 
-    // Single paragraph case: remove all content between bookmarkStart and bookmarkEnd
+    // Single paragraph case: remove all content between bookmark_start and bookmark_end
     if (start_para == end_para) {
         pugi::xml_node current = bookmark_start.next_sibling();
         while (current && current != bookmark_end) {
-            pugi::xml_node next = current.next_sibling();
+            const pugi::xml_node next = current.next_sibling();
             // Remove all node types: w:r (runs), w:drawing (images), w:tbl (tables), etc.
             start_para.remove_child(current);
             current = next;
         }
     } else {
         // Cross-paragraph case
-        // 1. Clear content from start paragraph (after bookmarkStart)
+        // 1. Clear content from start paragraph (after bookmark_start)
         pugi::xml_node current = bookmark_start.next_sibling();
         while (current) {
-            pugi::xml_node next = current.next_sibling();
+            const pugi::xml_node next = current.next_sibling();
             start_para.remove_child(current);
             current = next;
         }
@@ -388,12 +390,12 @@ bool BookmarkReplacer::clear_bookmark_content(Bookmark& bookmark) {
         // 2. Remove intermediate paragraphs entirely
         pugi::xml_node current_para = start_para.next_sibling("w:p");
         while (current_para && current_para != end_para) {
-            pugi::xml_node next_para = current_para.next_sibling("w:p");
+            const pugi::xml_node next_para = current_para.next_sibling("w:p");
             start_para.parent().remove_child(current_para);
             current_para = next_para;
         }
 
-        // 3. Clear content from end paragraph (before bookmarkEnd)
+        // 3. Clear content from end paragraph (before bookmark_end)
         if (end_para != start_para) {
             std::vector<pugi::xml_node> to_remove;
             for (pugi::xml_node child = end_para.first_child(); child && child != bookmark_end;
@@ -426,7 +428,7 @@ bool BookmarkReplacer::insert_image_at_bookmark(Bookmark& bookmark,
 
     pugi::xml_node para = paras[0];
 
-    // Find bookmarkEnd node
+    // Find bookmark_end node
     pugi::xml_node bookmark_end;
     for (pugi::xml_node child = para.first_child(); child; child = child.next_sibling()) {
         if (std::string(child.name()) == "w:bookmarkEnd") {
@@ -461,9 +463,9 @@ bool BookmarkReplacer::insert_image_at_bookmark(Bookmark& bookmark,
         extent.append_attribute("cy").set_value(size.height_emu());
 
         // Doc properties
-        pugi::xml_node docPr = inline_node.append_child("wp:docPr");
-        docPr.append_attribute("id").set_value(generate_image_id());
-        docPr.append_attribute("name").set_value("Picture");
+        pugi::xml_node doc_pr = inline_node.append_child("wp:docPr");
+        doc_pr.append_attribute("id").set_value(generate_image_id());
+        doc_pr.append_attribute("name").set_value("Picture");
 
         // Add graphic data
         pugi::xml_node graphic = inline_node.append_child("a:graphic");
@@ -479,28 +481,28 @@ bool BookmarkReplacer::insert_image_at_bookmark(Bookmark& bookmark,
             .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
 
         // Non-visual picture properties
-        pugi::xml_node nvPicPr = pic.append_child("pic:nvPicPr");
-        pugi::xml_node cnvPr = nvPicPr.append_child("pic:cNvPr");
-        cnvPr.append_attribute("id").set_value(0);
-        cnvPr.append_attribute("name").set_value(image_path.c_str());
-        nvPicPr.append_child("pic:cNvPicPr");
+        pugi::xml_node nv_pic_pr = pic.append_child("pic:nvPicPr");
+        pugi::xml_node cnv_pr = nv_pic_pr.append_child("pic:cNvPr");
+        cnv_pr.append_attribute("id").set_value(0);
+        cnv_pr.append_attribute("name").set_value(image_path.c_str());
+        nv_pic_pr.append_child("pic:cNvPicPr");
 
         // Blip fill
-        pugi::xml_node blipFill = pic.append_child("pic:blipFill");
-        pugi::xml_node blip = blipFill.append_child("a:blip");
+        pugi::xml_node blip_fill = pic.append_child("pic:blipFill");
+        pugi::xml_node blip = blip_fill.append_child("a:blip");
         blip.append_attribute("r:embed").set_value(rel_id.c_str());
-        pugi::xml_node stretch = blipFill.append_child("a:stretch");
+        pugi::xml_node stretch = blip_fill.append_child("a:stretch");
         stretch.append_child("a:fillRect");
 
         // Shape properties
-        pugi::xml_node spPr = pic.append_child("pic:spPr");
-        pugi::xml_node xfrm = spPr.append_child("a:xfrm");
+        pugi::xml_node sp_pr = pic.append_child("pic:spPr");
+        pugi::xml_node xfrm = sp_pr.append_child("a:xfrm");
         pugi::xml_node ext = xfrm.append_child("a:ext");
         ext.append_attribute("cx").set_value(size.width_emu());
         ext.append_attribute("cy").set_value(size.height_emu());
-        pugi::xml_node prstGeom = spPr.append_child("a:prstGeom");
-        prstGeom.append_attribute("prst").set_value("rect");
-        prstGeom.append_child("a:avLst");
+        pugi::xml_node prst_geom = sp_pr.append_child("a:prstGeom");
+        prst_geom.append_attribute("prst").set_value("rect");
+        prst_geom.append_child("a:avLst");
 
     } else {
         // Use anchor for left/right alignment
@@ -513,21 +515,21 @@ bool BookmarkReplacer::insert_image_at_bookmark(Bookmark& bookmark,
         anchor.append_attribute("allowOverlap").set_value(1);
 
         // Simple position
-        pugi::xml_node simplePos = anchor.append_child("wp:simplePos");
-        simplePos.append_attribute("x").set_value(0);
-        simplePos.append_attribute("y").set_value(0);
+        pugi::xml_node simple_pos = anchor.append_child("wp:simplePos");
+        simple_pos.append_attribute("x").set_value(0);
+        simple_pos.append_attribute("y").set_value(0);
 
         // Horizontal position
-        pugi::xml_node positionH = anchor.append_child("wp:positionH");
-        positionH.append_attribute("relativeFrom").set_value("column");
-        pugi::xml_node align_node = positionH.append_child("wp:align");
+        pugi::xml_node position_h = anchor.append_child("wp:positionH");
+        position_h.append_attribute("relativeFrom").set_value("column");
+        const pugi::xml_node align_node = position_h.append_child("wp:align");
         align_node.text().set(align == ImageAlignment::Left ? "left" : "right");
 
         // Vertical position
-        pugi::xml_node positionV = anchor.append_child("wp:positionV");
-        positionV.append_attribute("relativeFrom").set_value("paragraph");
-        pugi::xml_node posV_align = positionV.append_child("wp:align");
-        posV_align.text().set("top");
+        pugi::xml_node position_v = anchor.append_child("wp:positionV");
+        position_v.append_attribute("relativeFrom").set_value("paragraph");
+        const pugi::xml_node pos_v_align = position_v.append_child("wp:align");
+        pos_v_align.text().set("top");
 
         // Extent
         pugi::xml_node extent = anchor.append_child("wp:extent");
@@ -535,9 +537,9 @@ bool BookmarkReplacer::insert_image_at_bookmark(Bookmark& bookmark,
         extent.append_attribute("cy").set_value(size.height_emu());
 
         // Doc properties
-        pugi::xml_node docPr = anchor.append_child("wp:docPr");
-        docPr.append_attribute("id").set_value(generate_image_id());
-        docPr.append_attribute("name").set_value("Picture");
+        pugi::xml_node doc_pr = anchor.append_child("wp:docPr");
+        doc_pr.append_attribute("id").set_value(generate_image_id());
+        doc_pr.append_attribute("name").set_value("Picture");
 
         // Graphic data (same as inline)
         pugi::xml_node graphic = anchor.append_child("a:graphic");
@@ -552,33 +554,33 @@ bool BookmarkReplacer::insert_image_at_bookmark(Bookmark& bookmark,
         pic.append_attribute("xmlns:pic")
             .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
 
-        pugi::xml_node nvPicPr = pic.append_child("pic:nvPicPr");
-        pugi::xml_node cnvPr = nvPicPr.append_child("pic:cNvPr");
-        cnvPr.append_attribute("id").set_value(0);
-        cnvPr.append_attribute("name").set_value(image_path.c_str());
-        nvPicPr.append_child("pic:cNvPicPr");
+        pugi::xml_node nv_pic_pr = pic.append_child("pic:nvPicPr");
+        pugi::xml_node cnv_pr = nv_pic_pr.append_child("pic:cNvPr");
+        cnv_pr.append_attribute("id").set_value(0);
+        cnv_pr.append_attribute("name").set_value(image_path.c_str());
+        nv_pic_pr.append_child("pic:cNvPicPr");
 
-        pugi::xml_node blipFill = pic.append_child("pic:blipFill");
-        pugi::xml_node blip = blipFill.append_child("a:blip");
+        pugi::xml_node blip_fill = pic.append_child("pic:blipFill");
+        pugi::xml_node blip = blip_fill.append_child("a:blip");
         blip.append_attribute("r:embed").set_value(rel_id.c_str());
-        pugi::xml_node stretch = blipFill.append_child("a:stretch");
+        pugi::xml_node stretch = blip_fill.append_child("a:stretch");
         stretch.append_child("a:fillRect");
 
-        pugi::xml_node spPr = pic.append_child("pic:spPr");
-        pugi::xml_node xfrm = spPr.append_child("a:xfrm");
+        pugi::xml_node sp_pr = pic.append_child("pic:spPr");
+        pugi::xml_node xfrm = sp_pr.append_child("a:xfrm");
         pugi::xml_node ext = xfrm.append_child("a:ext");
         ext.append_attribute("cx").set_value(size.width_emu());
         ext.append_attribute("cy").set_value(size.height_emu());
-        pugi::xml_node prstGeom = spPr.append_child("a:prstGeom");
-        prstGeom.append_attribute("prst").set_value("rect");
-        prstGeom.append_child("a:avLst");
+        pugi::xml_node prst_geom = sp_pr.append_child("a:prstGeom");
+        prst_geom.append_attribute("prst").set_value("rect");
+        prst_geom.append_child("a:avLst");
     }
 
     return true;
 }
 
 std::string BookmarkReplacer::get_file_extension(const std::string& path) const {
-    size_t dot_pos = path.rfind('.');
+    const size_t dot_pos = path.rfind('.');
     if (dot_pos == std::string::npos) {
         return "";
     }
@@ -641,13 +643,8 @@ std::vector<std::tuple<std::string, bool, std::string>> BookmarkReplacer::previe
 }
 
 bool BookmarkReplacer::BatchResult::did_succeed(const std::string& bookmark_name) const {
-    for (const auto& failure : failures) {
-        if (failure.first == bookmark_name) {
-            return false;
-        }
-    }
-    // If not in failures and we have some successes, assume it succeeded
-    return true;
+    return std::none_of(failures.begin(), failures.end(),
+                        [&](const auto& failure) { return failure.first == bookmark_name; });
 }
 
 std::string BookmarkReplacer::BatchResult::get_error(const std::string& bookmark_name) const {
@@ -673,7 +670,7 @@ BookmarkReplacer::BatchResult BookmarkReplacer::replace_text_batch_transaction(
     bool all_exist = true;
     for (const auto& item : preview) {
         const std::string& name = std::get<0>(item);
-        bool exists = std::get<1>(item);
+        const bool exists = std::get<1>(item);
         const std::string& error = std::get<2>(item);
 
         if (!exists) {

@@ -597,10 +597,10 @@ TEST(TablePropertiesTest, ApplyToXmlNode) {
     props.alignment = ParagraphProperties::Alignment::Centered;
     props.borders.top = ParagraphProperties::Border{
         ParagraphProperties::Border::Style::Single, 8, "FF0000", 0};
-    props.cellMargin.top = 100;
-    props.cellMargin.left = 200;
+    props.cell_margin.top = 100;
+    props.cell_margin.left = 200;
 
-    props.applyTo(tbl);
+    props.apply_to(tbl);
 
     // Verify width
     auto tblPr = tbl.child("w:tblPr");

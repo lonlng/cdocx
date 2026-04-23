@@ -217,7 +217,7 @@ void example_update_document() {
     
     // Replace with formatting
     bool replaced = DocumentSearch::replace_with_formatting(doc, "fox", "CAT", 
-                                                           cdocx::bold | cdocx::italic);
+                                                           cdocx::kBold | cdocx::kItalic);
     std::cout << "  Replaced 'fox' with bold+italic 'CAT': " 
               << (replaced ? "Yes" : "No") << std::endl;
     

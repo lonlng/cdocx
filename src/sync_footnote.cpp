@@ -42,7 +42,7 @@ static void sync_notes_to_physical_impl(Document* doc,
     std::vector<pugi::xml_node> separators;
     for (auto child = root.first_child(); child;) {
         auto next = child.next_sibling();
-        int note_id = child.attribute("w:id").as_int();
+        const int note_id = child.attribute("w:id").as_int();
         if (note_id < 0 || note_id == 0) {
             separators.push_back(child);
         }
@@ -107,7 +107,7 @@ static void sync_notes_from_physical_impl(Document* doc,
     }
 
     for (auto node = root.child(child_name); node; node = node.next_sibling(child_name)) {
-        int id = node.attribute("w:id").as_int();
+        const int id = node.attribute("w:id").as_int();
         if (id < 0 || id == 0) {
             continue;
         }

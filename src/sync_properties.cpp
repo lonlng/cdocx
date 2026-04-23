@@ -144,20 +144,24 @@ void Document::sync_builtin_properties_from_physical() {
             if (auto n = root.child("Company").first_child()) {
                 builtin_properties_.company = n.value();
             }
+            auto safe_atoi = [](const char* str) -> int {
+                char* end = nullptr;
+                return static_cast<int>(std::strtol(str, &end, 10));
+            };
             if (auto n = root.child("Pages").first_child()) {
-                builtin_properties_.total_pages = std::atoi(n.value());
+                builtin_properties_.total_pages = safe_atoi(n.value());
             }
             if (auto n = root.child("Words").first_child()) {
-                builtin_properties_.total_words = std::atoi(n.value());
+                builtin_properties_.total_words = safe_atoi(n.value());
             }
             if (auto n = root.child("Characters").first_child()) {
-                builtin_properties_.total_chars = std::atoi(n.value());
+                builtin_properties_.total_chars = safe_atoi(n.value());
             }
             if (auto n = root.child("Lines").first_child()) {
-                builtin_properties_.total_lines = std::atoi(n.value());
+                builtin_properties_.total_lines = safe_atoi(n.value());
             }
             if (auto n = root.child("Paragraphs").first_child()) {
-                builtin_properties_.total_paragraphs = std::atoi(n.value());
+                builtin_properties_.total_paragraphs = safe_atoi(n.value());
             }
         }
     }
@@ -173,7 +177,7 @@ void Document::sync_custom_properties_to_physical() {
         if (has_xml_part("docProps/custom.xml")) {
             remove_xml_part("docProps/custom.xml");
             // Remove relationship
-            std::string rel_id = find_relationship_id("_rels/.rels", "docProps/custom.xml");
+            const std::string rel_id = find_relationship_id("_rels/.rels", "docProps/custom.xml");
             if (!rel_id.empty()) {
                 remove_relationship("_rels/.rels", rel_id);
             }
@@ -188,7 +192,7 @@ void Document::sync_custom_properties_to_physical() {
             "/docProps/custom.xml",
             "application/vnd.openxmlformats-officedocument.custom-properties+xml");
 
-        std::string rel_id = find_relationship_id("_rels/.rels", "docProps/custom.xml");
+        const std::string rel_id = find_relationship_id("_rels/.rels", "docProps/custom.xml");
         if (rel_id.empty()) {
             add_relationship("_rels/.rels",
                              "http://schemas.openxmlformats.org/officeDocument/2006/relationships/"
@@ -231,7 +235,7 @@ void Document::sync_custom_properties_from_physical() {
     }
 
     for (auto prop = root.child("property"); prop; prop = prop.next_sibling("property")) {
-        pugi::xml_attribute name_attr = prop.attribute("name");
+        const pugi::xml_attribute name_attr = prop.attribute("name");
         if (!name_attr) {
             continue;
         }

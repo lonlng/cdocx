@@ -25,16 +25,17 @@
 #include <algorithm>
 #include <cstring>
 #include <functional>
+#include <utility>
 #include <vector>
 
 namespace cdocx {
 
 namespace {
 
-pugi::xml_node get_settings_root(Document* doc) {
-    pugi::xml_document* settings = doc->get_settings();
+pugi::xml_node get_settings_root(const Document* doc) {
+    const pugi::xml_document* settings = doc->get_settings();
     if (!settings) {
-        return pugi::xml_node();
+        return pugi::xml_node{};
     }
     return settings->child("w:settings");
 }
@@ -50,8 +51,7 @@ Document::Document() {
     styles_ = std::make_unique<StyleCollection>(this);
 }
 
-Document::Document(const std::string& filepath)
-    : filepath_(filepath) {
+Document::Document(std::string filepath) : filepath_(std::move(filepath)) {
     init_numbering_manager();
     styles_ = std::make_unique<StyleCollection>(this);
 }
@@ -60,6 +60,7 @@ Document::~Document() {
     close();
 }
 
+// NOLINTBEGIN(bugprone-use-after-move)
 Document::Document(Document&& other) noexcept
     : CompositeNode(std::move(other)),
       filepath_(std::move(other.filepath_)),
@@ -89,7 +90,9 @@ Document::Document(Document&& other) noexcept
     other.zip_handle_ = nullptr;
     other.sections_dirty_ = true;
 }
+// NOLINTEND(bugprone-use-after-move)
 
+// NOLINTBEGIN(bugprone-use-after-move)
 Document& Document::operator=(Document&& other) noexcept {
     if (this != &other) {
         CompositeNode::operator=(std::move(other));
@@ -123,6 +126,7 @@ Document& Document::operator=(Document&& other) noexcept {
     }
     return *this;
 }
+// NOLINTEND(bugprone-use-after-move)
 
 // ============================================================================
 // Node Overrides
@@ -318,7 +322,7 @@ void Document::protect(ProtectionType type, const std::string& password) {
     // Remove existing protection
     root.remove_child("w:documentProtection");
 
-    auto docProt = root.append_child("w:documentProtection");
+    auto doc_prot = root.append_child("w:documentProtection");
 
     const char* edit_val = nullptr;
     switch (type) {
@@ -340,21 +344,21 @@ void Document::protect(ProtectionType type, const std::string& password) {
     }
 
     if (edit_val) {
-        docProt.append_attribute("w:edit").set_value(edit_val);
+        doc_prot.append_attribute("w:edit").set_value(edit_val);
     }
-    docProt.append_attribute("w:enforcement").set_value("1");
+    doc_prot.append_attribute("w:enforcement").set_value("1");
 
     if (!password.empty()) {
         // Word uses a specific password hashing algorithm.
         // For simplicity, we store a placeholder indicating password protection.
         // A production implementation would compute the proper SHA-1 hash with salt.
-        docProt.append_attribute("w:cryptProviderType").set_value("rsaFull");
-        docProt.append_attribute("w:cryptAlgorithmClass").set_value("hash");
-        docProt.append_attribute("w:cryptAlgorithmType").set_value("typeAny");
-        docProt.append_attribute("w:cryptAlgorithmSid").set_value("14");
-        docProt.append_attribute("w:cryptSpinCount").set_value("100000");
-        docProt.append_attribute("w:hash").set_value("");
-        docProt.append_attribute("w:salt").set_value("");
+        doc_prot.append_attribute("w:cryptProviderType").set_value("rsaFull");
+        doc_prot.append_attribute("w:cryptAlgorithmClass").set_value("hash");
+        doc_prot.append_attribute("w:cryptAlgorithmType").set_value("typeAny");
+        doc_prot.append_attribute("w:cryptAlgorithmSid").set_value("14");
+        doc_prot.append_attribute("w:cryptSpinCount").set_value("100000");
+        doc_prot.append_attribute("w:hash").set_value("");
+        doc_prot.append_attribute("w:salt").set_value("");
     }
 
     mark_modified("word/settings.xml");
@@ -371,17 +375,17 @@ void Document::unprotect() {
 }
 
 bool Document::is_protected() const {
-    pugi::xml_node root = get_settings_root(const_cast<Document*>(this));
+    const pugi::xml_node root = get_settings_root(this);
     if (!root) {
         return false;
     }
 
-    pugi::xml_node docProt = root.child("w:documentProtection");
-    if (!docProt) {
+    const pugi::xml_node doc_prot = root.child("w:documentProtection");
+    if (!doc_prot) {
         return false;
     }
 
-    pugi::xml_attribute enforcement = docProt.attribute("w:enforcement");
+    const pugi::xml_attribute enforcement = doc_prot.attribute("w:enforcement");
     return enforcement && std::strcmp(enforcement.value(), "1") == 0;
 }
 
@@ -390,17 +394,17 @@ Watermark Document::watermark() {
 }
 
 double Document::get_default_tab_stop() const {
-    pugi::xml_node root = get_settings_root(const_cast<Document*>(this));
+    const pugi::xml_node root = get_settings_root(this);
     if (!root) {
         return 36.0;  // Word default: 0.5 inch = 36 points
     }
 
-    pugi::xml_node defaultTabStop = root.child("w:defaultTabStop");
-    if (!defaultTabStop) {
+    const pugi::xml_node default_tab_stop = root.child("w:defaultTabStop");
+    if (!default_tab_stop) {
         return 36.0;
     }
 
-    int twips = defaultTabStop.attribute("w:val").as_int(720);
+    const int twips = default_tab_stop.attribute("w:val").as_int(720);
     return twips / 20.0;  // twips to points
 }
 
@@ -562,7 +566,7 @@ Paragraph Document::paragraphs() {
     }
 
     // Get document.xml
-    auto doc_xml = get_document_xml();
+    auto *doc_xml = get_document_xml();
     if (!doc_xml) {
         return para;
     }
@@ -615,21 +619,21 @@ void Document::ensure_minimum() {
 Range Document::get_range() {
     pugi::xml_document* doc_xml = get_document_xml();
     if (!doc_xml) {
-        return Range();
+        return {};
     }
 
-    pugi::xml_node body = doc_xml->child("w:document").child("w:body");
-    pugi::xml_node first_para = body.child("w:p");
+    const pugi::xml_node body = doc_xml->child("w:document").child("w:body");
+    const pugi::xml_node first_para = body.child("w:p");
     pugi::xml_node last_para;
     for (pugi::xml_node para = first_para; para; para = para.next_sibling("w:p")) {
         last_para = para;
     }
 
     if (!first_para) {
-        return Range();
+        return {};
     }
 
-    return Range(this, first_para, last_para);
+    return {this, first_para, last_para};
 }
 
 void Document::set_default_section_properties(const SectionProperties& props) {
@@ -786,13 +790,17 @@ StyleCollection& Document::styles() {
 
 const StyleCollection& Document::styles() const {
     if (!styles_) {
-        const_cast<Document*>(this)->styles_ =
-            std::make_unique<StyleCollection>(const_cast<Document*>(this));
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+        styles_ = std::make_unique<StyleCollection>(const_cast<Document*>(this));
     }
     return *styles_;
 }
 
 pugi::xml_document* Document::get_settings() {
+    return get_xml_part("word/settings.xml");
+}
+
+const pugi::xml_document* Document::get_settings() const {
     return get_xml_part("word/settings.xml");
 }
 
@@ -821,12 +829,12 @@ pugi::xml_document* Document::get_package_rels() {
 }
 
 pugi::xml_document* Document::get_header(int index) {
-    std::string name = "word/header" + std::to_string(index) + ".xml";
+    const std::string name = "word/header" + std::to_string(index) + ".xml";
     return get_xml_part(name);
 }
 
 pugi::xml_document* Document::get_footer(int index) {
-    std::string name = "word/footer" + std::to_string(index) + ".xml";
+    const std::string name = "word/footer" + std::to_string(index) + ".xml";
     return get_xml_part(name);
 }
 
@@ -916,6 +924,7 @@ std::shared_ptr<Comment> Document::get_comment(int id) const {
 }
 
 CommentCollection Document::get_comments() const {
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     return CommentCollection(const_cast<Document*>(this));
 }
 
@@ -1018,10 +1027,12 @@ std::shared_ptr<Footnote> Document::add_endnote(const std::string& text,
 }
 
 FootnoteCollection Document::footnotes() const {
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     return FootnoteCollection(const_cast<Document*>(this));
 }
 
 EndnoteCollection Document::endnotes() const {
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     return EndnoteCollection(const_cast<Document*>(this));
 }
 
@@ -1180,16 +1191,16 @@ bool Document::create_empty_document() {
         run.append_child("w:t");
 
         // Add section properties
-        auto sectPr = body.append_child("w:sectPr");
-        auto pgSz = sectPr.append_child("w:pgSz");
-        pgSz.append_attribute("w:w").set_value("12240");
-        pgSz.append_attribute("w:h").set_value("15840");
+        auto sect_pr = body.append_child("w:sectPr");
+        auto pg_sz = sect_pr.append_child("w:pgSz");
+        pg_sz.append_attribute("w:w").set_value("12240");
+        pg_sz.append_attribute("w:h").set_value("15840");
 
-        auto pgMar = sectPr.append_child("w:pgMar");
-        pgMar.append_attribute("w:top").set_value("1440");
-        pgMar.append_attribute("w:right").set_value("1440");
-        pgMar.append_attribute("w:bottom").set_value("1440");
-        pgMar.append_attribute("w:left").set_value("1440");
+        auto pg_mar = sect_pr.append_child("w:pgMar");
+        pg_mar.append_attribute("w:top").set_value("1440");
+        pg_mar.append_attribute("w:right").set_value("1440");
+        pg_mar.append_attribute("w:bottom").set_value("1440");
+        pg_mar.append_attribute("w:left").set_value("1440");
     }
 
     // Create word/styles.xml with default Normal style
@@ -1363,21 +1374,21 @@ bool Document::create_empty_document() {
         struct HeadingDef {
             const char* style_id;
             const char* name;
-            StyleIdentifier identifier;
             double font_size;
-            OutlineLevel outline_level;
             double space_before;
+            StyleIdentifier identifier;
+            OutlineLevel outline_level;
         };
         static const HeadingDef kHeadings[] = {
-            {"Heading1", "heading 1", StyleIdentifier::Heading1, 16, OutlineLevel::Level1, 24},
-            {"Heading2", "heading 2", StyleIdentifier::Heading2, 14, OutlineLevel::Level2, 18},
-            {"Heading3", "heading 3", StyleIdentifier::Heading3, 12, OutlineLevel::Level3, 12},
-            {"Heading4", "heading 4", StyleIdentifier::Heading4, 12, OutlineLevel::Level4, 12},
-            {"Heading5", "heading 5", StyleIdentifier::Heading5, 11, OutlineLevel::Level5, 12},
-            {"Heading6", "heading 6", StyleIdentifier::Heading6, 11, OutlineLevel::Level6, 12},
-            {"Heading7", "heading 7", StyleIdentifier::Heading7, 11, OutlineLevel::Level7, 12},
-            {"Heading8", "heading 8", StyleIdentifier::Heading8, 11, OutlineLevel::Level8, 12},
-            {"Heading9", "heading 9", StyleIdentifier::Heading9, 11, OutlineLevel::Level9, 12},
+            {"Heading1", "heading 1", 16, 24, StyleIdentifier::Heading1, OutlineLevel::Level1},
+            {"Heading2", "heading 2", 14, 18, StyleIdentifier::Heading2, OutlineLevel::Level2},
+            {"Heading3", "heading 3", 12, 12, StyleIdentifier::Heading3, OutlineLevel::Level3},
+            {"Heading4", "heading 4", 12, 12, StyleIdentifier::Heading4, OutlineLevel::Level4},
+            {"Heading5", "heading 5", 11, 12, StyleIdentifier::Heading5, OutlineLevel::Level5},
+            {"Heading6", "heading 6", 11, 12, StyleIdentifier::Heading6, OutlineLevel::Level6},
+            {"Heading7", "heading 7", 11, 12, StyleIdentifier::Heading7, OutlineLevel::Level7},
+            {"Heading8", "heading 8", 11, 12, StyleIdentifier::Heading8, OutlineLevel::Level8},
+            {"Heading9", "heading 9", 11, 12, StyleIdentifier::Heading9, OutlineLevel::Level9},
         };
         for (const auto& def : kHeadings) {
             auto heading =
@@ -1454,7 +1465,7 @@ void Document::init_numbering_manager() {
 
 void Document::load_numbering() {
     init_numbering_manager();
-    auto doc = get_numbering_xml();
+    auto *doc = get_numbering_xml();
     if (doc) {
         auto root = doc->child("w:numbering");
         if (root) {
@@ -1498,8 +1509,8 @@ void Document::save_numbering() {
     }
 
     // Ensure document.xml.rels has a relationship to numbering.xml
-    std::string rels_path = "word/_rels/document.xml.rels";
-    std::string numbering_target = "numbering.xml";
+    const std::string rels_path = "word/_rels/document.xml.rels";
+    const std::string numbering_target = "numbering.xml";
     if (find_relationship_id(rels_path, numbering_target).empty()) {
         add_relationship(
             rels_path,
@@ -1515,7 +1526,7 @@ void Document::save_numbering() {
 // Progress Reporting
 // ============================================================================
 
-void Document::report_progress(int percent, const std::string& current_file) {
+void Document::report_progress(int percent, const std::string& current_file) const {
     if (load_config_.progress_callback) {
         load_config_.progress_callback(percent, current_file);
     }

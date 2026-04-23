@@ -48,28 +48,28 @@ int main() {
     cdocx::TemplateEngine engine(&doc);
 
     // --- Plain text placeholders ({{key}}) ---
-    engine["标题"] = cdocx::TemplateValue::Text("替换后的标题");
-    engine["正文"] = cdocx::TemplateValue::Text("这是替换后的正文内容。");
-    engine["带格式正文"] = cdocx::TemplateValue::Text("带格式的替换正文内容。");
-    engine["自定义格式正文"] = cdocx::TemplateValue::Text("自定义格式的替换正文内容。");
+    engine["标题"] = cdocx::TemplateValue::text("替换后的标题");
+    engine["正文"] = cdocx::TemplateValue::text("这是替换后的正文内容。");
+    engine["带格式正文"] = cdocx::TemplateValue::text("带格式的替换正文内容。");
+    engine["自定义格式正文"] = cdocx::TemplateValue::text("自定义格式的替换正文内容。");
 
     // --- Text bookmarks (auto-detected by TemplateEngine) ---
-    engine["bookmark1"] = cdocx::TemplateValue::Text("替换后的书签标题");
-    engine["bookmark2"] = cdocx::TemplateValue::Text("替换后的书签正文");
-    engine["bookmark3"] = cdocx::TemplateValue::Text("替换后的带格式书签正文");
+    engine["bookmark1"] = cdocx::TemplateValue::text("替换后的书签标题");
+    engine["bookmark2"] = cdocx::TemplateValue::text("替换后的书签正文");
+    engine["bookmark3"] = cdocx::TemplateValue::text("替换后的带格式书签正文");
 
     // Bookmark with explicit custom formatting
-    engine["bookmark4"] = cdocx::TemplateValue::Text("替换后的自定义格式书签正文")
+    engine["bookmark4"] = cdocx::TemplateValue::text("替换后的自定义格式书签正文")
         .with_format(cdocx::TemplateFormat()
                          .bold()
                          .italic()
-                         .Size(28)
+                         .size(28)
                          .color("0000FF")
                          .font("SimSun"));
 
     // --- Image placeholders ---
     if (std::filesystem::exists("data/image2.jpg")) {
-        engine["图片2"] = cdocx::TemplateValue::Image("data/image2.jpg")
+        engine["图片2"] = cdocx::TemplateValue::image("data/image2.jpg")
             .sized(200, 150)
             .centered();
     }
@@ -78,7 +78,7 @@ int main() {
     // Note: Captions are supported for bookmark-based image replacement.
     // The caption is inserted below the image as a standard figure caption.
     if (std::filesystem::exists("data/image1.jpg")) {
-        engine["image1"] = cdocx::TemplateValue::Image("data/image1.jpg")
+        engine["image1"] = cdocx::TemplateValue::image("data/image1.jpg")
             .sized(300, 200)
             .centered()
             .with_caption("图1 示例图片");

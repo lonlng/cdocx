@@ -65,7 +65,7 @@ class Node : public std::enable_shared_from_this<Node> {
     // Abstract interface
     virtual NodeType node_type() const = 0;
     virtual std::string get_text() const { return ""; }
-    virtual std::shared_ptr<Node> clone(bool deep = true) const = 0;
+    virtual std::shared_ptr<Node> clone(bool deep) const = 0;
     virtual void accept(DocumentVisitor* visitor) = 0;
     virtual bool is_composite() const { return false; }
 
@@ -199,8 +199,12 @@ class CompositeNode : public Node {
     std::shared_ptr<Node> clone(bool deep) const override;
 
     // Accept visitor start/end (for nodes with children)
-    virtual VisitorAction accept_start(DocumentVisitor* visitor) { return VisitorAction::Continue; }
-    virtual VisitorAction accept_end(DocumentVisitor* visitor) { return VisitorAction::Continue; }
+    virtual VisitorAction accept_start(DocumentVisitor* /*visitor*/) {
+        return VisitorAction::Continue;
+    }
+    virtual VisitorAction accept_end(DocumentVisitor* /*visitor*/) {
+        return VisitorAction::Continue;
+    }
 };
 
 // ============================================================================
@@ -296,89 +300,109 @@ class DocumentVisitor {
     virtual ~DocumentVisitor() = default;
 
     // Document
-    virtual VisitorAction visit_document_start(Document& doc) { return VisitorAction::Continue; }
-    virtual VisitorAction visit_document_end(Document& doc) { return VisitorAction::Continue; }
+    virtual VisitorAction visit_document_start(Document& /*doc*/) {
+        return VisitorAction::Continue;
+    }
+    virtual VisitorAction visit_document_end(Document& /*doc*/) { return VisitorAction::Continue; }
 
     // Section
-    virtual VisitorAction visit_section_start(Section& section) { return VisitorAction::Continue; }
-    virtual VisitorAction visit_section_end(Section& section) { return VisitorAction::Continue; }
+    virtual VisitorAction visit_section_start(Section& /*section*/) {
+        return VisitorAction::Continue;
+    }
+    virtual VisitorAction visit_section_end(Section& /*section*/) {
+        return VisitorAction::Continue;
+    }
 
     // Body
-    virtual VisitorAction visit_body_start(Body& body) { return VisitorAction::Continue; }
-    virtual VisitorAction visit_body_end(Body& body) { return VisitorAction::Continue; }
+    virtual VisitorAction visit_body_start(Body& /*body*/) { return VisitorAction::Continue; }
+    virtual VisitorAction visit_body_end(Body& /*body*/) { return VisitorAction::Continue; }
 
     // Header/Footer
-    virtual VisitorAction visit_header_start(HeaderFooter& header) {
+    virtual VisitorAction visit_header_start(HeaderFooter& /*header*/) {
         return VisitorAction::Continue;
     }
-    virtual VisitorAction visit_header_end(HeaderFooter& header) { return VisitorAction::Continue; }
-    virtual VisitorAction visit_footer_start(HeaderFooter& footer) {
+    virtual VisitorAction visit_header_end(HeaderFooter& /*header*/) {
         return VisitorAction::Continue;
     }
-    virtual VisitorAction visit_footer_end(HeaderFooter& footer) { return VisitorAction::Continue; }
+    virtual VisitorAction visit_footer_start(HeaderFooter& /*footer*/) {
+        return VisitorAction::Continue;
+    }
+    virtual VisitorAction visit_footer_end(HeaderFooter& /*footer*/) {
+        return VisitorAction::Continue;
+    }
 
     // Paragraph
-    virtual VisitorAction visit_paragraph_start(Paragraph& para) { return VisitorAction::Continue; }
-    virtual VisitorAction visit_paragraph_end(Paragraph& para) { return VisitorAction::Continue; }
-
-    // Table
-    virtual VisitorAction visit_table_start(Table& table) { return VisitorAction::Continue; }
-    virtual VisitorAction visit_table_end(Table& table) { return VisitorAction::Continue; }
-
-    // Row
-    virtual VisitorAction visit_row_start(Row& row) { return VisitorAction::Continue; }
-    virtual VisitorAction visit_row_end(Row& row) { return VisitorAction::Continue; }
-
-    // Cell
-    virtual VisitorAction visit_cell_start(Cell& cell) { return VisitorAction::Continue; }
-    virtual VisitorAction visit_cell_end(Cell& cell) { return VisitorAction::Continue; }
-
-    // Run (leaf node - no start/end)
-    virtual VisitorAction visit_run(Run& run) { return VisitorAction::Continue; }
-
-    // SpecialChar (leaf node)
-    virtual VisitorAction visit_special_char(SpecialChar& ch) { return VisitorAction::Continue; }
-
-    // Field
-    virtual VisitorAction visit_field_start(Field& field) { return VisitorAction::Continue; }
-    virtual VisitorAction visit_field_separator(Field& field) { return VisitorAction::Continue; }
-    virtual VisitorAction visit_field_end(Field& field) { return VisitorAction::Continue; }
-
-    // Bookmark
-    virtual VisitorAction visit_bookmark_start(BookmarkStart& bookmark) {
+    virtual VisitorAction visit_paragraph_start(Paragraph& /*para*/) {
         return VisitorAction::Continue;
     }
-    virtual VisitorAction visit_bookmark_end(BookmarkEnd& bookmark) {
+    virtual VisitorAction visit_paragraph_end(Paragraph& /*para*/) {
+        return VisitorAction::Continue;
+    }
+
+    // Table
+    virtual VisitorAction visit_table_start(Table& /*table*/) { return VisitorAction::Continue; }
+    virtual VisitorAction visit_table_end(Table& /*table*/) { return VisitorAction::Continue; }
+
+    // Row
+    virtual VisitorAction visit_row_start(Row& /*row*/) { return VisitorAction::Continue; }
+    virtual VisitorAction visit_row_end(Row& /*row*/) { return VisitorAction::Continue; }
+
+    // Cell
+    virtual VisitorAction visit_cell_start(Cell& /*cell*/) { return VisitorAction::Continue; }
+    virtual VisitorAction visit_cell_end(Cell& /*cell*/) { return VisitorAction::Continue; }
+
+    // Run (leaf node - no start/end)
+    virtual VisitorAction visit_run(Run& /*run*/) { return VisitorAction::Continue; }
+
+    // SpecialChar (leaf node)
+    virtual VisitorAction visit_special_char(SpecialChar& /*ch*/) {
+        return VisitorAction::Continue;
+    }
+
+    // Field
+    virtual VisitorAction visit_field_start(Field& /*field*/) { return VisitorAction::Continue; }
+    virtual VisitorAction visit_field_separator(Field& /*field*/) {
+        return VisitorAction::Continue;
+    }
+    virtual VisitorAction visit_field_end(Field& /*field*/) { return VisitorAction::Continue; }
+
+    // Bookmark
+    virtual VisitorAction visit_bookmark_start(BookmarkStart& /*bookmark*/) {
+        return VisitorAction::Continue;
+    }
+    virtual VisitorAction visit_bookmark_end(BookmarkEnd& /*bookmark*/) {
         return VisitorAction::Continue;
     }
 
     // Comment
-    virtual VisitorAction visit_comment(Comment& comment) { return VisitorAction::Continue; }
-    virtual VisitorAction visit_comment_range_start(CommentRangeStart& comment) {
+    virtual VisitorAction visit_comment(Comment& /*comment*/) { return VisitorAction::Continue; }
+    virtual VisitorAction visit_comment_range_start(CommentRangeStart& /*comment*/) {
         return VisitorAction::Continue;
     }
-    virtual VisitorAction visit_comment_range_end(CommentRangeEnd& comment) {
+    virtual VisitorAction visit_comment_range_end(CommentRangeEnd& /*comment*/) {
         return VisitorAction::Continue;
     }
 
     // Footnote
-    virtual VisitorAction visit_footnote_start(Footnote& footnote) {
+    virtual VisitorAction visit_footnote_start(Footnote& /*footnote*/) {
         return VisitorAction::Continue;
     }
-    virtual VisitorAction visit_footnote_end(Footnote& footnote) { return VisitorAction::Continue; }
+    virtual VisitorAction visit_footnote_end(Footnote& /*footnote*/) {
+        return VisitorAction::Continue;
+    }
 
     // FormField
-    virtual VisitorAction visit_form_field(FormField& form_field) {
+    virtual VisitorAction visit_form_field(FormField& /*form_field*/) {
         return VisitorAction::Continue;
     }
 
     // FootnoteReference
-    virtual VisitorAction visit_footnote_reference(FootnoteReference& ref) {
+    virtual VisitorAction visit_footnote_reference(FootnoteReference& /*ref*/) {
         return VisitorAction::Continue;
     }
 
     // EndnoteReference
-    virtual VisitorAction visit_endnote_reference(EndnoteReference& ref) {
+    virtual VisitorAction visit_endnote_reference(EndnoteReference& /*ref*/) {
         return VisitorAction::Continue;
     }
 };

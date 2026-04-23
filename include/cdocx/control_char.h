@@ -50,27 +50,27 @@ class ControlChar {
     static std::string crlf() { return "\r\n"; }
 
     /// @brief Column break character
-    static std::string column_break() { return std::string(1, '\x0e'); }
+    static std::string column_break() { return std::string(1, '\x0e'); }  // NOLINT(modernize-return-braced-init-list)
 
     /// @brief Non-breaking space character
-    static std::string non_breaking_space() { return std::string(1, '\xa0'); }
+    static std::string non_breaking_space() { return std::string(1, '\xa0'); }  // NOLINT(modernize-return-braced-init-list)
 
     /// @brief End of a table cell or table row marker
-    static std::string cell() { return std::string(1, '\x07'); }
+    static std::string cell() { return std::string(1, '\x07'); }  // NOLINT(modernize-return-braced-init-list)
 
     // Character code constants
-    static constexpr char tab_char = '\t';
-    static constexpr char line_feed_char = '\n';
-    static constexpr char line_break_char = '\v';
-    static constexpr char page_break_char = '\f';
-    static constexpr char section_break_char = '\f';
-    static constexpr char paragraph_break_char = '\r';
-    static constexpr char column_break_char = '\x0e';
-    static constexpr char non_breaking_space_char = '\xa0';
-    static constexpr char cell_char = '\x07';
-    static constexpr char field_start_char = '\x13';
-    static constexpr char field_separator_char = '\x14';
-    static constexpr char field_end_char = '\x15';
+    static constexpr char kTabChar = '\t';
+    static constexpr char kLineFeedChar = '\n';
+    static constexpr char kLineBreakChar = '\v';
+    static constexpr char kPageBreakChar = '\f';
+    static constexpr char kSectionBreakChar = '\f';
+    static constexpr char kParagraphBreakChar = '\r';
+    static constexpr char kColumnBreakChar = '\x0e';
+    static constexpr char kNonBreakingSpaceChar = '\xa0';
+    static constexpr char kCellChar = '\x07';
+    static constexpr char kFieldStartChar = '\x13';
+    static constexpr char kFieldSeparatorChar = '\x14';
+    static constexpr char kFieldEndChar = '\x15';
 };
 
 }  // namespace cdocx

@@ -42,9 +42,7 @@
 
 #include <array>
 #include <map>
-#include <optional>
 #include <string>
-#include <vector>
 
 namespace cdocx {
 
@@ -58,7 +56,7 @@ using AbstractNumberingId = size_t;
 /**
  * @brief Numbering level enumeration
  */
-enum class NumberingLevel {
+enum class NumberingLevel : std::uint8_t {
     Level1 = 0,
     Level2,
     Level3,
@@ -90,7 +88,7 @@ struct ListFormat {
 /**
  * @brief Numbering style enumeration
  */
-enum class NumberStyle {
+enum class NumberStyle : std::uint8_t {
     Bullet,             ///< Project symbols (项目符号)
     Decimal,            ///< 1, 2, 3, etc.
     UpperRoman,         ///< I, II, III, IV, etc.
@@ -106,7 +104,7 @@ enum class NumberStyle {
 /**
  * @brief Numbering type enumeration
  */
-enum class NumberingType {
+enum class NumberingType : std::uint8_t {
     SingleLevel,      ///< Single level list
     MultiLevel,       ///< Multi-level list
     HybridMultiLevel  ///< Hybrid multi-level list
@@ -117,11 +115,11 @@ enum class NumberingType {
 // ============================================================================
 
 // Common bullet characters
-constexpr const char* BULLET_SOLID_CIRCLE = "\u2022";   ///< •
-constexpr const char* BULLET_HOLLOW_CIRCLE = "\u25CB";  ///< ○
-constexpr const char* BULLET_SOLID_SQUARE = "\u25A0";   ///< ■
-constexpr const char* BULLET_ARROW = "\u2192";          ///< →
-constexpr const char* BULLET_DASH = "\u2013";           ///< –
+constexpr const char* kBulletSolidCircle = "\u2022";   ///< •
+constexpr const char* kBulletHollowCircle = "\u25CB";  ///< ○
+constexpr const char* kBulletSolidSquare = "\u25A0";   ///< ■
+constexpr const char* kBulletArrow = "\u2192";          ///< →
+constexpr const char* kBulletDash = "\u2013";           ///< –
 
 // ============================================================================
 // Level Definition
@@ -134,21 +132,21 @@ constexpr const char* BULLET_DASH = "\u2013";           ///< –
  *          settings like start number, format, and alignment.
  */
 struct LevelDefinition : public ParagraphProperties, public TextProperties {
-    size_t startNumber = 1;                          ///< Starting number for this level
-    NumberStyle numberStyle = NumberStyle::Decimal;  ///< Numbering style
-    std::string numberFormat = "%1.";                ///< Format string (%1 = number)
-    ParagraphProperties::Alignment numberAlignment = ParagraphProperties::Alignment::Left;
+    size_t start_number = 1;                          ///< Starting number for this level
+    NumberStyle number_style = NumberStyle::Decimal;  ///< Numbering style
+    std::string number_format = "%1.";                ///< Format string (%1 = number)
+    ParagraphProperties::Alignment number_alignment = ParagraphProperties::Alignment::Left;
 
     // Level text template (e.g., "%1.", "%1.%2", etc.)
-    std::string levelText;
+    std::string level_text;
 
     // Font for the numbering symbol
     struct LevelFont {
         std::string ascii = "Arial";
-        std::string eastAsia = "SimSun";
-        std::string hAnsi = "Arial";
+        std::string east_asia = "SimSun";
+        std::string h_ansi = "Arial";
         std::string cs = "Arial";
-    } levelFont;
+    } level_font;
 
     /**
      * @brief Create a default bullet level
@@ -156,7 +154,7 @@ struct LevelDefinition : public ParagraphProperties, public TextProperties {
      * @param level Level number (0-8)
      * @return Configured LevelDefinition
      */
-    static LevelDefinition make_bullet_level(const std::string& bulletChar, int level = 0);
+    static LevelDefinition make_bullet_level(const std::string& bullet_char, int level = 0);
 
     /**
      * @brief Create a default numbered level
@@ -220,13 +218,13 @@ struct AbstractNumberingDefinition {
  */
 struct NumberingDefinition {
     NumberingId id = 0;                  ///< Unique instance ID
-    AbstractNumberingId abstractId = 0;  ///< Reference to abstract definition
+    AbstractNumberingId abstract_id = 0;  ///< Reference to abstract definition
 
     // Level overrides
-    std::map<NumberingLevel, LevelDefinition> levelOverrides;
+    std::map<NumberingLevel, LevelDefinition> level_overrides;
 
     NumberingDefinition() = default;
-    explicit NumberingDefinition(AbstractNumberingId abstract_id) : abstractId(abstract_id) {}
+    explicit NumberingDefinition(AbstractNumberingId abstract_id) : abstract_id(abstract_id) {}
 };
 
 // ============================================================================
@@ -246,12 +244,12 @@ class NumberingManager {
     Document* document_ = nullptr;
 
     // Storage
-    std::map<AbstractNumberingId, AbstractNumberingDefinition> abstractDefinitions_;
-    std::map<NumberingId, NumberingDefinition> numDefinitions_;
+    std::map<AbstractNumberingId, AbstractNumberingDefinition> abstract_definitions_;
+    std::map<NumberingId, NumberingDefinition> num_definitions_;
 
     // ID counters
-    AbstractNumberingId nextAbstractId_ = 0;
-    NumberingId nextNumId_ = 1;  // Start from 1 (0 means no numbering)
+    AbstractNumberingId next_abstract_id_ = 0;
+    NumberingId next_num_id_ = 1;  // Start from 1 (0 means no numbering)
 
     // Track whether definitions were modified after loading
     bool modified_ = false;
@@ -345,7 +343,7 @@ class NumberingManager {
      * @param levelDef New level definition
      * @return true if successful
      */
-    bool override_level(NumberingId numId, NumberingLevel level, const LevelDefinition& levelDef);
+    bool override_level(NumberingId num_id, NumberingLevel level, const LevelDefinition& level_def);
 
     // =======================================================================
     // Serialization
@@ -367,7 +365,7 @@ class NumberingManager {
      * @brief Check if any definitions exist
      * @return true if has definitions
      */
-    bool has_definitions() const { return !abstractDefinitions_.empty(); }
+    bool has_definitions() const { return !abstract_definitions_.empty(); }
 
     /**
      * @brief Check if definitions were modified after loading

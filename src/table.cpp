@@ -151,7 +151,7 @@ int Cell::get_column_index() const {
     }
     auto cells = row->get_cells();
     int col = 0;
-    for (size_t i = 0; i < cells.get_count(); ++i) {
+    for (int i = 0; i < static_cast<int>(cells.get_count()); ++i) {
         if (cells[i].get() == this) {
             return col;
         }
@@ -236,7 +236,7 @@ std::shared_ptr<Cell> Row::get_cell(int index) const {
     auto cells = get_children_of_type<Cell>();
     int col = 0;
     for (const auto& cell : cells) {
-        int span = cell->get_horizontal_merge_span();
+        const int span = cell->get_horizontal_merge_span();
         if (col <= index && index < col + span) {
             return cell;
         }
@@ -279,9 +279,9 @@ int Row::get_row_index() const {
         return -1;
     }
     auto rows = table->get_rows();
-    for (size_t i = 0; i < rows.get_count(); ++i) {
+    for (int i = 0; i < static_cast<int>(rows.get_count()); ++i) {
         if (rows[i].get() == this) {
-            return static_cast<int>(i);
+            return i;
         }
     }
     return -1;
@@ -296,11 +296,11 @@ bool Row::is_last_row() const {
     if (!table) {
         return true;
     }
-    return get_row_index() == static_cast<int>(table->get_row_count() - 1);
+    return get_row_index() == (table->get_row_count() - 1);
 }
 
 std::shared_ptr<Table> Row::get_parent_table() const {
-    Table* table = get_ancestor<Table>();
+    auto* table = get_ancestor<Table>();
     if (table) {
         return std::static_pointer_cast<Table>(table->shared_from_this());
     }
@@ -350,46 +350,46 @@ void Table::accept(DocumentVisitor* visitor) {
     }
 }
 
-void Table::preserve_tblPr(pugi::xml_node tblPr) {
-    if (!tblPr) {
+void Table::preserve_tbl_pr(pugi::xml_node tbl_pr) {
+    if (!tbl_pr) {
         return;
     }
-    preserved_tblPr_.reset();
-    preserved_tblPr_.append_copy(tblPr);
+    preserved_tbl_pr_.reset();
+    preserved_tbl_pr_.append_copy(tbl_pr);
 }
 
-pugi::xml_node Table::get_preserved_tblPr() const {
-    return preserved_tblPr_.first_child();
+pugi::xml_node Table::get_preserved_tbl_pr() const {
+    return preserved_tbl_pr_.first_child();
 }
 
-bool Table::has_preserved_tblPr() const {
-    return preserved_tblPr_.first_child() != nullptr;
+bool Table::has_preserved_tbl_pr() const {
+    return preserved_tbl_pr_.first_child() != nullptr;
 }
 
-void Table::preserve_tblGrid(pugi::xml_node tblGrid) {
-    if (!tblGrid) {
+void Table::preserve_tbl_grid(pugi::xml_node tbl_grid) {
+    if (!tbl_grid) {
         return;
     }
-    preserved_tblGrid_.reset();
-    preserved_tblGrid_.append_copy(tblGrid);
+    preserved_tbl_grid_.reset();
+    preserved_tbl_grid_.append_copy(tbl_grid);
 }
 
-pugi::xml_node Table::get_preserved_tblGrid() const {
-    return preserved_tblGrid_.first_child();
+pugi::xml_node Table::get_preserved_tbl_grid() const {
+    return preserved_tbl_grid_.first_child();
 }
 
-bool Table::has_preserved_tblGrid() const {
-    return preserved_tblGrid_.first_child() != nullptr;
+bool Table::has_preserved_tbl_grid() const {
+    return preserved_tbl_grid_.first_child() != nullptr;
 }
 
 std::shared_ptr<Node> Table::clone(bool deep) const {
     auto cloned = std::make_shared<Table>(get_document());
     cloned->set_table_format(format_);
-    if (has_preserved_tblPr()) {
-        cloned->preserve_tblPr(get_preserved_tblPr());
+    if (has_preserved_tbl_pr()) {
+        cloned->preserve_tbl_pr(get_preserved_tbl_pr());
     }
-    if (has_preserved_tblGrid()) {
-        cloned->preserve_tblGrid(get_preserved_tblGrid());
+    if (has_preserved_tbl_grid()) {
+        cloned->preserve_tbl_grid(get_preserved_tbl_grid());
     }
     if (deep) {
         for (const auto& child : get_children()) {
@@ -527,16 +527,14 @@ void Table::auto_fit(AutoFitBehavior behavior) {
 }
 
 void Table::insert_column(int index) {
-    if (index < 0) {
-        index = 0;
-    }
+    index = std::max(0, index);
 
     for (const auto& row : get_rows()) {
         int current_col = 0;
         int cell_index = 0;
         bool inserted = false;
         for (const auto& cell : row->get_cells()) {
-            int span = cell->get_horizontal_merge_span();
+            const int span = cell->get_horizontal_merge_span();
             if (current_col <= index && index < current_col + span) {
                 // Insert at this position
                 auto new_cell = std::make_shared<Cell>(get_document());
@@ -557,7 +555,7 @@ void Table::insert_column(int index) {
     }
 }
 
-void Table::delete_column(int index) {
+void Table::delete_column(int index) const {
     if (index < 0) {
         return;
     }
@@ -565,7 +563,7 @@ void Table::delete_column(int index) {
     for (const auto& row : get_rows()) {
         int current_col = 0;
         for (const auto& cell : row->get_cells()) {
-            int span = cell->get_horizontal_merge_span();
+            const int span = cell->get_horizontal_merge_span();
             if (current_col <= index && index < current_col + span) {
                 row->remove_child(cell);
                 break;
@@ -625,7 +623,10 @@ std::shared_ptr<Cell> Table::merge_cells(const std::shared_ptr<Cell>& start_cell
     return merge_cells(start_row_idx, start_col_idx, end_row_idx, end_col_idx);
 }
 
-std::shared_ptr<Cell> Table::merge_cells(int start_row, int start_col, int end_row, int end_col) {
+std::shared_ptr<Cell> Table::merge_cells(int start_row,
+                                         int start_col,
+                                         int end_row,
+                                         int end_col) const {
     if (start_row > end_row) {
         std::swap(start_row, end_row);
     }
@@ -633,7 +634,7 @@ std::shared_ptr<Cell> Table::merge_cells(int start_row, int start_col, int end_r
         std::swap(start_col, end_col);
     }
 
-    int row_count = get_row_count();
+    const int row_count = get_row_count();
     if (start_row < 0 || end_row >= row_count) {
         return nullptr;
     }
@@ -653,8 +654,8 @@ std::shared_ptr<Cell> Table::merge_cells(int start_row, int start_col, int end_r
         }
     }
 
-    int col_span = end_col - start_col + 1;
-    int row_span = end_row - start_row + 1;
+    const int col_span = end_col - start_col + 1;
+    const int row_span = end_row - start_row + 1;
 
     for (int r = start_row; r <= end_row; ++r) {
         auto row = get_row(r);
@@ -664,15 +665,11 @@ std::shared_ptr<Cell> Table::merge_cells(int start_row, int start_col, int end_r
         int current_col = 0;
         std::shared_ptr<Cell> first_cell_in_row;
         std::vector<std::shared_ptr<Cell>> cells_to_remove;
-        bool found_start = false;
-
         for (const auto& cell : cells) {
-            int span = cell->get_horizontal_merge_span();
-            if (!found_start) {
-                if (current_col <= start_col && start_col < current_col + span) {
-                    first_cell_in_row = cell;
-                    found_start = true;
-                    // Collect cells within the horizontal merge range
+            const int span = cell->get_horizontal_merge_span();
+            if (current_col <= start_col && start_col < current_col + span) {
+                first_cell_in_row = cell;
+                // Collect cells within the horizontal merge range
                     int inner_col = current_col + span;
                     for (size_t i = static_cast<size_t>(cell->get_column_index()) + 1;
                          i < cells.get_count();
@@ -685,7 +682,6 @@ std::shared_ptr<Cell> Table::merge_cells(int start_row, int start_col, int end_r
                         inner_col += next_cell->get_horizontal_merge_span();
                     }
                     break;
-                }
             }
             current_col += span;
         }
@@ -734,13 +730,13 @@ void Table::split_cell(const std::shared_ptr<Cell>& cell, int row_count, int col
         return;
     }
 
-    int row_idx = row->get_row_index();
-    int col_idx = cell->get_column_index();
+    const int row_idx = row->get_row_index();
+    const int col_idx = cell->get_column_index();
     if (row_idx < 0 || col_idx < 0) {
         return;
     }
 
-    int original_col_span = cell->get_horizontal_merge_span();
+    const int original_col_span = cell->get_horizontal_merge_span();
     int original_row_span = 1;
     if (cell->get_cell_format().vertical_merge) {
         // Count how many rows this cell spans
@@ -785,9 +781,7 @@ void Table::split_cell(const std::shared_ptr<Cell>& cell, int row_count, int col
         new_cell->ensure_minimum();
         int insert_pos = col_idx + c;
         // Clamp insert position
-        if (insert_pos > static_cast<int>(row->get_children().size())) {
-            insert_pos = static_cast<int>(row->get_children().size());
-        }
+        insert_pos = std::min(insert_pos, static_cast<int>(row->get_children().size()));
         row->insert_child(insert_pos, new_cell);
     }
 
@@ -809,9 +803,7 @@ void Table::split_cell(const std::shared_ptr<Cell>& cell, int row_count, int col
             auto new_cell = std::make_shared<Cell>(get_document());
             new_cell->ensure_minimum();
             int insert_pos = col_idx + c;
-            if (insert_pos > static_cast<int>(current_row->get_children().size())) {
-                insert_pos = static_cast<int>(current_row->get_children().size());
-            }
+            insert_pos = std::min(insert_pos, static_cast<int>(current_row->get_children().size()));
             current_row->insert_child(insert_pos, new_cell);
         }
     }
@@ -939,32 +931,24 @@ TableRow Table::rows_legacy() {
     return row_;
 }
 
-TableCell Table::cellAt(size_t row, size_t col) const {
+TableCell Table::cell_at(size_t row, size_t col) const {
     (void)row;
     (void)col;
-    return TableCell();
+    return TableCell{};
 }
 
-TableCell Table::cellAtUnsafe(size_t row, size_t col) const {
+TableCell Table::cell_at_unsafe(size_t row, size_t col) const {
     (void)row;
     (void)col;
-    return TableCell();
+    return TableCell{};
 }
 
-size_t Table::getRowCount() const {
-    return static_cast<size_t>(get_row_count());
-}
-
-size_t Table::getColumnCount() const {
-    return static_cast<size_t>(get_column_count());
-}
-
-TableCell Table::merge(size_t startRow, size_t startCol, size_t rowCount, size_t colCount) {
-    (void)startRow;
-    (void)startCol;
-    (void)rowCount;
-    (void)colCount;
-    return TableCell();
+TableCell Table::merge(size_t start_row, size_t start_col, size_t row_count, size_t col_count) {
+    (void)start_row;
+    (void)start_col;
+    (void)row_count;
+    (void)col_count;
+    return TableCell{};
 }
 
 void Table::split(size_t row, size_t col) {
@@ -972,13 +956,13 @@ void Table::split(size_t row, size_t col) {
     (void)col;
 }
 
-void Table::dumpStructure() const {
+void Table::dump_structure() const {
     // Debug output intentionally removed — library code must not write to stdout.
     (void)0;
 }
 
 void Table::set_properties(const TableProperties& props) {
-    props.applyTo(*this);
+    props.apply_to(*this);
 }
 
 }  // namespace cdocx

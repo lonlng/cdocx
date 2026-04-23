@@ -192,7 +192,7 @@ TEST(DocumentSearchTest, ReplaceWithFormatting) {
     auto para = body->append_paragraph("Hello, World!");
 
     bool replaced = DocumentSearch::replace_with_formatting(
-        doc, "World", "CDocx", static_cast<formatting_flag>(cdocx::bold));
+        doc, "World", "CDocx", static_cast<FormattingFlag>(cdocx::kBold));
     EXPECT_TRUE(replaced);
     EXPECT_EQ(para->get_text(), "Hello, CDocx!");
 

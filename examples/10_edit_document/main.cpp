@@ -134,7 +134,7 @@ int replace_text(Document& doc, const std::string& old_text, const std::string& 
  * @param text Text content for the new paragraph
  * @param flags Formatting flags (bold, italic, etc.)
  */
-void add_paragraph_at_end(Document& doc, const std::string& text, formatting_flag flags = none) {
+void add_paragraph_at_end(Document& doc, const std::string& text, FormattingFlag flags = kNone) {
     std::cout << "[ADD] Adding paragraph at end: \"" << text << "\"" << std::endl;
     
     // Find the last paragraph
@@ -176,22 +176,22 @@ void add_formatted_paragraphs(Document& doc) {
     }
     
     // Add a separator paragraph
-    auto& sep = last_para->insert_paragraph_after("", none);
+    auto& sep = last_para->insert_paragraph_after("", kNone);
     
     // Add bold paragraph
     Paragraph* current_ptr = &sep;
     current_ptr = &(current_ptr->insert_paragraph_after(
-        "=== This is a BOLD paragraph added by CDocx ===", bold));
+        "=== This is a BOLD paragraph added by CDocx ===", kBold));
     std::cout << "  Added bold paragraph" << std::endl;
     
     // Add italic paragraph
     current_ptr = &(current_ptr->insert_paragraph_after(
-        "=== This is an ITALIC paragraph added by CDocx ===", italic));
+        "=== This is an ITALIC paragraph added by CDocx ===", kItalic));
     std::cout << "  Added italic paragraph" << std::endl;
     
     // Add underlined paragraph
     current_ptr->insert_paragraph_after(
-        "=== This is an UNDERLINED paragraph added by CDocx ===", underline);
+        "=== This is an UNDERLINED paragraph added by CDocx ===", kUnderline);
     std::cout << "  Added underlined paragraph" << std::endl;
 }
 
@@ -201,7 +201,7 @@ void add_formatted_paragraphs(Document& doc) {
  * @param search_text Text to find
  * @param flags Formatting to apply
  */
-void apply_formatting_to_text(Document& doc, const std::string& search_text, formatting_flag flags) {
+void apply_formatting_to_text(Document& doc, const std::string& search_text, FormattingFlag flags) {
     std::cout << "[FORMAT] Applying formatting to text containing: \"" << search_text << "\"" << std::endl;
     
     int formatted = 0;
@@ -211,11 +211,11 @@ void apply_formatting_to_text(Document& doc, const std::string& search_text, for
             
             if (contains_ignore_case(text, search_text)) {
                 // Apply formatting based on flags
-                if (flags & bold) {
+                if (flags & kBold) {
                     run.set_bold(true);
                     std::cout << "  Applied BOLD to: \"" << text << "\"" << std::endl;
                 }
-                if (flags & italic) {
+                if (flags & kItalic) {
                     run.set_italic(true);
                     std::cout << "  Applied ITALIC to: \"" << text << "\"" << std::endl;
                 }
@@ -364,7 +364,7 @@ int main(int argc, char* argv[]) {
         
         // Edit 3: Make "TestGreen" text bold
         std::cout << "┌─ Operation 3: Format Text ─────────────────────────────────┐" << std::endl;
-        apply_formatting_to_text(doc, "TestGreen", bold);
+        apply_formatting_to_text(doc, "TestGreen", kBold);
         std::cout << "└────────────────────────────────────────────────────────────┘" << std::endl;
         std::cout << std::endl;
         

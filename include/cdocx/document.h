@@ -98,20 +98,20 @@ struct DocxTreeNode : public std::enable_shared_from_this<DocxTreeNode> {
     std::string full_path;  ///< Full path in ZIP
     DocxNodeType type;      ///< Node type
 
-    DocxTreeNode* parent;                                 ///< Parent node
+    DocxTreeNode* parent;                          ///< Parent node
     std::vector<std::shared_ptr<DocxTreeNode>> children;  ///< Child nodes
 
-    std::shared_ptr<pugi::xml_document> xml_doc;  ///< For XmlFile type
-    std::vector<uint8_t> binary_data;             ///< Binary data storage
-    std::string content_type;                     ///< MIME type
+    std::shared_ptr<pugi::xml_document> xml_doc;   ///< For XmlFile type
+    std::vector<uint8_t> binary_data;              ///< Binary data storage
+    std::string content_type;                      ///< MIME type
 
     bool is_modified = false;  ///< Modified since load
     bool is_new = false;       ///< Newly created
     bool is_deleted = false;   ///< Marked for deletion
     bool is_critical = false;  ///< Critical document part
 
-    DocxTreeNode(const std::string& n, DocxNodeType t, DocxTreeNode* p = nullptr)
-        : name(n), type(t), parent(p) {}
+    DocxTreeNode(std::string n, DocxNodeType t, DocxTreeNode* p = nullptr)
+        : name(std::move(n)), type(t), parent(p) {}
 
     bool is_directory() const {
         return type == DocxNodeType::Directory || type == DocxNodeType::Root;
@@ -171,11 +171,14 @@ struct Relationship {
     std::string target_mode;
 
     Relationship() = default;
-    Relationship(const std::string& i,
-                 const std::string& t,
-                 const std::string& tgt,
-                 const std::string& tm = "")
-        : id(i), type(t), target(tgt), target_mode(tm) {}
+    Relationship(std::string i,
+                 std::string t,
+                 std::string tgt,
+                 std::string tm = "")
+        : id(std::move(i)), type(std::move(t)), target(std::move(tgt)),
+          target_mode(std::move(tm)) {}
+    // Pass-by-value + std::move is the canonical modern C++ idiom for
+    // constructors that unconditionally capture their arguments.
 };
 
 struct ContentType {
@@ -241,8 +244,8 @@ struct LoadError {
     size_t line = 0;
 
     LoadError() = default;
-    LoadError(LoadErrorType t, const std::string& path, const std::string& msg)
-        : type(t), file_path(path), message(msg) {}
+    LoadError(LoadErrorType t, std::string path, std::string msg)
+        : type(t), file_path(std::move(path)), message(std::move(msg)) {}
 };
 
 struct LoadResult {
@@ -283,8 +286,8 @@ class Document : public CompositeNode {
   public:
     // Construction
     Document();
-    explicit Document(const std::string& filepath);
-    ~Document();
+    explicit Document(std::string filepath);
+    ~Document() override;
 
     // Disable copy, enable move
     Document(const Document&) = delete;
@@ -378,6 +381,7 @@ class Document : public CompositeNode {
     pugi::xml_document* get_content_types();
     pugi::xml_document* get_styles();
     pugi::xml_document* get_settings();
+    const pugi::xml_document* get_settings() const;
     pugi::xml_document* get_font_table();
     pugi::xml_document* get_numbering_xml();
     pugi::xml_document* get_footnotes();
@@ -514,7 +518,7 @@ class Document : public CompositeNode {
     std::unique_ptr<NumberingManager> numbering_manager_;
 
     // Styles
-    std::unique_ptr<StyleCollection> styles_;
+    mutable std::unique_ptr<StyleCollection> styles_;
 
     // Properties
     DocumentProperties builtin_properties_;
@@ -555,7 +559,7 @@ class Document : public CompositeNode {
     LoadResult load_tree_with_result();
     bool load_tree_parallel(LoadStatistics& stats);
     void build_caches_from_tree();
-    void report_progress(int percent, const std::string& current_file);
+    void report_progress(int percent, const std::string& current_file) const;
 
     // Content types and relationships
     bool load_content_types();
@@ -585,7 +589,7 @@ class Document : public CompositeNode {
     // Media helpers
     std::string get_mime_type(const std::string& filename) const;
     std::string get_extension_from_mime(const std::string& mime_type) const;
-    std::string generate_unique_image_name(const std::string& base_name);
+    std::string generate_unique_image_name(const std::string& base_name) const;
 
     // Create empty document
     bool create_empty_document();

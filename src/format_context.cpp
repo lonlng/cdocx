@@ -17,13 +17,13 @@ namespace cdocx {
 // Private Helper Methods
 // ============================================================================
 
-pugi::xml_node TextFormatContext::get_or_create_rPr(pugi::xml_node run) {
-    pugi::xml_node rPr = run.child("w:rPr");
-    if (!rPr) {
-        // Prepend to ensure rPr comes before w:t
-        rPr = run.prepend_child("w:rPr");
+pugi::xml_node TextFormatContext::get_or_create_r_pr(pugi::xml_node run) {
+    pugi::xml_node r_pr = run.child("w:rPr");
+    if (!r_pr) {
+        // Prepend to ensure r_pr comes before w:t
+        r_pr = run.prepend_child("w:rPr");
     }
-    return rPr;
+    return r_pr;
 }
 
 // ============================================================================
@@ -36,12 +36,12 @@ bool TextFormatContext::apply_color(pugi::xml_node run, const std::string& color
     }
 
     // Get or create run properties
-    pugi::xml_node rPr = get_or_create_rPr(run);
+    pugi::xml_node r_pr = get_or_create_r_pr(run);
 
     // Get or create color element
-    pugi::xml_node color = rPr.child("w:color");
+    pugi::xml_node color = r_pr.child("w:color");
     if (!color) {
-        color = rPr.append_child("w:color");
+        color = r_pr.append_child("w:color");
     }
 
     // Set color value (hex without #)
@@ -54,21 +54,21 @@ bool TextFormatContext::apply_font_size(pugi::xml_node run, int size) {
         return false;
     }
 
-    pugi::xml_node rPr = get_or_create_rPr(run);
+    pugi::xml_node r_pr = get_or_create_r_pr(run);
 
     // Set sz (size) element
-    pugi::xml_node sz = rPr.child("w:sz");
+    pugi::xml_node sz = r_pr.child("w:sz");
     if (!sz) {
-        sz = rPr.append_child("w:sz");
+        sz = r_pr.append_child("w:sz");
     }
     sz.append_attribute("w:val").set_value(size);
 
-    // Set szCs (complex script size) element
-    pugi::xml_node szCs = rPr.child("w:szCs");
-    if (!szCs) {
-        szCs = rPr.append_child("w:szCs");
+    // Set sz_cs (complex script size) element
+    pugi::xml_node sz_cs = r_pr.child("w:szCs");
+    if (!sz_cs) {
+        sz_cs = r_pr.append_child("w:szCs");
     }
-    szCs.append_attribute("w:val").set_value(size);
+    sz_cs.append_attribute("w:val").set_value(size);
 
     return true;
 }
@@ -78,18 +78,18 @@ bool TextFormatContext::apply_font_name(pugi::xml_node run, const std::string& f
         return false;
     }
 
-    pugi::xml_node rPr = get_or_create_rPr(run);
+    pugi::xml_node r_pr = get_or_create_r_pr(run);
 
-    // Get or create rFonts element
-    pugi::xml_node rFonts = rPr.child("w:rFonts");
-    if (!rFonts) {
-        rFonts = rPr.append_child("w:rFonts");
+    // Get or create r_fonts element
+    pugi::xml_node r_fonts = r_pr.child("w:rFonts");
+    if (!r_fonts) {
+        r_fonts = r_pr.append_child("w:rFonts");
     }
 
     // Set font attributes for different character sets
-    rFonts.append_attribute("w:ascii").set_value(font_name.c_str());
-    rFonts.append_attribute("w:hAnsi").set_value(font_name.c_str());
-    rFonts.append_attribute("w:cs").set_value(font_name.c_str());
+    r_fonts.append_attribute("w:ascii").set_value(font_name.c_str());
+    r_fonts.append_attribute("w:hAnsi").set_value(font_name.c_str());
+    r_fonts.append_attribute("w:cs").set_value(font_name.c_str());
 
     return true;
 }
@@ -99,16 +99,16 @@ bool TextFormatContext::apply_bold(pugi::xml_node run, bool bold) {
         return false;
     }
 
-    pugi::xml_node rPr = get_or_create_rPr(run);
+    pugi::xml_node r_pr = get_or_create_r_pr(run);
 
     if (bold) {
         // Add bold element if not present
-        if (!rPr.child("w:b")) {
-            rPr.append_child("w:b");
+        if (!r_pr.child("w:b")) {
+            r_pr.append_child("w:b");
         }
     } else {
         // Remove bold element
-        rPr.remove_child("w:b");
+        r_pr.remove_child("w:b");
     }
     return true;
 }
@@ -118,14 +118,14 @@ bool TextFormatContext::apply_italic(pugi::xml_node run, bool italic) {
         return false;
     }
 
-    pugi::xml_node rPr = get_or_create_rPr(run);
+    pugi::xml_node r_pr = get_or_create_r_pr(run);
 
     if (italic) {
-        if (!rPr.child("w:i")) {
-            rPr.append_child("w:i");
+        if (!r_pr.child("w:i")) {
+            r_pr.append_child("w:i");
         }
     } else {
-        rPr.remove_child("w:i");
+        r_pr.remove_child("w:i");
     }
     return true;
 }
@@ -135,16 +135,16 @@ bool TextFormatContext::apply_underline(pugi::xml_node run, bool underline) {
         return false;
     }
 
-    pugi::xml_node rPr = get_or_create_rPr(run);
+    pugi::xml_node r_pr = get_or_create_r_pr(run);
 
     if (underline) {
-        pugi::xml_node u = rPr.child("w:u");
+        pugi::xml_node u = r_pr.child("w:u");
         if (!u) {
-            u = rPr.append_child("w:u");
+            u = r_pr.append_child("w:u");
         }
         u.append_attribute("w:val").set_value("single");
     } else {
-        rPr.remove_child("w:u");
+        r_pr.remove_child("w:u");
     }
     return true;
 }

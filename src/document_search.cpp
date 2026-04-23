@@ -55,7 +55,7 @@ std::optional<Range> DocumentSearch::find(Document& doc, const std::string& text
         if (!para) {
             continue;
         }
-        std::string para_text = para->get_text();
+        const std::string para_text = para->get_text();
         if (para_text.find(text) != std::string::npos) {
             return Range(&doc, para->get_current_node(), para->get_current_node());
         }
@@ -74,7 +74,7 @@ std::vector<Range> DocumentSearch::find_all(Document& doc, const std::string& te
         if (!para) {
             continue;
         }
-        std::string para_text = para->get_text();
+        const std::string para_text = para->get_text();
         if (para_text.find(text) != std::string::npos) {
             results.emplace_back(&doc, para->get_current_node(), para->get_current_node());
         }
@@ -95,7 +95,7 @@ bool DocumentSearch::replace(Document& doc,
             continue;
         }
         std::string para_text = para->get_text();
-        size_t pos = para_text.find(old_text);
+        const size_t pos = para_text.find(old_text);
         if (pos != std::string::npos) {
             para_text.replace(pos, old_text.size(), new_text);
             para->set_text(para_text);
@@ -118,8 +118,8 @@ int DocumentSearch::replace_all(Document& doc,
         if (!para) {
             continue;
         }
-        std::string para_text = para->get_text();
-        int count = count_occurrences(para_text, old_text);
+        const std::string para_text = para->get_text();
+        const int count = count_occurrences(para_text, old_text);
         if (count > 0) {
             para->set_text(replace_all_in_string(para_text, old_text, new_text));
             total += count;
@@ -131,7 +131,7 @@ int DocumentSearch::replace_all(Document& doc,
 bool DocumentSearch::replace_with_formatting(Document& doc,
                                              const std::string& old_text,
                                              const std::string& new_text,
-                                             formatting_flag flag) {
+                                             FormattingFlag flag) {
     if (old_text.empty()) {
         return false;
     }
@@ -142,18 +142,18 @@ bool DocumentSearch::replace_with_formatting(Document& doc,
             continue;
         }
         std::string para_text = para->get_text();
-        size_t pos = para_text.find(old_text);
+        const size_t pos = para_text.find(old_text);
         if (pos != std::string::npos) {
             para_text.replace(pos, old_text.size(), new_text);
             para->set_text(para_text);
             if (auto run = para->get_first_run()) {
-                if (flag & bold) {
+                if (flag & kBold) {
                     run->set_bold(true);
                 }
-                if (flag & italic) {
+                if (flag & kItalic) {
                     run->set_italic(true);
                 }
-                if (flag & underline) {
+                if (flag & kUnderline) {
                     run->set_underline(UnderlineType::Single);
                 }
             }
@@ -176,7 +176,7 @@ int DocumentSearch::find_and_process(Document& doc,
         if (!para) {
             continue;
         }
-        std::string para_text = para->get_text();
+        const std::string para_text = para->get_text();
         if (para_text.find(pattern) != std::string::npos) {
             Range range(&doc, para->get_current_node(), para->get_current_node());
             ++count;

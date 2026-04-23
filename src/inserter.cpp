@@ -39,9 +39,9 @@ pugi::xml_node DocumentInserter::clone_paragraph(const pugi::xml_node& source_pa
     pugi::xml_node new_para = target_parent.append_child("w:p");
 
     // Copy paragraph properties if present
-    pugi::xml_node pPr = source_para.child("w:pPr");
-    if (pPr) {
-        new_para.append_copy(pPr);
+    const pugi::xml_node p_pr = source_para.child("w:pPr");
+    if (p_pr) {
+        new_para.append_copy(p_pr);
     }
 
     // Copy all runs
@@ -65,15 +65,15 @@ pugi::xml_node DocumentInserter::clone_table(const pugi::xml_node& source_table,
     pugi::xml_node new_table = target_parent.append_child("w:tbl");
 
     // Copy table properties
-    pugi::xml_node tblPr = source_table.child("w:tblPr");
-    if (tblPr) {
-        new_table.append_copy(tblPr);
+    const pugi::xml_node tbl_pr = source_table.child("w:tblPr");
+    if (tbl_pr) {
+        new_table.append_copy(tbl_pr);
     }
 
     // Copy table grid
-    pugi::xml_node tblGrid = source_table.child("w:tblGrid");
-    if (tblGrid) {
-        new_table.append_copy(tblGrid);
+    const pugi::xml_node tbl_grid = source_table.child("w:tblGrid");
+    if (tbl_grid) {
+        new_table.append_copy(tbl_grid);
     }
 
     // Copy all rows
@@ -81,9 +81,9 @@ pugi::xml_node DocumentInserter::clone_table(const pugi::xml_node& source_table,
         pugi::xml_node new_row = new_table.append_child("w:tr");
 
         // Copy row properties
-        pugi::xml_node trPr = row.child("w:trPr");
-        if (trPr) {
-            new_row.append_copy(trPr);
+        const pugi::xml_node tr_pr = row.child("w:trPr");
+        if (tr_pr) {
+            new_row.append_copy(tr_pr);
         }
 
         // Copy all cells
@@ -91,9 +91,9 @@ pugi::xml_node DocumentInserter::clone_table(const pugi::xml_node& source_table,
             pugi::xml_node new_cell = new_row.append_child("w:tc");
 
             // Copy cell properties
-            pugi::xml_node tcPr = cell.child("w:tcPr");
-            if (tcPr) {
-                new_cell.append_copy(tcPr);
+            const pugi::xml_node tc_pr = cell.child("w:tcPr");
+            if (tc_pr) {
+                new_cell.append_copy(tc_pr);
             }
 
             // Copy all paragraphs in cell
@@ -123,8 +123,8 @@ void DocumentInserter::insert_document(Document* source) {
         return;
     }
 
-    pugi::xml_node target_body = target_doc->child("w:document").child("w:body");
-    pugi::xml_node source_body = source_doc->child("w:document").child("w:body");
+    const pugi::xml_node target_body = target_doc->child("w:document").child("w:body");
+    const pugi::xml_node source_body = source_doc->child("w:document").child("w:body");
 
     if (!target_body || !source_body) {
         return;
@@ -132,7 +132,7 @@ void DocumentInserter::insert_document(Document* source) {
 
     // Clone all paragraphs and tables from source
     for (pugi::xml_node child = source_body.first_child(); child; child = child.next_sibling()) {
-        std::string name = child.name();
+        const std::string name = child.name();
         if (name == "w:p") {
             clone_paragraph(child, target_body);
         } else if (name == "w:tbl") {
@@ -147,7 +147,7 @@ void DocumentInserter::insert_document_after(Document* source, Paragraph& after_
     }
 
     // Get the insertion point
-    pugi::xml_node insert_after = after_para.get_current_node();
+    const pugi::xml_node insert_after = after_para.get_current_node();
     if (!insert_after) {
         return;
     }
@@ -158,7 +158,7 @@ void DocumentInserter::insert_document_after(Document* source, Paragraph& after_
         return;
     }
 
-    pugi::xml_node source_body = source_doc->child("w:document").child("w:body");
+    const pugi::xml_node source_body = source_doc->child("w:document").child("w:body");
     if (!source_body) {
         return;
     }
@@ -167,7 +167,7 @@ void DocumentInserter::insert_document_after(Document* source, Paragraph& after_
     pugi::xml_node last_inserted = insert_after;
 
     for (pugi::xml_node child = source_body.first_child(); child; child = child.next_sibling()) {
-        std::string name = child.name();
+        const std::string name = child.name();
         pugi::xml_node new_node;
 
         if (name == "w:p") {
@@ -204,7 +204,7 @@ void DocumentInserter::insert_document_at(Document* source, int position) {
     }
 
     pugi::xml_node target_body = target_doc_xml->child("w:document").child("w:body");
-    pugi::xml_node source_body = source_doc->child("w:document").child("w:body");
+    const pugi::xml_node source_body = source_doc->child("w:document").child("w:body");
 
     if (!target_body || !source_body) {
         return;
@@ -220,7 +220,7 @@ void DocumentInserter::insert_document_at(Document* source, int position) {
         int count = 0;
         for (pugi::xml_node child = target_body.first_child(); child;
              child = child.next_sibling()) {
-            std::string name = child.name();
+            const std::string name = child.name();
             if (name == "w:p" || name == "w:tbl") {
                 count++;
                 if (count == position) {
@@ -234,7 +234,7 @@ void DocumentInserter::insert_document_at(Document* source, int position) {
     // Clone source content in reverse order (to insert before same point)
     std::vector<pugi::xml_node> nodes_to_clone;
     for (pugi::xml_node child = source_body.first_child(); child; child = child.next_sibling()) {
-        std::string name = child.name();
+        const std::string name = child.name();
         if (name == "w:p" || name == "w:tbl") {
             nodes_to_clone.push_back(child);
         }
@@ -242,7 +242,7 @@ void DocumentInserter::insert_document_at(Document* source, int position) {
 
     // Insert in reverse order
     for (auto it = nodes_to_clone.rbegin(); it != nodes_to_clone.rend(); ++it) {
-        std::string name = it->name();
+        const std::string name = it->name();
         pugi::xml_node new_node;
 
         if (insert_before) {
@@ -271,7 +271,7 @@ void DocumentInserter::insert_paragraphs(Document* source, int position) {
     }
 
     pugi::xml_node target_body = target_doc_xml->child("w:document").child("w:body");
-    pugi::xml_node source_body = source_doc->child("w:document").child("w:body");
+    const pugi::xml_node source_body = source_doc->child("w:document").child("w:body");
 
     if (!target_body || !source_body) {
         return;
@@ -332,7 +332,7 @@ void DocumentInserter::insert_tables(Document* source, int position) {
     }
 
     pugi::xml_node target_body = target_doc_xml->child("w:document").child("w:body");
-    pugi::xml_node source_body = source_doc->child("w:document").child("w:body");
+    const pugi::xml_node source_body = source_doc->child("w:document").child("w:body");
 
     if (!target_body || !source_body) {
         return;

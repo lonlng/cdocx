@@ -20,7 +20,7 @@ int main() {
     tabs.add(72.0, cdocx::TabAlignment::Left, cdocx::TabLeader::Dots);
     tabs.add(144.0, cdocx::TabAlignment::Right, cdocx::TabLeader::Line);
     props.tab_stops = tabs;
-    props.applyTo(*para);
+    props.apply_to(*para);
 
     // DocumentBuilder with fields and footnote
     cdocx::DocumentBuilder builder(&doc);

@@ -14,10 +14,12 @@
 #include <cdocx/enums.h>
 #include <cdocx/fwd.h>
 
+#include <cstdint>
 #include <ctime>
 #include <map>
 #include <optional>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace cdocx {
@@ -36,11 +38,11 @@ namespace cdocx {
  * @code
  * TextProperties props;
  * props.font = TextProperties::Font{"Arial", "SimHei"};
- * props.fontSize = 24;  // 12pt
+ * props.font_size = 24;  // 12pt
  * props.color = "FF0000";
  * props.highlight = TextProperties::Highlight::Yellow;
  *
- * run.setProperties(props);
+ * run.set_properties(props);
  * @endcode
  */
 struct TextProperties {
@@ -54,15 +56,15 @@ struct TextProperties {
      */
     struct Font {
         std::string ascii = "Times New Roman";  ///< Western font
-        std::string eastAsia = "SimSun";        ///< CJK font (中文)
-        std::string hAnsi = "Times New Roman";  ///< High ANSI font
+        std::string east_asia = "SimSun";        ///< CJK font (中文)
+        std::string h_ansi = "Times New Roman";  ///< High ANSI font
         std::string cs = "Times New Roman";     ///< Complex script font
 
         /**
          * @enum Hint
          * @brief Font type hint for ambiguous characters
          */
-        enum class Hint {
+        enum class Hint : std::uint8_t {
             Default,       ///< No hint
             EastAsia,      ///< Prefer East Asian font
             ComplexScript  ///< Prefer complex script font
@@ -70,8 +72,11 @@ struct TextProperties {
         Hint hint = Hint::Default;
 
         Font() = default;
-        Font(const std::string& ascii_font, const std::string& east_asian_font)
-            : ascii(ascii_font), eastAsia(east_asian_font), hAnsi(ascii_font), cs(ascii_font) {}
+        Font(const std::string& ascii_font, std::string east_asian_font)
+            : ascii(ascii_font),
+              east_asia(std::move(east_asian_font)),
+              h_ansi(ascii_font),
+              cs(ascii_font) {}
     };
     std::optional<Font> font;
 
@@ -82,12 +87,12 @@ struct TextProperties {
     struct FontStyle {
         bool bold = false;
         bool italic = false;
-    } fontStyle;
+    } font_style;
 
     // ------------------------------------------------------------------------
     // Font Size (in half-points: 24 = 12pt)
     // ------------------------------------------------------------------------
-    int fontSize = 0;  ///< 0 = not set
+    int font_size = 0;  ///< 0 = not set
 
     // ------------------------------------------------------------------------
     // Font Color (RRGGBB or "auto")
@@ -102,7 +107,7 @@ struct TextProperties {
      * @enum UnderlineStyle
      * @brief Comprehensive underline style options
      */
-    enum class UnderlineStyle {
+    enum class UnderlineStyle : std::uint8_t {
         None,
         Words,            ///< Underline words only
         Single,           ///< 单实线
@@ -132,7 +137,7 @@ struct TextProperties {
     // Strikethrough Styles
     // ------------------------------------------------------------------------
 
-    enum class StrikeStyle {
+    enum class StrikeStyle : std::uint8_t {
         None,
         Single,  ///< 删除线
         Double   ///< 双删除线
@@ -142,11 +147,11 @@ struct TextProperties {
     // Vertical Alignment (Superscript/Subscript)
     // ------------------------------------------------------------------------
 
-    enum class VertAlign {
+    enum class VertAlign : std::uint8_t {
         None,
         Superscript,  ///< 上标
         Subscript     ///< 下标
-    } vertAlign = VertAlign::None;
+    } vert_align = VertAlign::None;
 
     // ------------------------------------------------------------------------
     // Highlight Colors
@@ -156,7 +161,7 @@ struct TextProperties {
      * @enum Highlight
      * @brief Text highlighting color options
      */
-    enum class Highlight {
+    enum class Highlight : std::uint8_t {
         None,
         Black,
         White,
@@ -185,7 +190,7 @@ struct TextProperties {
     // Character Spacing
     // ------------------------------------------------------------------------
 
-    enum class SpacingType {
+    enum class SpacingType : std::uint8_t {
         Normal,    ///< No adjustment
         Expanded,  ///< 加宽
         Condensed  ///< 紧缩
@@ -200,7 +205,7 @@ struct TextProperties {
     // Position (Raised/Lowered)
     // ------------------------------------------------------------------------
 
-    enum class PositionType {
+    enum class PositionType : std::uint8_t {
         Normal,  ///< Standard position
         Raised,  ///< 上升
         Lowered  ///< 下降
@@ -219,27 +224,27 @@ struct TextProperties {
      * @brief Apply these properties to a Run
      * @param[in,out] run The run to apply properties to
      */
-    void applyTo(Run& run) const;
+    void apply_to(Run& run) const;
 
     /**
      * @brief Apply these properties directly to an XML node
      * @param[in,out] run_node The w:r XML node
      */
-    void applyTo(pugi::xml_node run_node) const;
+    void apply_to(pugi::xml_node run_node) const;
 
     /**
      * @brief Extract properties from a Run
      * @param[in] run The run to extract from
      * @return TextProperties containing the extracted values
      */
-    static TextProperties extractFrom(const Run& run);
+    static TextProperties extract_from(const Run& run);
 
     /**
      * @brief Extract properties from an XML node
      * @param[in] run_node The w:r XML node
      * @return TextProperties containing the extracted values
      */
-    static TextProperties extractFrom(pugi::xml_node run_node);
+    static TextProperties extract_from(pugi::xml_node run_node);
 };
 
 // ============================================================================
@@ -299,8 +304,8 @@ class TabStopCollection {
     std::vector<TabStop>::iterator begin() { return tab_stops_.begin(); }
     std::vector<TabStop>::iterator end() { return tab_stops_.end(); }
 
-    void applyTo(pugi::xml_node para_node) const;
-    static TabStopCollection extractFrom(pugi::xml_node para_node);
+    void apply_to(pugi::xml_node para_node) const;
+    static TabStopCollection extract_from(pugi::xml_node para_node);
 
   private:
     std::vector<TabStop> tab_stops_;
@@ -319,27 +324,27 @@ class TabStopCollection {
  * @code
  * ParagraphProperties props;
  * props.align = ParagraphProperties::Alignment::Centered;
- * props.outlineLevel = ParagraphProperties::OutlineLevel::Level1;
+ * props.outline_level = ParagraphProperties::OutlineLevel::Level1;
  *
  * ParagraphProperties::Indentation indent;
  * indent.special.kind = ParagraphProperties::Indentation::Special::Kind::FirstLine;
  * indent.special.value = 200;  // 2 characters
  * props.indent = indent;
  *
- * para.setProperties(props);
+ * para.set_properties(props);
  * @endcode
  */
 struct ParagraphProperties {
     // ------------------------------------------------------------------------
     // Style ID
     // ------------------------------------------------------------------------
-    std::string styleId;
+    std::string style_id;
 
     // ------------------------------------------------------------------------
     // Alignment
     // ------------------------------------------------------------------------
 
-    enum class Alignment {
+    enum class Alignment : std::uint8_t {
         Left,
         Centered,
         Right,
@@ -352,7 +357,7 @@ struct ParagraphProperties {
     // Outline Level (for table of contents)
     // ------------------------------------------------------------------------
 
-    enum class OutlineLevel {
+    enum class OutlineLevel : std::uint8_t {
         Level1,
         Level2,
         Level3,
@@ -364,14 +369,14 @@ struct ParagraphProperties {
         Level9,
         BodyText
     };
-    OutlineLevel outlineLevel = OutlineLevel::BodyText;
+    OutlineLevel outline_level = OutlineLevel::BodyText;
 
     // ------------------------------------------------------------------------
     // Indentation
     // ------------------------------------------------------------------------
 
     struct Indentation {
-        enum class Type {
+        enum class Type : std::uint8_t {
             Character,  ///< 100 = 1 character
             Absolute    ///< 1440 = 1 inch = 72 points
         };
@@ -384,7 +389,7 @@ struct ParagraphProperties {
         Indent right;
 
         struct Special {
-            enum class Kind {
+            enum class Kind : std::uint8_t {
                 None,
                 FirstLine,  ///< 首行缩进
                 Hanging     ///< 悬挂缩进
@@ -401,7 +406,7 @@ struct ParagraphProperties {
     // ------------------------------------------------------------------------
 
     struct Spacing {
-        enum class Type {
+        enum class Type : std::uint8_t {
             Auto,     ///< Automatically determined
             Lines,    ///< 100 = 1 line
             Absolute  ///< 1440 = 1 inch
@@ -414,7 +419,7 @@ struct ParagraphProperties {
         ParaSpacing before;  ///< Space before paragraph
         ParaSpacing after;   ///< Space after paragraph
 
-        enum class LineSpacingType {
+        enum class LineSpacingType : std::uint8_t {
             Lines,    ///< 240 = 1 line
             AtLeast,  ///< Minimum line spacing
             Exactly   ///< Exact line spacing
@@ -423,7 +428,7 @@ struct ParagraphProperties {
         struct LineSpacing {
             LineSpacingType type = LineSpacingType::Lines;
             int value = 240;  ///< 240 = 1 line (single spacing)
-        } lineSpacing;
+        } line_spacing;
     };
     std::optional<Spacing> spacing;
 
@@ -431,17 +436,17 @@ struct ParagraphProperties {
     // Page Break Control
     // ------------------------------------------------------------------------
 
-    bool keepNext = false;         ///< Keep with next paragraph (与下段同页)
-    bool keepLines = false;        ///< Keep lines together (段中不分页)
-    bool pageBreakBefore = false;  ///< Page break before (段前分页)
-    bool pageBreakAfter = false;   ///< Page break after (段后分页)
+    bool keep_next = false;         ///< Keep with next paragraph (与下段同页)
+    bool keep_lines = false;        ///< Keep lines together (段中不分页)
+    bool page_break_before = false;  ///< Page break before (段前分页)
+    bool page_break_after = false;   ///< Page break after (段后分页)
 
     // ------------------------------------------------------------------------
     // Paragraph Borders
     // ------------------------------------------------------------------------
 
     struct Border {
-        enum class Style {
+        enum class Style : std::uint8_t {
             None,
             Single,
             Double,
@@ -478,27 +483,27 @@ struct ParagraphProperties {
      * @brief Apply these properties to a Paragraph
      * @param[in,out] para The paragraph to apply properties to
      */
-    void applyTo(Paragraph& para) const;
+    void apply_to(Paragraph& para) const;
 
     /**
      * @brief Apply these properties directly to an XML node
      * @param[in,out] para_node The w:p XML node
      */
-    void applyTo(pugi::xml_node para_node) const;
+    void apply_to(pugi::xml_node para_node) const;
 
     /**
      * @brief Extract properties from a Paragraph
      * @param[in] para The paragraph to extract from
      * @return ParagraphProperties containing the extracted values
      */
-    static ParagraphProperties extractFrom(const Paragraph& para);
+    static ParagraphProperties extract_from(const Paragraph& para);
 
     /**
      * @brief Extract properties from an XML node
      * @param[in] para_node The w:p XML node
      * @return ParagraphProperties containing the extracted values
      */
-    static ParagraphProperties extractFrom(pugi::xml_node para_node);
+    static ParagraphProperties extract_from(pugi::xml_node para_node);
 };
 
 // ============================================================================
@@ -515,7 +520,7 @@ struct TableProperties {
     // Table Width
     // ------------------------------------------------------------------------
 
-    enum class WidthType {
+    enum class WidthType : std::uint8_t {
         Auto,     ///< Auto width
         Percent,  ///< Percentage (5000 = 100%)
         Absolute  ///< Absolute width (twips, 1440 = 1 inch)
@@ -544,7 +549,7 @@ struct TableProperties {
         int left = 0;    ///< twips
         int bottom = 0;  ///< twips
         int right = 0;   ///< twips
-    } cellMargin;
+    } cell_margin;
 
     // ------------------------------------------------------------------------
     // Methods
@@ -554,13 +559,13 @@ struct TableProperties {
      * @brief Apply these properties to a Table
      * @param[in,out] table The table to apply properties to
      */
-    void applyTo(Table& table) const;
+    void apply_to(Table& table) const;
 
     /**
      * @brief Apply these properties directly to an XML node
      * @param[in,out] tbl_node The w:tbl XML node
      */
-    void applyTo(pugi::xml_node tbl_node) const;
+    void apply_to(pugi::xml_node tbl_node) const;
 };
 
 // ============================================================================
@@ -580,13 +585,13 @@ struct SectionProperties {
     struct PageSize {
         int width = 12240;   ///< A4 width in twips (8.5 inch)
         int height = 15840;  ///< A4 height in twips (11 inch)
-    } pageSize;
+    } page_size;
 
     // ------------------------------------------------------------------------
     // Page Orientation
     // ------------------------------------------------------------------------
 
-    enum class Orientation {
+    enum class Orientation : std::uint8_t {
         Portrait,
         Landscape
     } orientation = Orientation::Portrait;
@@ -602,7 +607,7 @@ struct SectionProperties {
         int left = 1440;    ///< 1 inch
         int header = 720;   ///< 0.5 inch
         int footer = 720;   ///< 0.5 inch
-    } pageMargins;
+    } page_margins;
 
     // ------------------------------------------------------------------------
     // Columns (for multi-column layout)
@@ -620,9 +625,9 @@ struct SectionProperties {
 
     /**
      * @brief Apply these properties to a section XML node
-     * @param[in,out] sectPr_node The w:sectPr XML node
+     * @param[in,out] sect_pr_node The w:sectPr XML node
      */
-    void applyTo(pugi::xml_node sectPr_node) const;
+    void apply_to(pugi::xml_node sect_pr_node) const;
 };
 
 // ============================================================================

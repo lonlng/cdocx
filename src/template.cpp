@@ -18,6 +18,7 @@
 
 #include <filesystem>
 #include <pugixml.hpp>
+#include <utility>
 
 namespace cdocx {
 
@@ -28,8 +29,8 @@ namespace cdocx {
 Template::Template(Document* document) : doc_(document) {
 }
 
-Template::Template(Document* document, const std::string& prefix, const std::string& suffix)
-    : doc_(document), pattern_prefix_(prefix), pattern_suffix_(suffix) {
+Template::Template(Document* document, std::string prefix, std::string suffix)
+    : doc_(document), pattern_prefix_(std::move(prefix)), pattern_suffix_(std::move(suffix)) {
 }
 
 // ============================================================================
@@ -66,7 +67,7 @@ bool Template::try_replace_in_text(std::string& text) {
     bool replaced = false;
 
     for (const auto& [key, value] : placeholders_) {
-        std::string pattern = pattern_prefix_ + key + pattern_suffix_;
+        const std::string pattern = pattern_prefix_ + key + pattern_suffix_;
         size_t pos = 0;
         while ((pos = text.find(pattern, pos)) != std::string::npos) {
             text.replace(pos, pattern.length(), value);
@@ -87,8 +88,8 @@ bool Template::try_replace_single_run(Run& r, bool first_only) {
     if (first_only) {
         // Replace only the first occurrence across all keys
         for (const auto& [key, value] : placeholders_) {
-            std::string pattern = pattern_prefix_ + key + pattern_suffix_;
-            size_t pos = text.find(pattern);
+            const std::string pattern = pattern_prefix_ + key + pattern_suffix_;
+            const size_t pos = text.find(pattern);
             if (pos != std::string::npos) {
                 text.replace(pos, pattern.length(), value);
                 r.set_text(text);
@@ -125,8 +126,8 @@ bool Template::try_replace_placeholder(const PlaceholderContext& ctx, Paragraph&
     std::string best_pattern;
 
     for (const auto& [key, value] : placeholders_) {
-        std::string pattern = pattern_prefix_ + key + pattern_suffix_;
-        size_t pos = ctx.collected_text.find(pattern);
+        const std::string pattern = pattern_prefix_ + key + pattern_suffix_;
+        const size_t pos = ctx.collected_text.find(pattern);
         if (pos != std::string::npos) {
             if (best_pos == std::string::npos || pos < best_pos) {
                 best_pos = pos;
@@ -140,18 +141,18 @@ bool Template::try_replace_placeholder(const PlaceholderContext& ctx, Paragraph&
         return false;
     }
 
-    size_t pattern_end = best_pos + best_pattern.length();
-    std::string trailing = ctx.collected_text.substr(pattern_end);
+    const size_t pattern_end = best_pos + best_pattern.length();
+    const std::string trailing = ctx.collected_text.substr(pattern_end);
 
-    std::string first_run_text = ctx.first_run->get_text();
-    std::string new_text = first_run_text.substr(0, ctx.prefix_pos) + best_value + trailing;
+    const std::string first_run_text = ctx.first_run->get_text();
+    const std::string new_text = first_run_text.substr(0, ctx.prefix_pos) + best_value + trailing;
     ctx.first_run->set_text(new_text);
     return true;
 }
 
 void Template::delete_collected_runs(const PlaceholderContext& ctx, Paragraph& p) {
     for (Run* run : ctx.runs_to_delete) {
-        for (auto& child : p.get_children()) {
+        for (const auto& child : p.get_children()) {
             if (child.get() == run) {
                 p.remove_child(child);
                 break;
@@ -187,13 +188,13 @@ bool Template::process_paragraph(Paragraph& p, bool stop_after_first) {
                 text = run->get_text();
             }
 
-            size_t prefix_start = text.rfind(pattern_prefix_);
+            const size_t prefix_start = text.rfind(pattern_prefix_);
             if (prefix_start != std::string::npos) {
-                std::string candidate = text.substr(prefix_start);
+                const std::string candidate = text.substr(prefix_start);
                 bool has_complete = false;
                 for (const auto& [key, value] : placeholders_) {
                     (void)value;
-                    std::string pattern = pattern_prefix_ + key + pattern_suffix_;
+                    const std::string pattern = pattern_prefix_ + key + pattern_suffix_;
                     if (candidate.find(pattern) != std::string::npos) {
                         has_complete = true;
                         break;
@@ -242,9 +243,9 @@ bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
         return false;
     }
 
-    std::string text = run->get_text();
+    const std::string text = run->get_text();
     for (const auto& [key, image_path] : image_placeholders_) {
-        std::string pattern = pattern_prefix_ + key + pattern_suffix_;
+        const std::string pattern = pattern_prefix_ + key + pattern_suffix_;
         if (text != pattern) {
             continue;
         }
@@ -258,7 +259,7 @@ bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
             continue;
         }
 
-        std::string rel_id = doc_->add_media_with_rel(image_path, nullptr);
+        const std::string rel_id = doc_->add_media_with_rel(image_path, nullptr);
         if (rel_id.empty()) {
             continue;
         }
@@ -280,10 +281,10 @@ bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
         extent.append_attribute("cx").set_value(size.width_emu());
         extent.append_attribute("cy").set_value(size.height_emu());
 
-        pugi::xml_node docPr = inline_node.append_child("wp:docPr");
+        pugi::xml_node doc_pr = inline_node.append_child("wp:docPr");
         static int image_id_counter = 1;
-        docPr.append_attribute("id").set_value(image_id_counter++);
-        docPr.append_attribute("name").set_value("Picture");
+        doc_pr.append_attribute("id").set_value(image_id_counter++);
+        doc_pr.append_attribute("name").set_value("Picture");
 
         pugi::xml_node graphic = inline_node.append_child("a:graphic");
         graphic.append_attribute("xmlns:a").set_value(
@@ -297,26 +298,26 @@ bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
         pic.append_attribute("xmlns:pic")
             .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
 
-        pugi::xml_node nvPicPr = pic.append_child("pic:nvPicPr");
-        pugi::xml_node cnvPr = nvPicPr.append_child("pic:cNvPr");
-        cnvPr.append_attribute("id").set_value(0);
-        cnvPr.append_attribute("name").set_value(image_path.c_str());
-        nvPicPr.append_child("pic:cNvPicPr");
+        pugi::xml_node nv_pic_pr = pic.append_child("pic:nvPicPr");
+        pugi::xml_node cnv_pr = nv_pic_pr.append_child("pic:cNvPr");
+        cnv_pr.append_attribute("id").set_value(0);
+        cnv_pr.append_attribute("name").set_value(image_path.c_str());
+        nv_pic_pr.append_child("pic:cNvPicPr");
 
-        pugi::xml_node blipFill = pic.append_child("pic:blipFill");
-        pugi::xml_node blip = blipFill.append_child("a:blip");
+        pugi::xml_node blip_fill = pic.append_child("pic:blipFill");
+        pugi::xml_node blip = blip_fill.append_child("a:blip");
         blip.append_attribute("r:embed").set_value(rel_id.c_str());
-        pugi::xml_node stretch = blipFill.append_child("a:stretch");
+        pugi::xml_node stretch = blip_fill.append_child("a:stretch");
         stretch.append_child("a:fillRect");
 
-        pugi::xml_node spPr = pic.append_child("pic:spPr");
-        pugi::xml_node xfrm = spPr.append_child("a:xfrm");
+        pugi::xml_node sp_pr = pic.append_child("pic:spPr");
+        pugi::xml_node xfrm = sp_pr.append_child("a:xfrm");
         pugi::xml_node ext = xfrm.append_child("a:ext");
         ext.append_attribute("cx").set_value(size.width_emu());
         ext.append_attribute("cy").set_value(size.height_emu());
-        pugi::xml_node prstGeom = spPr.append_child("a:prstGeom");
-        prstGeom.append_attribute("prst").set_value("rect");
-        prstGeom.append_child("a:avLst");
+        pugi::xml_node prst_geom = sp_pr.append_child("a:prstGeom");
+        prst_geom.append_attribute("prst").set_value("rect");
+        prst_geom.append_child("a:avLst");
 
         run->preserve_child(drawing);
         return true;
@@ -331,7 +332,7 @@ bool Template::replace_in_paragraph(const std::shared_ptr<Paragraph>& para) {
 
     bool replaced = false;
     // First pass: handle image placeholders (exact single-run match)
-    for (auto& child : para->get_children()) {
+    for (const auto& child : para->get_children()) {
         if (auto run = std::dynamic_pointer_cast<Run>(child)) {
             if (replace_image_in_run(run)) {
                 replaced = true;
@@ -351,11 +352,11 @@ bool Template::replace_in_table(const std::shared_ptr<Table>& table) {
         return false;
     }
     bool replaced = false;
-    for (auto& row_child : table->get_children()) {
+    for (const auto& row_child : table->get_children()) {
         if (auto row = std::dynamic_pointer_cast<Row>(row_child)) {
-            for (auto& cell_child : row->get_children()) {
+            for (const auto& cell_child : row->get_children()) {
                 if (auto cell = std::dynamic_pointer_cast<Cell>(cell_child)) {
-                    for (auto& para_child : cell->get_children()) {
+                    for (const auto& para_child : cell->get_children()) {
                         if (auto para = std::dynamic_pointer_cast<Paragraph>(para_child)) {
                             if (replace_in_paragraph(para)) {
                                 replaced = true;
@@ -403,11 +404,11 @@ bool Template::replace_in_headers_footers() {
         return false;
     }
     bool replaced = false;
-    for (auto& section : doc_->get_sections()) {
+    for (const auto& section : doc_->get_sections()) {
         if (!section) {
             continue;
         }
-        for (auto& header : section->get_all_headers()) {
+        for (const auto& header : section->get_all_headers()) {
             if (!header) {
                 continue;
             }
@@ -422,11 +423,11 @@ bool Template::replace_in_headers_footers() {
                 }
             }
         }
-        for (auto& footer : section->get_all_footers()) {
+        for (const auto& footer : section->get_all_footers()) {
             if (!footer) {
                 continue;
             }
-            for (auto& para : footer->get_paragraphs()) {
+            for (const auto& para : footer->get_paragraphs()) {
                 if (replace_in_paragraph(para)) {
                     replaced = true;
                 }
@@ -471,7 +472,7 @@ bool Template::replace_first_in_paragraph(const std::shared_ptr<Paragraph>& para
         return false;
     }
     // Check image placeholders first (single-run match)
-    for (auto& child : para->get_children()) {
+    for (const auto& child : para->get_children()) {
         if (auto run = std::dynamic_pointer_cast<Run>(child)) {
             if (replace_image_in_run(run)) {
                 return true;
@@ -486,11 +487,11 @@ bool Template::replace_first_in_table(const std::shared_ptr<Table>& table) {
     if (!table) {
         return false;
     }
-    for (auto& row_child : table->get_children()) {
+    for (const auto& row_child : table->get_children()) {
         if (auto row = std::dynamic_pointer_cast<Row>(row_child)) {
-            for (auto& cell_child : row->get_children()) {
+            for (const auto& cell_child : row->get_children()) {
                 if (auto cell = std::dynamic_pointer_cast<Cell>(cell_child)) {
-                    for (auto& para_child : cell->get_children()) {
+                    for (const auto& para_child : cell->get_children()) {
                         if (auto para = std::dynamic_pointer_cast<Paragraph>(para_child)) {
                             if (replace_first_in_paragraph(para)) {
                                 return true;
@@ -508,30 +509,30 @@ bool Template::replace_first_in_headers_footers() {
     if (!doc_) {
         return false;
     }
-    for (auto& section : doc_->get_sections()) {
+    for (const auto& section : doc_->get_sections()) {
         if (!section) {
             continue;
         }
-        for (auto& header : section->get_all_headers()) {
+        for (const auto& header : section->get_all_headers()) {
             if (!header) {
                 continue;
             }
-            for (auto& para : header->get_paragraphs()) {
+            for (const auto& para : header->get_paragraphs()) {
                 if (replace_first_in_paragraph(para)) {
                     return true;
                 }
             }
-            for (auto& table : header->get_tables()) {
+            for (const auto& table : header->get_tables()) {
                 if (replace_first_in_table(table)) {
                     return true;
                 }
             }
         }
-        for (auto& footer : section->get_all_footers()) {
+        for (const auto& footer : section->get_all_footers()) {
             if (!footer) {
                 continue;
             }
-            for (auto& para : footer->get_paragraphs()) {
+            for (const auto& para : footer->get_paragraphs()) {
                 if (replace_first_in_paragraph(para)) {
                     return true;
                 }

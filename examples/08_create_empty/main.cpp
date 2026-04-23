@@ -42,13 +42,13 @@ int main() {
     // Add a title paragraph
     cdocx::Paragraph title = doc.paragraphs().insert_paragraph_after("");
     title.add_run("New Document Created from Scratch", 
-                  static_cast<cdocx::formatting_flag>(cdocx::bold | cdocx::underline));
+                  static_cast<cdocx::FormattingFlag>(cdocx::kBold | cdocx::kUnderline));
     
     // Add some content paragraphs
     cdocx::Paragraph p1 = doc.paragraphs().insert_paragraph_after(
         "This document was created programmatically using CDocx. "
     );
-    p1.add_run("No template file was needed!", cdocx::italic);
+    p1.add_run("No template file was needed!", cdocx::kItalic);
     
     cdocx::Paragraph p2 = doc.paragraphs().insert_paragraph_after(
         "\nThe create_empty() method creates a minimal valid DOCX file with all required XML parts:"

@@ -6,6 +6,7 @@
 
 #include "sync_common.h"
 
+#include <charconv>
 #include <cstring>
 #include <ctime>
 
@@ -319,7 +320,7 @@ LineSpacingRule string_to_line_spacing_rule(const char* str) {
 
 void strip_whitespace_text_nodes(pugi::xml_node node) {
     for (pugi::xml_node child = node.first_child(); child;) {
-        pugi::xml_node next = child.next_sibling();
+        const pugi::xml_node next = child.next_sibling();
         if (child.type() == pugi::node_pcdata || child.type() == pugi::node_cdata) {
             node.remove_child(child);
         }
@@ -354,7 +355,7 @@ void parse_shading_from_xml(pugi::xml_node shd, Shading& shading) {
     }
     auto color_attr = shd.attribute("w:color");
     if (color_attr) {
-        std::string val = color_attr.value();
+        const std::string val = color_attr.value();
         if (val == "auto") {
             shading.foreground = Color::auto_color();
         } else {
@@ -363,7 +364,7 @@ void parse_shading_from_xml(pugi::xml_node shd, Shading& shading) {
     }
     auto fill_attr = shd.attribute("w:fill");
     if (fill_attr) {
-        std::string val = fill_attr.value();
+        const std::string val = fill_attr.value();
         if (val == "auto") {
             shading.background = Color::auto_color();
         } else {
@@ -388,7 +389,7 @@ void parse_border_from_xml(pugi::xml_node border_node, Border& border) {
         border.space = space.as_int();
     }
     if (auto color = border_node.attribute("w:color")) {
-        std::string c = color.value();
+        const std::string c = color.value();
         if (c == "auto") {
             border.color = Color::auto_color();
         } else {
@@ -478,12 +479,18 @@ std::string time_to_w3cdtf(std::time_t t) {
     }
     std::tm utc{};
 #ifdef _WIN32
-    gmtime_s(&utc, &t);
+    if (gmtime_s(&utc, &t) != 0) {
+        return "";
+    }
 #else
-    gmtime_r(&t, &utc);
+    if (gmtime_r(&t, &utc) == nullptr) {
+        return "";
+    }
 #endif
     char buf[32];
-    std::strftime(buf, sizeof(buf), "%Y-%m-%dT%H:%M:%SZ", &utc);
+    if (std::strftime(buf, sizeof(buf), "%Y-%m-%dT%H:%M:%SZ", &utc) == 0) {
+        return "";
+    }
     return buf;
 }
 
@@ -496,20 +503,29 @@ std::time_t timegm_wrapper(std::tm* tm) {
 }
 
 std::time_t w3cdtf_to_time(const std::string& s) {
-    if (s.empty()) {
+    if (s.empty() || s.size() < 19) {
         return 0;
     }
+    auto parse_component = [](const char* p, const char** end) -> int {
+        int value = 0;
+        auto result = std::from_chars(p, p + 4, value);
+        *end = result.ptr;
+        return value;
+    };
     std::tm utc = {};
-    std::sscanf(s.c_str(),
-                "%d-%d-%dT%d:%d:%d",
-                &utc.tm_year,
-                &utc.tm_mon,
-                &utc.tm_mday,
-                &utc.tm_hour,
-                &utc.tm_min,
-                &utc.tm_sec);
-    utc.tm_year -= 1900;
-    utc.tm_mon -= 1;
+    const char* p = s.c_str();
+    const char* end = nullptr;
+    utc.tm_year = parse_component(p, &end) - 1900;
+    p = end + 1;  // skip '-'
+    utc.tm_mon = parse_component(p, &end) - 1;
+    p = end + 1;  // skip '-'
+    utc.tm_mday = parse_component(p, &end);
+    p = end + 1;  // skip 'T'
+    utc.tm_hour = parse_component(p, &end);
+    p = end + 1;  // skip ':'
+    utc.tm_min = parse_component(p, &end);
+    p = end + 1;  // skip ':'
+    utc.tm_sec = parse_component(p, &end);
     return timegm_wrapper(&utc);
 }
 
@@ -525,7 +541,7 @@ pugi::xml_node get_or_create_child(pugi::xml_node parent, const char* name) {
 
 void set_text_child(pugi::xml_node parent, const char* name, const std::string& value) {
     if (value.empty()) {
-        pugi::xml_node child = parent.child(name);
+        const pugi::xml_node child = parent.child(name);
         if (child) {
             parent.remove_child(child);
         }

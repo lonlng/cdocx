@@ -375,7 +375,7 @@ TEST(CDocxFactoryTest, DocumentBuilderFactory) {
 TEST(CDocxFactoryTest, TableBuilderFactory) {
     auto table = CDocx::table(2, 3);
     ASSERT_NE(table, nullptr);
-    auto& ref = table->SetCellText(0, 0, "A1").SetCellText(1, 2, "B3");
+    auto& ref = table->set_cell_text(0, 0, "A1").set_cell_text(1, 2, "B3");
     EXPECT_EQ(&ref, table.get());
 }
 
@@ -542,13 +542,13 @@ TEST(ControlCharTest, Constants) {
 }
 
 TEST(ControlCharTest, CharConstants) {
-    EXPECT_EQ(cdocx::ControlChar::tab_char, '\t');
-    EXPECT_EQ(cdocx::ControlChar::line_feed_char, '\n');
-    EXPECT_EQ(cdocx::ControlChar::paragraph_break_char, '\r');
-    EXPECT_EQ(cdocx::ControlChar::page_break_char, '\f');
-    EXPECT_EQ(cdocx::ControlChar::column_break_char, '\x0e');
-    EXPECT_EQ(cdocx::ControlChar::non_breaking_space_char, '\xa0');
-    EXPECT_EQ(cdocx::ControlChar::cell_char, '\x07');
+    EXPECT_EQ(cdocx::ControlChar::kTabChar, '\t');
+    EXPECT_EQ(cdocx::ControlChar::kLineFeedChar, '\n');
+    EXPECT_EQ(cdocx::ControlChar::kParagraphBreakChar, '\r');
+    EXPECT_EQ(cdocx::ControlChar::kPageBreakChar, '\f');
+    EXPECT_EQ(cdocx::ControlChar::kColumnBreakChar, '\x0e');
+    EXPECT_EQ(cdocx::ControlChar::kNonBreakingSpaceChar, '\xa0');
+    EXPECT_EQ(cdocx::ControlChar::kCellChar, '\x07');
 }
 
 // ============================================================================
@@ -560,7 +560,7 @@ TEST(FileFormatUtilTest, DetectDocxFile) {
     ASSERT_TRUE(doc.create_empty());
     doc.save();
 
-    auto info = cdocx::FileFormatUtil::DetectFileFormat("test_format_detect.docx");
+    auto info = cdocx::FileFormatUtil::detect_file_format("test_format_detect.docx");
     ASSERT_NE(info, nullptr);
     EXPECT_EQ(info->load_format(), cdocx::LoadFormat::Docx);
     EXPECT_FALSE(info->is_encrypted());
@@ -569,67 +569,67 @@ TEST(FileFormatUtilTest, DetectDocxFile) {
 }
 
 TEST(FileFormatUtilTest, DetectMissingFile) {
-    auto info = cdocx::FileFormatUtil::DetectFileFormat("nonexistent_file.xyz");
+    auto info = cdocx::FileFormatUtil::detect_file_format("nonexistent_file.xyz");
     ASSERT_NE(info, nullptr);
     EXPECT_EQ(info->load_format(), cdocx::LoadFormat::Unknown);
 }
 
 TEST(FileFormatUtilTest, FormatToExtension) {
-    EXPECT_EQ(cdocx::FileFormatUtil::LoadFormatToExtension(cdocx::LoadFormat::Docx), ".docx");
-    EXPECT_EQ(cdocx::FileFormatUtil::LoadFormatToExtension(cdocx::LoadFormat::Docm), ".docm");
-    EXPECT_EQ(cdocx::FileFormatUtil::LoadFormatToExtension(cdocx::LoadFormat::Dotx), ".dotx");
-    EXPECT_EQ(cdocx::FileFormatUtil::LoadFormatToExtension(cdocx::LoadFormat::Rtf), ".rtf");
-    EXPECT_EQ(cdocx::FileFormatUtil::LoadFormatToExtension(cdocx::LoadFormat::Html), ".html");
-    EXPECT_EQ(cdocx::FileFormatUtil::LoadFormatToExtension(cdocx::LoadFormat::Text), ".txt");
-    EXPECT_EQ(cdocx::FileFormatUtil::LoadFormatToExtension(cdocx::LoadFormat::Markdown), ".md");
-    EXPECT_EQ(cdocx::FileFormatUtil::LoadFormatToExtension(cdocx::LoadFormat::Xml), ".xml");
-    EXPECT_EQ(cdocx::FileFormatUtil::LoadFormatToExtension(cdocx::LoadFormat::Unknown), "");
+    EXPECT_EQ(cdocx::FileFormatUtil::load_format_to_extension(cdocx::LoadFormat::Docx), ".docx");
+    EXPECT_EQ(cdocx::FileFormatUtil::load_format_to_extension(cdocx::LoadFormat::Docm), ".docm");
+    EXPECT_EQ(cdocx::FileFormatUtil::load_format_to_extension(cdocx::LoadFormat::Dotx), ".dotx");
+    EXPECT_EQ(cdocx::FileFormatUtil::load_format_to_extension(cdocx::LoadFormat::Rtf), ".rtf");
+    EXPECT_EQ(cdocx::FileFormatUtil::load_format_to_extension(cdocx::LoadFormat::Html), ".html");
+    EXPECT_EQ(cdocx::FileFormatUtil::load_format_to_extension(cdocx::LoadFormat::Text), ".txt");
+    EXPECT_EQ(cdocx::FileFormatUtil::load_format_to_extension(cdocx::LoadFormat::Markdown), ".md");
+    EXPECT_EQ(cdocx::FileFormatUtil::load_format_to_extension(cdocx::LoadFormat::Xml), ".xml");
+    EXPECT_EQ(cdocx::FileFormatUtil::load_format_to_extension(cdocx::LoadFormat::Unknown), "");
 
-    EXPECT_EQ(cdocx::FileFormatUtil::SaveFormatToExtension(cdocx::SaveFormat::Odt), ".odt");
+    EXPECT_EQ(cdocx::FileFormatUtil::save_format_to_extension(cdocx::SaveFormat::Odt), ".odt");
 }
 
 TEST(FileFormatUtilTest, ExtensionToSaveFormat) {
-    EXPECT_EQ(cdocx::FileFormatUtil::ExtensionToSaveFormat("docx"), cdocx::SaveFormat::Docx);
-    EXPECT_EQ(cdocx::FileFormatUtil::ExtensionToSaveFormat(".docx"), cdocx::SaveFormat::Docx);
-    EXPECT_EQ(cdocx::FileFormatUtil::ExtensionToSaveFormat(".html"), cdocx::SaveFormat::Html);
-    EXPECT_EQ(cdocx::FileFormatUtil::ExtensionToSaveFormat(".htm"), cdocx::SaveFormat::Html);
-    EXPECT_EQ(cdocx::FileFormatUtil::ExtensionToSaveFormat(".md"), cdocx::SaveFormat::Markdown);
-    EXPECT_EQ(cdocx::FileFormatUtil::ExtensionToSaveFormat(".rtf"), cdocx::SaveFormat::Rtf);
-    EXPECT_EQ(cdocx::FileFormatUtil::ExtensionToSaveFormat(".txt"), cdocx::SaveFormat::Text);
-    EXPECT_EQ(cdocx::FileFormatUtil::ExtensionToSaveFormat(".unknown"), cdocx::SaveFormat::Unknown);
+    EXPECT_EQ(cdocx::FileFormatUtil::extension_to_save_format("docx"), cdocx::SaveFormat::Docx);
+    EXPECT_EQ(cdocx::FileFormatUtil::extension_to_save_format(".docx"), cdocx::SaveFormat::Docx);
+    EXPECT_EQ(cdocx::FileFormatUtil::extension_to_save_format(".html"), cdocx::SaveFormat::Html);
+    EXPECT_EQ(cdocx::FileFormatUtil::extension_to_save_format(".htm"), cdocx::SaveFormat::Html);
+    EXPECT_EQ(cdocx::FileFormatUtil::extension_to_save_format(".md"), cdocx::SaveFormat::Markdown);
+    EXPECT_EQ(cdocx::FileFormatUtil::extension_to_save_format(".rtf"), cdocx::SaveFormat::Rtf);
+    EXPECT_EQ(cdocx::FileFormatUtil::extension_to_save_format(".txt"), cdocx::SaveFormat::Text);
+    EXPECT_EQ(cdocx::FileFormatUtil::extension_to_save_format(".unknown"), cdocx::SaveFormat::Unknown);
 }
 
 TEST(FileFormatUtilTest, FormatConversions) {
-    EXPECT_EQ(cdocx::FileFormatUtil::SaveFormatToLoadFormat(cdocx::SaveFormat::Docx), cdocx::LoadFormat::Docx);
-    EXPECT_EQ(cdocx::FileFormatUtil::LoadFormatToSaveFormat(cdocx::LoadFormat::Docx), cdocx::SaveFormat::Docx);
-    EXPECT_EQ(cdocx::FileFormatUtil::SaveFormatToLoadFormat(cdocx::SaveFormat::Unknown), cdocx::LoadFormat::Unknown);
-    EXPECT_EQ(cdocx::FileFormatUtil::LoadFormatToSaveFormat(cdocx::LoadFormat::Unknown), cdocx::SaveFormat::Unknown);
+    EXPECT_EQ(cdocx::FileFormatUtil::save_format_to_load_format(cdocx::SaveFormat::Docx), cdocx::LoadFormat::Docx);
+    EXPECT_EQ(cdocx::FileFormatUtil::load_format_to_save_format(cdocx::LoadFormat::Docx), cdocx::SaveFormat::Docx);
+    EXPECT_EQ(cdocx::FileFormatUtil::save_format_to_load_format(cdocx::SaveFormat::Unknown), cdocx::LoadFormat::Unknown);
+    EXPECT_EQ(cdocx::FileFormatUtil::load_format_to_save_format(cdocx::LoadFormat::Unknown), cdocx::SaveFormat::Unknown);
 }
 
 TEST(FileFormatUtilTest, DetectFromBuffer) {
     // HTML
     std::string html = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head></html>";
     std::vector<uint8_t> html_data(html.begin(), html.end());
-    auto html_info = cdocx::FileFormatUtil::DetectFileFormat(html_data);
+    auto html_info = cdocx::FileFormatUtil::detect_file_format(html_data);
     EXPECT_EQ(html_info->load_format(), cdocx::LoadFormat::Html);
     EXPECT_EQ(html_info->encoding(), "UTF-8");
 
     // RTF
     std::string rtf = "{\\rtf1\\ansi test}";
     std::vector<uint8_t> rtf_data(rtf.begin(), rtf.end());
-    auto rtf_info = cdocx::FileFormatUtil::DetectFileFormat(rtf_data);
+    auto rtf_info = cdocx::FileFormatUtil::detect_file_format(rtf_data);
     EXPECT_EQ(rtf_info->load_format(), cdocx::LoadFormat::Rtf);
 
     // Plain text
     std::string text = "This is plain text content.";
     std::vector<uint8_t> text_data(text.begin(), text.end());
-    auto text_info = cdocx::FileFormatUtil::DetectFileFormat(text_data);
+    auto text_info = cdocx::FileFormatUtil::detect_file_format(text_data);
     EXPECT_EQ(text_info->load_format(), cdocx::LoadFormat::Text);
 
     // XML
     std::string xml = "<?xml version=\"1.0\"?><root/>";
     std::vector<uint8_t> xml_data(xml.begin(), xml.end());
-    auto xml_info = cdocx::FileFormatUtil::DetectFileFormat(xml_data);
+    auto xml_info = cdocx::FileFormatUtil::detect_file_format(xml_data);
     EXPECT_EQ(xml_info->load_format(), cdocx::LoadFormat::Xml);
 }
 

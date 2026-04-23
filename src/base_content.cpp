@@ -9,6 +9,7 @@
 #include <cdocx/paragraph.h>
 
 #include <cstring>
+#include <utility>
 
 namespace cdocx {
 
@@ -22,7 +23,7 @@ Run::Run(Document* doc) {
     set_document(doc);
 }
 
-Run::Run(Document* doc, const std::string& text) : text_(text) {
+Run::Run(Document* doc, std::string text) : text_(std::move(text)) {
     set_document(doc);
 }
 
@@ -53,7 +54,7 @@ Run& Run::operator=(const Run& other) {
 }
 
 Run& Run::set_properties(const TextProperties& props) {
-    props.applyTo(*this);
+    props.apply_to(*this);
     return *this;
 }
 
@@ -105,8 +106,6 @@ Run& Run::set_underline_style(TextProperties::UnderlineStyle style, const std::s
             set_underline(UnderlineType::DashDotDotHeavy);
             break;
         case TextProperties::UnderlineStyle::Wave:
-            set_underline(UnderlineType::Wave);
-            break;
         case TextProperties::UnderlineStyle::WavyDouble:
             set_underline(UnderlineType::Wave);
             break;
@@ -228,11 +227,11 @@ void Run::accept(DocumentVisitor* visitor) {
     }
 }
 
-std::shared_ptr<Node> Run::clone(bool deep) const {
+std::shared_ptr<Node> Run::clone(bool /*deep*/) const {
     auto cloned = std::make_shared<Run>(get_document(), text_);
     cloned->font_ = font_;
-    if (preserved_rPr_.first_child()) {
-        cloned->preserved_rPr_.append_copy(preserved_rPr_.first_child());
+    if (preserved_r_pr_.first_child()) {
+        cloned->preserved_r_pr_.append_copy(preserved_r_pr_.first_child());
     }
     if (preserved_children_.first_child()) {
         for (auto child = preserved_children_.first_child(); child; child = child.next_sibling()) {
@@ -262,8 +261,7 @@ bool Run::has_preserved_children() const {
 // Run Legacy Implementation (XML-based)
 // ============================================================================
 
-Run::Run(pugi::xml_node parent, pugi::xml_node current)
-    : parent_xml_(parent), current_xml_(current) {
+Run::Run(pugi::xml_node parent, pugi::xml_node current) : parent_xml_(parent), current_xml_(current) {
 }
 
 void Run::set_parent_xml(pugi::xml_node node) {
@@ -299,16 +297,16 @@ bool Run::set_text_xml(const std::string& text) const {
 }
 
 namespace {
-pugi::xml_node EnsureRPr(pugi::xml_node current_xml) {
-    auto rPr = current_xml.child("w:rPr");
-    if (!rPr) {
+pugi::xml_node ensure_r_pr(pugi::xml_node current_xml) {
+    auto r_pr = current_xml.child("w:rPr");
+    if (!r_pr) {
         // Insert after any w:rPr element? Just prepend before w:t or other children
-        rPr = current_xml.prepend_child("w:rPr");
+        r_pr = current_xml.prepend_child("w:rPr");
     }
-    return rPr;
+    return r_pr;
 }
 
-pugi::xml_attribute SetAttr(pugi::xml_node node, const char* name, const char* value) {
+pugi::xml_attribute set_attr(pugi::xml_node node, const char* name, const char* value) {
     auto attr = node.attribute(name);
     if (!attr) {
         attr = node.append_attribute(name);
@@ -317,7 +315,7 @@ pugi::xml_attribute SetAttr(pugi::xml_node node, const char* name, const char* v
     return attr;
 }
 
-pugi::xml_attribute SetAttr(pugi::xml_node node, const char* name, int value) {
+pugi::xml_attribute set_attr(pugi::xml_node node, const char* name, int value) {
     auto attr = node.attribute(name);
     if (!attr) {
         attr = node.append_attribute(name);
@@ -331,16 +329,16 @@ bool Run::set_color_xml(const std::string& color_hex) {
     if (!current_xml_) {
         return false;
     }
-    auto rPr = EnsureRPr(current_xml_);
+    auto r_pr = ensure_r_pr(current_xml_);
     if (color_hex.empty() || color_hex == "auto") {
-        rPr.remove_child("w:color");
+        r_pr.remove_child("w:color");
         return true;
     }
-    auto color = rPr.child("w:color");
+    auto color = r_pr.child("w:color");
     if (!color) {
-        color = rPr.append_child("w:color");
+        color = r_pr.append_child("w:color");
     }
-    SetAttr(color, "w:val", color_hex.c_str());
+    set_attr(color, "w:val", color_hex.c_str());
     return true;
 }
 
@@ -348,22 +346,22 @@ bool Run::set_font_size_xml(int size) {
     if (!current_xml_) {
         return false;
     }
-    auto rPr = EnsureRPr(current_xml_);
+    auto r_pr = ensure_r_pr(current_xml_);
     if (size <= 0) {
-        rPr.remove_child("w:sz");
-        rPr.remove_child("w:szCs");
+        r_pr.remove_child("w:sz");
+        r_pr.remove_child("w:szCs");
         return true;
     }
-    auto sz = rPr.child("w:sz");
+    auto sz = r_pr.child("w:sz");
     if (!sz) {
-        sz = rPr.append_child("w:sz");
+        sz = r_pr.append_child("w:sz");
     }
-    SetAttr(sz, "w:val", size);
-    auto szCs = rPr.child("w:szCs");
-    if (!szCs) {
-        szCs = rPr.append_child("w:szCs");
+    set_attr(sz, "w:val", size);
+    auto sz_cs = r_pr.child("w:szCs");
+    if (!sz_cs) {
+        sz_cs = r_pr.append_child("w:szCs");
     }
-    SetAttr(szCs, "w:val", size);
+    set_attr(sz_cs, "w:val", size);
     return true;
 }
 
@@ -371,19 +369,19 @@ bool Run::set_font_name_xml(const std::string& font_name) {
     if (!current_xml_) {
         return false;
     }
-    auto rPr = EnsureRPr(current_xml_);
+    auto r_pr = ensure_r_pr(current_xml_);
     if (font_name.empty()) {
-        rPr.remove_child("w:rFonts");
+        r_pr.remove_child("w:rFonts");
         return true;
     }
-    auto fonts = rPr.child("w:rFonts");
+    auto fonts = r_pr.child("w:rFonts");
     if (!fonts) {
-        fonts = rPr.append_child("w:rFonts");
+        fonts = r_pr.append_child("w:rFonts");
     }
-    SetAttr(fonts, "w:ascii", font_name.c_str());
-    SetAttr(fonts, "w:hAnsi", font_name.c_str());
-    SetAttr(fonts, "w:cs", font_name.c_str());
-    SetAttr(fonts, "w:eastAsia", font_name.c_str());
+    set_attr(fonts, "w:ascii", font_name.c_str());
+    set_attr(fonts, "w:hAnsi", font_name.c_str());
+    set_attr(fonts, "w:cs", font_name.c_str());
+    set_attr(fonts, "w:eastAsia", font_name.c_str());
     return true;
 }
 
@@ -391,13 +389,13 @@ bool Run::set_bold_xml(bool bold) {
     if (!current_xml_) {
         return false;
     }
-    auto rPr = EnsureRPr(current_xml_);
+    auto r_pr = ensure_r_pr(current_xml_);
     if (bold) {
-        if (!rPr.child("w:b")) {
-            rPr.append_child("w:b");
+        if (!r_pr.child("w:b")) {
+            r_pr.append_child("w:b");
         }
     } else {
-        rPr.remove_child("w:b");
+        r_pr.remove_child("w:b");
     }
     return true;
 }
@@ -406,13 +404,13 @@ bool Run::set_italic_xml(bool italic) {
     if (!current_xml_) {
         return false;
     }
-    auto rPr = EnsureRPr(current_xml_);
+    auto r_pr = ensure_r_pr(current_xml_);
     if (italic) {
-        if (!rPr.child("w:i")) {
-            rPr.append_child("w:i");
+        if (!r_pr.child("w:i")) {
+            r_pr.append_child("w:i");
         }
     } else {
-        rPr.remove_child("w:i");
+        r_pr.remove_child("w:i");
     }
     return true;
 }
@@ -421,15 +419,15 @@ bool Run::set_underline_xml(bool underline) {
     if (!current_xml_) {
         return false;
     }
-    auto rPr = EnsureRPr(current_xml_);
+    auto r_pr = ensure_r_pr(current_xml_);
     if (underline) {
-        auto u = rPr.child("w:u");
+        auto u = r_pr.child("w:u");
         if (!u) {
-            u = rPr.append_child("w:u");
+            u = r_pr.append_child("w:u");
         }
-        SetAttr(u, "w:val", "single");
+        set_attr(u, "w:val", "single");
     } else {
-        rPr.remove_child("w:u");
+        r_pr.remove_child("w:u");
     }
     return true;
 }
@@ -442,10 +440,10 @@ void Run::set_properties_xml(const TextProperties& props) {
     if (props.font) {
         set_font_name_xml(props.font->ascii);
     }
-    set_bold_xml(props.fontStyle.bold);
-    set_italic_xml(props.fontStyle.italic);
-    if (props.fontSize > 0) {
-        set_font_size_xml(props.fontSize);
+    set_bold_xml(props.font_style.bold);
+    set_italic_xml(props.font_style.italic);
+    if (props.font_size > 0) {
+        set_font_size_xml(props.font_size);
     }
     if (!props.color.empty()) {
         set_color_xml(props.color);
@@ -453,43 +451,43 @@ void Run::set_properties_xml(const TextProperties& props) {
     if (props.underline.style != TextProperties::UnderlineStyle::None) {
         set_underline_style_xml(props.underline.style, props.underline.color);
     } else {
-        auto rPr = current_xml_.child("w:rPr");
-        if (rPr) {
-            rPr.remove_child("w:u");
+        auto r_pr = current_xml_.child("w:rPr");
+        if (r_pr) {
+            r_pr.remove_child("w:u");
         }
     }
     set_strike_xml(props.strike);
     if (props.highlight != TextProperties::Highlight::None) {
         set_highlight_xml(props.highlight);
     } else {
-        auto rPr = current_xml_.child("w:rPr");
-        if (rPr) {
-            rPr.remove_child("w:highlight");
+        auto r_pr = current_xml_.child("w:rPr");
+        if (r_pr) {
+            r_pr.remove_child("w:highlight");
         }
     }
     if (props.scale != 100) {
         set_scale_xml(props.scale);
     } else {
-        auto rPr = current_xml_.child("w:rPr");
-        if (rPr) {
-            rPr.remove_child("w:w");
+        auto r_pr = current_xml_.child("w:rPr");
+        if (r_pr) {
+            r_pr.remove_child("w:w");
         }
     }
     if (props.spacing.type != TextProperties::SpacingType::Normal) {
         set_spacing_xml(props.spacing.type, props.spacing.value);
     } else {
-        auto rPr = current_xml_.child("w:rPr");
-        if (rPr) {
-            rPr.remove_child("w:spacing");
+        auto r_pr = current_xml_.child("w:rPr");
+        if (r_pr) {
+            r_pr.remove_child("w:spacing");
         }
     }
     if (props.position.type != TextProperties::PositionType::Normal) {
         set_position_xml(props.position.type, props.position.value);
     } else {
-        auto rPr = current_xml_.child("w:rPr");
-        if (rPr) {
-            rPr.remove_child("w:vertAlign");
-            rPr.remove_child("w:position");
+        auto r_pr = current_xml_.child("w:rPr");
+        if (r_pr) {
+            r_pr.remove_child("w:vertAlign");
+            r_pr.remove_child("w:position");
         }
     }
 }
@@ -500,40 +498,40 @@ TextProperties Run::get_properties_xml() const {
         return props;
     }
 
-    auto rPr = current_xml_.child("w:rPr");
-    if (!rPr) {
+    auto r_pr = current_xml_.child("w:rPr");
+    if (!r_pr) {
         return props;
     }
 
     // Font
-    auto rFonts = rPr.child("w:rFonts");
-    if (rFonts) {
+    auto r_fonts = r_pr.child("w:rFonts");
+    if (r_fonts) {
         TextProperties::Font font;
-        font.ascii = rFonts.attribute("w:ascii").value();
-        font.hAnsi = rFonts.attribute("w:hAnsi").value();
-        font.cs = rFonts.attribute("w:cs").value();
-        font.eastAsia = rFonts.attribute("w:eastAsia").value();
+        font.ascii = r_fonts.attribute("w:ascii").value();
+        font.h_ansi = r_fonts.attribute("w:hAnsi").value();
+        font.cs = r_fonts.attribute("w:cs").value();
+        font.east_asia = r_fonts.attribute("w:eastAsia").value();
         props.font = font;
     }
 
     // Bold / Italic
-    props.fontStyle.bold = rPr.child("w:b") != nullptr;
-    props.fontStyle.italic = rPr.child("w:i") != nullptr;
+    props.font_style.bold = r_pr.child("w:b") != nullptr;
+    props.font_style.italic = r_pr.child("w:i") != nullptr;
 
     // Font size
-    auto sz = rPr.child("w:sz");
+    auto sz = r_pr.child("w:sz");
     if (sz) {
-        props.fontSize = sz.attribute("w:val").as_int();
+        props.font_size = sz.attribute("w:val").as_int();
     }
 
     // Color
-    auto color = rPr.child("w:color");
+    auto color = r_pr.child("w:color");
     if (color) {
         props.color = color.attribute("w:val").value();
     }
 
     // Underline
-    auto u = rPr.child("w:u");
+    auto u = r_pr.child("w:u");
     if (u) {
         const char* uval = u.attribute("w:val").value();
         auto& ul = props.underline;
@@ -579,14 +577,14 @@ TextProperties Run::get_properties_xml() const {
     }
 
     // Strike
-    if (rPr.child("w:dstrike")) {
+    if (r_pr.child("w:dstrike")) {
         props.strike = TextProperties::StrikeStyle::Double;
-    } else if (rPr.child("w:strike")) {
+    } else if (r_pr.child("w:strike")) {
         props.strike = TextProperties::StrikeStyle::Single;
     }
 
     // Highlight
-    auto hl = rPr.child("w:highlight");
+    auto hl = r_pr.child("w:highlight");
     if (hl) {
         const char* hval = hl.attribute("w:val").value();
         if (std::strcmp(hval, "black") == 0) {
@@ -625,15 +623,15 @@ TextProperties Run::get_properties_xml() const {
     }
 
     // Scale
-    auto w = rPr.child("w:w");
+    auto w = r_pr.child("w:w");
     if (w) {
         props.scale = w.attribute("w:val").as_int(100);
     }
 
     // Spacing
-    auto sp = rPr.child("w:spacing");
+    auto sp = r_pr.child("w:spacing");
     if (sp) {
-        int sval = sp.attribute("w:val").as_int();
+        const int sval = sp.attribute("w:val").as_int();
         if (sval >= 0) {
             props.spacing.type = TextProperties::SpacingType::Expanded;
             props.spacing.value = sval;
@@ -644,7 +642,7 @@ TextProperties Run::get_properties_xml() const {
     }
 
     // Position (vertAlign / position)
-    auto va = rPr.child("w:vertAlign");
+    auto va = r_pr.child("w:vertAlign");
     if (va) {
         const char* vval = va.attribute("w:val").value();
         if (std::strcmp(vval, "superscript") == 0) {
@@ -652,7 +650,7 @@ TextProperties Run::get_properties_xml() const {
         } else if (std::strcmp(vval, "subscript") == 0) {
             props.position.type = TextProperties::PositionType::Lowered;
         }
-        auto pos = rPr.child("w:position");
+        auto pos = r_pr.child("w:position");
         if (pos) {
             props.position.value = std::abs(pos.attribute("w:val").as_int());
         }
@@ -665,9 +663,9 @@ bool Run::set_highlight_xml(TextProperties::Highlight color) {
     if (!current_xml_) {
         return false;
     }
-    auto rPr = EnsureRPr(current_xml_);
+    auto r_pr = ensure_r_pr(current_xml_);
     if (color == TextProperties::Highlight::None) {
-        rPr.remove_child("w:highlight");
+        r_pr.remove_child("w:highlight");
         return true;
     }
     const char* val = "yellow";
@@ -723,11 +721,11 @@ bool Run::set_highlight_xml(TextProperties::Highlight color) {
         default:
             break;
     }
-    auto hl = rPr.child("w:highlight");
+    auto hl = r_pr.child("w:highlight");
     if (!hl) {
-        hl = rPr.append_child("w:highlight");
+        hl = r_pr.append_child("w:highlight");
     }
-    SetAttr(hl, "w:val", val);
+    set_attr(hl, "w:val", val);
     return true;
 }
 
@@ -735,9 +733,9 @@ bool Run::set_underline_style_xml(TextProperties::UnderlineStyle style, const st
     if (!current_xml_) {
         return false;
     }
-    auto rPr = EnsureRPr(current_xml_);
+    auto r_pr = ensure_r_pr(current_xml_);
     if (style == TextProperties::UnderlineStyle::None) {
-        rPr.remove_child("w:u");
+        r_pr.remove_child("w:u");
         return true;
     }
     const char* val = "single";
@@ -796,13 +794,13 @@ bool Run::set_underline_style_xml(TextProperties::UnderlineStyle style, const st
         default:
             break;
     }
-    auto u = rPr.child("w:u");
+    auto u = r_pr.child("w:u");
     if (!u) {
-        u = rPr.append_child("w:u");
+        u = r_pr.append_child("w:u");
     }
-    SetAttr(u, "w:val", val);
+    set_attr(u, "w:val", val);
     if (!color.empty() && color != "auto") {
-        SetAttr(u, "w:color", color.c_str());
+        set_attr(u, "w:color", color.c_str());
     }
     return true;
 }
@@ -811,13 +809,13 @@ bool Run::set_strike_xml(TextProperties::StrikeStyle style) {
     if (!current_xml_) {
         return false;
     }
-    auto rPr = EnsureRPr(current_xml_);
-    rPr.remove_child("w:strike");
-    rPr.remove_child("w:dstrike");
+    auto r_pr = ensure_r_pr(current_xml_);
+    r_pr.remove_child("w:strike");
+    r_pr.remove_child("w:dstrike");
     if (style == TextProperties::StrikeStyle::Single) {
-        rPr.append_child("w:strike");
+        r_pr.append_child("w:strike");
     } else if (style == TextProperties::StrikeStyle::Double) {
-        rPr.append_child("w:dstrike");
+        r_pr.append_child("w:dstrike");
     }
     return true;
 }
@@ -826,16 +824,16 @@ bool Run::set_scale_xml(int percent) {
     if (!current_xml_) {
         return false;
     }
-    auto rPr = EnsureRPr(current_xml_);
+    auto r_pr = ensure_r_pr(current_xml_);
     if (percent <= 0 || percent == 100) {
-        rPr.remove_child("w:w");
+        r_pr.remove_child("w:w");
         return true;
     }
-    auto w = rPr.child("w:w");
+    auto w = r_pr.child("w:w");
     if (!w) {
-        w = rPr.append_child("w:w");
+        w = r_pr.append_child("w:w");
     }
-    SetAttr(w, "w:val", percent);
+    set_attr(w, "w:val", percent);
     return true;
 }
 
@@ -843,17 +841,17 @@ bool Run::set_spacing_xml(TextProperties::SpacingType type, int value) {
     if (!current_xml_) {
         return false;
     }
-    auto rPr = EnsureRPr(current_xml_);
+    auto r_pr = ensure_r_pr(current_xml_);
     if (type == TextProperties::SpacingType::Normal || value == 0) {
-        rPr.remove_child("w:spacing");
+        r_pr.remove_child("w:spacing");
         return true;
     }
-    auto sp = rPr.child("w:spacing");
+    auto sp = r_pr.child("w:spacing");
     if (!sp) {
-        sp = rPr.append_child("w:spacing");
+        sp = r_pr.append_child("w:spacing");
     }
-    int val = (type == TextProperties::SpacingType::Expanded) ? value : -value;
-    SetAttr(sp, "w:val", val);
+    const int val = (type == TextProperties::SpacingType::Expanded) ? value : -value;
+    set_attr(sp, "w:val", val);
     return true;
 }
 
@@ -861,28 +859,28 @@ bool Run::set_position_xml(TextProperties::PositionType type, int value) {
     if (!current_xml_) {
         return false;
     }
-    auto rPr = EnsureRPr(current_xml_);
+    auto r_pr = ensure_r_pr(current_xml_);
     if (type == TextProperties::PositionType::Normal) {
-        rPr.remove_child("w:vertAlign");
-        rPr.remove_child("w:position");
+        r_pr.remove_child("w:vertAlign");
+        r_pr.remove_child("w:position");
         return true;
     }
     const char* valign =
         (type == TextProperties::PositionType::Raised) ? "superscript" : "subscript";
-    auto va = rPr.child("w:vertAlign");
+    auto va = r_pr.child("w:vertAlign");
     if (!va) {
-        va = rPr.append_child("w:vertAlign");
+        va = r_pr.append_child("w:vertAlign");
     }
-    SetAttr(va, "w:val", valign);
+    set_attr(va, "w:val", valign);
     if (value != 0) {
-        auto pos = rPr.child("w:position");
+        auto pos = r_pr.child("w:position");
         if (!pos) {
-            pos = rPr.append_child("w:position");
+            pos = r_pr.append_child("w:position");
         }
-        int val = (type == TextProperties::PositionType::Raised) ? value : -value;
-        SetAttr(pos, "w:val", val);
+        const int val = (type == TextProperties::PositionType::Raised) ? value : -value;
+        set_attr(pos, "w:val", val);
     } else {
-        rPr.remove_child("w:position");
+        r_pr.remove_child("w:position");
     }
     return true;
 }
@@ -962,7 +960,7 @@ void SpecialChar::accept(DocumentVisitor* visitor) {
     }
 }
 
-std::shared_ptr<Node> SpecialChar::clone(bool deep) const {
+std::shared_ptr<Node> SpecialChar::clone(bool /*deep*/) const {
     return std::make_shared<SpecialChar>(char_code_);
 }
 
@@ -1038,7 +1036,7 @@ std::string Field::get_switches_text() const {
 
 std::string Field::get_full_field_code() const {
     std::string result = field_code_;
-    std::string sw = get_switches_text();
+    const std::string sw = get_switches_text();
     if (!sw.empty()) {
         if (!result.empty()) {
             result += " ";
@@ -1048,7 +1046,7 @@ std::string Field::get_full_field_code() const {
     return result;
 }
 
-std::shared_ptr<Node> Field::clone(bool deep) const {
+std::shared_ptr<Node> Field::clone(bool /*deep*/) const {
     auto cloned = std::make_shared<Field>(get_document(), type_);
     cloned->field_code_ = field_code_;
     cloned->result_ = result_;
@@ -1064,7 +1062,7 @@ std::shared_ptr<Node> Field::clone(bool deep) const {
 
 BookmarkStart::BookmarkStart() = default;
 
-BookmarkStart::BookmarkStart(const std::string& name, int id) : name_(name), id_(id) {
+BookmarkStart::BookmarkStart(std::string name, int id) : name_(std::move(name)), id_(id) {
 }
 
 BookmarkStart::BookmarkStart(Document* doc) {
@@ -1077,7 +1075,7 @@ void BookmarkStart::accept(DocumentVisitor* visitor) {
     }
 }
 
-std::shared_ptr<Node> BookmarkStart::clone(bool deep) const {
+std::shared_ptr<Node> BookmarkStart::clone(bool /*deep*/) const {
     return std::make_shared<BookmarkStart>(name_, id_);
 }
 
@@ -1100,7 +1098,7 @@ void BookmarkEnd::accept(DocumentVisitor* visitor) {
     }
 }
 
-std::shared_ptr<Node> BookmarkEnd::clone(bool deep) const {
+std::shared_ptr<Node> BookmarkEnd::clone(bool /*deep*/) const {
     return std::make_shared<BookmarkEnd>(id_);
 }
 
@@ -1148,7 +1146,7 @@ std::string Hyperlink::get_screen_tip() const {
     return screen_tip_;
 }
 
-std::shared_ptr<Node> Hyperlink::clone(bool deep) const {
+std::shared_ptr<Node> Hyperlink::clone(bool /*deep*/) const {
     auto cloned = std::make_shared<Hyperlink>(get_document());
     cloned->set_field_code(get_field_code());
     cloned->set_result(get_result());

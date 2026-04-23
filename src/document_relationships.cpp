@@ -79,7 +79,7 @@ void Document::load_all_relationships() {
 
     // Load header/footer relationships
     for (int i = 1;; i++) {
-        std::string path = "word/_rels/header" + std::to_string(i) + ".xml.rels";
+        const std::string path = "word/_rels/header" + std::to_string(i) + ".xml.rels";
         if (!has_xml_part(path)) {
             break;
         }
@@ -87,7 +87,7 @@ void Document::load_all_relationships() {
     }
 
     for (int i = 1;; i++) {
-        std::string path = "word/_rels/footer" + std::to_string(i) + ".xml.rels";
+        const std::string path = "word/_rels/footer" + std::to_string(i) + ".xml.rels";
         if (!has_xml_part(path)) {
             break;
         }
@@ -103,7 +103,7 @@ std::string Document::add_relationship(const std::string& rels_path,
     int max_id = 0;
     for (const auto& rel : relationships_[rels_path]) {
         if (rel.id.substr(0, 3) == "rId") {
-            int id = std::stoi(rel.id.substr(3));
+            const int id = std::stoi(rel.id.substr(3));
             max_id = std::max(max_id, id);
         }
     }

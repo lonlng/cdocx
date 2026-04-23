@@ -18,8 +18,8 @@
  * // Add a section with landscape orientation
  * auto sect = doc.append_section();
  * sect->get_properties().orientation = SectionProperties::Orientation::Landscape;
- * sect->get_properties().pageSize.width = 16840;  // A4 landscape width in twips
- * sect->get_properties().pageSize.height = 11900; // A4 landscape height
+ * sect->get_properties().page_size.width = 16840;  // A4 landscape width in twips
+ * sect->get_properties().page_size.height = 11900; // A4 landscape height
  *
  * // Add content to section via body
  * auto body = sect->get_body();
@@ -71,7 +71,7 @@ class Section : public CompositeNode {
     explicit Section(Document* doc);
 
     // Legacy constructor (backward compatibility)
-    Section(pugi::xml_node sectPr, pugi::xml_node body, Document* doc, bool is_first);
+    Section(pugi::xml_node sect_pr, pugi::xml_node body, Document* doc, bool is_first);
 
     // Node overrides
     NodeType node_type() const override { return NodeType::Section; }
@@ -94,7 +94,7 @@ class Section : public CompositeNode {
     std::shared_ptr<class Table> append_table(int rows = 1, int cols = 1);
 
     // Legacy API (backward compatibility)
-    class Paragraph* add_paragraph(const std::string& text = "", formatting_flag flag = 0);
+    class Paragraph* add_paragraph(const std::string& text = "", FormattingFlag flag = kNone);
     class Table* add_table(size_t rows, size_t cols);
 
     // Header/Footer operations
@@ -131,7 +131,7 @@ class Section : public CompositeNode {
     void load_properties();
 
     // Set the underlying sectPr XML node (used during sync from physical)
-    void set_sectPr_node(pugi::xml_node node) { sectPr_node_ = node; }
+    void set_sect_pr_node(pugi::xml_node node) { sect_pr_node_ = node; }
 
     // Add header/footer references (used during sync from physical)
     void add_header_ref(const HeaderFooterRef& ref);
@@ -155,7 +155,7 @@ class Section : public CompositeNode {
     mutable std::vector<std::shared_ptr<HeaderFooter>> footers_;
 
     // Legacy members (backward compatibility)
-    pugi::xml_node sectPr_node_;
+    pugi::xml_node sect_pr_node_;
     pugi::xml_node body_node_;
     std::list<class Paragraph> paragraphs_;
     std::list<class Table> tables_;

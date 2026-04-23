@@ -70,7 +70,7 @@ int main() {
     body3->append_paragraph("Important: please read the manual.");
 
     cdocx::DocumentSearch::replace_with_formatting(
-        doc3, "Important", "WARNING", static_cast<cdocx::formatting_flag>(cdocx::bold));
+        doc3, "Important", "WARNING", static_cast<cdocx::FormattingFlag>(cdocx::kBold));
     std::cout << "Replaced 'Important' with bold 'WARNING'." << std::endl;
 
     // ------------------------------------------------------------------------

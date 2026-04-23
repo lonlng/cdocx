@@ -23,7 +23,7 @@ pugi::xml_node CaptionGenerator::insert_figure_caption(Document* doc,
                                                        const std::string& description,
                                                        int figure_number) {
     if (!doc) {
-        return pugi::xml_node();
+        return pugi::xml_node{};
     }
 
     // Auto-generate figure number if not provided
@@ -32,7 +32,7 @@ pugi::xml_node CaptionGenerator::insert_figure_caption(Document* doc,
     }
 
     // Generate full caption text
-    std::string full_text = generate_caption_text(figure_number, description);
+    const std::string full_text = generate_caption_text(figure_number, description);
 
     // Create caption paragraph
     return create_caption_paragraph(doc, full_text, after_para);
@@ -42,7 +42,7 @@ pugi::xml_node CaptionGenerator::insert_figure_caption_at_end(Document* doc,
                                                               const std::string& description,
                                                               int figure_number) {
     if (!doc) {
-        return pugi::xml_node();
+        return pugi::xml_node{};
     }
 
     // Auto-generate figure number if not provided
@@ -51,7 +51,7 @@ pugi::xml_node CaptionGenerator::insert_figure_caption_at_end(Document* doc,
     }
 
     // Generate full caption text
-    std::string full_text = generate_caption_text(figure_number, description);
+    const std::string full_text = generate_caption_text(figure_number, description);
 
     // Create caption paragraph at end (no insert_after)
     return create_caption_paragraph(doc, full_text, pugi::xml_node());
@@ -70,7 +70,7 @@ int CaptionGenerator::count_existing_figures(Document* doc) {
     int count = 0;
 
     // Get all paragraphs in document body
-    pugi::xml_node body = doc_xml->child("w:document").child("w:body");
+    const pugi::xml_node body = doc_xml->child("w:document").child("w:body");
     if (!body) {
         return 0;
     }
@@ -96,14 +96,14 @@ bool CaptionGenerator::is_figure_caption(pugi::xml_node para) {
     // Extract all text from paragraph
     std::string text;
     for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
-        pugi::xml_node t = run.child("w:t");
+        const pugi::xml_node t = run.child("w:t");
         if (t && t.text()) {
             text += t.text().get();
         }
     }
 
     // trim whitespace
-    size_t start = text.find_first_not_of(" \t\n\r");
+    const size_t start = text.find_first_not_of(" \t\n\r");
     if (start == std::string::npos) {
         return false;
     }
@@ -143,7 +143,7 @@ std::string CaptionGenerator::extract_caption_text(pugi::xml_node para) {
     // Extract all text
     std::string text;
     for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
-        pugi::xml_node t = run.child("w:t");
+        const pugi::xml_node t = run.child("w:t");
         if (t && t.text()) {
             text += t.text().get();
         }
@@ -185,17 +185,17 @@ pugi::xml_node CaptionGenerator::create_caption_paragraph(Document* doc,
                                                           const std::string& full_text,
                                                           pugi::xml_node insert_after) {
     if (!doc) {
-        return pugi::xml_node();
+        return pugi::xml_node{};
     }
 
     pugi::xml_document* doc_xml = doc->get_document_xml();
     if (!doc_xml) {
-        return pugi::xml_node();
+        return pugi::xml_node{};
     }
 
     pugi::xml_node body = doc_xml->child("w:document").child("w:body");
     if (!body) {
-        return pugi::xml_node();
+        return pugi::xml_node{};
     }
 
     // Create new paragraph
@@ -207,19 +207,19 @@ pugi::xml_node CaptionGenerator::create_caption_paragraph(Document* doc,
     }
 
     if (!caption_para) {
-        return pugi::xml_node();
+        return pugi::xml_node{};
     }
 
     // Create paragraph properties with center alignment
-    pugi::xml_node pPr = caption_para.append_child("w:pPr");
-    if (pPr) {
-        pugi::xml_node jc = pPr.append_child("w:jc");
+    pugi::xml_node p_pr = caption_para.append_child("w:pPr");
+    if (p_pr) {
+        pugi::xml_node jc = p_pr.append_child("w:jc");
         if (jc) {
             jc.append_attribute("w:val").set_value("center");
         }
 
         // Add spacing before and after
-        pugi::xml_node spacing = pPr.append_child("w:spacing");
+        pugi::xml_node spacing = p_pr.append_child("w:spacing");
         if (spacing) {
             spacing.append_attribute("w:before").set_value(100);  // 5pt
             spacing.append_attribute("w:after").set_value(100);   // 5pt
@@ -233,31 +233,31 @@ pugi::xml_node CaptionGenerator::create_caption_paragraph(Document* doc,
     }
 
     // Add run properties with fonts
-    pugi::xml_node rPr = run.append_child("w:rPr");
-    if (rPr) {
-        CaptionFormat fmt = CaptionFormat::chinese_default();
+    pugi::xml_node r_pr = run.append_child("w:rPr");
+    if (r_pr) {
+        const CaptionFormat fmt = CaptionFormat::chinese_default();
 
         // Font settings
-        pugi::xml_node rFonts = rPr.append_child("w:rFonts");
-        if (rFonts) {
-            rFonts.append_attribute("w:ascii").set_value(fmt.font_ascii.c_str());
-            rFonts.append_attribute("w:eastAsia").set_value(fmt.font_east_asia.c_str());
-            rFonts.append_attribute("w:hAnsi").set_value(fmt.font_hansi.c_str());
+        pugi::xml_node r_fonts = r_pr.append_child("w:rFonts");
+        if (r_fonts) {
+            r_fonts.append_attribute("w:ascii").set_value(fmt.font_ascii.c_str());
+            r_fonts.append_attribute("w:eastAsia").set_value(fmt.font_east_asia.c_str());
+            r_fonts.append_attribute("w:hAnsi").set_value(fmt.font_hansi.c_str());
         }
 
         // Font size
-        pugi::xml_node sz = rPr.append_child("w:sz");
+        pugi::xml_node sz = r_pr.append_child("w:sz");
         if (sz) {
             sz.append_attribute("w:val").set_value(fmt.font_size);
         }
-        pugi::xml_node szCs = rPr.append_child("w:szCs");
-        if (szCs) {
-            szCs.append_attribute("w:val").set_value(fmt.font_size);
+        pugi::xml_node sz_cs = r_pr.append_child("w:szCs");
+        if (sz_cs) {
+            sz_cs.append_attribute("w:val").set_value(fmt.font_size);
         }
     }
 
     // Add text
-    pugi::xml_node t = run.append_child("w:t");
+    const pugi::xml_node t = run.append_child("w:t");
     if (t) {
         t.text().set(full_text.c_str());
     }
@@ -279,12 +279,12 @@ std::string CaptionGenerator::generate_caption_text(int figure_number,
 
 pugi::xml_node CaptionGenerator::get_body(Document* doc) {
     if (!doc) {
-        return pugi::xml_node();
+        return pugi::xml_node{};
     }
 
     pugi::xml_document* doc_xml = doc->get_document_xml();
     if (!doc_xml) {
-        return pugi::xml_node();
+        return pugi::xml_node{};
     }
 
     return doc_xml->child("w:document").child("w:body");

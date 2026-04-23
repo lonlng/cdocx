@@ -24,10 +24,16 @@
 #pragma once
 
 // Version information
-#define CDOCX_VERSION_MAJOR 0
-#define CDOCX_VERSION_MINOR 7
-#define CDOCX_VERSION_PATCH 0
-#define CDOCX_VERSION "0.7.0"
+inline constexpr int kVersionMajor = 0;
+inline constexpr int kVersionMinor = 7;
+inline constexpr int kVersionPatch = 0;
+inline constexpr char kVersion[] = "0.7.0";
+
+// Backward-compatible macros
+#define CDOCX_VERSION_MAJOR kVersionMajor
+#define CDOCX_VERSION_MINOR kVersionMinor
+#define CDOCX_VERSION_PATCH kVersionPatch
+#define CDOCX_VERSION kVersion
 
 // ============================================================================
 // Core Headers
@@ -106,7 +112,7 @@ class CDocx {
      * @param path Path where to save the document
      * @return true if successful, false otherwise
      */
-    static bool save_document(std::shared_ptr<Document> doc, const std::string& path);
+    static bool save_document(const std::shared_ptr<Document>& doc, const std::string& path);
 
     // ========================================================================
     // Builder Factory Methods (Fluent API)

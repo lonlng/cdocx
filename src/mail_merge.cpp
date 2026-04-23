@@ -54,7 +54,7 @@ std::string parse_merge_field_name(const std::string& field_code) {
 
     // Check keyword (case-insensitive)
     std::string kw_lower;
-    for (char c : keyword) {
+    for (const char c : keyword) {
         kw_lower += static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
     }
     if (kw_lower != "mergefield") {
@@ -67,7 +67,7 @@ std::string parse_merge_field_name(const std::string& field_code) {
     rest = trim(rest);
 
     // Remove switches (anything starting with \\)
-    size_t switch_pos = rest.find("\\\\");
+    const size_t switch_pos = rest.find("\\\\");
     if (switch_pos != std::string::npos) {
         rest = trim(rest.substr(0, switch_pos));
     }
@@ -225,7 +225,7 @@ std::vector<std::string> MailMerge::collect_field_names() const {
                         continue;
                     }
 
-                    std::string name = parse_merge_field_name(field->get_field_code());
+                    const std::string name = parse_merge_field_name(field->get_field_code());
                     if (!name.empty()) {
                         result.push_back(name);
                     }
@@ -268,7 +268,7 @@ void MailMerge::delete_fields() {
                         continue;
                     }
 
-                    std::string name = parse_merge_field_name(field->get_field_code());
+                    const std::string name = parse_merge_field_name(field->get_field_code());
                     if (!name.empty()) {
                         para->remove_child(node);
                         removed_any = true;

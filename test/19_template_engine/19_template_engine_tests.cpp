@@ -30,7 +30,7 @@ TEST(TemplateFormatTest, DefaultConstructionIsEmpty) {
 
 TEST(TemplateFormatTest, ChainableBuilders) {
     TemplateFormat fmt;
-    fmt.bold().italic().underline().Size(24).font("Arial").color("FF0000")
+    fmt.bold().italic().underline().size(24).font("Arial").color("FF0000")
        .alignment("center").line_spacing(360).space_before(120).space_after(120);
 
     EXPECT_FALSE(fmt.is_empty());
@@ -45,7 +45,7 @@ TEST(TemplateFormatTest, ChainableBuilders) {
 
 TEST(TemplateFormatTest, ToBookmarkFormatConversion) {
     TemplateFormat fmt;
-    fmt.bold().Size(24).font_ascii("Arial").color("FF0000").alignment("center");
+    fmt.bold().size(24).font_ascii("Arial").color("FF0000").alignment("center");
 
     BookmarkFormat bmf = fmt.to_bookmark_format();
     EXPECT_TRUE(bmf.bold);
@@ -66,7 +66,7 @@ TEST(TemplateValueTest, DefaultConstructionIsEmptyText) {
 }
 
 TEST(TemplateValueTest, TextFactory) {
-    auto val = TemplateValue::Text("Hello World");
+    auto val = TemplateValue::text("Hello World");
     EXPECT_TRUE(val.is_text());
     EXPECT_EQ(val.text_content(), "Hello World");
     EXPECT_TRUE(val.text_format().is_empty());
@@ -74,22 +74,22 @@ TEST(TemplateValueTest, TextFactory) {
 
 TEST(TemplateValueTest, TextWithFormat) {
     TemplateFormat fmt;
-    fmt.bold().Size(28);
-    auto val = TemplateValue::Text("Hello", fmt);
+    fmt.bold().size(28);
+    auto val = TemplateValue::text("Hello", fmt);
     EXPECT_TRUE(val.is_text());
     EXPECT_EQ(val.text_content(), "Hello");
     EXPECT_TRUE(val.text_format().bold_opt().value());
 }
 
 TEST(TemplateValueTest, ImageFactory) {
-    auto val = TemplateValue::Image("logo.png");
+    auto val = TemplateValue::image("logo.png");
     EXPECT_TRUE(val.is_image());
     EXPECT_EQ(val.image_path(), "logo.png");
     EXPECT_EQ(val.image_alignment(), ImageAlignment::Center);
 }
 
 TEST(TemplateValueTest, ImageWithSize) {
-    auto val = TemplateValue::Image("logo.png", 400.0, 300.0);
+    auto val = TemplateValue::image("logo.png", 400.0, 300.0);
     EXPECT_TRUE(val.is_image());
     EXPECT_TRUE(val.image_size().is_valid());
     EXPECT_EQ(val.image_size().width_pt, 400.0);
@@ -97,7 +97,7 @@ TEST(TemplateValueTest, ImageWithSize) {
 }
 
 TEST(TemplateValueTest, ImageChainableConfig) {
-    auto val = TemplateValue::Image("logo.png")
+    auto val = TemplateValue::image("logo.png")
                    .sized(400.0, 300.0)
                    .left_aligned()
                    .with_caption("Company Logo");
@@ -121,7 +121,7 @@ TEST(TemplateEngineTest, DictionaryStyleAssignment) {
     Document doc;
     TemplateEngine engine(&doc);
 
-    engine["name"] = TemplateValue::Text("John");
+    engine["name"] = TemplateValue::text("John");
     engine["date"] = "2025-04-21";
 
     EXPECT_EQ(engine.size(), 2u);
@@ -133,7 +133,7 @@ TEST(TemplateEngineTest, SetApi) {
     Document doc;
     TemplateEngine engine(&doc);
 
-    engine.set("key1", TemplateValue::Text("value1"))
+    engine.set("key1", TemplateValue::text("value1"))
           .set("key2", std::string("value2"))
           .set("key3", "value3");
 
@@ -267,8 +267,8 @@ TEST(TemplateEngineTest, PlaceholderReplacementWithFormat) {
         ASSERT_TRUE(doc.is_open());
 
         TemplateEngine engine(&doc);
-        engine["title"] = TemplateValue::Text("Annual Report")
-                              .with_format(TemplateFormat().bold().Size(28));
+        engine["title"] = TemplateValue::text("Annual Report")
+                              .with_format(TemplateFormat().bold().size(28));
         auto result = engine.apply();
 
         EXPECT_EQ(result.success, 1);
@@ -642,7 +642,7 @@ TEST(TemplateEngineTest, GlobalConfigurationChaining) {
           .with_scope(TemplateScope::All)
           .with_target(TemplateTarget::Auto)
           .with_format_policy(FormatPolicy::Preserve)
-          .with_default_format(TemplateFormat().bold().Size(14))
+          .with_default_format(TemplateFormat().bold().size(14))
           .with_delimiters("[[", "]]");
 
     // Configurations are applied internally; just verify no crash
@@ -884,8 +884,8 @@ TEST(TemplateEngineTest, BookmarkInsertModeWithFormat) {
         TemplateEngine engine(&doc);
         engine.with_action(TemplateAction::Insert)
               .with_format_policy(FormatPolicy::Override);
-        engine["MARK"] = TemplateValue::Text("BoldPrefix")
-                              .with_format(TemplateFormat().bold().Size(28));
+        engine["MARK"] = TemplateValue::text("BoldPrefix")
+                              .with_format(TemplateFormat().bold().size(28));
         auto result = engine.apply();
 
         EXPECT_EQ(result.success, 1);

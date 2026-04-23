@@ -14,10 +14,10 @@
  * #include <cdocx/constants.h>
  *
  * // Apply bold and italic formatting
- * paragraph->add_run("Bold Italic Text", cdocx::bold | cdocx::italic);
+ * paragraph->add_run("Bold Italic Text", cdocx::kBold | cdocx::kItalic);
  *
  * // Apply underline with strikethrough
- * paragraph->add_run("Underlined Strike", cdocx::underline | cdocx::strikethrough);
+ * paragraph->add_run("Underlined Strike", cdocx::kUnderline | cdocx::kStrikethrough);
  * @endcode
  */
 
@@ -31,7 +31,7 @@ namespace cdocx {
  *          Multiple flags can be combined using bitwise OR operator.
  * @since 0.1.0
  */
-using formatting_flag = unsigned int;
+using FormattingFlag = unsigned int;
 
 // ============================================================================
 // Text Formatting Flags
@@ -47,62 +47,62 @@ using formatting_flag = unsigned int;
  * @brief No formatting applied
  * @details Default formatting with no special styling
  */
-constexpr formatting_flag none = 0;
+constexpr FormattingFlag kNone = 0;
 
 /**
  * @brief Bold text formatting
  * @details Applies bold weight to the text
  * @see Run::set_bold()
  */
-constexpr formatting_flag bold = 1 << 0;  ///< Bit 0
+constexpr FormattingFlag kBold = 1 << 0;  ///< Bit 0
 
 /**
  * @brief Italic text formatting
  * @details Applies italic style to the text
  * @see Run::set_italic()
  */
-constexpr formatting_flag italic = 1 << 1;  ///< Bit 1
+constexpr FormattingFlag kItalic = 1 << 1;  ///< Bit 1
 
 /**
  * @brief Underline text formatting
  * @details Applies single underline to the text
  * @see Run::set_underline()
  */
-constexpr formatting_flag underline = 1 << 2;  ///< Bit 2
+constexpr FormattingFlag kUnderline = 1 << 2;  ///< Bit 2
 
 /**
  * @brief Strikethrough text formatting
  * @details Draws a line through the text
  */
-constexpr formatting_flag strikethrough = 1 << 3;  ///< Bit 3
+constexpr FormattingFlag kStrikethrough = 1 << 3;  ///< Bit 3
 
 /**
  * @brief Superscript text formatting
  * @details Raises text above the baseline
  * @note Mutually exclusive with subscript
- * @see subscript
+ * @see kSubscript
  */
-constexpr formatting_flag superscript = 1 << 4;  ///< Bit 4
+constexpr FormattingFlag kSuperscript = 1 << 4;  ///< Bit 4
 
 /**
  * @brief Subscript text formatting
  * @details Lowers text below the baseline
  * @note Mutually exclusive with superscript
- * @see superscript
+ * @see kSuperscript
  */
-constexpr formatting_flag subscript = 1 << 5;  ///< Bit 5
+constexpr FormattingFlag kSubscript = 1 << 5;  ///< Bit 5
 
 /**
  * @brief Small caps text formatting
  * @details Converts lowercase letters to small capital letters
  */
-constexpr formatting_flag smallcaps = 1 << 6;  ///< Bit 6
+constexpr FormattingFlag kSmallCaps = 1 << 6;  ///< Bit 6
 
 /**
  * @brief Shadow text effect
  * @details Adds shadow effect to text
  */
-constexpr formatting_flag shadow = 1 << 7;  ///< Bit 7
+constexpr FormattingFlag kShadow = 1 << 7;  ///< Bit 7
 
 /** @} */  // End of Text Formatting Flags
 
@@ -119,12 +119,12 @@ constexpr formatting_flag shadow = 1 << 7;  ///< Bit 7
 /**
  * @brief Bold and italic combination
  */
-constexpr formatting_flag bold_italic = bold | italic;
+constexpr FormattingFlag kBoldItalic = kBold | kItalic;
 
 /**
  * @brief Bold, italic and underline combination
  */
-constexpr formatting_flag bold_italic_underline = bold | italic | underline;
+constexpr FormattingFlag kBoldItalicUnderline = kBold | kItalic | kUnderline;
 
 /** @} */  // End of Predefined Formatting Combinations
 

@@ -8,7 +8,6 @@
 
 #include <cdocx/enums.h>
 
-#include <optional>
 #include <string>
 
 namespace cdocx {
@@ -27,25 +26,25 @@ class Color {
     Color() = default;
     Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = 255)
         : r(red), g(green), b(blue), a(alpha) {}
-    Color(const std::string& hex);
+    explicit Color(const std::string& hex);
 
     // Static factory methods
     static Color from_hex(const std::string& hex);
-    static Color from_rgb(uint8_t r, uint8_t g, uint8_t b) { return Color(r, g, b); }
+    static Color from_rgb(uint8_t r, uint8_t g, uint8_t b) { return Color{r, g, b}; }
 
     // Predefined colors
-    static Color transparent() { return Color(0, 0, 0, 0); }
-    static Color black() { return Color(0, 0, 0); }
-    static Color white() { return Color(255, 255, 255); }
-    static Color red() { return Color(255, 0, 0); }
-    static Color green() { return Color(0, 255, 0); }
-    static Color blue() { return Color(0, 0, 255); }
-    static Color yellow() { return Color(255, 255, 0); }
-    static Color cyan() { return Color(0, 255, 255); }
-    static Color magenta() { return Color(255, 0, 255); }
-    static Color gray() { return Color(128, 128, 128); }
-    static Color light_gray() { return Color(192, 192, 192); }
-    static Color dark_gray() { return Color(64, 64, 64); }
+    static Color transparent() { return Color{0, 0, 0, 0}; }
+    static Color black() { return Color{0, 0, 0}; }
+    static Color white() { return Color{255, 255, 255}; }
+    static Color red() { return Color{255, 0, 0}; }
+    static Color green() { return Color{0, 255, 0}; }
+    static Color blue() { return Color{0, 0, 255}; }
+    static Color yellow() { return Color{255, 255, 0}; }
+    static Color cyan() { return Color{0, 255, 255}; }
+    static Color magenta() { return Color{255, 0, 255}; }
+    static Color gray() { return Color{128, 128, 128}; }
+    static Color light_gray() { return Color{192, 192, 192}; }
+    static Color dark_gray() { return Color{64, 64, 64}; }
 
     // Convert to hex string
     std::string to_hex() const;
@@ -84,18 +83,18 @@ class Border {
     Border(BorderType t, const Color& c, double w = 0.5) : type(t), color(c), width(w) {}
 
     // Predefined borders
-    static Border none() { return Border(BorderType::None, Color::black(), 0); }
+    static Border none() { return Border{BorderType::None, Color::black(), 0}; }
     static Border single(const Color& c = Color::black(), double w = 0.5) {
-        return Border(BorderType::Single, c, w);
+        return Border{BorderType::Single, c, w};
     }
     static Border double_border(const Color& c = Color::black(), double w = 0.5) {
-        return Border(BorderType::Double, c, w);
+        return Border{BorderType::Double, c, w};
     }
     static Border dotted(const Color& c = Color::black(), double w = 0.5) {
-        return Border(BorderType::Dotted, c, w);
+        return Border{BorderType::Dotted, c, w};
     }
     static Border dashed(const Color& c = Color::black(), double w = 0.5) {
-        return Border(BorderType::Dashed, c, w);
+        return Border{BorderType::Dashed, c, w};
     }
 
     bool is_visible() const { return type != BorderType::None; }
@@ -346,41 +345,38 @@ class Font {
 
 class TableFormat {
   public:
+    // Small types grouped first to avoid inter-field padding.
     // Alignment
     TableAlignment alignment = TableAlignment::Left;
-
-    // Indentation (in points)
-    double left_indent = 0;
-
     // Auto fit
     bool allow_auto_fit = true;
     AutoFitBehavior auto_fit_behavior = AutoFitBehavior::AutoFitToContents;
+    // Cell spacing
+    bool allow_cell_spacing = false;
+    // Text wrapping
+    TextWrapping text_wrapping = TextWrapping::None;
+    // BiDi (right-to-left)
+    bool bidi = false;
+    // Style
+    StyleIdentifier style_identifier = StyleIdentifier::TableNormal;
 
+    // Measurements (doubles grouped for 8-byte alignment)
+    // Indentation (in points)
+    double left_indent = 0;
     // Cell spacing (in points)
     double cell_spacing = 0;
-    bool allow_cell_spacing = false;
-
     // Default cell padding (in points)
     double top_padding = 0;
     double bottom_padding = 0;
     double left_padding = 5.4;  // Default ~0.1 inch
     double right_padding = 5.4;
 
-    // Borders
-    Borders borders;
-
-    // Shading
-    Shading shading;
-
-    // Text wrapping
-    TextWrapping text_wrapping = TextWrapping::None;
-
-    // BiDi (right-to-left)
-    bool bidi = false;
-
-    // Style
+    // Style name
     std::string style_name;
-    StyleIdentifier style_identifier = StyleIdentifier::TableNormal;
+
+    // Appearance (large structs placed last)
+    Borders borders;
+    Shading shading;
 
     // ------------------------------------------------------------------------
     // Convenience methods

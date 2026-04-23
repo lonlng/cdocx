@@ -14,7 +14,7 @@ namespace cdocx {
 // Node Types
 // ============================================================================
 
-enum class NodeType {
+enum class NodeType : std::uint8_t {
     Unknown,
     Document,
     Section,
@@ -51,7 +51,7 @@ enum class NodeType {
 // Paragraph Formatting
 // ============================================================================
 
-enum class ParagraphAlignment {
+enum class ParagraphAlignment : std::uint8_t {
     Left,
     Center,
     Right,
@@ -59,13 +59,13 @@ enum class ParagraphAlignment {
     Distributed
 };
 
-enum class LineSpacingRule {
+enum class LineSpacingRule : std::uint8_t {
     Auto,    // Multiple line spacing
     Exact,   // Exact points
     AtLeast  // Minimum points
 };
 
-enum class OutlineLevel {
+enum class OutlineLevel : std::uint8_t {
     Level1 = 0,
     Level2,
     Level3,
@@ -78,7 +78,7 @@ enum class OutlineLevel {
     BodyText
 };
 
-enum class DropCapPosition {
+enum class DropCapPosition : std::uint8_t {
     None,
     Normal,
     Margin
@@ -88,7 +88,7 @@ enum class DropCapPosition {
 // Font Formatting
 // ============================================================================
 
-enum class UnderlineType {
+enum class UnderlineType : std::uint8_t {
     None,
     Single,
     Words,
@@ -106,19 +106,19 @@ enum class UnderlineType {
     WaveHeavy
 };
 
-enum class StrikeType {
+enum class StrikeType : std::uint8_t {
     None,
     Single,
     Double
 };
 
-enum class ScriptType {
+enum class ScriptType : std::uint8_t {
     Normal,
     Superscript,
     Subscript
 };
 
-enum class HighlightColor {
+enum class HighlightColor : std::uint8_t {
     None,
     Black,
     Blue,
@@ -142,24 +142,24 @@ enum class HighlightColor {
 // Table Formatting
 // ============================================================================
 
-enum class TableAlignment {
+enum class TableAlignment : std::uint8_t {
     Left,
     Center,
     Right
 };
 
-enum class AutoFitBehavior {
+enum class AutoFitBehavior : std::uint8_t {
     AutoFitToContents,
     AutoFitToWindow,
     FixedColumnWidth
 };
 
-enum class TextWrapping {
+enum class TextWrapping : std::uint8_t {
     None,
     Around
 };
 
-enum class CellVerticalAlignment {
+enum class CellVerticalAlignment : std::uint8_t {
     Top,
     Center,
     Bottom
@@ -169,7 +169,7 @@ enum class CellVerticalAlignment {
 // Border
 // ============================================================================
 
-enum class BorderType {
+enum class BorderType : std::uint8_t {
     None,
     Single,
     Thick,
@@ -203,7 +203,7 @@ enum class BorderType {
 // Break Types
 // ============================================================================
 
-enum class BreakType {
+enum class BreakType : std::uint8_t {
     ParagraphBreak,
     PageBreak,
     ColumnBreak,
@@ -218,12 +218,12 @@ enum class BreakType {
 // Page Setup
 // ============================================================================
 
-enum class PageOrientation {
+enum class PageOrientation : std::uint8_t {
     Portrait,
     Landscape
 };
 
-enum class HeightRule {
+enum class HeightRule : std::uint8_t {
     Auto,
     AtLeast,
     Exact
@@ -233,7 +233,7 @@ enum class HeightRule {
 // Header/Footer Types
 // ============================================================================
 
-enum class HeaderFooterType {
+enum class HeaderFooterType : std::uint8_t {
     Primary,    // Default header/footer
     FirstPage,  // First page only
     EvenPages,  // Even pages only
@@ -255,7 +255,7 @@ enum class FootnoteType : std::uint8_t {
 // Field Types
 // ============================================================================
 
-enum class FieldType {
+enum class FieldType : std::uint8_t {
     Unknown,
     Page,
     NumPages,
@@ -301,14 +301,14 @@ enum class TextFormFieldType : std::uint8_t {
 // Style
 // ============================================================================
 
-enum class StyleType {
+enum class StyleType : std::uint8_t {
     Paragraph = 1,
     Character = 2,
     Table = 3,
     List = 4
 };
 
-enum class StyleIdentifier {
+enum class StyleIdentifier : std::uint16_t {
     Normal = 0,
     Heading1 = 1,
     Heading2 = 2,
@@ -652,7 +652,7 @@ enum class SaveFormat : std::uint8_t {
 // Visitor Action
 // ============================================================================
 
-enum class VisitorAction {
+enum class VisitorAction : std::uint8_t {
     Continue,  // Continue visiting
     Skip,      // Skip this node's children
     Stop       // Stop visiting completely

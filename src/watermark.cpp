@@ -23,7 +23,7 @@ namespace cdocx {
 static std::string escape_xml(const std::string& text) {
     std::string result;
     result.reserve(text.size());
-    for (char c : text) {
+    for (const char c : text) {
         switch (c) {
             case '&':
                 result += "&amp;";
@@ -51,11 +51,11 @@ static std::string escape_xml(const std::string& text) {
 static pugi::xml_node get_first_header_xml(Document* doc) {
     auto names = doc->get_header_names();
     if (names.empty()) {
-        return pugi::xml_node();
+        return pugi::xml_node{};
     }
     pugi::xml_document* header_doc = doc->get_header(0);
     if (!header_doc) {
-        return pugi::xml_node();
+        return pugi::xml_node{};
     }
     return header_doc->child("w:hdr");
 }
@@ -69,9 +69,9 @@ static void remove_watermark_nodes(pugi::xml_node header) {
         for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
             for (pugi::xml_node pict = run.child("w:pict"); pict;
                  pict = pict.next_sibling("w:pict")) {
-                pugi::xml_node shape = pict.child("v:shape");
+                const pugi::xml_node shape = pict.child("v:shape");
                 if (shape) {
-                    pugi::xml_attribute id_attr = shape.attribute("id");
+                    const pugi::xml_attribute id_attr = shape.attribute("id");
                     if (id_attr && std::strcmp(id_attr.value(), "PowerPlusWaterMarkObject") == 0) {
                         is_watermark = true;
                         break;
@@ -83,10 +83,10 @@ static void remove_watermark_nodes(pugi::xml_node header) {
             }
             for (pugi::xml_node drawing = run.child("w:drawing"); drawing;
                  drawing = drawing.next_sibling("w:drawing")) {
-                pugi::xml_node doc_pr =
+                const pugi::xml_node doc_pr =
                     drawing.child("wp:anchor").child("a:graphic").child("a:graphicData");
                 if (doc_pr) {
-                    pugi::xml_attribute name_attr = doc_pr.attribute("uri");
+                    const pugi::xml_attribute name_attr = doc_pr.attribute("uri");
                     if (name_attr && std::strstr(name_attr.value(), "watermark") != nullptr) {
                         is_watermark = true;
                         break;
@@ -97,7 +97,7 @@ static void remove_watermark_nodes(pugi::xml_node header) {
                 break;
             }
         }
-        pugi::xml_node next_para = para.next_sibling("w:p");
+        const pugi::xml_node next_para = para.next_sibling("w:p");
         if (is_watermark) {
             header.remove_child(para);
         }
@@ -113,7 +113,7 @@ Watermark::Watermark(Document* doc) : document_(doc) {
 }
 
 void Watermark::set_text(const std::string& text) {
-    TextWatermarkOptions options;
+    const TextWatermarkOptions options;
     set_text(text, options);
 }
 
@@ -127,7 +127,7 @@ void Watermark::set_text(const std::string& text, const TextWatermarkOptions& op
 }
 
 void Watermark::set_image(const std::string& image_path) {
-    ImageWatermarkOptions options;
+    const ImageWatermarkOptions options;
     set_image(image_path, options);
 }
 
@@ -144,7 +144,7 @@ void Watermark::remove() {
     if (!document_) {
         return;
     }
-    pugi::xml_node header = get_first_header_xml(document_);
+    const pugi::xml_node header = get_first_header_xml(document_);
     if (header) {
         remove_watermark_nodes(header);
     }
@@ -154,7 +154,7 @@ bool Watermark::has_watermark() const {
     if (!document_) {
         return false;
     }
-    pugi::xml_node header = get_first_header_xml(document_);
+    const pugi::xml_node header = get_first_header_xml(document_);
     if (!header) {
         return false;
     }
@@ -162,9 +162,9 @@ bool Watermark::has_watermark() const {
         for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
             for (pugi::xml_node pict = run.child("w:pict"); pict;
                  pict = pict.next_sibling("w:pict")) {
-                pugi::xml_node shape = pict.child("v:shape");
+                const pugi::xml_node shape = pict.child("v:shape");
                 if (shape) {
-                    pugi::xml_attribute id_attr = shape.attribute("id");
+                    const pugi::xml_attribute id_attr = shape.attribute("id");
                     if (id_attr && std::strcmp(id_attr.value(), "PowerPlusWaterMarkObject") == 0) {
                         return true;
                     }
@@ -193,8 +193,8 @@ void Watermark::insert_text_watermark_into_header(const std::string& text,
     }
 
     auto para = header.append_child("w:p");
-    auto pPr = para.append_child("w:pPr");
-    pPr.append_child("w:pStyle").append_attribute("w:val").set_value("Header");
+    auto p_pr = para.append_child("w:pPr");
+    p_pr.append_child("w:pStyle").append_attribute("w:val").set_value("Header");
 
     auto run = para.append_child("w:r");
     auto pict = run.append_child("w:pict");
@@ -249,7 +249,7 @@ void Watermark::insert_text_watermark_into_header(const std::string& text,
     shape.append_attribute("o:spid").set_value("_x0000_s2049");
     shape.append_attribute("type").set_value("#_x0000_t136");
 
-    int rotation = (options.layout == WatermarkLayout::Diagonal) ? 315 : 0;
+    const int rotation = (options.layout == WatermarkLayout::Diagonal) ? 315 : 0;
     std::string style = "position:absolute;margin-left:0;margin-top:0;width:468pt;height:117pt;";
     style += "rotation:" + std::to_string(rotation) + ";";
     style += "z-index:-251658752;";
@@ -263,8 +263,8 @@ void Watermark::insert_text_watermark_into_header(const std::string& text,
     auto fill = shape.append_child("v:fill");
     fill.append_attribute("opacity").set_value(options.semi_transparent ? ".5" : "1");
 
-    float font_size = options.font_size > 0 ? options.font_size : 1.0f;
-    std::string font_style =
+    const float font_size = options.font_size > 0 ? options.font_size : 1.0f;
+    const std::string font_style =
         "font-family:\"" + options.font_family + "\";font-size:" + std::to_string(font_size) + "pt";
 
     auto tp = shape.append_child("v:textpath");
@@ -287,8 +287,8 @@ void Watermark::insert_image_watermark_into_header(const std::string& image_path
     if (!file) {
         return;
     }
-    std::vector<uint8_t> data((std::istreambuf_iterator<char>(file)),
-                              std::istreambuf_iterator<char>());
+    const std::vector<uint8_t> data((std::istreambuf_iterator<char>(file)),
+                                    std::istreambuf_iterator<char>());
     file.close();
     if (data.empty()) {
         return;
@@ -311,17 +311,17 @@ void Watermark::insert_image_watermark_into_header(const std::string& image_path
         return;
     }
 
-    std::string header_path = header_names[0];
+    const std::string& header_path = header_names[0];
     std::string rels_path;
-    if (header_path.find("/") != std::string::npos) {
-        rels_path = header_path.substr(0, header_path.rfind("/") + 1) + "_rels/" +
-                    header_path.substr(header_path.rfind("/") + 1) + ".rels";
+    if (header_path.find('/') != std::string::npos) {
+        rels_path = header_path.substr(0, header_path.rfind('/') + 1) + "_rels/" +
+                    header_path.substr(header_path.rfind('/') + 1) + ".rels";
     } else {
         rels_path = "word/_rels/" + header_path + ".rels";
     }
 
     // Create relationship in header rels
-    std::string rel_id = document_->add_relationship(
+    const std::string rel_id = document_->add_relationship(
         rels_path,
         "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image",
         "media/" + filename);
@@ -335,8 +335,8 @@ void Watermark::insert_image_watermark_into_header(const std::string& image_path
     }
 
     auto para = header.append_child("w:p");
-    auto pPr = para.append_child("w:pPr");
-    auto jc = pPr.append_child("w:jc");
+    auto p_pr = para.append_child("w:pPr");
+    auto jc = p_pr.append_child("w:jc");
     jc.append_attribute("w:val").set_value("center");
 
     auto run = para.append_child("w:r");
@@ -352,9 +352,9 @@ void Watermark::insert_image_watermark_into_header(const std::string& image_path
 
     // Apply scale if explicitly set (> 0)
     if (options.scale > 0) {
-        int width_pt = static_cast<int>(400.0 * options.scale / 100.0);
-        int height_pt = static_cast<int>(300.0 * options.scale / 100.0);
-        std::string style =
+        const int width_pt = static_cast<int>(400.0 * options.scale / 100.0);
+        const int height_pt = static_cast<int>(300.0 * options.scale / 100.0);
+        const std::string style =
             "position:absolute;margin-left:0;margin-top:0;width:" + std::to_string(width_pt) +
             "pt;height:" + std::to_string(height_pt) +
             "pt;z-index:-251658752;"

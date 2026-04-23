@@ -533,16 +533,16 @@ TEST(TextFormattingTest, RunPropertiesXmlRoundTrip) {
         run_xml.set_current_xml(r);
 
         auto props = run_xml.get_properties_xml();
-        EXPECT_TRUE(props.fontStyle.bold);
-        EXPECT_TRUE(props.fontStyle.italic);
-        EXPECT_EQ(props.fontSize, 28);  // 14pt = 28 half-points
+        EXPECT_TRUE(props.font_style.bold);
+        EXPECT_TRUE(props.font_style.italic);
+        EXPECT_EQ(props.font_size, 28);  // 14pt = 28 half-points
         EXPECT_EQ(props.color, "FF0000");
 
         // Modify via set_properties_xml and verify
         cdocx::TextProperties new_props;
-        new_props.fontStyle.bold = false;
-        new_props.fontStyle.italic = false;
-        new_props.fontSize = 24;  // 12pt
+        new_props.font_style.bold = false;
+        new_props.font_style.italic = false;
+        new_props.font_size = 24;  // 12pt
         new_props.color = "0000FF";
         new_props.underline.style = cdocx::TextProperties::UnderlineStyle::Single;
         new_props.strike = cdocx::TextProperties::StrikeStyle::Single;
@@ -550,9 +550,9 @@ TEST(TextFormattingTest, RunPropertiesXmlRoundTrip) {
         run_xml.set_properties_xml(new_props);
 
         auto updated = run_xml.get_properties_xml();
-        EXPECT_FALSE(updated.fontStyle.bold);
-        EXPECT_FALSE(updated.fontStyle.italic);
-        EXPECT_EQ(updated.fontSize, 24);
+        EXPECT_FALSE(updated.font_style.bold);
+        EXPECT_FALSE(updated.font_style.italic);
+        EXPECT_EQ(updated.font_size, 24);
         EXPECT_EQ(updated.color, "0000FF");
         EXPECT_EQ(updated.underline.style, cdocx::TextProperties::UnderlineStyle::Single);
         EXPECT_EQ(updated.strike, cdocx::TextProperties::StrikeStyle::Single);

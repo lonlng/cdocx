@@ -116,19 +116,19 @@ class Paragraph : public CompositeNode {
     Paragraph& next();
     bool has_next() const;
     Run& runs();
-    Run& add_run(const std::string& text, formatting_flag f = 0);
-    Run& add_run(const char* text, formatting_flag f = 0);
+    Run& add_run(const std::string& text, FormattingFlag f = kNone);
+    Run& add_run(const char* text, FormattingFlag f = kNone);
     Run& add_run_with_bookmark(Document& doc,
                                const std::string& text,
                                const std::string& bookmark_name,
-                               formatting_flag f = 0);
+                               FormattingFlag f = kNone);
     Run& add_run_with_bookmark(Document& doc,
                                const char* text,
                                const std::string& bookmark_name,
-                               formatting_flag f = 0);
+                               FormattingFlag f = kNone);
     void remove_run(const Run& r);
-    Paragraph& insert_paragraph_after(const std::string& text, formatting_flag f = 0);
-    Paragraph* insert_before(const std::string& text, formatting_flag f = 0);
+    Paragraph& insert_paragraph_after(const std::string& text, FormattingFlag f = kNone);
+    Paragraph* insert_before(const std::string& text, FormattingFlag f = kNone);
     bool clear();
     bool remove();
 
@@ -147,7 +147,7 @@ class Paragraph : public CompositeNode {
     bool set_underline(bool underline);
 
     // Legacy numbering methods
-    bool set_numbering(NumberingId numId, NumberingLevel level = NumberingLevel::Level1);
+    bool set_numbering(NumberingId num_id, NumberingLevel level = NumberingLevel::Level1);
     bool remove_numbering();
     bool has_numbering() const;
     NumberingId get_numbering_id() const;
@@ -163,10 +163,10 @@ class Paragraph : public CompositeNode {
     Paragraph& set_keep_lines(bool value);
     Paragraph& set_page_break_before(bool value);
 
-    // Preserve raw pPr for round-trip fidelity of unmanaged properties (e.g., w:rPr)
-    void preserve_pPr(pugi::xml_node pPr);
-    pugi::xml_node get_preserved_pPr() const;
-    bool has_preserved_pPr() const;
+    // Preserve raw p_pr for round-trip fidelity of unmanaged properties (e.g., w:rPr)
+    void preserve_p_pr(pugi::xml_node p_pr);
+    pugi::xml_node get_preserved_p_pr() const;
+    bool has_preserved_p_pr() const;
 
   private:
     ParagraphFormat format_;
@@ -177,7 +177,7 @@ class Paragraph : public CompositeNode {
     pugi::xml_node current_;
     Run run_;
 
-    pugi::xml_document preserved_pPr_;
+    pugi::xml_document preserved_p_pr_;
 };
 
 // ============================================================================

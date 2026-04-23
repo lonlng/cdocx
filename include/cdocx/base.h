@@ -81,14 +81,14 @@ class Inline : public Node {
     Inline& set_superscript();
     Inline& set_subscript();
 
-    // Preserve original rPr for round-trip fidelity of unmanaged properties
-    void preserve_rPr(pugi::xml_node rPr);
-    pugi::xml_node get_preserved_rPr() const;
-    bool has_preserved_rPr() const;
+    // Preserve original r_pr for round-trip fidelity of unmanaged properties
+    void preserve_r_pr(pugi::xml_node r_pr);
+    pugi::xml_node get_preserved_r_pr() const;
+    bool has_preserved_r_pr() const;
 
   protected:
     Font font_;
-    pugi::xml_document preserved_rPr_;
+    pugi::xml_document preserved_r_pr_;
 };
 
 // ============================================================================
@@ -100,7 +100,7 @@ class Run : public Inline {
     // Construction
     Run();
     explicit Run(Document* doc);
-    Run(Document* doc, const std::string& text);
+    Run(Document* doc, std::string text);
     Run(const Run& other);
     Run& operator=(const Run& other);
 
@@ -369,7 +369,7 @@ class Field : public Inline {
 class BookmarkStart : public Node {
   public:
     BookmarkStart();
-    BookmarkStart(const std::string& name, int id);
+    BookmarkStart(std::string name, int id);
     explicit BookmarkStart(Document* doc);
 
     std::string get_name() const { return name_; }

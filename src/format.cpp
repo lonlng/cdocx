@@ -17,7 +17,7 @@ Color Color::from_hex(const std::string& hex) {
     }
     if (h.length() == 3) {
         std::string expanded;
-        for (char c : h) {
+        for (const char c : h) {
             expanded += c;
             expanded += c;
         }
@@ -27,17 +27,17 @@ Color Color::from_hex(const std::string& hex) {
         return Color::black();
     }
 
-    unsigned int rgba = static_cast<unsigned int>(std::strtoul(h.c_str(), nullptr, 16));
+    const auto rgba = static_cast<unsigned int>(std::strtoul(h.c_str(), nullptr, 16));
     if (h.length() == 6) {
-        return Color(static_cast<uint8_t>((rgba >> 16) & 0xFF),
-                     static_cast<uint8_t>((rgba >> 8) & 0xFF),
-                     static_cast<uint8_t>(rgba & 0xFF),
-                     255);
+        return {static_cast<uint8_t>((rgba >> 16) & 0xFF),
+                static_cast<uint8_t>((rgba >> 8) & 0xFF),
+                static_cast<uint8_t>(rgba & 0xFF),
+                255};
     }
-    return Color(static_cast<uint8_t>((rgba >> 24) & 0xFF),
-                 static_cast<uint8_t>((rgba >> 16) & 0xFF),
-                 static_cast<uint8_t>((rgba >> 8) & 0xFF),
-                 static_cast<uint8_t>(rgba & 0xFF));
+    return {static_cast<uint8_t>((rgba >> 24) & 0xFF),
+            static_cast<uint8_t>((rgba >> 16) & 0xFF),
+            static_cast<uint8_t>((rgba >> 8) & 0xFF),
+            static_cast<uint8_t>(rgba & 0xFF)};
 }
 
 Color::Color(const std::string& hex) {
@@ -46,14 +46,16 @@ Color::Color(const std::string& hex) {
 
 std::string Color::to_hex() const {
     char buf[9];
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg, cert-err33-c)
     std::snprintf(buf, sizeof(buf), "%02X%02X%02X%02X", r, g, b, a);
-    return std::string(buf);
+    return {buf};
 }
 
 std::string Color::to_hex_rgb() const {
     char buf[7];
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg, cert-err33-c)
     std::snprintf(buf, sizeof(buf), "%02X%02X%02X", r, g, b);
-    return std::string(buf);
+    return {buf};
 }
 
 }  // namespace cdocx
