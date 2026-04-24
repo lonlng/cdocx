@@ -10,6 +10,7 @@
 
 - **📄 Complete Document Operations**: Read, write, create DOCX files with full structure preservation
 - **🔄 Template System**: Placeholder replacement with customizable patterns (`{{key}}`)
+- **🔍 Template Analyzer** (Python tool): Auto-detect placeholders, bookmarks, and MERGEFIELDs, generate ready-to-use C++ headers
 - **📑 Document Insertion**: Merge documents at specific positions
 - **📐 Section Support**: Page setup, margins, orientation
 - **📋 List/Numbering**: Bulleted, numbered, and Chinese numbering lists
@@ -91,6 +92,37 @@ int main() {
     doc.save();
     return 0;
 }
+```
+
+### Template Engine (Recommended)
+
+```cpp
+#include <cdocx.h>
+#include <iostream>
+
+int main() {
+    cdocx::Document doc("template.docx");
+    doc.open();
+
+    // Dictionary-style template replacement
+    cdocx::TemplateEngine engine(&doc);
+    engine["company"] = cdocx::TemplateValue::text("Acme Inc.");
+    engine["date"]    = "2024-01-15";
+    engine["title"]   = cdocx::TemplateValue::text("Annual Report")
+        .with_format(cdocx::TemplateFormat().bold().size(24));
+
+    auto result = engine.apply();
+    std::cout << "Replaced: " << result.success << " items\n";
+
+    doc.save("output.docx");
+    return 0;
+}
+```
+
+**Auto-generate template keys** with the Python analyzer:
+
+```bash
+python tools/template_analyzer/analyze_template.py template.docx -o template_keys.h
 ```
 
 ### Using Sections
@@ -218,6 +250,8 @@ cdocx/
 ├── src/                     # Implementation files
 ├── test/                    # Test suite (Google Test)
 ├── examples/                # Example programs
+├── tools/                   # Developer tools
+│   └── template_analyzer/   # Docx template analyzer (Python)
 └── scripts/                 # Build scripts
 ```
 

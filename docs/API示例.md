@@ -652,6 +652,134 @@ int main() {
 
 ---
 
+## 11. TemplateEngine 模板引擎（推荐）
+
+`TemplateEngine` 是 CDocx 提供的统一字典风格模板 API，支持占位符（`{{key}}`）和书签两种目标类型，可配置格式化、作用域和行为模式。
+
+### 基础文本替换
+
+```cpp
+#include <cdocx.h>
+
+int main() {
+    cdocx::Document doc("template.docx");
+    doc.open();
+
+    cdocx::TemplateEngine engine(&doc);
+
+    // 字典风格赋值
+    engine["company"] = cdocx::TemplateValue::text("Acme Inc.");
+    engine["date"]    = "2026-04-24";
+    engine["title"]   = cdocx::TemplateValue::text("年度报告")
+        .with_format(cdocx::TemplateFormat().bold().size(24));
+
+    // 执行替换
+    auto result = engine.apply();
+    // result.success = 成功替换数
+    // result.failed  = 失败数
+    // result.skipped = 跳过数
+
+    doc.save("output.docx");
+    return 0;
+}
+```
+
+### 图片替换
+
+```cpp
+engine["logo"] = cdocx::TemplateValue::image("logo.png")
+    .sized(200, 100)
+    .centered();
+```
+
+### 书签替换
+
+```cpp
+// TemplateEngine 会自动检测目标类型：
+// - 如果文档中存在同名书签，则替换书签内容
+// - 否则查找 {{key}} 占位符
+engine["AUTHOR"]    = cdocx::TemplateValue::text("张三");
+engine["SIGNATURE"] = cdocx::TemplateValue::text("已批准");
+```
+
+### 批量设置
+
+```cpp
+std::map<std::string, std::string> data = {
+    {"company", "Acme Inc."},
+    {"address", "北京市朝阳区"},
+    {"phone",   "010-12345678"}
+};
+engine.set_batch(data);
+```
+
+### 高级配置
+
+```cpp
+auto result = engine
+    .with_action(cdocx::TemplateAction::Replace)      // Replace（替换内容）或 Insert（插入内容）
+    .with_scope(cdocx::TemplateScope::All)             // All（全部）或 First（仅首个）
+    .with_format_policy(cdocx::FormatPolicy::Preserve) // Preserve（保留原格式）/ Override / Custom
+    .with_delimiters("{{", "}}")                        // 自定义占位符分隔符
+    .apply();
+```
+
+### 使用模板分析器自动生成代码
+
+CDocx 提供 Python 工具 `tools/template_analyzer/analyze_template.py`，可自动分析 `.docx` 文件中的模板元素并生成 C++ 头文件。
+
+**用法：**
+
+```bash
+python tools/template_analyzer/analyze_template.py template.docx -o template_keys.h
+```
+
+**生成示例：**
+
+```cpp
+#pragma once
+#include <cdocx.h>
+
+namespace TemplateKeys {
+    inline constexpr const char* company_name = "company_name";
+    inline constexpr const char* date         = "date";
+    inline constexpr const char* title        = "title";
+
+    inline std::vector<std::string> names() {
+        return { company_name, date, title };
+    }
+
+    inline void fill(cdocx::TemplateEngine& engine,
+                     const std::map<std::string, std::string>& data) {
+        engine[cdocx::TemplateValue::text(company_name)] = data.at("company_name");
+        engine[cdocx::TemplateValue::text(date)]         = data.at("date");
+        engine[cdocx::TemplateValue::text(title)]        = data.at("title");
+    }
+}
+```
+
+在 C++ 代码中直接使用：
+
+```cpp
+#include "template_keys.h"
+
+int main() {
+    cdocx::Document doc("template.docx");
+    doc.open();
+
+    cdocx::TemplateEngine engine(&doc);
+    engine[cdocx::TemplateValue::text(TemplateKeys::company_name)] = "Acme Inc.";
+    engine.apply();
+
+    doc.save("output.docx");
+    return 0;
+}
+```
+
+完整工具文档请见 `tools/template_analyzer/README.md`。
+
+---
+
 ## API 对比：旧版 vs 新版
 
 | 操作 | 旧版 API | 新版 API |
