@@ -8,11 +8,11 @@ Analyzes a Word .docx file and extracts all template-replaceable elements:
   - Word bookmarks
   - MERGEFIELD fields
 
-Generates a ready-to-use C++17 header file with constants and a
-skeleton function for cdocx::TemplateEngine.
+Generates a ready-to-compile C++17 source file that opens the template,
+fills all detected elements using cdocx::TemplateEngine, and saves the result.
 
 Usage:
-    python analyze_template.py template.docx -o template_keys.h
+    python analyze_template.py template.docx -o fill_template.cpp
     python analyze_template.py template.docx          # writes to stdout
 """
 
@@ -44,15 +44,12 @@ class TemplateElement:
 
     def cpp_name(self, seen: set = None) -> str:
         """Return a valid C++ identifier derived from the element name."""
-        # Remove delimiters and sanitize
         raw = self.name.strip()
         raw = raw.replace("{{", "").replace("}}", "")
         raw = re.sub(r"[^a-zA-Z0-9_]", "_", raw)
-        # Must not start with a digit
         if raw and raw[0].isdigit():
             raw = "_" + raw
         raw = raw or "unnamed"
-        # Deduplicate: if the sanitized name collides with another, append a counter
         if seen is not None:
             base = raw
             counter = 2
@@ -61,6 +58,11 @@ class TemplateElement:
                 counter += 1
             seen.add(raw)
         return raw
+
+    def cpp_value_literal(self) -> str:
+        """Return a C++ string literal, escaping quotes and backslashes."""
+        s = self.name.replace("\\", "\\\\").replace('"', '\\"')
+        return f'"{s}"'
 
     def __repr__(self) -> str:
         return f"{self.kind}:{self.name}"
@@ -90,11 +92,9 @@ def parse_docx(docx_path: str) -> list:
         sys.exit(1)
 
     with zipfile.ZipFile(docx_path, "r") as zf:
-        # Collect all XML parts that may contain content
         content_parts = []
         for name in zf.namelist():
             if name.endswith(".xml") or name.endswith(".rels"):
-                # Document body, headers, footers, endnotes, comments
                 if any(
                     name.startswith(p)
                     for p in (
@@ -120,13 +120,10 @@ def parse_docx(docx_path: str) -> list:
                 print(f"Warning: could not parse {part}: {e}", file=sys.stderr)
                 continue
 
-            # ------------------------------------------------------------------
-            # 1. Bookmarks (w:bookmarkStart/@w:name)
-            # ------------------------------------------------------------------
+            # Bookmarks
             for bm_start in root.iter(qname("bookmarkStart")):
                 name = bm_start.get(qname("name"))
                 if name:
-                    # Try to grab surrounding paragraph text as context
                     ctx = ""
                     parent_para = bm_start
                     while parent_para is not None:
@@ -138,10 +135,7 @@ def parse_docx(docx_path: str) -> list:
                         TemplateElement("bookmark", name, part, ctx)
                     )
 
-            # ------------------------------------------------------------------
-            # 2. Placeholders inside w:t text nodes
-            # ------------------------------------------------------------------
-            # We scan at the paragraph level so merged runs are handled.
+            # Placeholders inside w:t text nodes
             for para in root.iter(qname("p")):
                 para_text = iter_text_in_element(para)
                 if not para_text:
@@ -151,13 +145,10 @@ def parse_docx(docx_path: str) -> list:
                         TemplateElement("placeholder", key, part, para_text[:80])
                     )
 
-            # ------------------------------------------------------------------
-            # 3. MERGEFIELD / other fields
-            # ------------------------------------------------------------------
+            # MERGEFIELD / other fields
             for instr in root.iter(qname("instrText")):
                 if instr.text:
                     code = instr.text.strip()
-                    # Match "MERGEFIELD Name" or "MERGEFIELD Name \* ..."
                     m = re.match(r"MERGEFIELD\s+(\S+)", code, re.IGNORECASE)
                     if m:
                         field_name = m.group(1)
@@ -181,7 +172,7 @@ def parse_docx(docx_path: str) -> list:
             seen.add(key)
             deduped.append(el)
 
-    # Filter out internal Word bookmarks (auto-generated navigation markers)
+    # Filter out internal Word bookmarks
     internal_bookmarks = {"_goback"}
     deduped = [
         el for el in deduped
@@ -191,26 +182,152 @@ def parse_docx(docx_path: str) -> list:
     return deduped
 
 
-def make_cpp_comment(text: str, width: int = 76) -> str:
-    """Break a string into C++ // comment lines."""
-    if not text:
-        return ""
+def escape_cpp_string(s: str) -> str:
+    """Escape a string for use as a C++ string literal."""
+    return s.replace("\\", "\\\\").replace('"', '\\"')
+
+
+def generate_cpp_program(elements: list, docx_path: str, output_path: str) -> str:
+    """Generate a complete, compilable C++ source file."""
+    # Pre-compute unique C++ identifiers
+    seen_ids = set()
+    for el in elements:
+        el._cpp_name = el.cpp_name(seen_ids)
+
+    abs_docx = os.path.abspath(docx_path).replace("\\", "/")
+    abs_out = os.path.abspath(output_path).replace("\\", "/")
+
     lines = []
-    while text:
-        chunk = text[:width]
-        text = text[width:]
-        lines.append("// " + chunk)
-    return "\n".join(lines)
+    lines.append("// ============================================================================")
+    lines.append(f"// Auto-generated from: {os.path.basename(docx_path)}")
+    lines.append("//")
+    lines.append("// This is a complete, ready-to-compile C++17 program.")
+    lines.append("// Steps to use:")
+    lines.append("//   1. Edit the data values in main() below.")
+    lines.append("//   2. Compile:  g++ -std=c++17 this_file.cpp -lcdocx -o fill_template")
+    lines.append("//   3. Run:      ./fill_template")
+    lines.append("//   4. Output:   output.docx (or the path you set)")
+    lines.append("//")
+    lines.append("// NOTE: This file is UTF-8 encoded. On MSVC compile with /utf-8 if it")
+    lines.append("//       contains non-ASCII characters in string literals.")
+    lines.append("// ============================================================================")
+    lines.append("")
+    lines.append("#include <cdocx.h>")
+    lines.append("#include <iostream>")
+    lines.append("#include <map>")
+    lines.append("#include <string>")
+    lines.append("")
 
+    # ------------------------------------------------------------------
+    # Constants
+    # ------------------------------------------------------------------
+    lines.append("// ------------------------------------------------------------------")
+    lines.append("// Template key constants (auto-detected from the .docx file)")
+    lines.append("// ------------------------------------------------------------------")
+    lines.append("namespace TemplateKeys {")
+    for el in elements:
+        ctx = escape_cpp_string(el.context)
+        lines.append(f'    // Source: {el.source}')
+        if ctx:
+            lines.append(f'    // Context: {ctx}')
+        lines.append(f'    inline constexpr const char* {el._cpp_name} = "{escape_cpp_string(el.name)}";')
+        lines.append("")
+    lines.append("} // namespace TemplateKeys")
+    lines.append("")
 
-def generate_header(elements: list, docx_name: str, guard: str) -> str:
-    """Generate the C++ header file content."""
-    # Group by kind
+    # ------------------------------------------------------------------
+    # Main program
+    # ------------------------------------------------------------------
+    lines.append("int main() {")
+    lines.append(f'    const std::string template_path = "{escape_cpp_string(abs_docx)}";')
+    lines.append(f'    const std::string output_path   = "{escape_cpp_string(abs_out)}";')
+    lines.append("")
+    lines.append("    // --------------------------------------------------------------")
+    lines.append("    // Open the template document")
+    lines.append("    // --------------------------------------------------------------")
+    lines.append("    cdocx::Document doc(template_path);")
+    lines.append("    if (!doc.open()) {")
+    lines.append('        std::cerr << "Failed to open: " << template_path << "\\n";')
+    lines.append("        return 1;")
+    lines.append("    }")
+    lines.append('    std::cout << "Template loaded: " << template_path << "\\n";')
+    lines.append("")
+    lines.append("    // --------------------------------------------------------------")
+    lines.append("    // Create TemplateEngine and fill data")
+    lines.append("    // --------------------------------------------------------------")
+    lines.append("    cdocx::TemplateEngine engine(&doc);")
+    lines.append("")
+    lines.append("    // ===== EDIT THE VALUES BELOW =====")
+    lines.append("")
+
+    # Group by kind for better readability
     placeholders = [e for e in elements if e.kind == "placeholder"]
     bookmarks = [e for e in elements if e.kind == "bookmark"]
     mergefields = [e for e in elements if e.kind == "mergefield"]
 
-    # Pre-compute unique C++ identifiers once per element
+    if placeholders:
+        lines.append("    // --- Placeholders ({{key}} style) ---")
+        for el in placeholders:
+            lines.append(f'    engine[cdocx::TemplateValue::text(TemplateKeys::{el._cpp_name})] = "{escape_cpp_string(el.name)}";  // TODO: replace value')
+        lines.append("")
+
+    if bookmarks:
+        lines.append("    // --- Bookmarks ---")
+        for el in bookmarks:
+            lines.append(f'    engine[cdocx::TemplateValue::text(TemplateKeys::{el._cpp_name})] = "{escape_cpp_string(el.name)}";  // TODO: replace value')
+        lines.append("")
+
+    if mergefields:
+        lines.append("    // --- MERGEFIELDs ---")
+        for el in mergefields:
+            lines.append(f'    engine[cdocx::TemplateValue::text(TemplateKeys::{el._cpp_name})] = "{escape_cpp_string(el.name)}";  // TODO: replace value')
+        lines.append("")
+
+    lines.append("    // ===== END OF EDITABLE VALUES =====")
+    lines.append("")
+
+    # Optional: batch set example
+    lines.append("    // Alternative: batch set from a map")
+    lines.append("    // std::map<std::string, std::string> data = {")
+    for el in elements:
+        lines.append(f'    //     {{"{escape_cpp_string(el.name)}", "your_value_here"}},')
+    lines.append("    // };")
+    lines.append("    // engine.set_batch(data);")
+    lines.append("")
+
+    # Apply
+    lines.append("    // --------------------------------------------------------------")
+    lines.append("    // Apply replacements")
+    lines.append("    // --------------------------------------------------------------")
+    lines.append("    auto result = engine.apply();")
+    lines.append('    std::cout << "Replacements: " << result.success << " succeeded, "')
+    lines.append('              << result.failed << " failed, "')
+    lines.append('              << result.skipped << " skipped\\n";')
+    lines.append("")
+
+    # Save
+    lines.append("    // --------------------------------------------------------------")
+    lines.append("    // Save the result")
+    lines.append("    // --------------------------------------------------------------")
+    lines.append("    if (!doc.save(output_path)) {")
+    lines.append('        std::cerr << "Failed to save: " << output_path << "\\n";')
+    lines.append("        return 1;")
+    lines.append("    }")
+    lines.append('    std::cout << "Saved: " << output_path << "\\n";')
+    lines.append("")
+    lines.append("    return 0;")
+    lines.append("}")
+    lines.append("")
+
+    return "\n".join(lines)
+
+
+def generate_header(elements: list, docx_name: str, guard: str) -> str:
+    """Generate the C++ header file content (legacy mode)."""
+    placeholders = [e for e in elements if e.kind == "placeholder"]
+    bookmarks = [e for e in elements if e.kind == "bookmark"]
+    mergefields = [e for e in elements if e.kind == "mergefield"]
+
     seen_ids = set()
     for el in elements:
         el._cpp_name = el.cpp_name(seen_ids)
@@ -220,18 +337,18 @@ def generate_header(elements: list, docx_name: str, guard: str) -> str:
     lines.append(f"// Auto-generated from: {os.path.basename(docx_name)}")
     lines.append("//")
     lines.append("// Usage:")
-    lines.append("//   cdocx::Document doc(\"template.docx\");")
+    lines.append('//   cdocx::Document doc("template.docx");')
     lines.append("//   doc.open();")
     lines.append("//   cdocx::TemplateEngine engine(&doc);")
     lines.append("//   TemplateKeys::fill(engine, data);")
     lines.append("//   engine.apply();")
-    lines.append("//   doc.save(\"output.docx\");")
+    lines.append('//   doc.save("output.docx");')
     lines.append("//")
     lines.append("// NOTE: This file is UTF-8 encoded. On MSVC compile with /utf-8 if it")
     lines.append("//       contains non-ASCII characters in string literals.")
     lines.append("// ============================================================================")
     lines.append("")
-    lines.append(f"#pragma once")
+    lines.append("#pragma once")
     lines.append("")
     lines.append("#include <cdocx.h>")
     lines.append("#include <map>")
@@ -240,29 +357,25 @@ def generate_header(elements: list, docx_name: str, guard: str) -> str:
     lines.append("namespace TemplateKeys {")
     lines.append("")
 
-    # ------------------------------------------------------------------
-    # Constants
-    # ------------------------------------------------------------------
     def emit_group(title, group):
         if not group:
             return
         lines.append(f"    // {title}")
         for el in group:
-            ctx = el.context.replace("\"", "\\\"")
+            ctx = el.context.replace('"', '\\"')
             lines.append(f"    // Source: {el.source}")
             if ctx:
-                for cl in make_cpp_comment(f"Context: {ctx}").split("\n"):
-                    lines.append(f"    {cl}")
-            lines.append(f'    inline constexpr const char* {el._cpp_name} = "{el.name}";')
+                from textwrap import wrap
+                wrapped = wrap(f"Context: {ctx}", width=70)
+                for w in wrapped:
+                    lines.append(f"    // {w}")
+            lines.append(f'    inline constexpr const char* {el._cpp_name} = "{escape_cpp_string(el.name)}";')
             lines.append("")
 
     emit_group("Placeholders ({{key}} style)", placeholders)
     emit_group("Bookmarks", bookmarks)
     emit_group("MERGEFIELDs", mergefields)
 
-    # ------------------------------------------------------------------
-    # Convenience: names() vector
-    # ------------------------------------------------------------------
     lines.append("    // ------------------------------------------------------------------")
     lines.append("    // All key names (for iteration / UI generation)")
     lines.append("    // ------------------------------------------------------------------")
@@ -274,9 +387,6 @@ def generate_header(elements: list, docx_name: str, guard: str) -> str:
     lines.append("    }")
     lines.append("")
 
-    # ------------------------------------------------------------------
-    # Skeleton fill function
-    # ------------------------------------------------------------------
     lines.append("    // ------------------------------------------------------------------")
     lines.append("    // Skeleton: fill all template values")
     lines.append("    // ------------------------------------------------------------------")
@@ -285,10 +395,7 @@ def generate_header(elements: list, docx_name: str, guard: str) -> str:
     lines.append("    inline void fill(cdocx::TemplateEngine& engine,")
     lines.append("                     const std::map<std::string, std::string>& data) {")
     for el in elements:
-        if el.kind == "placeholder" or el.kind == "bookmark":
-            lines.append(f'        // engine[cdocx::TemplateValue::text({el._cpp_name})] = data.at("{el.name}");')
-        elif el.kind == "mergefield":
-            lines.append(f'        // engine[cdocx::TemplateValue::text({el._cpp_name})] = data.at("{el.name}");')
+        lines.append(f'        // engine[cdocx::TemplateValue::text({el._cpp_name})] = data.at("{escape_cpp_string(el.name)}");')
     lines.append("    }")
     lines.append("    */")
     lines.append("")
@@ -301,17 +408,28 @@ def generate_header(elements: list, docx_name: str, guard: str) -> str:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Analyze a .docx file and generate a C++ header with template keys."
+        description="Analyze a .docx file and generate C++ code for template filling."
     )
     parser.add_argument("docx", help="Input .docx file")
     parser.add_argument(
         "-o", "--output", default="-",
-        help="Output header file (default: '-' for stdout)"
+        help="Output file (default: '-' for stdout). Extension decides mode: .h -> header, .cpp -> full program"
+    )
+    parser.add_argument(
+        "--mode",
+        choices=["program", "header", "auto"],
+        default="auto",
+        help="Output mode: 'program' = compilable .cpp, 'header' = .h with constants, 'auto' = decide by extension (default)"
     )
     parser.add_argument(
         "--guard",
         default=None,
-        help="Include guard name (default: auto-derived from filename)"
+        help="Include guard name for header mode (default: auto-derived from filename)"
+    )
+    parser.add_argument(
+        "--out-docx",
+        default="output.docx",
+        help="Output .docx path written into the generated program (default: output.docx)"
     )
     args = parser.parse_args()
 
@@ -322,20 +440,30 @@ def main():
         print("Supported: {{placeholder}} text, Word bookmarks, MERGEFIELDs.", file=sys.stderr)
         sys.exit(0)
 
-    # Sort for stable output: kind then name
     elements.sort(key=lambda e: (e.kind, e.name))
 
-    if args.guard is None:
-        base = os.path.splitext(os.path.basename(args.output))[0]
-        args.guard = re.sub(r"[^A-Z0-9]", "_", base.upper()) + "_H"
+    # Determine output mode
+    mode = args.mode
+    if mode == "auto":
+        ext = os.path.splitext(args.output)[1].lower()
+        if ext == ".h" or ext == ".hpp":
+            mode = "header"
+        else:
+            mode = "program"
 
-    header = generate_header(elements, args.docx, args.guard)
+    if mode == "header":
+        if args.guard is None:
+            base = os.path.splitext(os.path.basename(args.output))[0]
+            args.guard = re.sub(r"[^A-Z0-9]", "_", base.upper()) + "_H"
+        content = generate_header(elements, args.docx, args.guard)
+    else:
+        content = generate_cpp_program(elements, args.docx, args.out_docx)
 
     if args.output == "-":
-        print(header)
+        print(content)
     else:
         with open(args.output, "w", encoding="utf-8") as f:
-            f.write(header)
+            f.write(content)
         print(f"Generated {args.output} with {len(elements)} template element(s).")
 
 

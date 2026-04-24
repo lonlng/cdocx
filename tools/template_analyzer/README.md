@@ -1,6 +1,6 @@
 # Docx Template Analyzer
 
-CDocx 模板分析器 —— 自动检测 Word 文档中的模板替换元素，并生成可直接使用的 C++17 头文件。
+CDocx 模板分析器 —— 自动检测 Word 文档中的模板替换元素，并生成**可直接编译运行的 C++17 程序**。
 
 ## 功能概述
 
@@ -12,10 +12,9 @@ CDocx 模板分析器 —— 自动检测 Word 文档中的模板替换元素，
 | **Bookmark** | Word 书签 (`w:bookmarkStart`) | `AUTHOR`、`SIGNATURE` |
 | **MERGEFIELD** | Word 邮件合并域 | `MERGEFIELD Name`、`MERGEFIELD Score` |
 
-生成产物为一个 C++17 头文件，包含：
-- 每个模板元素的 `inline constexpr const char*` 常量
-- `names()` 函数：返回所有 key 的名称列表
-- `fill()` 骨架函数：预写好的 `TemplateEngine` 赋值代码（注释状态）
+**默认生成产物**：一个完整的 `.cpp` 源文件，包含 `main()` 函数，直接编译运行即可完成模板填充。
+
+**可选生成产物**：`.h` 头文件（仅含常量和骨架函数）。
 
 ## 环境要求
 
@@ -24,26 +23,63 @@ CDocx 模板分析器 —— 自动检测 Word 文档中的模板替换元素，
 
 ## 快速开始
 
-### 1. 基本用法
+### 1. 生成可编译的 C++ 程序（默认）
 
 ```bash
-# 输出到 stdout
-python tools/template_analyzer/analyze_template.py template.docx
-
-# 输出到文件
-python tools/template_analyzer/analyze_template.py template.docx -o template_keys.h
+python tools/template_analyzer/analyze_template.py template.docx -o fill_template.cpp
 ```
 
-### 2. 完整示例
+生成的 `fill_template.cpp` 是一个完整的程序：
 
-假设有一个 `report_template.docx`，内容如下：
+```cpp
+#include <cdocx.h>
+#include <iostream>
+
+namespace TemplateKeys {
+    inline constexpr const char* company_name = "company_name";
+    inline constexpr const char* date = "date";
+    // ... 其他常量
+}
+
+int main() {
+    cdocx::Document doc("template.docx");
+    doc.open();
+
+    cdocx::TemplateEngine engine(&doc);
+
+    // ===== 直接在这里修改数据 =====
+    engine[cdocx::TemplateValue::text(TemplateKeys::company_name)] = "Acme Inc.";
+    engine[cdocx::TemplateValue::text(TemplateKeys::date)]        = "2026-04-24";
+    // =============================
+
+    engine.apply();
+    doc.save("output.docx");
+    return 0;
+}
+```
+
+**使用步骤**：
+1. 修改 `.cpp` 中赋值语句的字符串值
+2. 编译：`g++ -std=c++17 fill_template.cpp -lcdocx -o fill_template`
+3. 运行：`./fill_template`
+4. 得到 `output.docx`
+
+### 2. 生成头文件模式
+
+```bash
+python tools/template_analyzer/analyze_template.py template.docx -o template_keys.h --mode header
+```
+
+生成只含常量和注释骨架的头文件，适合集成到现有项目中。
+
+### 3. 完整示例
+
+假设 `report_template.docx` 内容如下：
 
 ```
 公司名称: {{company}}
 报告标题: {{title}}
 日期: {{date}}
-
-报告正文...
 
 签字人: [BOOKMARK: SIGNER]
 ```
@@ -51,85 +87,22 @@ python tools/template_analyzer/analyze_template.py template.docx -o template_key
 运行分析器：
 
 ```bash
-python tools/template_analyzer/analyze_template.py report_template.docx -o report_keys.h
+python tools/template_analyzer/analyze_template.py report_template.docx -o fill_report.cpp --out-docx report_filled.docx
 ```
 
-生成的 `report_keys.h`：
+生成 `fill_report.cpp`，其中 `main()` 内已写好：
 
 ```cpp
-#pragma once
+    // --- Placeholders ({{key}} style) ---
+    engine[cdocx::TemplateValue::text(TemplateKeys::company)] = "company";  // TODO: replace value
+    engine[cdocx::TemplateValue::text(TemplateKeys::title)]   = "title";    // TODO: replace value
+    engine[cdocx::TemplateValue::text(TemplateKeys::date)]    = "date";     // TODO: replace value
 
-#include <cdocx.h>
-#include <map>
-#include <string>
-
-namespace TemplateKeys {
-
-    // Placeholders ({{key}} style)
-    inline constexpr const char* company = "company";
-    inline constexpr const char* title   = "title";
-    inline constexpr const char* date    = "date";
-
-    // Bookmarks
-    inline constexpr const char* signer = "SIGNER";
-
-    // All key names
-    inline std::vector<std::string> names() {
-        return { company, title, date, signer };
-    }
-
-    // Skeleton fill function
-    inline void fill(cdocx::TemplateEngine& engine,
-                     const std::map<std::string, std::string>& data) {
-        engine[cdocx::TemplateValue::text(company)] = data.at("company");
-        engine[cdocx::TemplateValue::text(title)]   = data.at("title");
-        engine[cdocx::TemplateValue::text(date)]    = data.at("date");
-        engine[cdocx::TemplateValue::text(signer)]  = data.at("SIGNER");
-    }
-
-} // namespace TemplateKeys
+    // --- Bookmarks ---
+    engine[cdocx::TemplateValue::text(TemplateKeys::signer)]  = "SIGNER";   // TODO: replace value
 ```
 
-### 3. 在 C++ 代码中使用
-
-```cpp
-#include "report_keys.h"
-#include <cdocx.h>
-#include <iostream>
-
-int main() {
-    cdocx::Document doc("report_template.docx");
-    doc.open();
-
-    cdocx::TemplateEngine engine(&doc);
-
-    // 方式1: 直接赋值（推荐）
-    engine[cdocx::TemplateValue::text(TemplateKeys::company)] = "Acme Inc.";
-    engine[cdocx::TemplateValue::text(TemplateKeys::title)]   = "年度财报";
-    engine[cdocx::TemplateValue::text(TemplateKeys::date)]    = "2026-04-24";
-    engine[cdocx::TemplateValue::text(TemplateKeys::signer)]  = "张三";
-
-    // 方式2: 使用生成的 fill() 函数
-    // std::map<std::string, std::string> data = {
-    //     {"company", "Acme Inc."},
-    //     {"title",   "年度财报"},
-    //     {"date",    "2026-04-24"},
-    //     {"SIGNER",  "张三"}
-    // };
-    // TemplateKeys::fill(engine, data);
-
-    // 方式3: 批量设置 + 格式
-    engine[cdocx::TemplateValue::text(TemplateKeys::title)]
-        = cdocx::TemplateValue::text("年度财报")
-            .with_format(cdocx::TemplateFormat().bold().size(24));
-
-    auto result = engine.apply();
-    std::cout << "成功替换: " << result.success << " 处\n";
-
-    doc.save("report_output.docx");
-    return 0;
-}
-```
+直接修改右侧字符串值，编译运行即可得到填充后的 `report_filled.docx`。
 
 ## 命令行参数
 
@@ -140,22 +113,32 @@ python analyze_template.py <docx文件> [选项]
   docx                  输入的 .docx 文件路径
 
 可选参数:
-  -o, --output OUTPUT   输出头文件路径（默认: '-' 表示 stdout）
-  --guard GUARD         自定义 include guard 名称
-                        （默认: 根据输出文件名自动生成）
+  -o, --output OUTPUT   输出文件路径（默认: '-' 表示 stdout）
+                        扩展名决定模式: .h -> 头文件, 其他 -> 完整程序
+  --mode {program,header,auto}
+                        输出模式:
+                          program = 完整可编译 .cpp（默认）
+                          header  = .h 头文件（仅常量）
+                          auto    = 根据扩展名自动决定
+  --out-docx OUT_DOCX   生成程序中使用的输出 .docx 路径
+                        （默认: output.docx，仅 program 模式有效）
+  --guard GUARD         头文件模式的 include guard 名称
 ```
 
 ### 示例
 
 ```bash
-# 输出到 stdout
-python analyze_template.py contract.docx
+# 生成完整程序（默认）
+python analyze_template.py contract.docx -o fill_contract.cpp
 
-# 输出到指定文件
-python analyze_template.py contract.docx -o include/contract_keys.h
+# 生成完整程序并指定输出 docx 路径
+python analyze_template.py contract.docx -o fill_contract.cpp --out-docx filled/contract_2026.docx
+
+# 生成头文件
+python analyze_template.py contract.docx -o include/contract_keys.h --mode header
 
 # 自定义 include guard
-python analyze_template.py contract.docx -o contract.h --guard CONTRACT_TEMPLATE_H
+python analyze_template.py contract.docx -o contract.h --mode header --guard CONTRACT_TEMPLATE_H
 ```
 
 ## 处理非 ASCII 字符
@@ -168,10 +151,10 @@ python analyze_template.py contract.docx -o contract.h --guard CONTRACT_TEMPLATE
 | `{{标题}}`     | `__` |
 | `{{日期}}`     | `___2`（自动去重）|
 
-**编译注意事项**：生成的头文件为 **UTF-8 编码**。若使用 MSVC 编译且包含非 ASCII 字符串字面量，请添加 `/utf-8` 编译选项：
+**编译注意事项**：生成的文件为 **UTF-8 编码**。若使用 MSVC 编译且包含非 ASCII 字符串字面量，请添加 `/utf-8` 编译选项：
 
 ```bash
-cl /std:c++17 /utf-8 /I include main.cpp
+cl /std:c++17 /utf-8 fill_template.cpp
 ```
 
 ## 检测范围
@@ -192,6 +175,48 @@ cl /std:c++17 /utf-8 /I include main.cpp
 - Word 自动生成的导航书签 `_GoBack`
 - 重复出现的同名元素（按 `kind + name` 去重，保留首次出现）
 
+## 生成代码结构说明
+
+### Program 模式（`.cpp`）
+
+生成的 `.cpp` 文件包含：
+
+1. **头文件引用**：`cdocx.h`、`iostream`、`map`、`string`
+2. **常量命名空间**：`TemplateKeys::{key}` 对应每个模板元素
+3. **`main()` 函数**：
+   - 打开模板文档（含错误检查）
+   - 创建 `TemplateEngine`
+   - 按类别分组列出所有替换项（`// TODO: replace value`）
+   - 提供 `set_batch` 批量赋值注释示例
+   - 调用 `engine.apply()` 并打印结果统计
+   - 保存输出文档（含错误检查）
+
+### Header 模式（`.h`）
+
+生成的 `.h` 文件包含：
+
+1. **`inline constexpr const char*`** 常量
+2. **`names()`**：返回所有 key 的 `vector<string>`
+3. **注释掉的 `fill()` 骨架函数**：供手动解注释使用
+
+## 常见问题
+
+**Q: 生成的 C++ 标识符可读性差（全是下划线）**
+A: 占位符名称建议尽量使用 ASCII 字符（如 `{{company_name}}` 而非 `{{公司名称}}`），这样生成的常量名可读性最佳。非 ASCII 字符会被替换为下划线以确保标识符合法性。
+
+**Q: 能否修改生成的常量命名风格？**
+A: 目前常量名由占位符原文直接派生（去除 `{{}}` 后保留字母数字下划线）。如需自定义命名，可在生成后手动编辑文件，或修改 `TemplateElement.cpp_name()` 方法的实现。
+
+**Q: 占位符跨多个 `<w:r>` 怎么办？**
+A: 工具在段落级别拼接所有文本后再提取占位符，因此即使 `{{` 和 `}}` 被 Word 拆分到不同的 Run 中，只要视觉上在同一段落内，工具仍能正确识别。
+
+**Q: 编译时找不到 `cdocx.h`？**
+A: 确保编译命令中包含 `-I` 指向 cdocx 的 `include` 目录。例如：
+
+```bash
+g++ -std=c++17 -I /path/to/cdocx/include fill_template.cpp -lcdocx -o fill_template
+```
+
 ## 与 TemplateEngine 配合
 
 生成的代码基于 CDocx 的 `TemplateEngine` API，支持：
@@ -206,14 +231,3 @@ cl /std:c++17 /utf-8 /I include main.cpp
 | 目标类型 | 自动识别 Bookmark / Placeholder |
 
 完整 `TemplateEngine` 用法请参考 `examples/21_template_engine/main.cpp` 和 `AGENTS.md`。
-
-## 常见问题
-
-**Q: 生成的 C++ 标识符可读性差（全是下划线）**
-A: 占位符名称建议尽量使用 ASCII 字符（如 `{{company_name}}` 而非 `{{公司名称}}`），这样生成的常量名可读性最佳。非 ASCII 字符会被替换为下划线以确保标识符合法性。
-
-**Q: 能否修改生成的常量命名风格？**
-A: 目前常量名由占位符原文直接派生（去除 `{{}}` 后保留字母数字下划线）。如需自定义命名，可在生成后手动编辑头文件，或修改 `TemplateElement.cpp_name()` 方法的实现。
-
-**Q: 占位符跨多个 `<w:r>` 怎么办？**
-A: 工具在段落级别拼接所有文本后再提取占位符，因此即使 `{{` 和 `}}` 被 Word 拆分到不同的 Run 中，只要视觉上在同一段落内，工具仍能正确识别。
