@@ -54,6 +54,9 @@ UnderlineType string_to_underline_type(const char* str);
 const char* paragraph_alignment_to_string(ParagraphAlignment alignment);
 ParagraphAlignment string_to_paragraph_alignment(const char* str);
 
+const char* pp_alignment_to_string(ParagraphProperties::Alignment alignment);
+ParagraphProperties::Alignment string_to_pp_alignment(const char* str);
+
 const char* cell_vertical_alignment_to_string(CellVerticalAlignment alignment);
 CellVerticalAlignment string_to_cell_vertical_alignment(const char* str);
 

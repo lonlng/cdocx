@@ -4,6 +4,8 @@
  * @since 0.4.0
  */
 
+#include "sync_common.h"
+
 #include <cdocx/base.h>
 #include <cdocx/format_context.h>
 #include <cdocx/paragraph.h>
@@ -389,25 +391,7 @@ void ParagraphProperties::apply_to(pugi::xml_node para_node) const {
     // Alignment
     if (align) {
         pugi::xml_node jc = p_pr.append_child("w:jc");
-        const char* align_str = "left";  // NOLINT(clang-analyzer-deadcode.DeadStores)
-        switch (*align) {
-            case Alignment::Left:
-                align_str = "left";
-                break;
-            case Alignment::Centered:
-                align_str = "center";
-                break;
-            case Alignment::Right:
-                align_str = "right";
-                break;
-            case Alignment::Justified:
-                align_str = "both";
-                break;
-            case Alignment::Distributed:
-                align_str = "distribute";
-                break;
-        }
-        jc.append_attribute("w:val").set_value(align_str);
+        jc.append_attribute("w:val").set_value(pp_alignment_to_string(*align));
     }
 
     // Outline level
@@ -552,18 +536,7 @@ ParagraphProperties ParagraphProperties::extract_from(pugi::xml_node para_node) 
     // Extract alignment
     const pugi::xml_node jc = p_pr.child("w:jc");
     if (jc) {
-        const char* val = jc.attribute("w:val").value();
-        if (strcmp(val, "center") == 0) {
-            props.align = Alignment::Centered;
-        } else if (strcmp(val, "right") == 0) {
-            props.align = Alignment::Right;
-        } else if (strcmp(val, "both") == 0) {
-            props.align = Alignment::Justified;
-        } else if (strcmp(val, "distribute") == 0) {
-            props.align = Alignment::Distributed;
-        } else {
-            props.align = Alignment::Left;
-        }
+        props.align = string_to_pp_alignment(jc.attribute("w:val").value());
     }
 
     // Extract outline level

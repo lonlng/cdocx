@@ -173,6 +173,37 @@ ParagraphAlignment string_to_paragraph_alignment(const char* str) {
     return ParagraphAlignment::Left;
 }
 
+// ParagraphProperties::Alignment lookup table
+struct PpAlignmentMapping {
+    ParagraphProperties::Alignment alignment{};
+    const char* xml_value{};
+};
+
+static const PpAlignmentMapping kPpAlignmentMappings[] = {
+    {ParagraphProperties::Alignment::Centered, "center"},
+    {ParagraphProperties::Alignment::Right, "right"},
+    {ParagraphProperties::Alignment::Justified, "both"},
+    {ParagraphProperties::Alignment::Distributed, "distribute"},
+};
+
+const char* pp_alignment_to_string(ParagraphProperties::Alignment alignment) {
+    for (const auto& m : kPpAlignmentMappings) {
+        if (m.alignment == alignment) {
+            return m.xml_value;
+        }
+    }
+    return "left";
+}
+
+ParagraphProperties::Alignment string_to_pp_alignment(const char* str) {
+    for (const auto& m : kPpAlignmentMappings) {
+        if (std::strcmp(m.xml_value, str) == 0) {
+            return m.alignment;
+        }
+    }
+    return ParagraphProperties::Alignment::Left;
+}
+
 // CellVerticalAlignment lookup table
 struct CellVerticalAlignmentMapping {
     CellVerticalAlignment alignment{};

@@ -3,6 +3,8 @@
  * @brief Numbering (List) system implementation
  */
 
+#include "sync_common.h"
+
 #include <cdocx/document.h>
 #include <cdocx/numbering.h>
 
@@ -372,19 +374,7 @@ void NumberingManager::save_to_xml(pugi::xml_node numbering_root) {
 
             // Level justification
             auto lvl_jc = lvl.append_child("w:lvlJc");
-            switch (level.number_alignment) {
-                case ParagraphProperties::Alignment::Left:
-                    lvl_jc.append_attribute("w:val").set_value("left");
-                    break;
-                case ParagraphProperties::Alignment::Centered:
-                    lvl_jc.append_attribute("w:val").set_value("center");
-                    break;
-                case ParagraphProperties::Alignment::Right:
-                    lvl_jc.append_attribute("w:val").set_value("right");
-                    break;
-                default:
-                    lvl_jc.append_attribute("w:val").set_value("left");
-            }
+            lvl_jc.append_attribute("w:val").set_value(pp_alignment_to_string(level.number_alignment));
         }
     }
 
