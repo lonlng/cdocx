@@ -15,6 +15,88 @@
 
 namespace cdocx {
 
+namespace {
+
+struct UnderlineStyleMapping {
+    TextProperties::UnderlineStyle style{};
+    const char* xml_value{};
+};
+
+static const UnderlineStyleMapping kUnderlineStyleMappings[] = {
+    {TextProperties::UnderlineStyle::Words, "words"},
+    {TextProperties::UnderlineStyle::Single, "single"},
+    {TextProperties::UnderlineStyle::Double, "double"},
+    {TextProperties::UnderlineStyle::Thick, "thick"},
+    {TextProperties::UnderlineStyle::Dotted, "dotted"},
+    {TextProperties::UnderlineStyle::DottedHeavy, "dottedHeavy"},
+    {TextProperties::UnderlineStyle::Dash, "dash"},
+    {TextProperties::UnderlineStyle::DashedHeavy, "dashedHeavy"},
+    {TextProperties::UnderlineStyle::DashLong, "dashLong"},
+    {TextProperties::UnderlineStyle::DashLongHeavy, "dashLongHeavy"},
+    {TextProperties::UnderlineStyle::DotDash, "dotDash"},
+    {TextProperties::UnderlineStyle::DashDotHeavy, "dashDotHeavy"},
+    {TextProperties::UnderlineStyle::DotDotDash, "dotDotDash"},
+    {TextProperties::UnderlineStyle::DashDotDotHeavy, "dashDotDotHeavy"},
+    {TextProperties::UnderlineStyle::Wave, "wave"},
+    {TextProperties::UnderlineStyle::WavyDouble, "wavyDouble"},
+    {TextProperties::UnderlineStyle::WavyHeavy, "wavyHeavy"},
+};
+
+const char* underline_style_to_string(TextProperties::UnderlineStyle style) {
+    for (const auto& m : kUnderlineStyleMappings) {
+        if (m.style == style) {
+            return m.xml_value;
+        }
+    }
+    return "single";
+}
+
+TextProperties::UnderlineStyle string_to_underline_style(const char* str) {
+    for (const auto& m : kUnderlineStyleMappings) {
+        if (std::strcmp(m.xml_value, str) == 0) {
+            return m.style;
+        }
+    }
+    return TextProperties::UnderlineStyle::Single;
+}
+
+struct UnderlineStyleToTypeMapping {
+    TextProperties::UnderlineStyle style{};
+    UnderlineType type{};
+};
+
+static const UnderlineStyleToTypeMapping kUnderlineStyleToTypeMappings[] = {
+    {TextProperties::UnderlineStyle::None, UnderlineType::None},
+    {TextProperties::UnderlineStyle::Words, UnderlineType::Words},
+    {TextProperties::UnderlineStyle::Single, UnderlineType::Single},
+    {TextProperties::UnderlineStyle::Double, UnderlineType::Double},
+    {TextProperties::UnderlineStyle::Thick, UnderlineType::Thick},
+    {TextProperties::UnderlineStyle::Dotted, UnderlineType::Dotted},
+    {TextProperties::UnderlineStyle::DottedHeavy, UnderlineType::DottedHeavy},
+    {TextProperties::UnderlineStyle::Dash, UnderlineType::Dash},
+    {TextProperties::UnderlineStyle::DashedHeavy, UnderlineType::DashHeavy},
+    {TextProperties::UnderlineStyle::DashLong, UnderlineType::Dash},
+    {TextProperties::UnderlineStyle::DashLongHeavy, UnderlineType::DashHeavy},
+    {TextProperties::UnderlineStyle::DotDash, UnderlineType::DashDot},
+    {TextProperties::UnderlineStyle::DashDotHeavy, UnderlineType::DashDotHeavy},
+    {TextProperties::UnderlineStyle::DotDotDash, UnderlineType::DashDotDot},
+    {TextProperties::UnderlineStyle::DashDotDotHeavy, UnderlineType::DashDotDotHeavy},
+    {TextProperties::UnderlineStyle::Wave, UnderlineType::Wave},
+    {TextProperties::UnderlineStyle::WavyDouble, UnderlineType::Wave},
+    {TextProperties::UnderlineStyle::WavyHeavy, UnderlineType::WaveHeavy},
+};
+
+UnderlineType underline_style_to_type(TextProperties::UnderlineStyle style) {
+    for (const auto& m : kUnderlineStyleToTypeMappings) {
+        if (m.style == style) {
+            return m.type;
+        }
+    }
+    return UnderlineType::Single;
+}
+
+}  // anonymous namespace
+
 // ============================================================================
 // Run DOM Implementation
 // ============================================================================
@@ -61,63 +143,7 @@ Run& Run::set_properties(const TextProperties& props) {
 }
 
 Run& Run::set_underline_style(TextProperties::UnderlineStyle style, const std::string& color) {
-    switch (style) {
-        case TextProperties::UnderlineStyle::None:
-            set_underline(UnderlineType::None);
-            break;
-        case TextProperties::UnderlineStyle::Words:
-            set_underline(UnderlineType::Words);
-            break;
-        case TextProperties::UnderlineStyle::Single:
-            set_underline(UnderlineType::Single);
-            break;
-        case TextProperties::UnderlineStyle::Double:
-            set_underline(UnderlineType::Double);
-            break;
-        case TextProperties::UnderlineStyle::Thick:
-            set_underline(UnderlineType::Thick);
-            break;
-        case TextProperties::UnderlineStyle::Dotted:
-            set_underline(UnderlineType::Dotted);
-            break;
-        case TextProperties::UnderlineStyle::DottedHeavy:
-            set_underline(UnderlineType::DottedHeavy);
-            break;
-        case TextProperties::UnderlineStyle::Dash:
-            set_underline(UnderlineType::Dash);
-            break;
-        case TextProperties::UnderlineStyle::DashedHeavy:
-            set_underline(UnderlineType::DashHeavy);
-            break;
-        case TextProperties::UnderlineStyle::DashLong:
-            set_underline(UnderlineType::Dash);
-            break;
-        case TextProperties::UnderlineStyle::DashLongHeavy:
-            set_underline(UnderlineType::DashHeavy);
-            break;
-        case TextProperties::UnderlineStyle::DotDash:
-            set_underline(UnderlineType::DashDot);
-            break;
-        case TextProperties::UnderlineStyle::DashDotHeavy:
-            set_underline(UnderlineType::DashDotHeavy);
-            break;
-        case TextProperties::UnderlineStyle::DotDotDash:
-            set_underline(UnderlineType::DashDotDot);
-            break;
-        case TextProperties::UnderlineStyle::DashDotDotHeavy:
-            set_underline(UnderlineType::DashDotDotHeavy);
-            break;
-        case TextProperties::UnderlineStyle::Wave:
-        case TextProperties::UnderlineStyle::WavyDouble:
-            set_underline(UnderlineType::Wave);
-            break;
-        case TextProperties::UnderlineStyle::WavyHeavy:
-            set_underline(UnderlineType::WaveHeavy);
-            break;
-        default:
-            set_underline(UnderlineType::Single);
-            break;
-    }
+    set_underline(underline_style_to_type(style));
     if (!color.empty() && color != "auto") {
         font_.underline_color = Color(color);
     }
@@ -535,43 +561,8 @@ TextProperties Run::get_properties_xml() const {
     // Underline
     auto u = r_pr.child("w:u");
     if (u) {
-        const char* uval = u.attribute("w:val").value();
         auto& ul = props.underline;
-        if (std::strcmp(uval, "words") == 0) {
-            ul.style = TextProperties::UnderlineStyle::Words;
-        } else if (std::strcmp(uval, "single") == 0) {
-            ul.style = TextProperties::UnderlineStyle::Single;
-        } else if (std::strcmp(uval, "double") == 0) {
-            ul.style = TextProperties::UnderlineStyle::Double;
-        } else if (std::strcmp(uval, "thick") == 0) {
-            ul.style = TextProperties::UnderlineStyle::Thick;
-        } else if (std::strcmp(uval, "dotted") == 0) {
-            ul.style = TextProperties::UnderlineStyle::Dotted;
-        } else if (std::strcmp(uval, "dottedHeavy") == 0) {
-            ul.style = TextProperties::UnderlineStyle::DottedHeavy;
-        } else if (std::strcmp(uval, "dash") == 0) {
-            ul.style = TextProperties::UnderlineStyle::Dash;
-        } else if (std::strcmp(uval, "dashedHeavy") == 0) {
-            ul.style = TextProperties::UnderlineStyle::DashedHeavy;
-        } else if (std::strcmp(uval, "dashLong") == 0) {
-            ul.style = TextProperties::UnderlineStyle::DashLong;
-        } else if (std::strcmp(uval, "dashLongHeavy") == 0) {
-            ul.style = TextProperties::UnderlineStyle::DashLongHeavy;
-        } else if (std::strcmp(uval, "dotDash") == 0) {
-            ul.style = TextProperties::UnderlineStyle::DotDash;
-        } else if (std::strcmp(uval, "dashDotHeavy") == 0) {
-            ul.style = TextProperties::UnderlineStyle::DashDotHeavy;
-        } else if (std::strcmp(uval, "dotDotDash") == 0) {
-            ul.style = TextProperties::UnderlineStyle::DotDotDash;
-        } else if (std::strcmp(uval, "dashDotDotHeavy") == 0) {
-            ul.style = TextProperties::UnderlineStyle::DashDotDotHeavy;
-        } else if (std::strcmp(uval, "wave") == 0) {
-            ul.style = TextProperties::UnderlineStyle::Wave;
-        } else if (std::strcmp(uval, "wavyDouble") == 0) {
-            ul.style = TextProperties::UnderlineStyle::WavyDouble;
-        } else if (std::strcmp(uval, "wavyHeavy") == 0) {
-            ul.style = TextProperties::UnderlineStyle::WavyHeavy;
-        }
+        ul.style = string_to_underline_style(u.attribute("w:val").value());
         auto ucolor = u.attribute("w:color");
         if (ucolor) {
             ul.color = ucolor.value();
@@ -655,62 +646,8 @@ bool Run::set_underline_style_xml(TextProperties::UnderlineStyle style, const st
         r_pr.remove_child("w:u");
         return true;
     }
-    const char* val = "single";
-    switch (style) {
-        case TextProperties::UnderlineStyle::Words:
-            val = "words";
-            break;
-        case TextProperties::UnderlineStyle::Single:
-            val = "single";
-            break;
-        case TextProperties::UnderlineStyle::Double:
-            val = "double";
-            break;
-        case TextProperties::UnderlineStyle::Thick:
-            val = "thick";
-            break;
-        case TextProperties::UnderlineStyle::Dotted:
-            val = "dotted";
-            break;
-        case TextProperties::UnderlineStyle::DottedHeavy:
-            val = "dottedHeavy";
-            break;
-        case TextProperties::UnderlineStyle::Dash:
-            val = "dash";
-            break;
-        case TextProperties::UnderlineStyle::DashedHeavy:
-            val = "dashedHeavy";
-            break;
-        case TextProperties::UnderlineStyle::DashLong:
-            val = "dashLong";
-            break;
-        case TextProperties::UnderlineStyle::DashLongHeavy:
-            val = "dashLongHeavy";
-            break;
-        case TextProperties::UnderlineStyle::DotDash:
-            val = "dotDash";
-            break;
-        case TextProperties::UnderlineStyle::DashDotHeavy:
-            val = "dashDotHeavy";
-            break;
-        case TextProperties::UnderlineStyle::DotDotDash:
-            val = "dotDotDash";
-            break;
-        case TextProperties::UnderlineStyle::DashDotDotHeavy:
-            val = "dashDotDotHeavy";
-            break;
-        case TextProperties::UnderlineStyle::Wave:
-            val = "wave";
-            break;
-        case TextProperties::UnderlineStyle::WavyDouble:
-            val = "wavyDouble";
-            break;
-        case TextProperties::UnderlineStyle::WavyHeavy:
-            val = "wavyHeavy";
-            break;
-        default:
-            break;
-    }
+
+    const char* val = underline_style_to_string(style);
     auto u = r_pr.child("w:u");
     if (!u) {
         u = r_pr.append_child("w:u");
