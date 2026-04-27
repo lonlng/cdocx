@@ -69,6 +69,33 @@ int main() {
     }
 
     // ------------------------------------------------------------------------
+    // Example 5: Form Fields
+    // ------------------------------------------------------------------------
+    builder.writeln();
+    builder.writeln("Form Field Examples:");
+
+    // Text input field
+    builder.write("Name: ");
+    builder.insert_text_input("Name", cdocx::TextFormFieldType::Regular, "", "Enter your name", 50);
+    builder.writeln();
+
+    // Number input field
+    builder.write("Age: ");
+    builder.insert_text_input("Age", cdocx::TextFormFieldType::Number, "0", "25", 3);
+    builder.writeln();
+
+    // Checkbox field
+    builder.write("Agree to terms: ");
+    builder.insert_check_box("Agree", true, 10);
+    builder.writeln();
+
+    // Combo box field
+    builder.write("Select option: ");
+    std::vector<std::string> options = {"Option A", "Option B", "Option C"};
+    builder.insert_combo_box("Selection", options, 0);
+    builder.writeln();
+
+    // ------------------------------------------------------------------------
     // Save
     // ------------------------------------------------------------------------
     doc.save();
