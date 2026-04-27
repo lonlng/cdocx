@@ -481,17 +481,7 @@ std::shared_ptr<Paragraph> Document::parse_paragraph_from_xml(pugi::xml_node par
                         auto ttype = ff_text_input.child("w:type");
                         if (ttype) {
                             const char* tv = ttype.attribute("w:val").value();
-                            if (std::strcmp(tv, "number") == 0) {
-                                form_field->set_text_input_type(TextFormFieldType::Number);
-                            } else if (std::strcmp(tv, "date") == 0) {
-                                form_field->set_text_input_type(TextFormFieldType::Date);
-                            } else if (std::strcmp(tv, "currentDate") == 0) {
-                                form_field->set_text_input_type(TextFormFieldType::CurrentDate);
-                            } else if (std::strcmp(tv, "currentTime") == 0) {
-                                form_field->set_text_input_type(TextFormFieldType::CurrentTime);
-                            } else if (std::strcmp(tv, "calculated") == 0) {
-                                form_field->set_text_input_type(TextFormFieldType::Calculated);
-                            }
+                            form_field->set_text_input_type(string_to_text_form_field_type(tv));
                         }
                         auto tdef = ff_text_input.child("w:default");
                         if (tdef) {

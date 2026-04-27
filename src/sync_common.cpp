@@ -625,4 +625,36 @@ TextProperties::Highlight string_to_highlight(const char* str) {
     return TextProperties::Highlight::None;
 }
 
+// TextFormFieldType lookup table
+struct TextFormFieldTypeMapping {
+    TextFormFieldType type{};
+    const char* xml_value{};
+};
+
+static const TextFormFieldTypeMapping kTextFormFieldTypeMappings[] = {
+    {TextFormFieldType::Number, "number"},
+    {TextFormFieldType::Date, "date"},
+    {TextFormFieldType::CurrentDate, "currentDate"},
+    {TextFormFieldType::CurrentTime, "currentTime"},
+    {TextFormFieldType::Calculated, "calculated"},
+};
+
+const char* text_form_field_type_to_string(TextFormFieldType type) {
+    for (const auto& m : kTextFormFieldTypeMappings) {
+        if (m.type == type) {
+            return m.xml_value;
+        }
+    }
+    return "regular";
+}
+
+TextFormFieldType string_to_text_form_field_type(const char* str) {
+    for (const auto& m : kTextFormFieldTypeMappings) {
+        if (std::strcmp(m.xml_value, str) == 0) {
+            return m.type;
+        }
+    }
+    return TextFormFieldType::Regular;
+}
+
 }  // namespace cdocx

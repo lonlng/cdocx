@@ -75,6 +75,9 @@ LineSpacingRule string_to_line_spacing_rule(const char* str);
 const char* highlight_to_string(TextProperties::Highlight highlight);
 TextProperties::Highlight string_to_highlight(const char* str);
 
+const char* text_form_field_type_to_string(TextFormFieldType type);
+TextFormFieldType string_to_text_form_field_type(const char* str);
+
 // ---------------------------------------------------------------------------
 // Shading
 // ---------------------------------------------------------------------------

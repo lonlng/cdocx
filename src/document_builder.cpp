@@ -4,6 +4,8 @@
  * @since 0.3.0
  */
 
+#include "sync_common.h"
+
 #include <cdocx/document_builder.h>
 #include <cdocx/document.h>
 #include <cdocx/footnote.h>
@@ -990,27 +992,6 @@ bool DocumentBuilder::insert_image(const std::string& image_path, double width, 
 }
 
 // Form Fields
-struct TextFormFieldTypeMapping {
-    TextFormFieldType type{};
-    const char* xml_value{};
-};
-
-static const TextFormFieldTypeMapping kTextFormFieldTypeMappings[] = {
-    {TextFormFieldType::Number, "number"},
-    {TextFormFieldType::Date, "date"},
-    {TextFormFieldType::CurrentDate, "currentDate"},
-    {TextFormFieldType::CurrentTime, "currentTime"},
-    {TextFormFieldType::Calculated, "calculated"},
-};
-
-static const char* text_form_field_type_to_string(TextFormFieldType type) {
-    for (const auto& m : kTextFormFieldTypeMappings) {
-        if (m.type == type) {
-            return m.xml_value;
-        }
-    }
-    return "regular";
-}
 
 static void append_ffdata_text_input(pugi::xml_node fld_char, const FormField& field) {
     auto ff_data = fld_char.append_child("w:ffData");
