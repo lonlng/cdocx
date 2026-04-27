@@ -6,11 +6,13 @@
 
 #include <gtest/gtest.h>
 #include <cdocx.h>
+#include "../test_helpers.h"
 #include <cdocx/advanced.h>
 #include <filesystem>
 
 using namespace cdocx;
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 
 static std::string find_text_in_paragraphs(const ParagraphCollection& paras) {
     std::string all_text;
@@ -41,6 +43,7 @@ static std::string get_test_image_path() {
 // ============================================================================
 
 TEST(DocumentBuilderTest, InsertHyperlink) {
+    TempDoc temp_doc("test_builder_link.docx");
     Document doc("test_builder_link.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -77,10 +80,10 @@ TEST(DocumentBuilderTest, InsertHyperlink) {
     EXPECT_TRUE(found_rel);
 
     doc2.close();
-    fs::remove("test_builder_link.docx");
 }
 
 TEST(DocumentBuilderTest, InsertHyperlinkWithFormatting) {
+    TempDoc temp_doc("test_builder_link_fmt.docx");
     Document doc("test_builder_link_fmt.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -98,7 +101,6 @@ TEST(DocumentBuilderTest, InsertHyperlinkWithFormatting) {
     EXPECT_NE(text.find("Bold Link"), std::string::npos);
 
     doc2.close();
-    fs::remove("test_builder_link_fmt.docx");
 }
 
 // ============================================================================
@@ -111,6 +113,7 @@ TEST(DocumentBuilderTest, InsertImageWithAutoSize) {
         GTEST_SKIP() << "Test image not found, skipping image insertion test";
     }
 
+    TempDoc temp_doc("test_builder_image.docx");
     Document doc("test_builder_image.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -157,7 +160,6 @@ TEST(DocumentBuilderTest, InsertImageWithAutoSize) {
     EXPECT_TRUE(found_drawing);
 
     doc2.close();
-    fs::remove("test_builder_image.docx");
 }
 
 TEST(DocumentBuilderTest, InsertImageWithExplicitSize) {
@@ -166,6 +168,7 @@ TEST(DocumentBuilderTest, InsertImageWithExplicitSize) {
         GTEST_SKIP() << "Test image not found, skipping image insertion test";
     }
 
+    TempDoc temp_doc("test_builder_image_size.docx");
     Document doc("test_builder_image_size.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -208,10 +211,10 @@ TEST(DocumentBuilderTest, InsertImageWithExplicitSize) {
     EXPECT_TRUE(found_drawing);
 
     doc2.close();
-    fs::remove("test_builder_image_size.docx");
 }
 
 TEST(DocumentBuilderTest, InsertImageMissingFile) {
+    TempDoc temp_doc("test_builder_image_missing.docx");
     Document doc("test_builder_image_missing.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -219,7 +222,6 @@ TEST(DocumentBuilderTest, InsertImageMissingFile) {
     bool result = builder.insert_image("nonexistent_image.png");
     EXPECT_FALSE(result);
 
-    fs::remove("test_builder_image_missing.docx");
 }
 
 // ============================================================================
@@ -227,6 +229,7 @@ TEST(DocumentBuilderTest, InsertImageMissingFile) {
 // ============================================================================
 
 TEST(DocumentBuilderTest, WriteAndFormat) {
+    TempDoc temp_doc("test_builder_basic.docx");
     Document doc("test_builder_basic.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -247,10 +250,10 @@ TEST(DocumentBuilderTest, WriteAndFormat) {
     EXPECT_NE(text.find("Normal"), std::string::npos);
 
     doc2.close();
-    fs::remove("test_builder_basic.docx");
 }
 
 TEST(DocumentBuilderTest, TableBuilding) {
+    TempDoc temp_doc("test_builder_table.docx");
     Document doc("test_builder_table.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -281,7 +284,6 @@ TEST(DocumentBuilderTest, TableBuilding) {
     EXPECT_EQ(tables[0]->get_row_count(), 2);
 
     doc2.close();
-    fs::remove("test_builder_table.docx");
 }
 
 // ============================================================================
@@ -289,6 +291,7 @@ TEST(DocumentBuilderTest, TableBuilding) {
 // ============================================================================
 
 TEST(DocumentBuilderTest, FluentChaining) {
+    TempDoc temp_doc("test_builder_fluent.docx");
     Document doc("test_builder_fluent.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -315,10 +318,10 @@ TEST(DocumentBuilderTest, FluentChaining) {
     EXPECT_NE(text.find("Normal text italic"), std::string::npos);
 
     doc2.close();
-    fs::remove("test_builder_fluent.docx");
 }
 
 TEST(DocumentBuilderTest, FluentTableAndBookmark) {
+    TempDoc temp_doc("test_builder_fluent_table.docx");
     Document doc("test_builder_fluent_table.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -347,7 +350,6 @@ TEST(DocumentBuilderTest, FluentTableAndBookmark) {
     EXPECT_TRUE(bookmarks.contains("TableStart"));
 
     doc2.close();
-    fs::remove("test_builder_fluent_table.docx");
 }
 
 // ============================================================================
@@ -436,6 +438,7 @@ TEST(DocumentEnsureMinimumTest, CreatesSectionAndParagraph) {
 // ============================================================================
 
 TEST(DocumentRangeTest, GetRangeText) {
+    TempDoc temp_doc("test_range.docx");
     Document doc("test_range.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -453,10 +456,10 @@ TEST(DocumentRangeTest, GetRangeText) {
     EXPECT_NE(text.find("World"), std::string::npos);
 
     doc2.close();
-    fs::remove("test_range.docx");
 }
 
 TEST(DocumentRangeTest, RangeReplaceAll) {
+    TempDoc temp_doc("test_range_replace.docx");
     Document doc("test_range_replace.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -477,7 +480,6 @@ TEST(DocumentRangeTest, RangeReplaceAll) {
     EXPECT_EQ(text.find("Hello"), std::string::npos);
 
     doc2.close();
-    fs::remove("test_range_replace.docx");
 }
 
 // ============================================================================
@@ -556,6 +558,7 @@ TEST(ControlCharTest, CharConstants) {
 // ============================================================================
 
 TEST(FileFormatUtilTest, DetectDocxFile) {
+    TempDoc temp_doc("test_format_detect.docx");
     Document doc("test_format_detect.docx");
     ASSERT_TRUE(doc.create_empty());
     doc.save();
@@ -565,7 +568,6 @@ TEST(FileFormatUtilTest, DetectDocxFile) {
     EXPECT_EQ(info->load_format(), cdocx::LoadFormat::Docx);
     EXPECT_FALSE(info->is_encrypted());
 
-    fs::remove("test_format_detect.docx");
 }
 
 TEST(FileFormatUtilTest, DetectMissingFile) {
@@ -638,6 +640,7 @@ TEST(FileFormatUtilTest, DetectFromBuffer) {
 // ============================================================================
 
 TEST(ShadingSyncTest, ParagraphShadingRoundTrip) {
+    TempDoc temp_doc("test_shading_para.docx");
     Document doc("test_shading_para.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -662,10 +665,10 @@ TEST(ShadingSyncTest, ParagraphShadingRoundTrip) {
     EXPECT_EQ(target_para->get_paragraph_format().shading.background.to_hex_rgb(), "FFCC00");
 
     doc2.close();
-    fs::remove("test_shading_para.docx");
 }
 
 TEST(ShadingSyncTest, RunShadingRoundTrip) {
+    TempDoc temp_doc("test_shading_run.docx");
     Document doc("test_shading_run.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -697,10 +700,10 @@ TEST(ShadingSyncTest, RunShadingRoundTrip) {
     EXPECT_TRUE(found_shd);
 
     doc2.close();
-    fs::remove("test_shading_run.docx");
 }
 
 TEST(ShadingSyncTest, TableShadingRoundTrip) {
+    TempDoc temp_doc("test_shading_table.docx");
     Document doc("test_shading_table.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -727,5 +730,4 @@ TEST(ShadingSyncTest, TableShadingRoundTrip) {
     EXPECT_TRUE(found_shd);
 
     doc2.close();
-    fs::remove("test_shading_table.docx");
 }

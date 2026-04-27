@@ -1,9 +1,11 @@
 #include <gtest/gtest.h>
 #include <cdocx.h>
+#include "../test_helpers.h"
 #include <cstring>
 #include <filesystem>
 
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 
 TEST(StyleCollectionTest, AddAndRetrieveStyle) {
     cdocx::Document doc("test_styles.docx");

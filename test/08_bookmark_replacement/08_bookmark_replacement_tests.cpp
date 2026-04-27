@@ -10,6 +10,7 @@
 
 #include <gtest/gtest.h>
 #include <cdocx.h>
+#include "../test_helpers.h"
 #include <cdocx/bookmark_replacer.h>
 #include <cdocx/caption_generator.h>
 #include <filesystem>
@@ -17,6 +18,7 @@
 #include <map>
 
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 
 // ============================================================================
 // BookmarkFormat Tests

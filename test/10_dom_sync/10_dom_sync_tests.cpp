@@ -6,18 +6,21 @@
 
 #include <gtest/gtest.h>
 #include <cdocx.h>
+#include "../test_helpers.h"
 #include <cstring>
 #include <filesystem>
 #include <fstream>
 
 using namespace cdocx;
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 
 // ============================================================================
 // Node Tree Traversal Tests
 // ============================================================================
 
 TEST(DomSyncTest, PreOrderTraversal) {
+    TempDoc temp_doc("test_traversal.docx");
     Document doc("test_traversal.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -47,10 +50,10 @@ TEST(DomSyncTest, PreOrderTraversal) {
     EXPECT_EQ(order[5], NodeType::Run);
     EXPECT_EQ(order[6], NodeType::Run);
 
-    fs::remove("test_traversal.docx");
 }
 
 TEST(DomSyncTest, LogicalNavigation) {
+    TempDoc temp_doc("test_logical.docx");
     Document doc("test_logical.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -76,7 +79,6 @@ TEST(DomSyncTest, LogicalNavigation) {
     EXPECT_EQ(para2->get_previous_logical(), para1);
     EXPECT_EQ(para1->get_previous_logical(), nullptr);
 
-    fs::remove("test_logical.docx");
 }
 
 // ============================================================================
@@ -84,6 +86,7 @@ TEST(DomSyncTest, LogicalNavigation) {
 // ============================================================================
 
 TEST(DomSyncTest, FieldRoundTrip) {
+    TempDoc temp_doc("test_field.docx");
     {
         Document doc("test_field.docx");
         ASSERT_TRUE(doc.create_empty());
@@ -130,7 +133,6 @@ TEST(DomSyncTest, FieldRoundTrip) {
         EXPECT_TRUE(found_field);
     }
 
-    fs::remove("test_field.docx");
 }
 
 // ============================================================================
@@ -138,6 +140,7 @@ TEST(DomSyncTest, FieldRoundTrip) {
 // ============================================================================
 
 TEST(DomSyncTest, HyperlinkRoundTrip) {
+    TempDoc temp_doc("test_hyperlink.docx");
     {
         Document doc("test_hyperlink.docx");
         ASSERT_TRUE(doc.create_empty());
@@ -189,10 +192,10 @@ TEST(DomSyncTest, HyperlinkRoundTrip) {
         EXPECT_TRUE(found_link);
     }
 
-    fs::remove("test_hyperlink.docx");
 }
 
 TEST(DomSyncTest, HyperlinkBookmarkRoundTrip) {
+    TempDoc temp_doc("test_hyperlink_bm.docx");
     {
         Document doc("test_hyperlink_bm.docx");
         ASSERT_TRUE(doc.create_empty());
@@ -240,7 +243,6 @@ TEST(DomSyncTest, HyperlinkBookmarkRoundTrip) {
         EXPECT_TRUE(found_link);
     }
 
-    fs::remove("test_hyperlink_bm.docx");
 }
 
 // ============================================================================
@@ -248,6 +250,7 @@ TEST(DomSyncTest, HyperlinkBookmarkRoundTrip) {
 // ============================================================================
 
 TEST(DomSyncTest, PreserveUnknownXmlNodes) {
+    TempDoc temp_doc("test_unknown.docx");
     {
         Document doc("test_unknown.docx");
         ASSERT_TRUE(doc.create_empty());
@@ -295,7 +298,6 @@ TEST(DomSyncTest, PreserveUnknownXmlNodes) {
         EXPECT_TRUE(found_custom);
     }
 
-    fs::remove("test_unknown.docx");
 }
 
 // ============================================================================
