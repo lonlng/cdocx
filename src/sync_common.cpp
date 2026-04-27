@@ -551,5 +551,47 @@ void set_text_child(pugi::xml_node parent, const char* name, const std::string& 
     child.append_child(pugi::node_pcdata).set_value(value.c_str());
 }
 
+// Highlight lookup table
+struct HighlightMapping {
+    TextProperties::Highlight highlight{};
+    const char* xml_value{};
+};
+
+static const HighlightMapping kHighlightMappings[] = {
+    {TextProperties::Highlight::Black, "black"},
+    {TextProperties::Highlight::White, "white"},
+    {TextProperties::Highlight::Red, "red"},
+    {TextProperties::Highlight::Green, "green"},
+    {TextProperties::Highlight::Blue, "blue"},
+    {TextProperties::Highlight::Yellow, "yellow"},
+    {TextProperties::Highlight::Cyan, "cyan"},
+    {TextProperties::Highlight::Magenta, "magenta"},
+    {TextProperties::Highlight::DarkRed, "darkRed"},
+    {TextProperties::Highlight::DarkGreen, "darkGreen"},
+    {TextProperties::Highlight::DarkBlue, "darkBlue"},
+    {TextProperties::Highlight::DarkYellow, "darkYellow"},
+    {TextProperties::Highlight::DarkCyan, "darkCyan"},
+    {TextProperties::Highlight::DarkMagenta, "darkMagenta"},
+    {TextProperties::Highlight::DarkGray, "darkGray"},
+    {TextProperties::Highlight::LightGray, "lightGray"},
+};
+
+const char* highlight_to_string(TextProperties::Highlight highlight) {
+    for (const auto& m : kHighlightMappings) {
+        if (m.highlight == highlight) {
+            return m.xml_value;
+        }
+    }
+    return "yellow";
+}
+
+TextProperties::Highlight string_to_highlight(const char* str) {
+    for (const auto& m : kHighlightMappings) {
+        if (std::strcmp(m.xml_value, str) == 0) {
+            return m.highlight;
+        }
+    }
+    return TextProperties::Highlight::None;
+}
 
 }  // namespace cdocx

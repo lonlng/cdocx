@@ -8,6 +8,8 @@
 #include <cdocx/document.h>
 #include <cdocx/paragraph.h>
 
+#include "sync_common.h"
+
 #include <cstring>
 #include <utility>
 
@@ -586,40 +588,7 @@ TextProperties Run::get_properties_xml() const {
     // Highlight
     auto hl = r_pr.child("w:highlight");
     if (hl) {
-        const char* hval = hl.attribute("w:val").value();
-        if (std::strcmp(hval, "black") == 0) {
-            props.highlight = TextProperties::Highlight::Black;
-        } else if (std::strcmp(hval, "white") == 0) {
-            props.highlight = TextProperties::Highlight::White;
-        } else if (std::strcmp(hval, "red") == 0) {
-            props.highlight = TextProperties::Highlight::Red;
-        } else if (std::strcmp(hval, "green") == 0) {
-            props.highlight = TextProperties::Highlight::Green;
-        } else if (std::strcmp(hval, "blue") == 0) {
-            props.highlight = TextProperties::Highlight::Blue;
-        } else if (std::strcmp(hval, "yellow") == 0) {
-            props.highlight = TextProperties::Highlight::Yellow;
-        } else if (std::strcmp(hval, "cyan") == 0) {
-            props.highlight = TextProperties::Highlight::Cyan;
-        } else if (std::strcmp(hval, "magenta") == 0) {
-            props.highlight = TextProperties::Highlight::Magenta;
-        } else if (std::strcmp(hval, "darkRed") == 0) {
-            props.highlight = TextProperties::Highlight::DarkRed;
-        } else if (std::strcmp(hval, "darkGreen") == 0) {
-            props.highlight = TextProperties::Highlight::DarkGreen;
-        } else if (std::strcmp(hval, "darkBlue") == 0) {
-            props.highlight = TextProperties::Highlight::DarkBlue;
-        } else if (std::strcmp(hval, "darkYellow") == 0) {
-            props.highlight = TextProperties::Highlight::DarkYellow;
-        } else if (std::strcmp(hval, "darkCyan") == 0) {
-            props.highlight = TextProperties::Highlight::DarkCyan;
-        } else if (std::strcmp(hval, "darkMagenta") == 0) {
-            props.highlight = TextProperties::Highlight::DarkMagenta;
-        } else if (std::strcmp(hval, "darkGray") == 0) {
-            props.highlight = TextProperties::Highlight::DarkGray;
-        } else if (std::strcmp(hval, "lightGray") == 0) {
-            props.highlight = TextProperties::Highlight::LightGray;
-        }
+        props.highlight = string_to_highlight(hl.attribute("w:val").value());
     }
 
     // Scale
@@ -668,59 +637,7 @@ bool Run::set_highlight_xml(TextProperties::Highlight color) {
         r_pr.remove_child("w:highlight");
         return true;
     }
-    const char* val = "yellow";
-    switch (color) {
-        case TextProperties::Highlight::Black:
-            val = "black";
-            break;
-        case TextProperties::Highlight::Blue:
-            val = "blue";
-            break;
-        case TextProperties::Highlight::Cyan:
-            val = "cyan";
-            break;
-        case TextProperties::Highlight::Green:
-            val = "green";
-            break;
-        case TextProperties::Highlight::Magenta:
-            val = "magenta";
-            break;
-        case TextProperties::Highlight::Red:
-            val = "red";
-            break;
-        case TextProperties::Highlight::Yellow:
-            val = "yellow";
-            break;
-        case TextProperties::Highlight::White:
-            val = "white";
-            break;
-        case TextProperties::Highlight::DarkBlue:
-            val = "darkBlue";
-            break;
-        case TextProperties::Highlight::DarkCyan:
-            val = "darkCyan";
-            break;
-        case TextProperties::Highlight::DarkGreen:
-            val = "darkGreen";
-            break;
-        case TextProperties::Highlight::DarkMagenta:
-            val = "darkMagenta";
-            break;
-        case TextProperties::Highlight::DarkRed:
-            val = "darkRed";
-            break;
-        case TextProperties::Highlight::DarkYellow:
-            val = "darkYellow";
-            break;
-        case TextProperties::Highlight::DarkGray:
-            val = "darkGray";
-            break;
-        case TextProperties::Highlight::LightGray:
-            val = "lightGray";
-            break;
-        default:
-            break;
-    }
+    const char* val = highlight_to_string(color);
     auto hl = r_pr.child("w:highlight");
     if (!hl) {
         hl = r_pr.append_child("w:highlight");

@@ -69,6 +69,9 @@ ScriptType string_to_script_type(const char* str);
 const char* line_spacing_rule_to_string(LineSpacingRule rule);
 LineSpacingRule string_to_line_spacing_rule(const char* str);
 
+const char* highlight_to_string(TextProperties::Highlight highlight);
+TextProperties::Highlight string_to_highlight(const char* str);
+
 // ---------------------------------------------------------------------------
 // Shading
 // ---------------------------------------------------------------------------
