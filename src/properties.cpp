@@ -560,79 +560,65 @@ ParagraphProperties ParagraphProperties::extract_from(pugi::xml_node para_node) 
 
 namespace {
 
-const char* tab_alignmentto_string(TabAlignment alignment) {
-    switch (alignment) {
-        case TabAlignment::Center:
-            return "center";
-        case TabAlignment::Right:
-            return "right";
-        case TabAlignment::Decimal:
-            return "decimal";
-        case TabAlignment::Bar:
-            return "bar";
-        case TabAlignment::List:
-            return "list";
-        case TabAlignment::Clear:
-            return "clear";
-        default:
-            return "left";
+struct TabAlignmentMapping {
+    TabAlignment alignment{};
+    const char* xml_value{};
+};
+
+static const TabAlignmentMapping kTabAlignmentMappings[] = {
+    {TabAlignment::Center, "center"},
+    {TabAlignment::Right, "right"},
+    {TabAlignment::Decimal, "decimal"},
+    {TabAlignment::Bar, "bar"},
+    {TabAlignment::List, "list"},
+    {TabAlignment::Clear, "clear"},
+};
+
+const char* tab_alignment_to_string(TabAlignment alignment) {
+    for (const auto& m : kTabAlignmentMappings) {
+        if (m.alignment == alignment) {
+            return m.xml_value;
+        }
     }
+    return "left";
 }
 
 TabAlignment string_to_tab_alignment(const char* str) {
-    if (std::strcmp(str, "center") == 0) {
-        return TabAlignment::Center;
-    }
-    if (std::strcmp(str, "right") == 0) {
-        return TabAlignment::Right;
-    }
-    if (std::strcmp(str, "decimal") == 0) {
-        return TabAlignment::Decimal;
-    }
-    if (std::strcmp(str, "bar") == 0) {
-        return TabAlignment::Bar;
-    }
-    if (std::strcmp(str, "list") == 0) {
-        return TabAlignment::List;
-    }
-    if (std::strcmp(str, "clear") == 0) {
-        return TabAlignment::Clear;
+    for (const auto& m : kTabAlignmentMappings) {
+        if (std::strcmp(m.xml_value, str) == 0) {
+            return m.alignment;
+        }
     }
     return TabAlignment::Left;
 }
 
+struct TabLeaderMapping {
+    TabLeader leader{};
+    const char* xml_value{};
+};
+
+static const TabLeaderMapping kTabLeaderMappings[] = {
+    {TabLeader::Dots, "dot"},
+    {TabLeader::Dashes, "hyphen"},
+    {TabLeader::Line, "underscore"},
+    {TabLeader::Heavy, "heavy"},
+    {TabLeader::MiddleDot, "middleDot"},
+};
+
 const char* tab_leader_to_string(TabLeader leader) {
-    switch (leader) {
-        case TabLeader::Dots:
-            return "dot";
-        case TabLeader::Dashes:
-            return "hyphen";
-        case TabLeader::Line:
-            return "underscore";
-        case TabLeader::Heavy:
-            return "heavy";
-        case TabLeader::MiddleDot:
-            return "middleDot";
-        default:
-            return "none";
+    for (const auto& m : kTabLeaderMappings) {
+        if (m.leader == leader) {
+            return m.xml_value;
+        }
     }
+    return "none";
 }
 
 TabLeader string_to_tab_leader(const char* str) {
-    if (std::strcmp(str, "dot") == 0) {
-        return TabLeader::Dots;
-    }
-    if (std::strcmp(str, "hyphen") == 0) {
-        return TabLeader::Dashes;
-    }
-    if (std::strcmp(str, "underscore") == 0) {
-        return TabLeader::Line;
-    }
-    if (std::strcmp(str, "heavy") == 0) {
-        return TabLeader::Heavy;
-    }
-    if (std::strcmp(str, "middleDot") == 0) {
-        return TabLeader::MiddleDot;
+    for (const auto& m : kTabLeaderMappings) {
+        if (std::strcmp(m.xml_value, str) == 0) {
+            return m.leader;
+        }
     }
     return TabLeader::None;
 }
@@ -701,7 +687,7 @@ void TabStopCollection::apply_to(pugi::xml_node para_node) const {
     pugi::xml_node tabs = p_pr.append_child("w:tabs");
     for (const auto& ts : tab_stops_) {
         pugi::xml_node tab = tabs.append_child("w:tab");
-        tab.append_attribute("w:val").set_value(tab_alignmentto_string(ts.alignment));
+        tab.append_attribute("w:val").set_value(tab_alignment_to_string(ts.alignment));
         tab.append_attribute("w:pos").set_value(
             static_cast<int>(ts.position * 20));  // points to twips
         if (ts.leader != TabLeader::None) {
