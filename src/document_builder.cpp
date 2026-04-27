@@ -543,71 +543,52 @@ std::shared_ptr<Footnote> DocumentBuilder::insert_footnote(FootnoteType type,
 
 namespace {
 
-std::string field_type_to_code(FieldType type) {
-    switch (type) {
-        case FieldType::Page:
-            return "PAGE";
-        case FieldType::NumPages:
-            return "NUMPAGES";
-        case FieldType::Date:
-            return "DATE";
-        case FieldType::Time:
-            return "TIME";
-        case FieldType::CreateDate:
-            return "CREATEDATE";
-        case FieldType::SaveDate:
-            return "SAVEDATE";
-        case FieldType::Author:
-            return "AUTHOR";
-        case FieldType::Title:
-            return "TITLE";
-        case FieldType::Subject:
-            return "SUBJECT";
-        case FieldType::Keywords:
-            return "KEYWORDS";
-        case FieldType::FileName:
-            return "FILENAME";
-        case FieldType::FileSize:
-            return "FILESIZE";
-        case FieldType::NumWords:
-            return "NUMWORDS";
-        case FieldType::NumChars:
-            return "NUMCHARS";
-        case FieldType::Ref:
-            return "REF";
-        case FieldType::PageRef:
-            return "PAGEREF";
-        case FieldType::Formula:
-            return "=";
-        default:
-            return "";
-    }
-}
+struct FieldTypeMapping {
+    FieldType type;
+    const char* code;
+    const char* result;
+};
 
-std::string field_type_to_result(FieldType type) {
-    switch (type) {
-        case FieldType::Page:
-        case FieldType::NumPages:
-            return "1";
-        case FieldType::FileSize:
-        case FieldType::NumWords:
-        case FieldType::NumChars:
-            return "0";
-        default:
-            return "";
+static const FieldTypeMapping kFieldTypeMappings[] = {
+    {FieldType::Page, "PAGE", "1"},
+    {FieldType::NumPages, "NUMPAGES", "1"},
+    {FieldType::Date, "DATE", ""},
+    {FieldType::Time, "TIME", ""},
+    {FieldType::CreateDate, "CREATEDATE", ""},
+    {FieldType::SaveDate, "SAVEDATE", ""},
+    {FieldType::Author, "AUTHOR", ""},
+    {FieldType::Title, "TITLE", ""},
+    {FieldType::Subject, "SUBJECT", ""},
+    {FieldType::Keywords, "KEYWORDS", ""},
+    {FieldType::FileName, "FILENAME", ""},
+    {FieldType::FileSize, "FILESIZE", "0"},
+    {FieldType::NumWords, "NUMWORDS", "0"},
+    {FieldType::NumChars, "NUMCHARS", "0"},
+    {FieldType::Ref, "REF", ""},
+    {FieldType::PageRef, "PAGEREF", ""},
+    {FieldType::Formula, "=", ""},
+};
+
+const FieldTypeMapping* find_field_mapping(FieldType type) {
+    for (const auto& m : kFieldTypeMappings) {
+        if (m.type == type) {
+            return &m;
+        }
     }
+    return nullptr;
 }
 
 }  // anonymous namespace
 
 std::shared_ptr<Field> DocumentBuilder::insert_field(FieldType field_type, bool /*update_field*/) {
-    std::string code = field_type_to_code(field_type);
-    if (code.empty()) {
-        code = "PAGE";
-    }
     auto field = std::make_shared<Field>(doc_, field_type);
-    field->set_field_code(code);
-    field->set_result(field_type_to_result(field_type));
+    const auto* mapping = find_field_mapping(field_type);
+    if (mapping) {
+        field->set_field_code(mapping->code);
+        field->set_result(mapping->result);
+    } else {
+        field->set_field_code("PAGE");
+    }
     return insert_field_node(field);
 }
 
@@ -665,7 +646,7 @@ std::shared_ptr<Field> DocumentBuilder::insert_field_node(const std::shared_ptr<
 std::shared_ptr<Field> DocumentBuilder::insert_page_number(const std::string& switches) {
     auto field = std::make_shared<Field>(doc_, FieldType::Page);
     field->set_field_code("PAGE");
-    field->set_result(field_type_to_result(FieldType::Page));
+    field->set_result("1");
     if (!switches.empty()) {
         field->add_switch(switches);
     }
@@ -678,8 +659,7 @@ std::shared_ptr<Field> DocumentBuilder::insert_num_pages() {
 
 std::shared_ptr<Field> DocumentBuilder::insert_date(const std::string& switches) {
     auto field = std::make_shared<Field>(doc_, FieldType::Date);
-    field->set_field_code(field_type_to_code(FieldType::Date));
-    field->set_result(field_type_to_result(FieldType::Date));
+    field->set_field_code("DATE");
     if (!switches.empty()) {
         field->add_switch(switches);
     }
@@ -688,8 +668,7 @@ std::shared_ptr<Field> DocumentBuilder::insert_date(const std::string& switches)
 
 std::shared_ptr<Field> DocumentBuilder::insert_time(const std::string& switches) {
     auto field = std::make_shared<Field>(doc_, FieldType::Time);
-    field->set_field_code(field_type_to_code(FieldType::Time));
-    field->set_result(field_type_to_result(FieldType::Time));
+    field->set_field_code("TIME");
     if (!switches.empty()) {
         field->add_switch(switches);
     }
