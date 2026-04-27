@@ -10,11 +10,13 @@
 
 #include <gtest/gtest.h>
 #include <cdocx.h>
+#include "../test_helpers.h"
 #include <filesystem>
 #include <iostream>
 #include <fstream>
 
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 
 /**
  * @brief Helper to check if a file is a valid ZIP (DOCX) file
@@ -36,7 +38,6 @@ TEST(CreateEmptyTest, CreateEmptyCreatesValidDocument) {
 
     // Clean up any existing file
     if (fs::exists(test_file)) {
-        fs::remove(test_file);
     }
 
     cdocx::Document doc;
@@ -51,7 +52,6 @@ TEST(CreateEmptyTest, CreateEmptyCreatesValidDocument) {
 
     // Clean up
     if (fs::exists(test_file)) {
-        fs::remove(test_file);
     }
 }
 
@@ -60,7 +60,6 @@ TEST(CreateEmptyTest, CreatedEmptyDocumentHasAllRequiredXmlParts) {
 
     // Clean up
     if (fs::exists(test_file)) {
-        fs::remove(test_file);
     }
 
     // Create and save empty document
@@ -94,7 +93,6 @@ TEST(CreateEmptyTest, CreatedEmptyDocumentHasAllRequiredXmlParts) {
 
     // Clean up
     if (fs::exists(test_file)) {
-        fs::remove(test_file);
     }
 }
 
@@ -103,7 +101,6 @@ TEST(CreateEmptyTest, CreatedEmptyDocumentCanHaveContentAdded) {
 
     // Clean up
     if (fs::exists(test_file)) {
-        fs::remove(test_file);
     }
 
     // Create empty document and add content
@@ -146,7 +143,6 @@ TEST(CreateEmptyTest, CreatedEmptyDocumentCanHaveContentAdded) {
 
     // Clean up
     if (fs::exists(test_file)) {
-        fs::remove(test_file);
     }
 }
 
@@ -192,7 +188,6 @@ TEST(CreateEmptyTest, CreatedDocumentHasValidDocumentStructure) {
     const std::string test_file = "test_structure.docx";
 
     // Clean up
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     // Create document
     {
@@ -227,12 +222,11 @@ TEST(CreateEmptyTest, CreatedDocumentHasValidDocumentStructure) {
     }
 
     // Clean up
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(CreateEmptyTest, CreatedDocumentHasWebSettings) {
-    const std::string test_file = "test_websettings.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_websettings.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -273,12 +267,11 @@ TEST(CreateEmptyTest, CreatedDocumentHasWebSettings) {
         EXPECT_TRUE(found) << "webSettings relationship not found in document.xml.rels";
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(CreateEmptyTest, CreatedDocumentHasContentTypeDefaults) {
-    const std::string test_file = "test_content_types.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_content_types.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -315,12 +308,11 @@ TEST(CreateEmptyTest, CreatedDocumentHasContentTypeDefaults) {
             << "[Content_Types].xml missing Default Extension=xml";
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(CreateEmptyTest, CreatedDocumentHasBuiltinStyles) {
-    const std::string test_file = "test_builtin_styles.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_builtin_styles.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -361,12 +353,11 @@ TEST(CreateEmptyTest, CreatedDocumentHasBuiltinStyles) {
         EXPECT_GE(style_count, 16) << "Expected at least 16 built-in styles";
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(CreateEmptyTest, CreatedDocumentHasCorrectRelationships) {
-    const std::string test_file = "test_relationships.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_relationships.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -406,12 +397,11 @@ TEST(CreateEmptyTest, CreatedDocumentHasCorrectRelationships) {
         EXPECT_TRUE(targets.count("webSettings.xml"));
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(CreateEmptyTest, PlaceholderParagraphRemovedOnAppend) {
-    const std::string test_file = "test_placeholder.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_placeholder.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -440,7 +430,6 @@ TEST(CreateEmptyTest, PlaceholderParagraphRemovedOnAppend) {
         doc.save();
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 // Minimal 1x1 pixel PNG image data (for testing thumbnail)
@@ -457,8 +446,8 @@ const unsigned char MINIMAL_PNG[] = {
 };
 
 TEST(CreateEmptyTest, ThumbnailCanBeAddedAndRemoved) {
-    const std::string test_file = "test_thumbnail.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_thumbnail.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -541,7 +530,6 @@ TEST(CreateEmptyTest, ThumbnailCanBeAddedAndRemoved) {
         EXPECT_FALSE(doc.has_thumbnail());
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 /** @} */

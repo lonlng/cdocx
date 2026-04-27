@@ -2,10 +2,12 @@
 #include <fstream>
 #include <gtest/gtest.h>
 #include "cdocx.h"
+#include "../test_helpers.h"
 #include <iostream>
 #include <filesystem>
 
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 
 // Helper function to check if a file exists
 bool file_exists(const std::string& filename) {
@@ -509,8 +511,8 @@ TEST(XmlPartsTest, MarkModifiedFlagsPartForSave) {
 
     // The internal state is updated; we verify no crash and
     // that the document can still be saved successfully.
-    const std::string test_file = "test_mark_modified.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_mark_modified.docx");
+    const std::string& test_file = temp_doc.path();
 
     doc.save(test_file);
     EXPECT_TRUE(fs::exists(test_file));
@@ -520,5 +522,4 @@ TEST(XmlPartsTest, MarkModifiedFlagsPartForSave) {
     doc2.open();
     EXPECT_TRUE(doc2.is_open());
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }

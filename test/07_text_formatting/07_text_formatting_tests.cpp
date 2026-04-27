@@ -10,16 +10,17 @@
 
 #include <gtest/gtest.h>
 #include <cdocx.h>
+#include "../test_helpers.h"
 #include <cstring>
 #include <filesystem>
 #include <iostream>
 
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 
 TEST(TextFormattingTest, RunSetColorSetsFontColorCorrectly) {
     const std::string test_file = "test_color.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -33,13 +34,11 @@ TEST(TextFormattingTest, RunSetColorSetsFontColorCorrectly) {
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, RunSetFontSizeSetsFontSizeCorrectly) {
     const std::string test_file = "test_font_size.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -54,13 +53,11 @@ TEST(TextFormattingTest, RunSetFontSizeSetsFontSizeCorrectly) {
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, RunSetFontNameSetsFontCorrectly) {
     const std::string test_file = "test_font_name.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -79,13 +76,11 @@ TEST(TextFormattingTest, RunSetFontNameSetsFontCorrectly) {
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, RunSetBoldTogglesBoldFormatting) {
     const std::string test_file = "test_bold.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -98,13 +93,11 @@ TEST(TextFormattingTest, RunSetBoldTogglesBoldFormatting) {
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, RunSetItalicTogglesItalicFormatting) {
     const std::string test_file = "test_italic.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -117,13 +110,11 @@ TEST(TextFormattingTest, RunSetItalicTogglesItalicFormatting) {
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, RunSetUnderlineTogglesUnderlineFormatting) {
     const std::string test_file = "test_underline.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -138,13 +129,11 @@ TEST(TextFormattingTest, RunSetUnderlineTogglesUnderlineFormatting) {
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, RunCombinedFormatting) {
     const std::string test_file = "test_combined_run.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -160,13 +149,11 @@ TEST(TextFormattingTest, RunCombinedFormatting) {
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, ParagraphSetAlignmentSetsAlignmentCorrectly) {
     const std::string test_file = "test_alignment.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -186,13 +173,11 @@ TEST(TextFormattingTest, ParagraphSetAlignmentSetsAlignmentCorrectly) {
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, ParagraphSetStyleSetsStyleCorrectly) {
     const std::string test_file = "test_style.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -209,13 +194,11 @@ TEST(TextFormattingTest, ParagraphSetStyleSetsStyleCorrectly) {
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, ParagraphSetLineSpacingSetsLineSpacingCorrectly) {
     const std::string test_file = "test_line_spacing.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -232,13 +215,11 @@ TEST(TextFormattingTest, ParagraphSetLineSpacingSetsLineSpacingCorrectly) {
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, ParagraphSetSpacingBeforeAfterSetsSpacingCorrectly) {
     const std::string test_file = "test_spacing.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -256,13 +237,11 @@ TEST(TextFormattingTest, ParagraphSetSpacingBeforeAfterSetsSpacingCorrectly) {
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, ParagraphSetIndentSetsIndentationCorrectly) {
     const std::string test_file = "test_indent.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -285,13 +264,11 @@ TEST(TextFormattingTest, ParagraphSetIndentSetsIndentationCorrectly) {
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, ParagraphCombinedFormatting) {
     const std::string test_file = "test_combined_para.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -307,13 +284,11 @@ TEST(TextFormattingTest, ParagraphCombinedFormatting) {
     doc.save();
     EXPECT_TRUE(fs::exists(test_file));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, FullDocumentWithAllFormattingFeatures) {
     const std::string test_file = "test_full_formatting.docx";
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -365,12 +340,11 @@ TEST(TextFormattingTest, FullDocumentWithAllFormattingFeatures) {
         }
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, DropCapRoundTrip) {
-    const std::string test_file = "test_dropcap.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_dropcap.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -409,12 +383,11 @@ TEST(TextFormattingTest, DropCapRoundTrip) {
         EXPECT_EQ(para->get_paragraph_format().lines_to_drop, 3);
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, DropCapMarginRoundTrip) {
-    const std::string test_file = "test_dropcap_margin.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_dropcap_margin.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -453,12 +426,11 @@ TEST(TextFormattingTest, DropCapMarginRoundTrip) {
         EXPECT_EQ(para->get_paragraph_format().lines_to_drop, 4);
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, DropCapNoneNotSerialized) {
-    const std::string test_file = "test_dropcap_none.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_dropcap_none.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -484,12 +456,11 @@ TEST(TextFormattingTest, DropCapNoneNotSerialized) {
         EXPECT_EQ(p->get_paragraph_format().drop_cap_position, cdocx::DropCapPosition::None);
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(TextFormattingTest, RunPropertiesXmlRoundTrip) {
-    const std::string test_file = "test_run_props_xml.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_run_props_xml.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -560,7 +531,6 @@ TEST(TextFormattingTest, RunPropertiesXmlRoundTrip) {
         doc.save();
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 /** @} */
