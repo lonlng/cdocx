@@ -48,8 +48,8 @@ int main() {
     cdocx::TemplateEngine engine(&doc);
 
     // ===== 直接在这里修改数据 =====
-    engine[cdocx::TemplateValue::text(TemplateKeys::company_name)] = "Acme Inc.";
-    engine[cdocx::TemplateValue::text(TemplateKeys::date)]        = "2026-04-24";
+    engine[TemplateKeys::company_name] = cdocx::TemplateValue::text("Acme Inc.");
+    engine[TemplateKeys::date]         = cdocx::TemplateValue::text("2026-04-24");
     // =============================
 
     engine.apply();
@@ -94,12 +94,12 @@ python tools/template_analyzer/analyze_template.py report_template.docx -o fill_
 
 ```cpp
     // --- Placeholders ({{key}} style) ---
-    engine[cdocx::TemplateValue::text(TemplateKeys::company)] = "company";  // TODO: replace value
-    engine[cdocx::TemplateValue::text(TemplateKeys::title)]   = "title";    // TODO: replace value
-    engine[cdocx::TemplateValue::text(TemplateKeys::date)]    = "date";     // TODO: replace value
+    engine[TemplateKeys::company] = cdocx::TemplateValue::text("company");  // TODO: replace value
+    engine[TemplateKeys::title]   = cdocx::TemplateValue::text("title");    // TODO: replace value
+    engine[TemplateKeys::date]    = cdocx::TemplateValue::text("date");     // TODO: replace value
 
     // --- Bookmarks ---
-    engine[cdocx::TemplateValue::text(TemplateKeys::signer)]  = "SIGNER";   // TODO: replace value
+    engine[TemplateKeys::signer]  = cdocx::TemplateValue::text("SIGNER");   // TODO: replace value
 ```
 
 直接修改右侧字符串值，编译运行即可得到填充后的 `report_filled.docx`。

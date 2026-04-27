@@ -268,19 +268,19 @@ def generate_cpp_program(elements: list, docx_path: str, output_path: str) -> st
     if placeholders:
         lines.append("    // --- Placeholders ({{key}} style) ---")
         for el in placeholders:
-            lines.append(f'    engine[cdocx::TemplateValue::text(TemplateKeys::{el._cpp_name})] = "{escape_cpp_string(el.name)}";  // TODO: replace value')
+            lines.append(f'    engine[TemplateKeys::{el._cpp_name}] = cdocx::TemplateValue::text("{escape_cpp_string(el.name)}");  // TODO: replace value')
         lines.append("")
 
     if bookmarks:
         lines.append("    // --- Bookmarks ---")
         for el in bookmarks:
-            lines.append(f'    engine[cdocx::TemplateValue::text(TemplateKeys::{el._cpp_name})] = "{escape_cpp_string(el.name)}";  // TODO: replace value')
+            lines.append(f'    engine[TemplateKeys::{el._cpp_name}] = cdocx::TemplateValue::text("{escape_cpp_string(el.name)}");  // TODO: replace value')
         lines.append("")
 
     if mergefields:
         lines.append("    // --- MERGEFIELDs ---")
         for el in mergefields:
-            lines.append(f'    engine[cdocx::TemplateValue::text(TemplateKeys::{el._cpp_name})] = "{escape_cpp_string(el.name)}";  // TODO: replace value')
+            lines.append(f'    engine[TemplateKeys::{el._cpp_name}] = cdocx::TemplateValue::text("{escape_cpp_string(el.name)}");  // TODO: replace value')
         lines.append("")
 
     lines.append("    // ===== END OF EDITABLE VALUES =====")
@@ -395,7 +395,7 @@ def generate_header(elements: list, docx_name: str, guard: str) -> str:
     lines.append("    inline void fill(cdocx::TemplateEngine& engine,")
     lines.append("                     const std::map<std::string, std::string>& data) {")
     for el in elements:
-        lines.append(f'        // engine[cdocx::TemplateValue::text({el._cpp_name})] = data.at("{escape_cpp_string(el.name)}");')
+        lines.append(f'        // engine[{el._cpp_name}] = cdocx::TemplateValue::text(data.at("{escape_cpp_string(el.name)}"));')
     lines.append("    }")
     lines.append("    */")
     lines.append("")
