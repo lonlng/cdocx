@@ -430,69 +430,42 @@ pugi::xml_document* NumberingManager::get_numbering_xml() {
 // Helper Functions
 // ============================================================================
 
+struct NumberStyleMapping {
+    NumberStyle style{};
+    const char* xml_value{};
+};
+
+static const NumberStyleMapping kNumberStyleMappings[] = {
+    {NumberStyle::Bullet, "bullet"},
+    {NumberStyle::Decimal, "decimal"},
+    {NumberStyle::UpperRoman, "upperRoman"},
+    {NumberStyle::LowerRoman, "lowerRoman"},
+    {NumberStyle::UpperLetter, "upperLetter"},
+    {NumberStyle::LowerLetter, "lowerLetter"},
+    {NumberStyle::OrdinalText, "ordinal"},
+    {NumberStyle::CardinalText, "cardinalText"},
+    {NumberStyle::ChineseCounting, "chineseCounting"},
+    {NumberStyle::IdeographEnchanted, "ideographEnchanted"},
+};
+
 const char* number_style_to_string(NumberStyle style) {
-    switch (style) {
-        case NumberStyle::Bullet:
-            return "bullet";
-        case NumberStyle::Decimal:
-            return "decimal";
-        case NumberStyle::UpperRoman:
-            return "upperRoman";
-        case NumberStyle::LowerRoman:
-            return "lowerRoman";
-        case NumberStyle::UpperLetter:
-            return "upperLetter";
-        case NumberStyle::LowerLetter:
-            return "lowerLetter";
-        case NumberStyle::OrdinalText:
-            return "ordinal";
-        case NumberStyle::CardinalText:
-            return "cardinalText";
-        case NumberStyle::ChineseCounting:
-            return "chineseCounting";
-        case NumberStyle::IdeographEnchanted:
-            return "ideographEnchanted";
-        default:
-            return "decimal";
+    for (const auto& m : kNumberStyleMappings) {
+        if (m.style == style) {
+            return m.xml_value;
+        }
     }
+    return "decimal";
 }
 
 NumberStyle string_to_number_style(const char* val) {
     if (!val || !*val) {
         return NumberStyle::Decimal;
     }
-
-    if (std::strcmp(val, "bullet") == 0) {
-        return NumberStyle::Bullet;
+    for (const auto& m : kNumberStyleMappings) {
+        if (std::strcmp(m.xml_value, val) == 0) {
+            return m.style;
+        }
     }
-    if (std::strcmp(val, "decimal") == 0) {
-        return NumberStyle::Decimal;
-    }
-    if (std::strcmp(val, "upperRoman") == 0) {
-        return NumberStyle::UpperRoman;
-    }
-    if (std::strcmp(val, "lowerRoman") == 0) {
-        return NumberStyle::LowerRoman;
-    }
-    if (std::strcmp(val, "upperLetter") == 0) {
-        return NumberStyle::UpperLetter;
-    }
-    if (std::strcmp(val, "lowerLetter") == 0) {
-        return NumberStyle::LowerLetter;
-    }
-    if (std::strcmp(val, "ordinal") == 0) {
-        return NumberStyle::OrdinalText;
-    }
-    if (std::strcmp(val, "cardinalText") == 0) {
-        return NumberStyle::CardinalText;
-    }
-    if (std::strcmp(val, "chineseCounting") == 0) {
-        return NumberStyle::ChineseCounting;
-    }
-    if (std::strcmp(val, "ideographEnchanted") == 0) {
-        return NumberStyle::IdeographEnchanted;
-    }
-
     return NumberStyle::Decimal;
 }
 
