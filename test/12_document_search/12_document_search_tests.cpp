@@ -7,16 +7,19 @@
 #include <gtest/gtest.h>
 #include <cdocx.h>
 #include <cdocx/advanced.h>
+#include "../test_helpers.h"
 #include <filesystem>
 
 using namespace cdocx;
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 
 // ============================================================================
 // DocumentSearch::find Tests
 // ============================================================================
 
 TEST(DocumentSearchTest, FindExistingText) {
+    TempDoc temp_doc("test_find.docx");
     Document doc("test_find.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -30,10 +33,10 @@ TEST(DocumentSearchTest, FindExistingText) {
     // present for pure DOM paragraphs created via append_paragraph().
 
     doc.save();
-    fs::remove("test_find.docx");
 }
 
 TEST(DocumentSearchTest, FindMissingText) {
+    TempDoc temp_doc("test_find_missing.docx");
     Document doc("test_find_missing.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -44,10 +47,10 @@ TEST(DocumentSearchTest, FindMissingText) {
     EXPECT_FALSE(range.has_value());
 
     doc.save();
-    fs::remove("test_find_missing.docx");
 }
 
 TEST(DocumentSearchTest, FindEmptyReturnsNullopt) {
+    TempDoc temp_doc("test_find_empty.docx");
     Document doc("test_find_empty.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -58,7 +61,6 @@ TEST(DocumentSearchTest, FindEmptyReturnsNullopt) {
     EXPECT_FALSE(range.has_value());
 
     doc.save();
-    fs::remove("test_find_empty.docx");
 }
 
 // ============================================================================
@@ -66,6 +68,7 @@ TEST(DocumentSearchTest, FindEmptyReturnsNullopt) {
 // ============================================================================
 
 TEST(DocumentSearchTest, FindAllMultipleParagraphs) {
+    TempDoc temp_doc("test_find_all.docx");
     Document doc("test_find_all.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -78,10 +81,10 @@ TEST(DocumentSearchTest, FindAllMultipleParagraphs) {
     EXPECT_EQ(ranges.size(), 2u);
 
     doc.save();
-    fs::remove("test_find_all.docx");
 }
 
 TEST(DocumentSearchTest, FindAllNoMatch) {
+    TempDoc temp_doc("test_find_all_none.docx");
     Document doc("test_find_all_none.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -92,7 +95,6 @@ TEST(DocumentSearchTest, FindAllNoMatch) {
     EXPECT_TRUE(ranges.empty());
 
     doc.save();
-    fs::remove("test_find_all_none.docx");
 }
 
 // ============================================================================
@@ -100,6 +102,7 @@ TEST(DocumentSearchTest, FindAllNoMatch) {
 // ============================================================================
 
 TEST(DocumentSearchTest, ReplaceFirstOccurrence) {
+    TempDoc temp_doc("test_replace.docx");
     Document doc("test_replace.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -111,10 +114,10 @@ TEST(DocumentSearchTest, ReplaceFirstOccurrence) {
     EXPECT_EQ(para->get_text(), "Hello, CDocx! World!");
 
     doc.save();
-    fs::remove("test_replace.docx");
 }
 
 TEST(DocumentSearchTest, ReplaceNoMatch) {
+    TempDoc temp_doc("test_replace_none.docx");
     Document doc("test_replace_none.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -125,7 +128,6 @@ TEST(DocumentSearchTest, ReplaceNoMatch) {
     EXPECT_FALSE(replaced);
 
     doc.save();
-    fs::remove("test_replace_none.docx");
 }
 
 // ============================================================================
@@ -133,6 +135,7 @@ TEST(DocumentSearchTest, ReplaceNoMatch) {
 // ============================================================================
 
 TEST(DocumentSearchTest, ReplaceAllInSingleParagraph) {
+    TempDoc temp_doc("test_replace_all.docx");
     Document doc("test_replace_all.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -144,10 +147,10 @@ TEST(DocumentSearchTest, ReplaceAllInSingleParagraph) {
     EXPECT_EQ(para->get_text(), "Hello, CDocx! CDocx!");
 
     doc.save();
-    fs::remove("test_replace_all.docx");
 }
 
 TEST(DocumentSearchTest, ReplaceAllAcrossParagraphs) {
+    TempDoc temp_doc("test_replace_all_multi.docx");
     Document doc("test_replace_all_multi.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -163,10 +166,10 @@ TEST(DocumentSearchTest, ReplaceAllAcrossParagraphs) {
     EXPECT_EQ(para3->get_text(), "No match");
 
     doc.save();
-    fs::remove("test_replace_all_multi.docx");
 }
 
 TEST(DocumentSearchTest, ReplaceAllEmptyPattern) {
+    TempDoc temp_doc("test_replace_all_empty.docx");
     Document doc("test_replace_all_empty.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -177,7 +180,6 @@ TEST(DocumentSearchTest, ReplaceAllEmptyPattern) {
     EXPECT_EQ(count, 0);
 
     doc.save();
-    fs::remove("test_replace_all_empty.docx");
 }
 
 // ============================================================================
@@ -185,6 +187,7 @@ TEST(DocumentSearchTest, ReplaceAllEmptyPattern) {
 // ============================================================================
 
 TEST(DocumentSearchTest, ReplaceWithFormatting) {
+    TempDoc temp_doc("test_replace_fmt.docx");
     Document doc("test_replace_fmt.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -201,7 +204,6 @@ TEST(DocumentSearchTest, ReplaceWithFormatting) {
     EXPECT_TRUE(run->get_font().bold);
 
     doc.save();
-    fs::remove("test_replace_fmt.docx");
 }
 
 // ============================================================================
@@ -209,6 +211,7 @@ TEST(DocumentSearchTest, ReplaceWithFormatting) {
 // ============================================================================
 
 TEST(DocumentSearchTest, FindAndProcessCallback) {
+    TempDoc temp_doc("test_process.docx");
     Document doc("test_process.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -227,10 +230,10 @@ TEST(DocumentSearchTest, FindAndProcessCallback) {
     EXPECT_EQ(call_count, 2);
 
     doc.save();
-    fs::remove("test_process.docx");
 }
 
 TEST(DocumentSearchTest, FindAndProcessStopEarly) {
+    TempDoc temp_doc("test_process_stop.docx");
     Document doc("test_process_stop.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -249,7 +252,6 @@ TEST(DocumentSearchTest, FindAndProcessStopEarly) {
     EXPECT_EQ(call_count, 1);
 
     doc.save();
-    fs::remove("test_process_stop.docx");
 }
 
 // ============================================================================
@@ -257,6 +259,7 @@ TEST(DocumentSearchTest, FindAndProcessStopEarly) {
 // ============================================================================
 
 TEST(DocumentSearchTest, ReplaceAllRoundTrip) {
+    TempDoc temp_doc("test_replace_rt.docx");
     Document doc("test_replace_rt.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -283,7 +286,6 @@ TEST(DocumentSearchTest, ReplaceAllRoundTrip) {
     EXPECT_TRUE(found_cdocx);
 
     doc2.close();
-    fs::remove("test_replace_rt.docx");
 }
 
 // ============================================================================
@@ -291,6 +293,7 @@ TEST(DocumentSearchTest, ReplaceAllRoundTrip) {
 // ============================================================================
 
 TEST(DocumentSearchTest, RangeReplace) {
+    TempDoc temp_doc("test_range_replace.docx");
     Document doc("test_range_replace.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -310,10 +313,10 @@ TEST(DocumentSearchTest, RangeReplace) {
     EXPECT_EQ(paras[1]->get_text(), "Goodbye, World!");
 
     doc.save();
-    fs::remove("test_range_replace.docx");
 }
 
 TEST(DocumentSearchTest, RangeReplaceAll) {
+    TempDoc temp_doc("test_range_replace_all.docx");
     Document doc("test_range_replace_all.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -333,5 +336,4 @@ TEST(DocumentSearchTest, RangeReplaceAll) {
     EXPECT_EQ(paras[1]->get_text(), "C D");
 
     doc.save();
-    fs::remove("test_range_replace_all.docx");
 }
