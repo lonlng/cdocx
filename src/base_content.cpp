@@ -5,6 +5,7 @@
  */
 
 #include <cdocx/base.h>
+#include <cdocx/convert_util.h>
 #include <cdocx/document.h>
 #include <cdocx/paragraph.h>
 
@@ -153,10 +154,10 @@ Run& Run::set_underline_style(TextProperties::UnderlineStyle style, const std::s
 Run& Run::set_spacing(TextProperties::SpacingType type, int value) {
     switch (type) {
         case TextProperties::SpacingType::Expanded:
-            font_.spacing = value / 20.0;
+            font_.spacing = ConvertUtil::twips_to_point(value);
             break;
         case TextProperties::SpacingType::Condensed:
-            font_.spacing = -value / 20.0;
+            font_.spacing = -ConvertUtil::twips_to_point(value);
             break;
         case TextProperties::SpacingType::Normal:
         default:

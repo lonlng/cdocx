@@ -6,6 +6,7 @@
 #include "sync_common.h"
 
 #include <cdocx/body.h>
+#include <cdocx/convert_util.h>
 #include <cdocx/comment.h>
 #include <cdocx/document.h>
 #include <cdocx/footnote.h>
@@ -145,7 +146,7 @@ void parse_run_format_from_xml(Inline* run, pugi::xml_node run_node) {
     parse_font_from_xml(r_pr, font);
 
     if (auto sp = r_pr.child("w:spacing")) {
-        font.spacing = sp.attribute("w:val").as_int() / 20.0;
+        font.spacing = ConvertUtil::twips_to_point(sp.attribute("w:val").as_int());
     }
 
     if (auto w = r_pr.child("w:w")) {
@@ -202,22 +203,22 @@ void parse_paragraph_format_children_from_xml(pugi::xml_node p_pr, ParagraphForm
 
     auto ind = p_pr.child("w:ind");
     if (ind) {
-        format.left_indent = ind.attribute("w:left").as_int() / 20.0;
-        format.right_indent = ind.attribute("w:right").as_int() / 20.0;
-        format.first_line_indent = ind.attribute("w:firstLine").as_int() / 20.0;
+        format.left_indent = ConvertUtil::twips_to_point(ind.attribute("w:left").as_int());
+        format.right_indent = ConvertUtil::twips_to_point(ind.attribute("w:right").as_int());
+        format.first_line_indent = ConvertUtil::twips_to_point(ind.attribute("w:firstLine").as_int());
     }
 
     auto spacing = p_pr.child("w:spacing");
     if (spacing) {
-        format.space_before = spacing.attribute("w:before").as_int() / 20.0;
-        format.space_after = spacing.attribute("w:after").as_int() / 20.0;
+        format.space_before = ConvertUtil::twips_to_point(spacing.attribute("w:before").as_int());
+        format.space_after = ConvertUtil::twips_to_point(spacing.attribute("w:after").as_int());
         const char* line_rule = spacing.attribute("w:lineRule").value();
         const int line_value = spacing.attribute("w:line").as_int();
         if (line_value != 0) {
             format.line_spacing_rule = string_to_line_spacing_rule(line_rule);
             if (format.line_spacing_rule == LineSpacingRule::Exact ||
                 format.line_spacing_rule == LineSpacingRule::AtLeast) {
-                format.line_spacing = line_value / 20.0;
+                format.line_spacing = ConvertUtil::twips_to_point(line_value);
             } else {
                 format.line_spacing = line_value / 240.0;
             }
@@ -615,7 +616,7 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
         }
         auto tbl_ind = tbl_pr.child("w:tblInd");
         if (tbl_ind) {
-            table->get_table_format().left_indent = tbl_ind.attribute("w:w").as_int() / 20.0;
+            table->get_table_format().left_indent = ConvertUtil::twips_to_point(tbl_ind.attribute("w:w").as_int());
         }
         auto tbl_style = tbl_pr.child("w:tblStyle");
         if (tbl_style) {
@@ -663,7 +664,7 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
         if (tr_pr) {
             auto tr_height = tr_pr.child("w:trHeight");
             if (tr_height) {
-                row->get_row_format().height = tr_height.attribute("w:val").as_int() / 20.0;
+                row->get_row_format().height = ConvertUtil::twips_to_point(tr_height.attribute("w:val").as_int());
                 const char* rule = tr_height.attribute("w:hRule").value();
                 row->get_row_format().height_rule_exact = (std::strcmp(rule, "exact") == 0);
             }
@@ -683,7 +684,7 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
             if (tc_pr) {
                 auto tc_w = tc_pr.child("w:tcW");
                 if (tc_w) {
-                    cell->get_cell_format().width = tc_w.attribute("w:w").as_int() / 20.0;
+                    cell->get_cell_format().width = ConvertUtil::twips_to_point(tc_w.attribute("w:w").as_int());
                     const char* typeval = tc_w.attribute("w:type").value();
                     cell->get_cell_format().preferred_width = (std::strcmp(typeval, "pct") == 0);
                 }

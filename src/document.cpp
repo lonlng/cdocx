@@ -13,6 +13,7 @@
 #include <cdocx/advanced.h>
 #include <cdocx/base.h>
 #include <cdocx/body.h>
+#include <cdocx/convert_util.h>
 #include <cdocx/comment.h>
 #include <cdocx/document.h>
 #include <cdocx/footnote.h>
@@ -414,7 +415,7 @@ double Document::get_default_tab_stop() const {
     }
 
     const int twips = default_tab_stop.attribute("w:val").as_int(kDefaultTabStopTwips);
-    return twips / 20.0;  // twips to points
+    return ConvertUtil::twips_to_point(twips);
 }
 
 void Document::set_default_tab_stop(double points) {
@@ -425,7 +426,7 @@ void Document::set_default_tab_stop(double points) {
 
     root.remove_child("w:defaultTabStop");
     auto dts = root.append_child("w:defaultTabStop");
-    dts.append_attribute("w:val").set_value(static_cast<int>(points * 20));  // points to twips
+    dts.append_attribute("w:val").set_value(ConvertUtil::point_to_twips(points));
 
     mark_modified("word/settings.xml");
 }

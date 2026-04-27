@@ -6,6 +6,7 @@
 #include "sync_common.h"
 
 #include <cdocx/body.h>
+#include <cdocx/convert_util.h>
 #include <cdocx/comment.h>
 #include <cdocx/document.h>
 #include <cdocx/footnote.h>
@@ -305,7 +306,7 @@ void serialize_font_to_r_pr(pugi::xml_node r_pr, const Font& font, bool add_sz_c
     }
     if (font.spacing != 0) {
         auto sp = r_pr.append_child("w:spacing");
-        sp.append_attribute("w:val").set_value(static_cast<int>(font.spacing * 20));
+        sp.append_attribute("w:val").set_value(ConvertUtil::point_to_twips(font.spacing));
     }
     if (font.scale != 100) {
         auto w = r_pr.append_child("w:w");
@@ -652,14 +653,14 @@ void serialize_paragraph_format_children_to_xml(pugi::xml_node p_pr,
     if (format.left_indent != 0 || format.right_indent != 0 || format.first_line_indent != 0) {
         auto ind = p_pr.append_child("w:ind");
         if (format.left_indent != 0) {
-            ind.append_attribute("w:left").set_value(static_cast<int>(format.left_indent * 20));
+            ind.append_attribute("w:left").set_value(ConvertUtil::point_to_twips(format.left_indent));
         }
         if (format.right_indent != 0) {
-            ind.append_attribute("w:right").set_value(static_cast<int>(format.right_indent * 20));
+            ind.append_attribute("w:right").set_value(ConvertUtil::point_to_twips(format.right_indent));
         }
         if (format.first_line_indent != 0) {
             ind.append_attribute("w:firstLine")
-                .set_value(static_cast<int>(format.first_line_indent * 20));
+                .set_value(ConvertUtil::point_to_twips(format.first_line_indent));
         }
     }
 
@@ -667,17 +668,17 @@ void serialize_paragraph_format_children_to_xml(pugi::xml_node p_pr,
         auto spacing = p_pr.append_child("w:spacing");
         if (format.space_before != 0) {
             spacing.append_attribute("w:before")
-                .set_value(static_cast<int>(format.space_before * 20));
+                .set_value(ConvertUtil::point_to_twips(format.space_before));
         }
         if (format.space_after != 0) {
             spacing.append_attribute("w:after").set_value(
-                static_cast<int>(format.space_after * 20));
+                ConvertUtil::point_to_twips(format.space_after));
         }
         if (format.line_spacing != 1.15) {
             int line_value = static_cast<int>(format.line_spacing * 240);
             if (format.line_spacing_rule == LineSpacingRule::Exact ||
                 format.line_spacing_rule == LineSpacingRule::AtLeast) {
-                line_value = static_cast<int>(format.line_spacing * 20);
+                line_value = ConvertUtil::point_to_twips(format.line_spacing);
             }
             spacing.append_attribute("w:lineRule")
                 .set_value(line_spacing_rule_to_string(format.line_spacing_rule));
@@ -899,7 +900,7 @@ static void serialize_cell_to_xml(pugi::xml_node parent, Cell* cell) {
     {
         auto tc_w = tc_pr.append_child("w:tcW");
         if (fmt.width != 0) {
-            tc_w.append_attribute("w:w").set_value(static_cast<int>(fmt.width * 20));
+            tc_w.append_attribute("w:w").set_value(ConvertUtil::point_to_twips(fmt.width));
             tc_w.append_attribute("w:type").set_value(fmt.preferred_width ? "pct" : "dxa");
         } else {
             tc_w.append_attribute("w:w").set_value("0");
@@ -950,7 +951,7 @@ static void serialize_row_to_xml(pugi::xml_node parent, Row* row) {
         auto tr_pr = tr.append_child("w:trPr");
         if (fmt.height != 0) {
             auto tr_height = tr_pr.append_child("w:trHeight");
-            tr_height.append_attribute("w:val").set_value(static_cast<int>(fmt.height * 20));
+            tr_height.append_attribute("w:val").set_value(ConvertUtil::point_to_twips(fmt.height));
             tr_height.append_attribute("w:hRule").set_value(fmt.height_rule_exact ? "exact"
                                                                                   : "atLeast");
         }
@@ -1012,7 +1013,7 @@ static void serialize_table_to_xml(pugi::xml_node parent, const Table* table) {
 
     if (fmt.left_indent != 0) {
         auto tbl_ind = tbl_pr.append_child("w:tblInd");
-        tbl_ind.append_attribute("w:w").set_value(static_cast<int>(fmt.left_indent * 20));
+        tbl_ind.append_attribute("w:w").set_value(ConvertUtil::point_to_twips(fmt.left_indent));
         tbl_ind.append_attribute("w:type").set_value("dxa");
     }
 

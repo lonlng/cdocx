@@ -7,6 +7,7 @@
 #include "sync_common.h"
 
 #include <cdocx/base.h>
+#include <cdocx/convert_util.h>
 #include <cdocx/format_context.h>
 #include <cdocx/paragraph.h>
 #include <cdocx/properties.h>
@@ -634,7 +635,7 @@ void TabStopCollection::apply_to(pugi::xml_node para_node) const {
         pugi::xml_node tab = tabs.append_child("w:tab");
         tab.append_attribute("w:val").set_value(tab_alignment_to_string(ts.alignment));
         tab.append_attribute("w:pos").set_value(
-            static_cast<int>(ts.position * 20));  // points to twips
+            ConvertUtil::point_to_twips(ts.position));
         if (ts.leader != TabLeader::None) {
             tab.append_attribute("w:leader").set_value(tab_leader_to_string(ts.leader));
         }
@@ -660,7 +661,7 @@ TabStopCollection TabStopCollection::extract_from(pugi::xml_node para_node) {
     for (pugi::xml_node tab = tabs.child("w:tab"); tab; tab = tab.next_sibling("w:tab")) {
         TabStop ts;
         ts.alignment = string_to_tab_alignment(tab.attribute("w:val").value());
-        ts.position = tab.attribute("w:pos").as_int() / 20.0;  // twips to points
+        ts.position = ConvertUtil::twips_to_point(tab.attribute("w:pos").as_int());
 
         const pugi::xml_attribute leader_attr = tab.attribute("w:leader");
         if (leader_attr) {
