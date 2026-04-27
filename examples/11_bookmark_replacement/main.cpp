@@ -170,7 +170,7 @@ int main() {
         std::cout << "Performing conditional replacement on STATUS..." << std::endl;
         
         bool replaced = replacer.replace_if("STATUS", 
-            [](const std::string& name, const std::string& old_text, std::string& new_text) {
+            [](const std::string& /*name*/, const std::string& old_text, std::string& new_text) {
                 // Only replace if old text contains "[PLACEHOLDER]"
                 if (old_text.find("[PLACEHOLDER]") != std::string::npos) {
                     new_text = "Completed";

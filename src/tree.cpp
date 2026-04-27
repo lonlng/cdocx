@@ -89,10 +89,10 @@ std::shared_ptr<DocxTreeNode> DocxTreeNode::add_file(const std::string& file_nam
         return existing;
     }
 
-    const std::string full_path = name.empty() ? file_name : this->full_path + "/" + file_name;
+    const std::string child_full_path = name.empty() ? file_name : this->full_path + "/" + file_name;
 
     auto node = std::make_shared<DocxTreeNode>(file_name, file_type, this);
-    node->full_path = full_path;
+    node->full_path = child_full_path;
     children.push_back(node);
     return node;
 }

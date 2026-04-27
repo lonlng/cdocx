@@ -218,7 +218,7 @@ TEST(DocumentSearchTest, FindAndProcessCallback) {
 
     int call_count = 0;
     int result = DocumentSearch::find_and_process(doc, "World",
-        [&call_count](const std::string& found_text, Range& range) {
+        [&call_count](const std::string& /*found_text*/, Range& /*range*/) {
             ++call_count;
             return true; // continue
         });
@@ -240,7 +240,7 @@ TEST(DocumentSearchTest, FindAndProcessStopEarly) {
 
     int call_count = 0;
     int result = DocumentSearch::find_and_process(doc, "World",
-        [&call_count](const std::string& found_text, Range& range) {
+        [&call_count](const std::string& /*found_text*/, Range& /*range*/) {
             ++call_count;
             return false; // stop after first
         });

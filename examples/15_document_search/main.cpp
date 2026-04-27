@@ -84,7 +84,7 @@ int main() {
     body4->append_paragraph("Task 3: DONE - Setup project");
 
     int todo_count = cdocx::DocumentSearch::find_and_process(doc4, "TODO",
-        [](const std::string& found_text, cdocx::Range& range) {
+        [](const std::string& /*found_text*/, cdocx::Range& range) {
             std::cout << "Found task: " << range.get_text() << std::endl;
             return true; // continue searching
         });

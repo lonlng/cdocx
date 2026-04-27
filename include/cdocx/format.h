@@ -320,9 +320,9 @@ class Font {
         }
     }
 
-    void set_underline(UnderlineType type, const Color& color = Color::auto_color()) {
+    void set_underline(UnderlineType type, const Color& clr = Color::auto_color()) {
         underline = type;
-        underline_color = color;
+        underline_color = clr;
     }
 
     void clear_formatting() {
