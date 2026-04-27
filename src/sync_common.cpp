@@ -6,7 +6,9 @@
 
 #include "sync_common.h"
 
+#include <cdocx/document.h>
 #include <cdocx/document_builder.h>
+#include <cdocx/formfield.h>
 
 #include <charconv>
 #include <cstring>
@@ -758,6 +760,150 @@ pugi::xml_node append_image_drawing(pugi::xml_node parent,
     }
 
     return drawing;
+}
+
+// ============================================================================
+// Form Field Helpers
+// ============================================================================
+
+void serialize_ffdata_to_fld_char(pugi::xml_node fld_char, const FormField* field) {
+    if (!field) {
+        return;
+    }
+    auto ff_data = fld_char.append_child("w:ffData");
+    if (!field->get_name().empty()) {
+        ff_data.append_child("w:name").append_attribute("w:val").set_value(
+            field->get_name().c_str());
+    }
+    ff_data.append_child("w:enabled")
+        .append_attribute("w:val")
+        .set_value(field->get_enabled() ? "1" : "0");
+    ff_data.append_child("w:calcOnExit")
+        .append_attribute("w:val")
+        .set_value(field->get_calculate_on_exit() ? "1" : "0");
+    if (!field->get_status_text().empty()) {
+        ff_data.append_child("w:statusText")
+            .append_attribute("w:val")
+            .set_value(field->get_status_text().c_str());
+    }
+    if (!field->get_help_text().empty()) {
+        ff_data.append_child("w:helpText")
+            .append_attribute("w:val")
+            .set_value(field->get_help_text().c_str());
+    }
+    if (!field->get_entry_macro().empty()) {
+        ff_data.append_child("w:entryMacro")
+            .append_attribute("w:val")
+            .set_value(field->get_entry_macro().c_str());
+    }
+    if (!field->get_exit_macro().empty()) {
+        ff_data.append_child("w:exitMacro")
+            .append_attribute("w:val")
+            .set_value(field->get_exit_macro().c_str());
+    }
+
+    switch (field->get_form_field_type()) {
+        case FormFieldType::TextInput: {
+            auto text_input = ff_data.append_child("w:textInput");
+            const char* typeval = text_form_field_type_to_string(field->get_text_input_type());
+            text_input.append_child("w:type").append_attribute("w:val").set_value(typeval);
+            if (!field->get_text_input_default().empty()) {
+                text_input.append_child("w:default")
+                    .append_attribute("w:val")
+                    .set_value(field->get_text_input_default().c_str());
+            }
+            if (field->get_max_length() > 0) {
+                text_input.append_child("w:maxLength")
+                    .append_attribute("w:val")
+                    .set_value(field->get_max_length());
+            }
+            if (!field->get_text_input_format().empty()) {
+                text_input.append_child("w:format")
+                    .append_attribute("w:val")
+                    .set_value(field->get_text_input_format().c_str());
+            }
+            break;
+        }
+        case FormFieldType::CheckBox: {
+            auto check_box = ff_data.append_child("w:checkBox");
+            if (field->get_is_check_box_exact_size() && field->get_check_box_size() > 0) {
+                auto size = check_box.append_child("w:size");
+                size.append_attribute("w:val").set_value(
+                    static_cast<int>(field->get_check_box_size() * 2));
+            } else {
+                check_box.append_child("w:sizeAuto");
+            }
+            check_box.append_child("w:default")
+                .append_attribute("w:val")
+                .set_value(field->get_default_value() ? "1" : "0");
+            check_box.append_child("w:checked")
+                .append_attribute("w:val")
+                .set_value(field->get_checked() ? "1" : "0");
+            break;
+        }
+        case FormFieldType::ComboBox: {
+            auto dd_list = ff_data.append_child("w:ddList");
+            for (const auto& item : field->get_drop_down_items()) {
+                dd_list.append_child("w:listEntry").append_attribute("w:val").set_value(
+                    item.c_str());
+            }
+            if (field->get_drop_down_selected_index() >= 0) {
+                dd_list.append_child("w:default")
+                    .append_attribute("w:val")
+                    .set_value(field->get_drop_down_selected_index());
+            }
+            break;
+        }
+    }
+}
+
+void append_form_field_sequence(pugi::xml_node parent, const FormField* field, Document* doc) {
+    if (!field) {
+        return;
+    }
+
+    int bookmark_id = 0;
+    if (!field->get_name().empty() && doc) {
+        auto bm_start = parent.append_child("w:bookmarkStart");
+        bookmark_id = doc->generate_unique_bookmark_id();
+        bm_start.append_attribute("w:id").set_value(bookmark_id);
+        bm_start.append_attribute("w:name").set_value(field->get_name().c_str());
+    }
+
+    auto begin_run = parent.append_child("w:r");
+    auto fld_char = begin_run.append_child("w:fldChar");
+    fld_char.append_attribute("w:fldCharType").set_value("begin");
+
+    serialize_ffdata_to_fld_char(fld_char, field);
+
+    // Instruction text
+    const char* instr = "FORMTEXT";
+    if (field->get_form_field_type() == FormFieldType::CheckBox) {
+        instr = "FORMCHECKBOX";
+    } else if (field->get_form_field_type() == FormFieldType::ComboBox) {
+        instr = "FORMDROPDOWN";
+    }
+    auto instr_run = parent.append_child("w:r");
+    auto instr_text = instr_run.append_child("w:instrText");
+    instr_text.text().set(instr);
+
+    auto sep_run = parent.append_child("w:r");
+    sep_run.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("separate");
+
+    const std::string result = field->get_result();
+    if (!result.empty()) {
+        auto res_run = parent.append_child("w:r");
+        auto text_node = res_run.append_child("w:t");
+        text_node.text().set(result.c_str());
+    }
+
+    auto end_run = parent.append_child("w:r");
+    end_run.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("end");
+
+    if (bookmark_id != 0) {
+        auto bm_end = parent.append_child("w:bookmarkEnd");
+        bm_end.append_attribute("w:id").set_value(bookmark_id);
+    }
 }
 
 }  // namespace cdocx

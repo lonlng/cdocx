@@ -19,6 +19,10 @@ namespace cdocx {
 struct ImageSize;
 enum class ImageAlignment : std::uint8_t;
 
+// Forward declarations
+class Document;
+class FormField;
+
 // ---------------------------------------------------------------------------
 // General helpers
 // ---------------------------------------------------------------------------
@@ -116,5 +120,11 @@ pugi::xml_node append_image_drawing(pugi::xml_node parent,
                                     ImageAlignment align,
                                     int image_id,
                                     const std::string& image_name);
+
+// ---------------------------------------------------------------------------
+// Form Field
+// ---------------------------------------------------------------------------
+void serialize_ffdata_to_fld_char(pugi::xml_node fld_char, const FormField* field);
+void append_form_field_sequence(pugi::xml_node parent, const FormField* field, Document* doc);
 
 }  // namespace cdocx

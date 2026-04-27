@@ -946,113 +946,6 @@ bool DocumentBuilder::insert_image(const std::string& image_path, double width, 
 
 // Form Fields
 
-static void append_ffdata_text_input(pugi::xml_node fld_char, const FormField& field) {
-    auto ff_data = fld_char.append_child("w:ffData");
-    if (!field.get_name().empty()) {
-        ff_data.append_child("w:name").append_attribute("w:val").set_value(
-            field.get_name().c_str());
-    }
-    ff_data.append_child("w:enabled")
-        .append_attribute("w:val")
-        .set_value(field.get_enabled() ? "1" : "0");
-    ff_data.append_child("w:calcOnExit")
-        .append_attribute("w:val")
-        .set_value(field.get_calculate_on_exit() ? "1" : "0");
-
-    if (!field.get_status_text().empty()) {
-        ff_data.append_child("w:statusText")
-            .append_attribute("w:val")
-            .set_value(field.get_status_text().c_str());
-    }
-    if (!field.get_help_text().empty()) {
-        ff_data.append_child("w:helpText")
-            .append_attribute("w:val")
-            .set_value(field.get_help_text().c_str());
-    }
-    if (!field.get_entry_macro().empty()) {
-        ff_data.append_child("w:entryMacro")
-            .append_attribute("w:val")
-            .set_value(field.get_entry_macro().c_str());
-    }
-    if (!field.get_exit_macro().empty()) {
-        ff_data.append_child("w:exitMacro")
-            .append_attribute("w:val")
-            .set_value(field.get_exit_macro().c_str());
-    }
-
-    auto text_input = ff_data.append_child("w:textInput");
-    text_input.append_child("w:type").append_attribute("w:val").set_value(
-        text_form_field_type_to_string(field.get_text_input_type()));
-    if (!field.get_text_input_default().empty()) {
-        text_input.append_child("w:default")
-            .append_attribute("w:val")
-            .set_value(field.get_text_input_default().c_str());
-    }
-    if (field.get_max_length() > 0) {
-        text_input.append_child("w:maxLength")
-            .append_attribute("w:val")
-            .set_value(field.get_max_length());
-    }
-    if (!field.get_text_input_format().empty()) {
-        text_input.append_child("w:format")
-            .append_attribute("w:val")
-            .set_value(field.get_text_input_format().c_str());
-    }
-}
-
-static void append_ffdata_check_box(pugi::xml_node fld_char, const FormField& field) {
-    auto ff_data = fld_char.append_child("w:ffData");
-    if (!field.get_name().empty()) {
-        ff_data.append_child("w:name").append_attribute("w:val").set_value(
-            field.get_name().c_str());
-    }
-    ff_data.append_child("w:enabled")
-        .append_attribute("w:val")
-        .set_value(field.get_enabled() ? "1" : "0");
-    ff_data.append_child("w:calcOnExit")
-        .append_attribute("w:val")
-        .set_value(field.get_calculate_on_exit() ? "1" : "0");
-
-    auto check_box = ff_data.append_child("w:checkBox");
-    if (field.get_is_check_box_exact_size() && field.get_check_box_size() > 0) {
-        auto size = check_box.append_child("w:size");
-        size.append_attribute("w:val").set_value(
-            static_cast<int>(field.get_check_box_size() * 2));  // half-points
-    } else {
-        check_box.append_child("w:sizeAuto");
-    }
-    check_box.append_child("w:default")
-        .append_attribute("w:val")
-        .set_value(field.get_default_value() ? "1" : "0");
-    check_box.append_child("w:checked")
-        .append_attribute("w:val")
-        .set_value(field.get_checked() ? "1" : "0");
-}
-
-static void append_ffdata_drop_down(pugi::xml_node fld_char, const FormField& field) {
-    auto ff_data = fld_char.append_child("w:ffData");
-    if (!field.get_name().empty()) {
-        ff_data.append_child("w:name").append_attribute("w:val").set_value(
-            field.get_name().c_str());
-    }
-    ff_data.append_child("w:enabled")
-        .append_attribute("w:val")
-        .set_value(field.get_enabled() ? "1" : "0");
-    ff_data.append_child("w:calcOnExit")
-        .append_attribute("w:val")
-        .set_value(field.get_calculate_on_exit() ? "1" : "0");
-
-    auto dd_list = ff_data.append_child("w:ddList");
-    for (const auto& item : field.get_drop_down_items()) {
-        dd_list.append_child("w:listEntry").append_attribute("w:val").set_value(item.c_str());
-    }
-    if (field.get_drop_down_selected_index() >= 0) {
-        dd_list.append_child("w:default")
-            .append_attribute("w:val")
-            .set_value(field.get_drop_down_selected_index());
-    }
-}
-
 std::shared_ptr<FormField> DocumentBuilder::insert_form_field_impl(
     const std::shared_ptr<FormField>& field) {
     if (!doc_) {
@@ -1060,50 +953,8 @@ std::shared_ptr<FormField> DocumentBuilder::insert_form_field_impl(
     }
 
     ensure_paragraph();
-    pugi::xml_node para = current_paragraph_;
 
-    int bookmark_id = 0;
-    if (!field->get_name().empty()) {
-        bookmark_id = doc_->generate_unique_bookmark_id();
-        // Create bookmark start
-        pugi::xml_node bm_start = para.append_child("w:bookmarkStart");
-        bm_start.append_attribute("w:id").set_value(bookmark_id);
-        bm_start.append_attribute("w:name").set_value(field->get_name().c_str());
-    }
-
-    // Begin fld_char with ffData
-    pugi::xml_node begin_run = para.append_child("w:r");
-    pugi::xml_node fld_char = begin_run.append_child("w:fldChar");
-    fld_char.append_attribute("w:fldCharType").set_value("begin");
-
-    switch (field->get_form_field_type()) {
-        case FormFieldType::TextInput:
-            append_ffdata_text_input(fld_char, *field);
-            break;
-        case FormFieldType::CheckBox:
-            append_ffdata_check_box(fld_char, *field);
-            break;
-        case FormFieldType::ComboBox:
-            append_ffdata_drop_down(fld_char, *field);
-            break;
-    }
-
-    // Instruction text
-    pugi::xml_node instr_run = para.append_child("w:r");
-    const pugi::xml_node instr_text = instr_run.append_child("w:instrText");
-    const char* instr = "FORMTEXT";
-    if (field->get_form_field_type() == FormFieldType::CheckBox) {
-        instr = "FORMCHECKBOX";
-    } else if (field->get_form_field_type() == FormFieldType::ComboBox) {
-        instr = "FORMDROPDOWN";
-    }
-    instr_text.text().set(instr);
-
-    // Separate
-    pugi::xml_node sep_run = para.append_child("w:r");
-    sep_run.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("separate");
-
-    // Result
+    // Compute default result for checkbox / combobox when empty
     std::string result = field->get_result();
     if (result.empty()) {
         if (field->get_form_field_type() == FormFieldType::CheckBox) {
@@ -1117,19 +968,10 @@ std::shared_ptr<FormField> DocumentBuilder::insert_form_field_impl(
         }
     }
     if (!result.empty()) {
-        pugi::xml_node res_run = para.append_child("w:r");
-        const pugi::xml_node text_node = res_run.append_child("w:t");
-        text_node.text().set(result.c_str());
+        field->set_result(result);
     }
 
-    // End
-    pugi::xml_node end_run = para.append_child("w:r");
-    end_run.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("end");
-
-    if (bookmark_id != 0) {
-        pugi::xml_node bm_end = para.append_child("w:bookmarkEnd");
-        bm_end.append_attribute("w:id").set_value(bookmark_id);
-    }
+    append_form_field_sequence(current_paragraph_, field.get(), doc_);
 
     if (doc_) {
         doc_->mark_xml_paragraph_dirty(current_paragraph_);
