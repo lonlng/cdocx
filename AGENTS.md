@@ -545,6 +545,7 @@ Fully implemented fluent cursor-based builder:
 - Hyperlink insertion (`insert_hyperlink`)
 - Image insertion (`insert_image` with auto-size and explicit size)
 - Field insertion (`insert_page_number`, `insert_date`, `insert_time`, `insert_num_pages`, `insert_merge_field`, `insert_table_of_contents`)
+- Form field insertion (`insert_text_input`, `insert_check_box`, `insert_combo_box`)
 - Footnote/endnote insertion (`insert_footnote`, `insert_endnote`)
 
 ### 10. DocumentSearch (`advanced.h`)
