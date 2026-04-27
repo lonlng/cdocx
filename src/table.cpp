@@ -87,6 +87,12 @@ std::shared_ptr<Paragraph> Cell::ensure_minimum() {
     return paras.front();
 }
 
+std::shared_ptr<class Table> Cell::append_table(int rows, int cols) {
+    auto table = std::make_shared<Table>(get_document(), rows, cols);
+    append_child(table);
+    return table;
+}
+
 void Cell::set_text(const std::string& text) {
     remove_all_children();
     append_paragraph(text);

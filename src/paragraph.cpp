@@ -168,6 +168,47 @@ std::shared_ptr<Field> Paragraph::append_field(FieldType type) {
 }
 
 // ============================================================================
+// Special Character Operations (DOM API)
+// ============================================================================
+
+std::shared_ptr<SpecialChar> Paragraph::append_special_char(char16_t char_code) {
+    auto special = std::make_shared<SpecialChar>(char_code);
+    append_child(special);
+    return special;
+}
+
+std::shared_ptr<SpecialChar> Paragraph::append_break(BreakType break_type) {
+    switch (break_type) {
+        case BreakType::PageBreak:
+            return append_page_break();
+        case BreakType::LineBreak:
+            return append_line_break();
+        case BreakType::ColumnBreak:
+            return append_special_char(0x0E);  // column break
+        default:
+            return append_special_char(0x0D);  // paragraph break
+    }
+}
+
+std::shared_ptr<SpecialChar> Paragraph::append_page_break() {
+    auto special = std::make_shared<SpecialChar>(0x0C);
+    append_child(special);
+    return special;
+}
+
+std::shared_ptr<SpecialChar> Paragraph::append_line_break() {
+    auto special = std::make_shared<SpecialChar>(0x0B);
+    append_child(special);
+    return special;
+}
+
+std::shared_ptr<SpecialChar> Paragraph::append_tab() {
+    auto special = std::make_shared<SpecialChar>(0x09);
+    append_child(special);
+    return special;
+}
+
+// ============================================================================
 // Run Operations (DOM API)
 // ============================================================================
 

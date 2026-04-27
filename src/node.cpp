@@ -149,6 +149,23 @@ std::shared_ptr<Node> CompositeNode::append_child(std::shared_ptr<Node> child) {
     return child;
 }
 
+std::shared_ptr<Node> CompositeNode::prepend_child(std::shared_ptr<Node> child) {
+    if (!child) {
+        return nullptr;
+    }
+
+    child->set_parent(this);
+    child->set_document(document_);
+
+    if (!children_.empty()) {
+        child->set_next_sibling(children_.front());
+        children_.front()->set_previous_sibling(child);
+    }
+
+    children_.insert(children_.begin(), child);
+    return child;
+}
+
 std::shared_ptr<Node> CompositeNode::insert_child(int index, std::shared_ptr<Node> child) {
     if (!child || index < 0 || static_cast<size_t>(index) > children_.size()) {
         return nullptr;
