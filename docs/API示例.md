@@ -72,23 +72,23 @@ for (int i = 0; i < 5; ++i) {
 auto para = doc->get_body()->append_paragraph("Formatted paragraph");
 
 // 对齐方式
-para->get_paragraph_format().set_alignment(cdocx::ParagraphAlignment::Center);
+para->get_paragraph_format().alignment = cdocx::ParagraphAlignment::Center;
 
 // 缩进
-para->get_paragraph_format().set_left_indent(36);      // 0.5 inch
-para->get_paragraph_format().set_first_line_indent(24); // 首行缩进
+para->get_paragraph_format().left_indent = 36;      // 0.5 inch
+para->get_paragraph_format().first_line_indent = 24; // 首行缩进
 
 // 间距
-para->get_paragraph_format().set_space_before(12);  // points
-para->get_paragraph_format().set_space_after(12);
+para->get_paragraph_format().space_before = 12;  // points
+para->get_paragraph_format().space_after = 12;
 
 // 行距
 para->get_paragraph_format().set_line_spacing(1.5);  // 1.5倍行距
 para->get_paragraph_format().set_line_spacing(20, cdocx::LineSpacingRule::Exact); // 固定20磅
 
 // 分页控制
-para->get_paragraph_format().set_keep_with_next(true);
-para->get_paragraph_format().set_page_break_before(true);
+para->get_paragraph_format().keep_with_next = true;
+para->get_paragraph_format().page_break_before = true;
 ```
 
 ### 遍历段落
@@ -126,19 +126,16 @@ para->append_run("Normal text");
 
 // 粗体
 para->append_run(" Bold text")
-    ->get_font()
-    .set_bold(true);
+    ->set_bold(true);
 
 // 链式调用
 para->append_run(" Bold and red")
-    ->get_font()
-    .set_bold(true)
+    ->set_bold(true)
     .set_color(cdocx::Color::red());
 
 // 多种格式
 auto run = para->append_run(" Complex formatting");
-run->get_font()
-    .set_bold(true)
+run->set_bold(true)
     .set_italic(true)
     .set_underline(cdocx::UnderlineType::Single)
     .set_size(14)
@@ -153,35 +150,35 @@ auto run = para->append_run("Text");
 auto& font = run->get_font();
 
 // 字体名称
-font.set_name("Times New Roman");
+font.name = "Times New Roman";
 font.set_names("Arial", "微软雅黑");  // ASCII, 中文
 
 // 字号 (points)
-font.set_size(12);
-font.set_size(14.5);
+font.size = 12;
+font.size = 14.5;
 
 // 颜色
-font.set_color(cdocx::Color::red());
-font.set_color(cdocx::Color::from_hex("FF0000"));
-font.set_color(cdocx::Color(255, 0, 0));
+font.color = cdocx::Color::red();
+font.color = cdocx::Color::from_hex("FF0000");
+font.color = cdocx::Color(255, 0, 0);
 
 // 格式
-font.set_bold(true);
-font.set_italic(true);
+font.bold = true;
+font.italic = true;
 font.set_underline(cdocx::UnderlineType::Single);
-font.set_strike(cdocx::StrikeType::Single);
-font.set_double_strike(true);
+font.strike = cdocx::StrikeType::Single;
+font.double_strike = true;
 
 // 脚本位置
-font.set_script_type(cdocx::ScriptType::Superscript);
-font.set_script_type(cdocx::ScriptType::Subscript);
+font.script_type = cdocx::ScriptType::Superscript;
+font.script_type = cdocx::ScriptType::Subscript;
 
 // 高亮
-font.set_highlight(cdocx::HighlightColor::Yellow);
+font.highlight = cdocx::HighlightColor::Yellow;
 
 // 小型大写字母
-font.set_small_caps(true);
-font.set_all_caps(true);
+font.small_caps = true;
+font.all_caps = true;
 ```
 
 ---
@@ -214,8 +211,7 @@ header_row->get_cell(2)->set_text("City");
 for (auto& cell : header_row->get_cells()) {
     cell->get_first_paragraph()
         ->append_run(cell->get_text())
-        ->get_font()
-        .set_bold(true);
+        ->set_bold(true);
     cell->get_cell_format()
         .set_shading(cdocx::Shading().set_solid_fill(cdocx::Color::light_gray()));
 }
@@ -371,8 +367,8 @@ builder.insert_hyperlink("Visit Example.com", "https://example.com");
 // 方式2: 直接创建 Hyperlink 节点并添加到段落
 auto link_para = doc->get_body()->append_paragraph();
 auto hyperlink = std::make_shared<cdocx::Hyperlink>();
-hyperlink->set_text("Click here");
-hyperlink->set_url("https://example.com");
+hyperlink->set_result("Click here");
+hyperlink->set_address("https://example.com");
 link_para->append_child(hyperlink);
 ```
 
