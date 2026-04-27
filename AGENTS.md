@@ -9,7 +9,7 @@ CDocx is a C++17 library for creating, reading, and writing Microsoft Office Wor
 - **License**: MIT
 - **Build System**: CMake (minimum version 3.14)
 - **Namespace**: `cdocx`
-- **Version**: 0.7.0 (transition release)
+- **Version**: 0.8.0
 - **Dependencies** (auto-fetched via CMake FetchContent):
   - [pugixml](https://gitee.com/lonlng/pugixml) (v1.15) - XML parsing
   - [zip](https://gitee.com/lonlng/zip) (v0.3.6) - ZIP archive handling
@@ -38,22 +38,40 @@ cdocx/
 │   ├── cdocx.h                 # Main aggregated header
 │   └── cdocx/                  # Modular headers
 │       ├── document.h          # Document class (DOM root)
+│       ├── cdocx.h             # CDocx factory methods
 │       ├── node.h              # Node/CompositeNode hierarchy
 │       ├── body.h              # Body class
-│       ├── paragraph.h         # Paragraph class
+│       ├── paragraph.h         # Paragraph, Run, Field, Hyperlink
+│       ├── paragraph_builder.h # ParagraphBuilder fluent API
 │       ├── table.h             # Table, Row, Cell
-│       ├── section.h           # Section support
+│       ├── table_builder.h     # TableBuilder fluent API
+│       ├── section.h           # Section, HeaderFooter
 │       ├── numbering.h         # List/Numbering
-│       ├── template.h          # Template replacement
+│       ├── template.h          # Template replacement (legacy FSM)
+│       ├── template_engine.h   # TemplateEngine unified API
 │       ├── inserter.h          # Document insertion
-│       ├── advanced.h          # Bookmark, Builder, Search, TableOperations
+│       ├── advanced.h          # DocumentBuilder, DocumentSearch, TableOperations
+│       ├── document_builder.h  # DocumentBuilder declarations
+│       ├── document_search.h   # DocumentSearch declarations
+│       ├── bookmark.h          # Bookmark collection
 │       ├── bookmark_replacer.h # Bookmark replacement
+│       ├── bookmark_inserter.h # Bookmark insertion
 │       ├── caption_generator.h # Caption generation
+│       ├── comment.h           # CommentCollection
+│       ├── mail_merge.h        # Mail merge
+│       ├── watermark.h         # Watermark
+│       ├── style.h             # Style / StyleCollection
+│       ├── range.h             # Range operations
+│       ├── footnote.h          # Footnote / FootnoteReference
+│       ├── formfield.h         # Form field support
 │       ├── format.h            # Format attributes
 │       ├── format_context.h    # Format context
 │       ├── properties.h        # Property structures
 │       ├── enums.h             # Enumerations
 │       ├── constants.h         # Constants
+│       ├── control_char.h      # Control character constants
+│       ├── convert_util.h      # Unit conversions
+│       ├── file_format_util.h  # File format detection
 │       ├── fwd.h               # Forward declarations
 │       ├── iterator.h          # Iterator support
 │       └── base.h              # Legacy iterators
@@ -62,26 +80,52 @@ cdocx/
 │   └── impl.h                  # Private implementation (PIMPL)
 │
 ├── src/                        # Implementation files
-│   ├── advanced.cpp
+│   ├── advanced.cpp            # DocumentBuilder, DocumentSearch, TableOperations
 │   ├── base_content.cpp
 │   ├── body.cpp
-│   ├── bookmark_replacer.cpp
+│   ├── bookmark.cpp            # Bookmark collection DOM
+│   ├── bookmark_inserter.cpp   # Bookmark inserter (physical XML)
+│   ├── bookmark_replacer.cpp   # Bookmark replacement
 │   ├── caption_generator.cpp
-│   ├── document.cpp
-│   ├── document_sync.cpp       # DOM-XML sync
-│   ├── format.cpp              # Color implementation only
+│   ├── cdocx.cpp               # CDocx factory class
+│   ├── comment.cpp             # CommentCollection
+│   ├── convert_util.cpp        # Unit conversions
+│   ├── document.cpp            # Document core + media/relationships
+│   ├── document_builder.cpp    # DocumentBuilder fluent API
+│   ├── document_io.cpp         # Document load/save
+│   ├── document_media.cpp      # Media management
+│   ├── document_relationships.cpp # Relationship handling
+│   ├── document_search.cpp     # DocumentSearch find/replace
+│   ├── document_sync.cpp       # DOM-XML sync (legacy monolithic)
+│   ├── file_format_util.cpp    # File format detection
+│   ├── footnote.cpp            # Footnote / endnote DOM
+│   ├── format.cpp              # Color implementation
 │   ├── format_context.cpp
-│   ├── impl.cpp
-│   ├── inserter.cpp
-│   ├── node.cpp                # Basic tree ops
-│   ├── numbering.cpp
-│   ├── paragraph.cpp
+│   ├── formfield.cpp           # Form field support
+│   ├── impl.cpp                # PIMPL internals
+│   ├── inserter.cpp            # DocumentInserter
+│   ├── mail_merge.cpp          # Mail merge
+│   ├── node.cpp                # Node/CompositeNode tree ops
+│   ├── numbering.cpp           # List/Numbering
+│   ├── paragraph.cpp           # Paragraph, Run, Field, Hyperlink
+│   ├── paragraph_builder.cpp   # ParagraphBuilder fluent API
 │   ├── properties.cpp
-│   ├── section.cpp
-│   ├── table.cpp
-│   ├── table_builder.cpp
-│   ├── template.cpp
-│   └── tree.cpp
+│   ├── range.cpp               # Range operations
+│   ├── section.cpp             # Section, HeaderFooter
+│   ├── style.cpp               # Style / StyleCollection
+│   ├── sync_comment.cpp        # Comment XML sync
+│   ├── sync_common.cpp/.h      # Common sync utilities
+│   ├── sync_deserialize.cpp    # XML-to-DOM deserialization
+│   ├── sync_footnote.cpp       # Footnote XML sync
+│   ├── sync_properties.cpp     # Property XML sync
+│   ├── sync_serialize.cpp      # DOM-to-XML serialization
+│   ├── sync_style.cpp          # Style XML sync
+│   ├── table.cpp               # Table, Row, Cell
+│   ├── table_builder.cpp       # TableBuilder fluent API
+│   ├── template.cpp            # Template replacement (legacy FSM)
+│   ├── template_engine.cpp     # TemplateEngine unified API
+│   ├── tree.cpp                # DocxTree physical model
+│   └── watermark.cpp           # Text/image watermarks
 │
 ├── test/                       # Test suite (Google Test)
 │   ├── 01_basic/
@@ -93,6 +137,16 @@ cdocx/
 │   ├── 07_text_formatting/
 │   ├── 08_bookmark_replacement/
 │   ├── 09_section_and_list/
+│   ├── 10_dom_sync/
+│   ├── 11_table_merge/
+│   ├── 12_document_search/
+│   ├── 13_document_builder/
+│   ├── 14_style_collection/
+│   ├── 15_mail_merge/
+│   ├── 16_comment_collection/
+│   ├── 17_footnote_collection/
+│   ├── 18_field_switches/
+│   ├── 19_template_engine/
 │   └── CMakeLists.txt
 │
 ├── examples/                   # Example programs
@@ -111,6 +165,14 @@ cdocx/
 │   ├── 12_caption_generation/
 │   ├── 13_enhanced_properties/
 │   ├── 13_section_and_list/
+│   ├── 14_table_merge/
+│   ├── 15_document_search/
+│   ├── 16_document_builder/
+│   ├── 17_style_collection/
+│   ├── 18_new_features/
+│   ├── 19_mail_merge/
+│   ├── 21_template_engine/
+│   ├── test_dom_sync/
 │   └── CMakeLists.txt
 │
 ├── scripts/
@@ -277,7 +339,11 @@ Node (abstract)
 - Document-order traversal (`get_previous_node_in_document`, `get_next_node_in_document`, `get_previous_logical`, `get_next_logical`) is **implemented** in `node.cpp`
 - DOM-to-XML serialization handles **bookmarks, hyperlinks, and fields** (both serialization and deserialization); basic field round-tripping works
 - `HeaderFooter` DOM content methods (`append_paragraph`, `append_table`, `get_paragraphs`) are **implemented**
-- Known gaps: fluent `DocumentBuilder`, and `CDocx` factory class remain unimplemented; `DocumentSearch` is now implemented
+- `DocumentBuilder` fluent API is **fully implemented** (text, hyperlinks, images, tables, bookmarks, fields)
+- `CDocx` factory class (`create_document`, `load_document`, `save_document`) is **fully implemented**
+- `DocumentSearch` (`find`, `replace`, `replace_all`, `replace_with_formatting`, `find_and_process`) is **fully implemented**
+- `TableOperations` static helpers are **fully implemented**
+- `TemplateEngine` unified dictionary-style API is **fully implemented**
 
 ### Physical Structure
 
@@ -317,17 +383,20 @@ CDocx provides **three API paths** to the same underlying DOCX package:
 | DOM ↔ XML synchronization | `document_sync.cpp` (auto on save) | Complete (Run, Para, Table, Section, Bookmark, Hyperlink, Field) |
 | Node deep copy and document-order traversal | `Node::clone`, `get_next_node_in_document` | Complete |
 
-### Tier 3 — Advanced Features (Stubbed / Roadmap)
+### Tier 3 — Advanced Features (Complete)
 
 | Feature | API | Status |
 |---------|-----|--------|
-| Table merge/split | `Table::merge_cells`, `split_cell` | **Implemented** |
-| Document-wide search/replace | `DocumentSearch`, `Range::replace` | **Implemented** (paragraph-level; `Range` has DOM fallback) |
-| DocumentBuilder bookmarks, images, hyperlinks | `DocumentBuilder` | **Partial / stubs** |
-| Style manager | `StyleCollection` | Not implemented |
-| Complex fields (page numbers, dates) | `Field` DOM class | Basic structure works; advanced types stubbed |
-| Footnote / endnote DOM wrappers | — | Not implemented |
-| Export to PDF / HTML / Markdown | — | Roadmap (v0.8.0+) |
+| Table merge/split | `Table::merge_cells`, `split_cell` | **Complete** |
+| Document-wide search/replace | `DocumentSearch`, `Range::replace` | **Complete** |
+| DocumentBuilder bookmarks, images, hyperlinks, fields | `DocumentBuilder` | **Complete** |
+| Style manager | `StyleCollection` | **Complete** |
+| Comment collection | `CommentCollection` | **Complete** |
+| Mail merge | `MailMerge` | **Complete** |
+| Watermark | `Watermark` | **Complete** |
+| Complex fields (page numbers, dates, TOC) | `Field` DOM class | **Basic** (structure works; deep customization roadmap) |
+| Footnote / endnote DOM wrappers | `Footnote`, `FootnoteReference` | **Basic** (DOM classes exist; collection API roadmap) |
+| Export to PDF / HTML / Markdown | — | Roadmap (v0.9.0+) |
 
 ### Recommended API Selection
 
@@ -396,7 +465,7 @@ run.set_font(font);
 ```
 
 ### 4. Table Classes (`cdocx::Table`, `cdocx::Row`, `cdocx::Cell`)
-Basic table manipulation works. **Cell merging/splitting are declared but not implemented.**
+Full table manipulation including merge/split, column insert/delete, and auto-fit behaviors.
 
 ```cpp
 auto table = std::make_shared<Table>(doc, 3, 4);
@@ -466,27 +535,36 @@ inserter.insert_batch({{"NAME", "John"}, {"AGE", "30"}});
 
 **Important:** Because `BookmarkInserter` manipulates the physical XML tree directly, callers must invoke `doc.sync_from_physical_tree()` before `doc.save()` if the DOM and physical tree are out of sync.
 
-### 9. DocumentBuilder (`advanced.h`)
-The actual implementation is a **cursor-based builder** with working:
-- Cursor movement (`move_to_document_start`, `move_to_paragraph`)
+### 9. DocumentBuilder (`document_builder.h` / `document_builder.cpp`)
+Fully implemented fluent cursor-based builder:
+- Cursor movement (`move_to_document_start`, `move_to_paragraph`, `move_to_bookmark`, `move_to_header_footer`)
 - Text insertion (`write`, `writeln`, `insert_paragraph`)
-- Formatting setters (`set_bold`, `set_font_size`, `set_color`)
-- Basic table building (`start_table`, `insert_row`, `insert_cell`)
+- Formatting setters (`set_bold`, `set_font_size`, `set_color`, `set_italic`, `set_underline`, `set_alignment`, etc.)
+- Table building (`start_table`, `insert_row`, `insert_cell`, `end_row`, `end_table`)
 - Bookmark creation (`start_bookmark`, `end_bookmark`)
-
-**Stubs:** `insert_hyperlink`, `insert_image`, `move_to_bookmark`, `move_to_cell`
-
-**Not implemented:** The fluent metadata chain API (`with_title`, `with_author`, `with_subject`, `with_keywords`, `with_page_size`, `with_margins`, `with_orientation`) is declared in `advanced.h` but has no definitions in `advanced.cpp`.
+- Hyperlink insertion (`insert_hyperlink`)
+- Image insertion (`insert_image` with auto-size and explicit size)
+- Field insertion (`insert_page_number`, `insert_date`, `insert_time`, `insert_num_pages`, `insert_merge_field`, `insert_table_of_contents`)
+- Footnote/endnote insertion (`insert_footnote`, `insert_endnote`)
 
 ### 10. DocumentSearch (`advanced.h`)
 **Status: Implemented.** `find`, `find_all`, `replace`, `replace_all`, `replace_with_formatting`, and `find_and_process` are functional. The implementation operates at the paragraph level using the DOM. `Range` has a DOM fallback for paragraphs that do not have an XML node binding (common for pure DOM-created paragraphs).
 
 ### 11. TableOperations (`advanced.h`)
-**Status: ALL methods are unimplemented stubs.** (`insert_row`, `delete_row`, `merge_cells_horizontal`, etc.)  
-**Note:** `Table::merge_cells` and `Table::split_cell` on the DOM `Table` class ARE implemented. `TableOperations` is a separate planned utility wrapper.
+**Status: Fully implemented.** Static helper methods for common table operations:
+- `insert_row`, `append_row`, `delete_row`
+- `insert_cell`, `delete_cell`
+- `merge_cells_horizontal`
+- `set_cell_text`, `get_cell_text`
 
-### 12. CDocx Factory Class (`cdocx.h`)
-**Status: Declared but NOT implemented.** `create_document`, `load_document`, `paragraph()`, `table()` have no `.cpp` implementation.
+**Note:** These complement the instance methods on `Table::merge_cells` and `Table::split_cell`.
+
+### 12. CDocx Factory Class (`cdocx.h` / `cdocx.cpp`)
+**Status: Fully implemented.** Provides convenient static factory methods:
+- `create_document()` — create empty document
+- `load_document(path)` — load from file
+- `save_document(doc, path)` — save to file
+- `paragraph()` / `table()` — standalone node factories
 
 ---
 
@@ -508,6 +586,15 @@ Test framework: **Google Test**, integrated with **CTest**.
 | `08_bookmark_replacement` | Bookmark replacement | - | 60s |
 | `09_section_and_list` | Sections and numbering | - | 60s |
 | `10_dom_sync` | DOM-XML synchronization | - | 60s |
+| `11_table_merge` | Table merge/split/operations | - | 60s |
+| `12_document_search` | Document search and replace | - | 60s |
+| `13_document_builder` | DocumentBuilder fluent API | - | 60s |
+| `14_style_collection` | Style collection management | - | 60s |
+| `15_mail_merge` | Mail merge | - | 60s |
+| `16_comment_collection` | Comment collection | - | 60s |
+| `17_footnote_collection` | Footnote/endnote collection | - | 60s |
+| `18_field_switches` | Field switches | - | 60s |
+| `19_template_engine` | TemplateEngine unified API | - | 60s |
 
 ### Test Labels
 
@@ -565,27 +652,45 @@ for (auto p = doc.paragraphs(); p.has_next(); p.next()) {
 }
 ```
 
-### DOM Pattern (Partial - In Transition)
+### DOM Pattern (Complete)
 
 ```cpp
-auto doc = std::make_shared<cdocx::Document>();
-doc->create_empty("output.docx");
-auto section = doc->append_section();
-auto body = section->get_body();
+auto doc = cdocx::CDocx::create_document();
+auto body = doc->get_first_section()->get_body();
 auto para = body->append_paragraph("Hello, World!");
-para->append_run(" Bold text")->set_bold(true);
-doc->save();
+para->append_run(" Bold text")
+    ->get_font()
+    .set_bold(true);
+cdocx::CDocx::save_document(*doc, "output.docx");
 ```
 
 ---
 
 ## Version History
 
-### v0.7.0 (Current - Transition)
+### v0.8.0 (Current)
+- `TemplateEngine` unified dictionary-style template API with text/image placeholders, bookmarks, format policies, action/scope modes
+- `BookmarkInserter` for wrapping existing text with bookmarks
+- `CommentCollection` for add/get/remove document comments
+- `MailMerge` simple field replacement with cleanup options
+- `Watermark` text and image watermarks in headers
+- `StyleCollection` style management via `doc.styles()`
+- Table column insert/delete and `auto_fit` behaviors (`AutoFitToContents`, `AutoFitToWindow`, `FixedColumnWidth`)
+- `DocumentBuilder` enhancements: `move_to_bookmark`, `insert_hyperlink`, `insert_image` (auto-size and explicit size), `insert_footnote`/`insert_endnote`
+- `FileFormatUtil` file format detection and conversion
+- `Section::link_to_previous` / `is_linked_to_previous`
+- Field switches support (`FieldSwitch` enum, `parse_field_code_and_switches`)
+- Run property default elision (skip writing default `<w:rPr>` to reduce file size)
+- `ParagraphBuilder` and `TableBuilder` fluent APIs
+
+### v0.7.0 (Transition)
 - DOM class hierarchy introduced (`Node`/`CompositeNode`)
 - `document_sync.cpp` handles DOM-XML serialization (paragraphs, tables, sections, bookmarks, fields, hyperlinks)
 - `Color` fully implemented; other format classes are header-only structs
-- **Known gaps**: `CDocx` factory unimplemented; `DocumentBuilder::insert_hyperlink`/`insert_image` stubs; `TableOperations` utility class not implemented; `Table::auto_fit` stub
+- `DocumentSearch` find/replace/find_all/find_and_process
+- `TableOperations` static helpers
+- `Range` operations
+- `CDocx` factory class
 
 ### v0.5.0
 - Section support (fully working)
@@ -618,19 +723,25 @@ doc->save();
 | DOCX open/save/create | Complete | Fully tested |
 | Legacy iterator API | Complete | |
 | Run/Paragraph formatting | Complete | |
-| Template replacement | Complete | |
+| Template replacement | Complete | `Template` (legacy FSM) and `TemplateEngine` (recommended) |
 | Document insertion | Complete | |
-| Media management | Complete | |
-| XML Parts API | Complete | |
-| Section support | Complete | |
-| List/Numbering | Complete | |
-| Bookmark replacement | Partial | Same-paragraph only |
-| DOM node hierarchy | Mostly Complete | `clone()`, traversal, and basic ops work on all major nodes |
-| DOM-XML sync | Mostly Complete | Bookmarks/hyperlinks/fields supported for both serialization and deserialization |
-| Table merge/split | Complete | `merge_cells` and `split_cell` implemented with XML round-trip |
-| DocumentSearch | Implemented | `find`, `replace`, `replace_all`, `replace_with_formatting`, `find_and_process` |
-| DocumentBuilder | Partial | Cursor-based API works; fluent metadata chain missing |
-| CDocx factory class | Not implemented | Declared only |
+| Media management | Complete | Add/delete/replace/export images |
+| XML Parts API | Complete | Direct `pugi::xml_document*` access |
+| Section support | Complete | Page setup, margins, orientation, headers/footers |
+| List/Numbering | Complete | Bulleted, numbered, outline, Chinese numbering |
+| Bookmark replacement | Complete | Same-paragraph via `BookmarkReplacer`; multi-run via `BookmarkInserter` |
+| DOM node hierarchy | Complete | `clone()`, traversal, append/remove on all major nodes |
+| DOM-XML sync | Complete | Run, Para, Table, Section, Bookmark, Hyperlink, Field, Footnote, Comment, Style |
+| Table merge/split | Complete | `merge_cells`, `split_cell`, column insert/delete, auto-fit |
+| DocumentSearch | Complete | `find`, `find_all`, `replace`, `replace_all`, `replace_with_formatting`, `find_and_process` |
+| DocumentBuilder | Complete | Cursor-based API; hyperlinks, images, tables, bookmarks, fields, footnotes |
+| TableOperations | Complete | Static helpers for row/cell operations |
+| CDocx factory class | Complete | `create_document`, `load_document`, `save_document` |
+| StyleCollection | Complete | Style get/create/update |
+| CommentCollection | Complete | Add/get/remove comments |
+| MailMerge | Complete | Simple field replacement with cleanup |
+| Watermark | Complete | Text and image watermarks |
+| Footnote/endnote DOM | Basic | `Footnote`/`FootnoteReference` classes exist; collection API roadmap |
 
 ---
 

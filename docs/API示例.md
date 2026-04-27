@@ -785,9 +785,9 @@ int main() {
     cdocx::TemplateEngine engine(&doc);
 
     // ===== 直接在这里修改数据 =====
-    engine[cdocx::TemplateValue::text(TemplateKeys::company_name)] = "Acme Inc.";
-    engine[cdocx::TemplateValue::text(TemplateKeys::date)]        = "2026-04-24";
-    engine[cdocx::TemplateValue::text(TemplateKeys::title)]       = "年度报告";
+    engine[TemplateKeys::company_name] = cdocx::TemplateValue::text("Acme Inc.");
+    engine[TemplateKeys::date]        = cdocx::TemplateValue::text("2026-04-24");
+    engine[TemplateKeys::title]       = cdocx::TemplateValue::text("年度报告");
     // =============================
 
     auto result = engine.apply();

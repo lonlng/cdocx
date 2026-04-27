@@ -85,7 +85,7 @@ int main() {
     // Document properties
     doc.get_builtin_document_properties().title = "CDocx New Features Demo";
     doc.get_builtin_document_properties().author = "CDocx Team";
-    doc.get_builtin_document_properties().subject = "Demonstration of v0.7.0 features";
+    doc.get_builtin_document_properties().subject = "Demonstration of v0.8.0 features";
     doc.get_builtin_document_properties().keywords = "CDocx, DOCX, C++";
     doc.get_builtin_document_properties().company = "ELEGANCE Labs";
     doc.get_builtin_document_properties().category = "Demo";

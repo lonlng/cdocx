@@ -369,38 +369,43 @@ cdocx/
 ├── include/
 │   ├── cdocx.h              # Main public API header
 │   └── cdocx/               # Modular headers
-│       ├── document.h       # Document class
-│       ├── node.h           # Node hierarchy (DOM API)
-│       ├── body.h           # Body class
-│       ├── paragraph.h      # Paragraph, Run, Field, Hyperlink
-│       ├── paragraph_builder.h # ParagraphBuilder fluent API
-│       ├── base.h           # Run, legacy iterators
-│       ├── table.h          # Table, Row, Cell
-│       ├── table_builder.h  # TableBuilder fluent API
-│       ├── section.h        # Section, HeaderFooter
-│       ├── numbering.h      # List/Numbering
-│       ├── template.h       # Template replacement (legacy FSM)
-│       ├── template_engine.h # TemplateEngine (recommended)
-│       ├── inserter.h       # Document insertion
-│       ├── advanced.h       # DocumentBuilder, DocumentSearch, TableOperations
-│       ├── document_builder.h # DocumentBuilder fluent API
-│       ├── document_search.h # DocumentSearch find/replace
-│       ├── bookmark.h       # Bookmark collection
-│       ├── bookmark_replacer.h # Bookmark replacement
-│       ├── bookmark_inserter.h # Bookmark insertion
-│       ├── caption_generator.h # Caption generation
-│       ├── comment.h        # Comment collection
-│       ├── mail_merge.h     # Mail merge
-│       ├── watermark.h      # Watermark
-│       ├── style.h          # Style collection
-│       ├── format.h         # Format attributes (Font, ParagraphFormat, etc.)
-│       ├── properties.h     # Property structures
-│       ├── enums.h          # Enumerations
-│       ├── constants.h      # Constants
-│       ├── convert_util.h   # Unit conversions
-│       ├── control_char.h   # Control character constants
-│       ├── file_format_util.h # File format detection
-│       └── iterator.h       # Iterator support
+│       ├── document.h           # Document class
+│       ├── cdocx.h              # CDocx factory methods
+│       ├── node.h               # Node hierarchy (DOM API)
+│       ├── body.h               # Body class
+│       ├── paragraph.h          # Paragraph, Run, Field, Hyperlink
+│       ├── paragraph_builder.h  # ParagraphBuilder fluent API
+│       ├── base.h               # Run, legacy iterators
+│       ├── table.h              # Table, Row, Cell
+│       ├── table_builder.h      # TableBuilder fluent API
+│       ├── section.h            # Section, HeaderFooter
+│       ├── numbering.h          # List/Numbering
+│       ├── template.h           # Template replacement (legacy FSM)
+│       ├── template_engine.h    # TemplateEngine (recommended)
+│       ├── inserter.h           # Document insertion
+│       ├── advanced.h           # DocumentBuilder, DocumentSearch, TableOperations
+│       ├── document_builder.h   # DocumentBuilder fluent API
+│       ├── document_search.h    # DocumentSearch find/replace
+│       ├── bookmark.h           # Bookmark collection
+│       ├── bookmark_replacer.h  # Bookmark replacement
+│       ├── bookmark_inserter.h  # Bookmark insertion
+│       ├── caption_generator.h  # Caption generation
+│       ├── comment.h            # Comment collection
+│       ├── mail_merge.h         # Mail merge
+│       ├── watermark.h          # Watermark
+│       ├── style.h              # Style collection
+│       ├── range.h              # Range operations
+│       ├── footnote.h           # Footnote / FootnoteReference
+│       ├── formfield.h          # Form field support
+│       ├── format.h             # Format attributes (Font, ParagraphFormat, etc.)
+│       ├── properties.h         # Property structures
+│       ├── enums.h              # Enumerations
+│       ├── constants.h          # Constants
+│       ├── convert_util.h       # Unit conversions
+│       ├── control_char.h       # Control character constants
+│       ├── file_format_util.h   # File format detection
+│       ├── fwd.h                # Forward declarations
+│       └── iterator.h           # Iterator support
 ├── src/                     # Implementation files
 ├── test/                    # Test suite (Google Test)
 ├── examples/                # Example programs
