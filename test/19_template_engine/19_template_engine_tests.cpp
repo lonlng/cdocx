@@ -913,4 +913,170 @@ TEST(TemplateEngineTest, BookmarkInsertModeWithFormat) {
     fs::remove(test_file);
 }
 
+// ============================================================================
+// TemplateEngine Header/Footer Tests
+// ============================================================================
+
+TEST(TemplateEngineTest, PlaceholderReplacementInHeader) {
+    const std::string test_file = "test_te_header.docx";
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+        auto section = doc.get_first_section();
+        auto header = section->add_header(HeaderFooterType::Primary);
+        header->append_paragraph("Header: {{header_title}}");
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        TemplateEngine engine(&doc);
+        engine["header_title"] = "Annual Report";
+        auto result = engine.apply();
+
+        EXPECT_EQ(result.success, 1);
+        EXPECT_EQ(result.failed, 0);
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        bool found = false;
+        for (auto& section : doc.get_sections()) {
+            for (auto& h : section->get_all_headers()) {
+                if (!h) continue;
+                for (auto& p : h->get_paragraphs()) {
+                    if (p->get_text() == "Header: Annual Report") {
+                        found = true;
+                    }
+                }
+            }
+        }
+        EXPECT_TRUE(found);
+    }
+
+    fs::remove(test_file);
+}
+
+TEST(TemplateEngineTest, PlaceholderReplacementInFooter) {
+    const std::string test_file = "test_te_footer.docx";
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+        auto section = doc.get_first_section();
+        auto footer = section->add_footer(HeaderFooterType::Primary);
+        footer->append_paragraph("Footer: {{footer_date}}");
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        TemplateEngine engine(&doc);
+        engine["footer_date"] = "2026-04-27";
+        auto result = engine.apply();
+
+        EXPECT_EQ(result.success, 1);
+        EXPECT_EQ(result.failed, 0);
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        bool found = false;
+        for (auto& section : doc.get_sections()) {
+            for (auto& f : section->get_all_footers()) {
+                if (!f) continue;
+                for (auto& p : f->get_paragraphs()) {
+                    if (p->get_text() == "Footer: 2026-04-27") {
+                        found = true;
+                    }
+                }
+            }
+        }
+        EXPECT_TRUE(found);
+    }
+
+    fs::remove(test_file);
+}
+
+TEST(TemplateEngineTest, PlaceholderReplacementInHeaderAndFooterTogether) {
+    const std::string test_file = "test_te_hf.docx";
+    if (fs::exists(test_file)) fs::remove(test_file);
+
+    {
+        Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+        auto section = doc.get_first_section();
+        auto body = section->get_body();
+        body->append_paragraph("Body: {{body_key}}");
+        auto header = section->add_header(HeaderFooterType::Primary);
+        header->append_paragraph("Header: {{header_key}}");
+        auto footer = section->add_footer(HeaderFooterType::Primary);
+        footer->append_paragraph("Footer: {{footer_key}}");
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        TemplateEngine engine(&doc);
+        engine["body_key"] = "BodyValue";
+        engine["header_key"] = "HeaderValue";
+        engine["footer_key"] = "FooterValue";
+        auto result = engine.apply();
+
+        EXPECT_EQ(result.success, 3);
+        EXPECT_EQ(result.failed, 0);
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto paras = doc.get_first_section()->get_body()->get_paragraphs();
+        ASSERT_FALSE(paras.empty());
+        EXPECT_EQ(paras[0]->get_text(), "Body: BodyValue");
+
+        bool header_ok = false, footer_ok = false;
+        for (auto& section : doc.get_sections()) {
+            for (auto& h : section->get_all_headers()) {
+                if (!h) continue;
+                for (auto& p : h->get_paragraphs()) {
+                    if (p->get_text() == "Header: HeaderValue") header_ok = true;
+                }
+            }
+            for (auto& f : section->get_all_footers()) {
+                if (!f) continue;
+                for (auto& p : f->get_paragraphs()) {
+                    if (p->get_text() == "Footer: FooterValue") footer_ok = true;
+                }
+            }
+        }
+        EXPECT_TRUE(header_ok);
+        EXPECT_TRUE(footer_ok);
+    }
+
+    fs::remove(test_file);
+}
+
 /** @} */
