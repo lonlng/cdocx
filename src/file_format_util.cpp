@@ -50,6 +50,47 @@ static bool contains(const std::string& haystack, const std::string& needle) {
     return haystack.find(needle) != std::string::npos;
 }
 
+// ============================================================================
+// Format lookup table (shared between LoadFormat and SaveFormat)
+// ============================================================================
+
+struct FormatMapping {
+    std::uint8_t value;
+    const char* extension;
+};
+
+static const FormatMapping kFormatMappings[] = {
+    {20, ".docx"},
+    {21, ".docm"},
+    {22, ".dotx"},
+    {23, ".dotm"},
+    {24, ".fopc"},
+    {30, ".rtf"},
+    {50, ".html"},
+    {60, ".odt"},
+    {62, ".txt"},
+    {63, ".md"},
+    {65, ".xml"},
+};
+
+static const char* format_value_to_extension(std::uint8_t value) {
+    for (const auto& m : kFormatMappings) {
+        if (m.value == value) {
+            return m.extension;
+        }
+    }
+    return "";
+}
+
+static std::uint8_t extension_to_format_value(const std::string& ext) {
+    for (const auto& m : kFormatMappings) {
+        if (ext == m.extension) {
+            return m.value;
+        }
+    }
+    return 255;  // Unknown
+}
+
 static std::string read_zip_entry(zip_t* za, const std::string& entry_name) {
     if (zip_entry_open(za, entry_name.c_str()) != 0) {
         return "";
@@ -244,61 +285,11 @@ std::shared_ptr<FileFormatInfo> FileFormatUtil::detect_file_format(const std::ve
 }
 
 std::string FileFormatUtil::load_format_to_extension(LoadFormat load_format) {
-    switch (load_format) {
-        case LoadFormat::Docx:
-            return ".docx";
-        case LoadFormat::Docm:
-            return ".docm";
-        case LoadFormat::Dotx:
-            return ".dotx";
-        case LoadFormat::Dotm:
-            return ".dotm";
-        case LoadFormat::FlatOpc:
-            return ".fopc";
-        case LoadFormat::Rtf:
-            return ".rtf";
-        case LoadFormat::Html:
-            return ".html";
-        case LoadFormat::Odt:
-            return ".odt";
-        case LoadFormat::Text:
-            return ".txt";
-        case LoadFormat::Markdown:
-            return ".md";
-        case LoadFormat::Xml:
-            return ".xml";
-        default:
-            return "";
-    }
+    return format_value_to_extension(static_cast<std::uint8_t>(load_format));
 }
 
 std::string FileFormatUtil::save_format_to_extension(SaveFormat save_format) {
-    switch (save_format) {
-        case SaveFormat::Docx:
-            return ".docx";
-        case SaveFormat::Docm:
-            return ".docm";
-        case SaveFormat::Dotx:
-            return ".dotx";
-        case SaveFormat::Dotm:
-            return ".dotm";
-        case SaveFormat::FlatOpc:
-            return ".fopc";
-        case SaveFormat::Rtf:
-            return ".rtf";
-        case SaveFormat::Html:
-            return ".html";
-        case SaveFormat::Odt:
-            return ".odt";
-        case SaveFormat::Text:
-            return ".txt";
-        case SaveFormat::Markdown:
-            return ".md";
-        case SaveFormat::Xml:
-            return ".xml";
-        default:
-            return "";
-    }
+    return format_value_to_extension(static_cast<std::uint8_t>(save_format));
 }
 
 SaveFormat FileFormatUtil::extension_to_save_format(const std::string& extension) {
@@ -306,98 +297,28 @@ SaveFormat FileFormatUtil::extension_to_save_format(const std::string& extension
     if (!ext.empty() && ext[0] != '.') {
         ext = "." + ext;
     }
-    if (ext == ".docx") {
-        return SaveFormat::Docx;
+    // Handle alias extensions
+    if (ext == ".flatopc") {
+        ext = ".fopc";
+    } else if (ext == ".htm") {
+        ext = ".html";
+    } else if (ext == ".text") {
+        ext = ".txt";
+    } else if (ext == ".markdown") {
+        ext = ".md";
+    } else if (ext == ".wordml" || ext == ".wml") {
+        ext = ".xml";
     }
-    if (ext == ".docm") {
-        return SaveFormat::Docm;
-    }
-    if (ext == ".dotx") {
-        return SaveFormat::Dotx;
-    }
-    if (ext == ".dotm") {
-        return SaveFormat::Dotm;
-    }
-    if (ext == ".fopc" || ext == ".flatopc") {
-        return SaveFormat::FlatOpc;
-    }
-    if (ext == ".rtf") {
-        return SaveFormat::Rtf;
-    }
-    if (ext == ".html" || ext == ".htm") {
-        return SaveFormat::Html;
-    }
-    if (ext == ".odt") {
-        return SaveFormat::Odt;
-    }
-    if (ext == ".txt" || ext == ".text") {
-        return SaveFormat::Text;
-    }
-    if (ext == ".md" || ext == ".markdown") {
-        return SaveFormat::Markdown;
-    }
-    if (ext == ".xml" || ext == ".wordml" || ext == ".wml") {
-        return SaveFormat::Xml;
-    }
-    return SaveFormat::Unknown;
+    const std::uint8_t value = extension_to_format_value(ext);
+    return static_cast<SaveFormat>(value);
 }
 
 LoadFormat FileFormatUtil::save_format_to_load_format(SaveFormat save_format) {
-    switch (save_format) {
-        case SaveFormat::Docx:
-            return LoadFormat::Docx;
-        case SaveFormat::Docm:
-            return LoadFormat::Docm;
-        case SaveFormat::Dotx:
-            return LoadFormat::Dotx;
-        case SaveFormat::Dotm:
-            return LoadFormat::Dotm;
-        case SaveFormat::FlatOpc:
-            return LoadFormat::FlatOpc;
-        case SaveFormat::Rtf:
-            return LoadFormat::Rtf;
-        case SaveFormat::Html:
-            return LoadFormat::Html;
-        case SaveFormat::Odt:
-            return LoadFormat::Odt;
-        case SaveFormat::Text:
-            return LoadFormat::Text;
-        case SaveFormat::Markdown:
-            return LoadFormat::Markdown;
-        case SaveFormat::Xml:
-            return LoadFormat::Xml;
-        default:
-            return LoadFormat::Unknown;
-    }
+    return static_cast<LoadFormat>(static_cast<std::uint8_t>(save_format));
 }
 
 SaveFormat FileFormatUtil::load_format_to_save_format(LoadFormat load_format) {
-    switch (load_format) {
-        case LoadFormat::Docx:
-            return SaveFormat::Docx;
-        case LoadFormat::Docm:
-            return SaveFormat::Docm;
-        case LoadFormat::Dotx:
-            return SaveFormat::Dotx;
-        case LoadFormat::Dotm:
-            return SaveFormat::Dotm;
-        case LoadFormat::FlatOpc:
-            return SaveFormat::FlatOpc;
-        case LoadFormat::Rtf:
-            return SaveFormat::Rtf;
-        case LoadFormat::Html:
-            return SaveFormat::Html;
-        case LoadFormat::Odt:
-            return SaveFormat::Odt;
-        case LoadFormat::Text:
-            return SaveFormat::Text;
-        case LoadFormat::Markdown:
-            return SaveFormat::Markdown;
-        case LoadFormat::Xml:
-            return SaveFormat::Xml;
-        default:
-            return SaveFormat::Unknown;
-    }
+    return static_cast<SaveFormat>(static_cast<std::uint8_t>(load_format));
 }
 
 }  // namespace cdocx
