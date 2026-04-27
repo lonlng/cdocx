@@ -16,6 +16,8 @@
 #include <cdocx/table.h>
 #include <cdocx/template.h>
 
+#include "sync_common.h"
+
 #include <filesystem>
 #include <pugixml.hpp>
 #include <utility>
@@ -267,57 +269,12 @@ bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
         run->set_text("");
 
         pugi::xml_document drawing_doc;
-        pugi::xml_node drawing = drawing_doc.append_child("w:drawing");
+        static int image_id_counter = 1;
+        auto drawing = append_image_drawing(
+            drawing_doc, rel_id, size, ImageAlignment::Center,
+            image_id_counter++, image_path);
         drawing.append_attribute("xmlns:wp")
             .set_value("http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing");
-
-        pugi::xml_node inline_node = drawing.append_child("wp:inline");
-        inline_node.append_attribute("distT").set_value(0);
-        inline_node.append_attribute("distB").set_value(0);
-        inline_node.append_attribute("distL").set_value(0);
-        inline_node.append_attribute("distR").set_value(0);
-
-        pugi::xml_node extent = inline_node.append_child("wp:extent");
-        extent.append_attribute("cx").set_value(size.width_emu());
-        extent.append_attribute("cy").set_value(size.height_emu());
-
-        pugi::xml_node doc_pr = inline_node.append_child("wp:docPr");
-        static int image_id_counter = 1;
-        doc_pr.append_attribute("id").set_value(image_id_counter++);
-        doc_pr.append_attribute("name").set_value("Picture");
-
-        pugi::xml_node graphic = inline_node.append_child("a:graphic");
-        graphic.append_attribute("xmlns:a").set_value(
-            "http://schemas.openxmlformats.org/drawingml/2006/main");
-
-        pugi::xml_node graphic_data = graphic.append_child("a:graphicData");
-        graphic_data.append_attribute("uri").set_value(
-            "http://schemas.openxmlformats.org/drawingml/2006/picture");
-
-        pugi::xml_node pic = graphic_data.append_child("pic:pic");
-        pic.append_attribute("xmlns:pic")
-            .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
-
-        pugi::xml_node nv_pic_pr = pic.append_child("pic:nvPicPr");
-        pugi::xml_node cnv_pr = nv_pic_pr.append_child("pic:cNvPr");
-        cnv_pr.append_attribute("id").set_value(0);
-        cnv_pr.append_attribute("name").set_value(image_path.c_str());
-        nv_pic_pr.append_child("pic:cNvPicPr");
-
-        pugi::xml_node blip_fill = pic.append_child("pic:blipFill");
-        pugi::xml_node blip = blip_fill.append_child("a:blip");
-        blip.append_attribute("r:embed").set_value(rel_id.c_str());
-        pugi::xml_node stretch = blip_fill.append_child("a:stretch");
-        stretch.append_child("a:fillRect");
-
-        pugi::xml_node sp_pr = pic.append_child("pic:spPr");
-        pugi::xml_node xfrm = sp_pr.append_child("a:xfrm");
-        pugi::xml_node ext = xfrm.append_child("a:ext");
-        ext.append_attribute("cx").set_value(size.width_emu());
-        ext.append_attribute("cy").set_value(size.height_emu());
-        pugi::xml_node prst_geom = sp_pr.append_child("a:prstGeom");
-        prst_geom.append_attribute("prst").set_value("rect");
-        prst_geom.append_child("a:avLst");
 
         run->preserve_child(drawing);
         return true;

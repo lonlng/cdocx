@@ -12,6 +12,8 @@
 #include <cdocx/caption_generator.h>
 #include <cdocx/document.h>
 
+#include "sync_common.h"
+
 #include <algorithm>
 #include <cctype>
 #include <fstream>
@@ -444,137 +446,7 @@ bool BookmarkReplacer::insert_image_at_bookmark(Bookmark& bookmark,
 
     // Create run with drawing
     pugi::xml_node run = para.insert_child_before("w:r", bookmark_end);
-
-    // Add drawing element
-    pugi::xml_node drawing = run.append_child("w:drawing");
-
-    // Create inline or anchor based on alignment
-    if (align == ImageAlignment::Center) {
-        // Use inline for center alignment
-        pugi::xml_node inline_node = drawing.append_child("wp:inline");
-        inline_node.append_attribute("distT").set_value(0);
-        inline_node.append_attribute("distB").set_value(0);
-        inline_node.append_attribute("distL").set_value(0);
-        inline_node.append_attribute("distR").set_value(0);
-
-        // Extent
-        pugi::xml_node extent = inline_node.append_child("wp:extent");
-        extent.append_attribute("cx").set_value(size.width_emu());
-        extent.append_attribute("cy").set_value(size.height_emu());
-
-        // Doc properties
-        pugi::xml_node doc_pr = inline_node.append_child("wp:docPr");
-        doc_pr.append_attribute("id").set_value(generate_image_id());
-        doc_pr.append_attribute("name").set_value("Picture");
-
-        // Add graphic data
-        pugi::xml_node graphic = inline_node.append_child("a:graphic");
-        graphic.append_attribute("xmlns:a").set_value(
-            "http://schemas.openxmlformats.org/drawingml/2006/main");
-
-        pugi::xml_node graphic_data = graphic.append_child("a:graphicData");
-        graphic_data.append_attribute("uri").set_value(
-            "http://schemas.openxmlformats.org/drawingml/2006/picture");
-
-        pugi::xml_node pic = graphic_data.append_child("pic:pic");
-        pic.append_attribute("xmlns:pic")
-            .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
-
-        // Non-visual picture properties
-        pugi::xml_node nv_pic_pr = pic.append_child("pic:nvPicPr");
-        pugi::xml_node cnv_pr = nv_pic_pr.append_child("pic:cNvPr");
-        cnv_pr.append_attribute("id").set_value(0);
-        cnv_pr.append_attribute("name").set_value(image_path.c_str());
-        nv_pic_pr.append_child("pic:cNvPicPr");
-
-        // Blip fill
-        pugi::xml_node blip_fill = pic.append_child("pic:blipFill");
-        pugi::xml_node blip = blip_fill.append_child("a:blip");
-        blip.append_attribute("r:embed").set_value(rel_id.c_str());
-        pugi::xml_node stretch = blip_fill.append_child("a:stretch");
-        stretch.append_child("a:fillRect");
-
-        // Shape properties
-        pugi::xml_node sp_pr = pic.append_child("pic:spPr");
-        pugi::xml_node xfrm = sp_pr.append_child("a:xfrm");
-        pugi::xml_node ext = xfrm.append_child("a:ext");
-        ext.append_attribute("cx").set_value(size.width_emu());
-        ext.append_attribute("cy").set_value(size.height_emu());
-        pugi::xml_node prst_geom = sp_pr.append_child("a:prstGeom");
-        prst_geom.append_attribute("prst").set_value("rect");
-        prst_geom.append_child("a:avLst");
-
-    } else {
-        // Use anchor for left/right alignment
-        pugi::xml_node anchor = drawing.append_child("wp:anchor");
-        anchor.append_attribute("simplePos").set_value(0);
-        anchor.append_attribute("relativeHeight").set_value(251658240);
-        anchor.append_attribute("behindDoc").set_value(0);
-        anchor.append_attribute("locked").set_value(0);
-        anchor.append_attribute("layoutInCell").set_value(1);
-        anchor.append_attribute("allowOverlap").set_value(1);
-
-        // Simple position
-        pugi::xml_node simple_pos = anchor.append_child("wp:simplePos");
-        simple_pos.append_attribute("x").set_value(0);
-        simple_pos.append_attribute("y").set_value(0);
-
-        // Horizontal position
-        pugi::xml_node position_h = anchor.append_child("wp:positionH");
-        position_h.append_attribute("relativeFrom").set_value("column");
-        const pugi::xml_node align_node = position_h.append_child("wp:align");
-        align_node.text().set(align == ImageAlignment::Left ? "left" : "right");
-
-        // Vertical position
-        pugi::xml_node position_v = anchor.append_child("wp:positionV");
-        position_v.append_attribute("relativeFrom").set_value("paragraph");
-        const pugi::xml_node pos_v_align = position_v.append_child("wp:align");
-        pos_v_align.text().set("top");
-
-        // Extent
-        pugi::xml_node extent = anchor.append_child("wp:extent");
-        extent.append_attribute("cx").set_value(size.width_emu());
-        extent.append_attribute("cy").set_value(size.height_emu());
-
-        // Doc properties
-        pugi::xml_node doc_pr = anchor.append_child("wp:docPr");
-        doc_pr.append_attribute("id").set_value(generate_image_id());
-        doc_pr.append_attribute("name").set_value("Picture");
-
-        // Graphic data (same as inline)
-        pugi::xml_node graphic = anchor.append_child("a:graphic");
-        graphic.append_attribute("xmlns:a").set_value(
-            "http://schemas.openxmlformats.org/drawingml/2006/main");
-
-        pugi::xml_node graphic_data = graphic.append_child("a:graphicData");
-        graphic_data.append_attribute("uri").set_value(
-            "http://schemas.openxmlformats.org/drawingml/2006/picture");
-
-        pugi::xml_node pic = graphic_data.append_child("pic:pic");
-        pic.append_attribute("xmlns:pic")
-            .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
-
-        pugi::xml_node nv_pic_pr = pic.append_child("pic:nvPicPr");
-        pugi::xml_node cnv_pr = nv_pic_pr.append_child("pic:cNvPr");
-        cnv_pr.append_attribute("id").set_value(0);
-        cnv_pr.append_attribute("name").set_value(image_path.c_str());
-        nv_pic_pr.append_child("pic:cNvPicPr");
-
-        pugi::xml_node blip_fill = pic.append_child("pic:blipFill");
-        pugi::xml_node blip = blip_fill.append_child("a:blip");
-        blip.append_attribute("r:embed").set_value(rel_id.c_str());
-        pugi::xml_node stretch = blip_fill.append_child("a:stretch");
-        stretch.append_child("a:fillRect");
-
-        pugi::xml_node sp_pr = pic.append_child("pic:spPr");
-        pugi::xml_node xfrm = sp_pr.append_child("a:xfrm");
-        pugi::xml_node ext = xfrm.append_child("a:ext");
-        ext.append_attribute("cx").set_value(size.width_emu());
-        ext.append_attribute("cy").set_value(size.height_emu());
-        pugi::xml_node prst_geom = sp_pr.append_child("a:prstGeom");
-        prst_geom.append_attribute("prst").set_value("rect");
-        prst_geom.append_child("a:avLst");
-    }
+    append_image_drawing(run, rel_id, size, align, generate_image_id(), image_path);
 
     return true;
 }

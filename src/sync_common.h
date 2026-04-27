@@ -15,6 +15,10 @@
 
 namespace cdocx {
 
+// Forward declarations (defined in document_builder.h)
+struct ImageSize;
+enum class ImageAlignment : std::uint8_t;
+
 // ---------------------------------------------------------------------------
 // General helpers
 // ---------------------------------------------------------------------------
@@ -102,5 +106,15 @@ void parse_run_format_from_xml(Inline* run, pugi::xml_node run_node);
 void parse_paragraph_format_children_from_xml(pugi::xml_node p_pr, ParagraphFormat& format);
 void serialize_paragraph_to_xml(pugi::xml_node parent, const Paragraph* para);
 void serialize_paragraph_format_children_to_xml(pugi::xml_node p_pr, const ParagraphFormat& format);
+
+// ---------------------------------------------------------------------------
+// Image Drawing
+// ---------------------------------------------------------------------------
+pugi::xml_node append_image_drawing(pugi::xml_node parent,
+                                    const std::string& rel_id,
+                                    const ImageSize& size,
+                                    ImageAlignment align,
+                                    int image_id,
+                                    const std::string& image_name);
 
 }  // namespace cdocx

@@ -934,56 +934,9 @@ bool DocumentBuilder::insert_image(const std::string& image_path, double width, 
 
     // Create run with drawing
     pugi::xml_node run = current_paragraph_.append_child("w:r");
-    pugi::xml_node drawing = run.append_child("w:drawing");
-
-    // Use inline image (simple, in-line with text)
-    pugi::xml_node inline_node = drawing.append_child("wp:inline");
-    inline_node.append_attribute("distT").set_value(0);
-    inline_node.append_attribute("distB").set_value(0);
-    inline_node.append_attribute("distL").set_value(0);
-    inline_node.append_attribute("distR").set_value(0);
-
-    pugi::xml_node extent = inline_node.append_child("wp:extent");
-    extent.append_attribute("cx").set_value(size.width_emu());
-    extent.append_attribute("cy").set_value(size.height_emu());
-
-    pugi::xml_node doc_pr = inline_node.append_child("wp:docPr");
     static int image_id_counter = 1;
-    doc_pr.append_attribute("id").set_value(image_id_counter++);
-    doc_pr.append_attribute("name").set_value("Picture");
-
-    pugi::xml_node graphic = inline_node.append_child("a:graphic");
-    graphic.append_attribute("xmlns:a").set_value(
-        "http://schemas.openxmlformats.org/drawingml/2006/main");
-
-    pugi::xml_node graphic_data = graphic.append_child("a:graphicData");
-    graphic_data.append_attribute("uri").set_value(
-        "http://schemas.openxmlformats.org/drawingml/2006/picture");
-
-    pugi::xml_node pic = graphic_data.append_child("pic:pic");
-    pic.append_attribute("xmlns:pic")
-        .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
-
-    pugi::xml_node nv_pic_pr = pic.append_child("pic:nvPicPr");
-    pugi::xml_node cnv_pr = nv_pic_pr.append_child("pic:cNvPr");
-    cnv_pr.append_attribute("id").set_value(0);
-    cnv_pr.append_attribute("name").set_value(image_path.c_str());
-    nv_pic_pr.append_child("pic:cNvPicPr");
-
-    pugi::xml_node blip_fill = pic.append_child("pic:blipFill");
-    pugi::xml_node blip = blip_fill.append_child("a:blip");
-    blip.append_attribute("r:embed").set_value(rel_id.c_str());
-    pugi::xml_node stretch = blip_fill.append_child("a:stretch");
-    stretch.append_child("a:fillRect");
-
-    pugi::xml_node sp_pr = pic.append_child("pic:spPr");
-    pugi::xml_node xfrm = sp_pr.append_child("a:xfrm");
-    pugi::xml_node ext = xfrm.append_child("a:ext");
-    ext.append_attribute("cx").set_value(size.width_emu());
-    ext.append_attribute("cy").set_value(size.height_emu());
-    pugi::xml_node prst_geom = sp_pr.append_child("a:prstGeom");
-    prst_geom.append_attribute("prst").set_value("rect");
-    prst_geom.append_child("a:avLst");
+    append_image_drawing(run, rel_id, size, ImageAlignment::Center,
+                         image_id_counter++, image_path);
 
     if (doc_) {
         doc_->mark_xml_paragraph_dirty(current_paragraph_);

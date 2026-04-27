@@ -12,6 +12,8 @@
 #include <cdocx/template.h>
 #include <cdocx/template_engine.h>
 
+#include "sync_common.h"
+
 #include <filesystem>
 
 namespace cdocx {
@@ -438,120 +440,7 @@ static bool insert_image_run_after(pugi::xml_node para,
         return false;
     }
 
-    pugi::xml_node drawing = run.append_child("w:drawing");
-
-    if (align == ImageAlignment::Center) {
-        pugi::xml_node inline_node = drawing.append_child("wp:inline");
-        inline_node.append_attribute("distT").set_value(0);
-        inline_node.append_attribute("distB").set_value(0);
-        inline_node.append_attribute("distL").set_value(0);
-        inline_node.append_attribute("distR").set_value(0);
-
-        pugi::xml_node extent = inline_node.append_child("wp:extent");
-        extent.append_attribute("cx").set_value(size.width_emu());
-        extent.append_attribute("cy").set_value(size.height_emu());
-
-        pugi::xml_node doc_props = inline_node.append_child("wp:doc_props");
-        doc_props.append_attribute("id").set_value(image_id);
-        doc_props.append_attribute("name").set_value("Picture");
-
-        pugi::xml_node graphic = inline_node.append_child("a:graphic");
-        graphic.append_attribute("xmlns:a").set_value(
-            "http://schemas.openxmlformats.org/drawingml/2006/main");
-
-        pugi::xml_node graphic_data = graphic.append_child("a:graphicData");
-        graphic_data.append_attribute("uri").set_value(
-            "http://schemas.openxmlformats.org/drawingml/2006/picture");
-
-        pugi::xml_node pic = graphic_data.append_child("pic:pic");
-        pic.append_attribute("xmlns:pic")
-            .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
-
-        pugi::xml_node nv_pic_pr = pic.append_child("pic:nv_pic_pr");
-        pugi::xml_node cnv_pr = nv_pic_pr.append_child("pic:cNvPr");
-        cnv_pr.append_attribute("id").set_value(0);
-        cnv_pr.append_attribute("name").set_value("image");
-        nv_pic_pr.append_child("pic:cNvPicPr");
-
-        pugi::xml_node blip_fill = pic.append_child("pic:blip_fill");
-        pugi::xml_node blip = blip_fill.append_child("a:blip");
-        blip.append_attribute("r:embed").set_value(rel_id.c_str());
-        pugi::xml_node stretch = blip_fill.append_child("a:stretch");
-        stretch.append_child("a:fillRect");
-
-        pugi::xml_node sp_props = pic.append_child("pic:sp_props");
-        pugi::xml_node xfrm = sp_props.append_child("a:xfrm");
-        pugi::xml_node ext = xfrm.append_child("a:ext");
-        ext.append_attribute("cx").set_value(size.width_emu());
-        ext.append_attribute("cy").set_value(size.height_emu());
-        pugi::xml_node prst_geom = sp_props.append_child("a:prst_geom");
-        prst_geom.append_attribute("prst").set_value("rect");
-        prst_geom.append_child("a:avLst");
-    } else {
-        pugi::xml_node anchor = drawing.append_child("wp:anchor");
-        anchor.append_attribute("simple_pos").set_value(0);
-        anchor.append_attribute("relativeHeight").set_value(251658240);
-        anchor.append_attribute("behindDoc").set_value(0);
-        anchor.append_attribute("locked").set_value(0);
-        anchor.append_attribute("layoutInCell").set_value(1);
-        anchor.append_attribute("allowOverlap").set_value(1);
-
-        pugi::xml_node simple_pos = anchor.append_child("wp:simple_pos");
-        simple_pos.append_attribute("x").set_value(0);
-        simple_pos.append_attribute("y").set_value(0);
-
-        pugi::xml_node positionh = anchor.append_child("wp:positionh");
-        positionh.append_attribute("relativeFrom").set_value("column");
-        const pugi::xml_node align_node = positionh.append_child("wp:align");
-        align_node.text().set(align == ImageAlignment::Left ? "left" : "right");
-
-        pugi::xml_node positionv = anchor.append_child("wp:positionv");
-        positionv.append_attribute("relativeFrom").set_value("paragraph");
-        const pugi::xml_node pos_v_align = positionv.append_child("wp:align");
-        pos_v_align.text().set("top");
-
-        pugi::xml_node extent = anchor.append_child("wp:extent");
-        extent.append_attribute("cx").set_value(size.width_emu());
-        extent.append_attribute("cy").set_value(size.height_emu());
-
-        pugi::xml_node doc_props = anchor.append_child("wp:doc_props");
-        doc_props.append_attribute("id").set_value(image_id);
-        doc_props.append_attribute("name").set_value("Picture");
-
-        pugi::xml_node graphic = anchor.append_child("a:graphic");
-        graphic.append_attribute("xmlns:a").set_value(
-            "http://schemas.openxmlformats.org/drawingml/2006/main");
-
-        pugi::xml_node graphic_data = graphic.append_child("a:graphicData");
-        graphic_data.append_attribute("uri").set_value(
-            "http://schemas.openxmlformats.org/drawingml/2006/picture");
-
-        pugi::xml_node pic = graphic_data.append_child("pic:pic");
-        pic.append_attribute("xmlns:pic")
-            .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
-
-        pugi::xml_node nv_pic_pr = pic.append_child("pic:nv_pic_pr");
-        pugi::xml_node cnv_pr = nv_pic_pr.append_child("pic:cNvPr");
-        cnv_pr.append_attribute("id").set_value(0);
-        cnv_pr.append_attribute("name").set_value("image");
-        nv_pic_pr.append_child("pic:cNvPicPr");
-
-        pugi::xml_node blip_fill = pic.append_child("pic:blip_fill");
-        pugi::xml_node blip = blip_fill.append_child("a:blip");
-        blip.append_attribute("r:embed").set_value(rel_id.c_str());
-        pugi::xml_node stretch = blip_fill.append_child("a:stretch");
-        stretch.append_child("a:fillRect");
-
-        pugi::xml_node sp_props = pic.append_child("pic:sp_props");
-        pugi::xml_node xfrm = sp_props.append_child("a:xfrm");
-        pugi::xml_node ext = xfrm.append_child("a:ext");
-        ext.append_attribute("cx").set_value(size.width_emu());
-        ext.append_attribute("cy").set_value(size.height_emu());
-        pugi::xml_node prst_geom = sp_props.append_child("a:prst_geom");
-        prst_geom.append_attribute("prst").set_value("rect");
-        prst_geom.append_child("a:avLst");
-    }
-
+    append_image_drawing(run, rel_id, size, align, image_id, "image");
     return true;
 }
 
