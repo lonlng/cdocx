@@ -120,6 +120,18 @@ std::shared_ptr<Node> CompositeNode::get_child(int index) const {
     return children_[index];
 }
 
+int CompositeNode::index_of(const std::shared_ptr<Node>& child) const {
+    if (!child) {
+        return -1;
+    }
+    for (size_t i = 0; i < children_.size(); ++i) {
+        if (children_[i] == child) {
+            return static_cast<int>(i);
+        }
+    }
+    return -1;
+}
+
 std::shared_ptr<Node> CompositeNode::append_child(std::shared_ptr<Node> child) {
     if (!child) {
         return nullptr;

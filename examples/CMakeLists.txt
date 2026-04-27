@@ -59,6 +59,15 @@ list(APPEND CDOCX_EXAMPLES 19_mail_merge)
 # v0.8.0: TemplateEngine unified API example
 list(APPEND CDOCX_EXAMPLES 21_template_engine)
 
+# v0.8.0: CommentCollection example
+list(APPEND CDOCX_EXAMPLES 20_comments)
+
+# v0.8.0: Watermark example
+list(APPEND CDOCX_EXAMPLES 22_watermark)
+
+# v0.8.0: BookmarkInserter example
+list(APPEND CDOCX_EXAMPLES 23_bookmark_inserter)
+
 # DOM sync validation
 list(APPEND CDOCX_EXAMPLES test_dom_sync)
 
