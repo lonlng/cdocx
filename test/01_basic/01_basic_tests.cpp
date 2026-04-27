@@ -1,7 +1,10 @@
 #include <sstream>
 #include <fstream>
+#include <filesystem>
 #include <gtest/gtest.h>
 #include "cdocx.h"
+
+namespace fs = std::filesystem;
 
 TEST(BasicTest, CheckContentsOfMyTestDocx) {
     cdocx::Document doc("data/my_test.docx");
@@ -83,7 +86,7 @@ TEST(BasicTest, OpenCorruptedZipFailsGracefully) {
     // Should not crash and should not be open
     EXPECT_FALSE(doc.is_open());
 
-    std::remove(bad_file.c_str());
+    fs::remove(bad_file);
 }
 
 TEST(BasicTest, DomApiCanIterateExistingDocument) {

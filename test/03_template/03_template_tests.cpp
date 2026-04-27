@@ -5,6 +5,8 @@
 #include <filesystem>
 #include <fstream>
 
+namespace fs = std::filesystem;
+
 TEST(TemplateTest, TemplateImagePlaceholderDetection) {
     cdocx::Document doc("template.docx");
     doc.open();
