@@ -352,7 +352,7 @@ include(FetchContent)
 FetchContent_Declare(
     cdocx
     GIT_REPOSITORY https://github.com/lonlng/CDocx.git
-    GIT_TAG v0.7.0
+    GIT_TAG v0.8.0
 )
 FetchContent_MakeAvailable(cdocx)
 target_link_libraries(your_target PRIVATE cdocx::cdocx)

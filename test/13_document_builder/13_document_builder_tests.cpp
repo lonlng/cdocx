@@ -361,9 +361,9 @@ TEST(CDocxFactoryTest, CreateDocument) {
 }
 
 TEST(CDocxFactoryTest, VersionInfo) {
-    EXPECT_EQ(CDocx::version(), "0.7.0");
+    EXPECT_EQ(CDocx::version(), "0.8.0");
     EXPECT_NE(CDocx::version_string().find("CDocx"), std::string::npos);
-    EXPECT_NE(CDocx::version_string().find("0.7.0"), std::string::npos);
+    EXPECT_NE(CDocx::version_string().find("0.8.0"), std::string::npos);
 }
 
 TEST(CDocxFactoryTest, DocumentBuilderFactory) {

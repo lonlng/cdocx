@@ -1,7 +1,7 @@
 /**
  * @file cdocx.h
  * @brief CDocx v2.0 - Main aggregated header
- * @version 0.7.0
+ * @version 0.8.0
  *
  * CDocx is a modern C++17 library for creating, reading, and writing
  * Microsoft Office Word (.docx) files.
@@ -25,9 +25,9 @@
 
 // Version information
 inline constexpr int kVersionMajor = 0;
-inline constexpr int kVersionMinor = 7;
+inline constexpr int kVersionMinor = 8;
 inline constexpr int kVersionPatch = 0;
-inline constexpr char kVersion[] = "0.7.0";
+inline constexpr char kVersion[] = "0.8.0";
 
 // Backward-compatible macros
 #define CDOCX_VERSION_MAJOR kVersionMajor
