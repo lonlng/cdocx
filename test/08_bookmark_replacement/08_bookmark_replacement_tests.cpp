@@ -188,9 +188,8 @@ TEST(ReplacementStatsTest, ResetClearsAllCounters) {
 // ============================================================================
 
 TEST(BookmarkReplacerTest, ConstructionWithValidDocument) {
-    const std::string test_file = "test_replacer_doc.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_replacer_doc.docx");
+    const std::string& test_file = temp_doc.path();
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -198,7 +197,6 @@ TEST(BookmarkReplacerTest, ConstructionWithValidDocument) {
     cdocx::BookmarkReplacer replacer(&doc);
     EXPECT_EQ(replacer.get_stats().total(), 0);
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 // ============================================================================
@@ -206,9 +204,8 @@ TEST(BookmarkReplacerTest, ConstructionWithValidDocument) {
 // ============================================================================
 
 TEST(BookmarkReplacerIntegrationTest, TextReplacementPreservesFormat) {
-    const std::string test_file = "test_format_preserve.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_format_preserve.docx");
+    const std::string& test_file = temp_doc.path();
 
     // Create document with formatted bookmark content
     {
@@ -234,13 +231,11 @@ TEST(BookmarkReplacerIntegrationTest, TextReplacementPreservesFormat) {
         EXPECT_TRUE(doc.is_open());
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(CaptionGeneratorTest, CountExistingFiguresWithEmptyDocument) {
-    const std::string test_file = "test_empty_caption.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_empty_caption.docx");
+    const std::string& test_file = temp_doc.path();
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -249,13 +244,11 @@ TEST(CaptionGeneratorTest, CountExistingFiguresWithEmptyDocument) {
     int count = cdocx::CaptionGenerator::count_existing_figures(&doc);
     EXPECT_EQ(count, 0);
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(CaptionGeneratorTest, GetNextFigureNumberWithEmptyDocument) {
-    const std::string test_file = "test_next_fig.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_next_fig.docx");
+    const std::string& test_file = temp_doc.path();
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -264,13 +257,11 @@ TEST(CaptionGeneratorTest, GetNextFigureNumberWithEmptyDocument) {
     int next = cdocx::CaptionGenerator::get_next_figure_number(&doc);
     EXPECT_EQ(next, 1);
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(CaptionGeneratorTest, IsFigureCaptionWithNonCaptionText) {
-    const std::string test_file = "test_non_caption.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_non_caption.docx");
+    const std::string& test_file = temp_doc.path();
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -285,13 +276,11 @@ TEST(CaptionGeneratorTest, IsFigureCaptionWithNonCaptionText) {
     pugi::xml_node para = doc_xml->child("w:document").child("w:body").child("w:p");
     EXPECT_FALSE(cdocx::CaptionGenerator::is_figure_caption(para));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(CaptionGeneratorTest, ExtractCaptionTextWithNonCaptionReturnsEmpty) {
-    const std::string test_file = "test_extract_non_caption.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_extract_non_caption.docx");
+    const std::string& test_file = temp_doc.path();
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -306,13 +295,11 @@ TEST(CaptionGeneratorTest, ExtractCaptionTextWithNonCaptionReturnsEmpty) {
     std::string text = cdocx::CaptionGenerator::extract_caption_text(para);
     EXPECT_EQ(text, "");
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(BookmarkReplacerTest, ListBookmarksReturnsEmptyForDocumentWithoutBookmarks) {
-    const std::string test_file = "test_no_bookmarks.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_no_bookmarks.docx");
+    const std::string& test_file = temp_doc.path();
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -323,13 +310,11 @@ TEST(BookmarkReplacerTest, ListBookmarksReturnsEmptyForDocumentWithoutBookmarks)
 
     EXPECT_TRUE(bookmarks.empty());
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(BookmarkReplacerTest, HasBookmarkReturnsFalseForNonExistentBookmark) {
-    const std::string test_file = "test_has_bookmark.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_has_bookmark.docx");
+    const std::string& test_file = temp_doc.path();
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -340,13 +325,11 @@ TEST(BookmarkReplacerTest, HasBookmarkReturnsFalseForNonExistentBookmark) {
     EXPECT_FALSE(replacer.has_bookmark("NON_EXISTENT"));
     EXPECT_FALSE(replacer.has_bookmark(""));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(BookmarkReplacerTest, GetBookmarkTextReturnsEmptyForNonExistentBookmark) {
-    const std::string test_file = "test_get_text.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_get_text.docx");
+    const std::string& test_file = temp_doc.path();
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -357,13 +340,11 @@ TEST(BookmarkReplacerTest, GetBookmarkTextReturnsEmptyForNonExistentBookmark) {
     std::string text = replacer.get_bookmark_text("NON_EXISTENT");
     EXPECT_EQ(text, "");
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(BookmarkReplacerTest, BatchReplacementWithEmptyMap) {
-    const std::string test_file = "test_batch_empty.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_batch_empty.docx");
+    const std::string& test_file = temp_doc.path();
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -377,13 +358,11 @@ TEST(BookmarkReplacerTest, BatchReplacementWithEmptyMap) {
     EXPECT_EQ(count, 0);
     EXPECT_EQ(replacer.get_stats().total(), 0);
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(BookmarkReplacerTest, ReplaceTextReturnsFalseForNonExistentBookmark) {
-    const std::string test_file = "test_replace_nonexistent.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_replace_nonexistent.docx");
+    const std::string& test_file = temp_doc.path();
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -395,13 +374,11 @@ TEST(BookmarkReplacerTest, ReplaceTextReturnsFalseForNonExistentBookmark) {
     EXPECT_FALSE(result);
     EXPECT_EQ(replacer.get_stats().fail_count, 1);
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(BookmarkReplacerIntegrationTest, FullBookmarkWorkflowWithDocumentCreationAndModification) {
-    const std::string test_file = "test_full_workflow.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_full_workflow.docx");
+    const std::string& test_file = temp_doc.path();
 
     // Create document
     {
@@ -436,7 +413,6 @@ TEST(BookmarkReplacerIntegrationTest, FullBookmarkWorkflowWithDocumentCreationAn
         EXPECT_EQ(fig_count, 0);
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 // ============================================================================
@@ -444,9 +420,8 @@ TEST(BookmarkReplacerIntegrationTest, FullBookmarkWorkflowWithDocumentCreationAn
 // ============================================================================
 
 TEST(DocumentBookmarksTest, GetBookmarksEmptyDocument) {
-    const std::string test_file = "test_doc_bookmarks_empty.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_doc_bookmarks_empty.docx");
+    const std::string& test_file = temp_doc.path();
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -456,13 +431,11 @@ TEST(DocumentBookmarksTest, GetBookmarksEmptyDocument) {
     EXPECT_TRUE(bookmarks.get_names().empty());
     EXPECT_FALSE(bookmarks.contains("AnyBookmark"));
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(DocumentBookmarksTest, GetBookmarksFromDomCreatedBookmarks) {
-    const std::string test_file = "test_doc_bookmarks_dom.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_doc_bookmarks_dom.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -499,13 +472,11 @@ TEST(DocumentBookmarksTest, GetBookmarksFromDomCreatedBookmarks) {
         EXPECT_EQ(bm->get_name(), "TestBookmark");
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(DocumentBookmarksTest, GetBookmarksMultipleBookmarks) {
-    const std::string test_file = "test_doc_bookmarks_multi.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_doc_bookmarks_multi.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -551,13 +522,11 @@ TEST(DocumentBookmarksTest, GetBookmarksMultipleBookmarks) {
         EXPECT_TRUE(bm1.get_name() == "BookmarkA" || bm1.get_name() == "BookmarkB");
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(DocumentBookmarksTest, BookmarkCollectionAddCreatesBookmark) {
-    const std::string test_file = "test_bookmark_collection_add.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_bookmark_collection_add.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -595,13 +564,11 @@ TEST(DocumentBookmarksTest, BookmarkCollectionAddCreatesBookmark) {
         EXPECT_TRUE(bookmarks.contains("NewBookmark"));
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(DocumentBookmarksTest, BookmarkCollectionAddDuplicateReturnsExisting) {
-    const std::string test_file = "test_bookmark_add_dup.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_bookmark_add_dup.docx");
+    const std::string& test_file = temp_doc.path();
 
     cdocx::Document doc;
     ASSERT_TRUE(doc.create_empty(test_file));
@@ -624,13 +591,11 @@ TEST(DocumentBookmarksTest, BookmarkCollectionAddDuplicateReturnsExisting) {
     EXPECT_EQ(bm2.get_name(), "DupBookmark");
     EXPECT_EQ(bookmarks.count(), 1u);
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 TEST(BookmarkInserterTest, BatchSortsByLengthDescendingToAvoidSubstringHiding) {
-    const std::string test_file = "test_bmk_inserter_substring.docx";
-
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_bmk_inserter_substring.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         cdocx::Document doc;
@@ -679,7 +644,6 @@ TEST(BookmarkInserterTest, BatchSortsByLengthDescendingToAvoidSubstringHiding) {
         EXPECT_EQ(long_bm->get_text(), "YK52+320~YK52+470");
     }
 
-    if (fs::exists(test_file)) fs::remove(test_file);
 }
 
 /** @} */
