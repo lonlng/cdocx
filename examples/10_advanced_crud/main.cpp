@@ -27,14 +27,11 @@ void print_section(const std::string& title) {
 void example_create_document() {
     print_section("Example 1: Creating Documents with DocumentBuilder");
     
-    Document doc("output_create.docx");
-    if (!doc.create_empty()) {
-        std::cerr << "Failed to create document!" << std::endl;
-        return;
-    }
-    
+    // Create document using CDocx factory (recommended)
+    auto doc = cdocx::CDocx::create_document();
+
     // Use DocumentBuilder for easy document construction
-    DocumentBuilder builder(&doc);
+    DocumentBuilder builder(doc.get());
     
     // Add title with formatting
     builder.set_bold(true);
@@ -120,7 +117,7 @@ void example_create_document() {
     builder.writeln("Document created successfully!");
     
     // Save document
-    doc.save();
+    cdocx::CDocx::save_document(doc, "output_create.docx");
     std::cout << "Document saved to: output_create.docx" << std::endl;
 }
 
@@ -132,15 +129,14 @@ void example_read_document() {
     
     // First create a document to read
     {
-        Document doc("output_read.docx");
-        doc.create_empty();
-        DocumentBuilder builder(&doc);
+        auto doc = cdocx::CDocx::create_document();
+        DocumentBuilder builder(doc.get());
         builder.writeln("First paragraph with some text.");
         builder.writeln("Second paragraph for demonstration.");
         builder.start_bookmark("MyBookmark");
         builder.writeln("This is inside a bookmark.");
         builder.end_bookmark("MyBookmark");
-        doc.save();
+        cdocx::CDocx::save_document(doc, "output_read.docx");
     }
     
     // Now read it
@@ -192,13 +188,12 @@ void example_update_document() {
     
     // Create a document
     {
-        Document doc("output_update.docx");
-        doc.create_empty();
-        DocumentBuilder builder(&doc);
+        auto doc = cdocx::CDocx::create_document();
+        DocumentBuilder builder(doc.get());
         builder.writeln("The quick brown fox jumps over the lazy dog.");
         builder.writeln("Old text that needs to be replaced.");
         builder.writeln("Another line with old content.");
-        doc.save();
+        cdocx::CDocx::save_document(doc, "output_update.docx");
     }
     
     // Update the document
@@ -233,15 +228,14 @@ void example_delete_content() {
     
     // Create a document with bookmarks
     {
-        Document doc("output_delete.docx");
-        doc.create_empty();
-        DocumentBuilder builder(&doc);
+        auto doc = cdocx::CDocx::create_document();
+        DocumentBuilder builder(doc.get());
         builder.writeln("This paragraph will stay.");
         builder.start_bookmark("ToRemove");
         builder.writeln("This paragraph will be removed with the bookmark.");
         builder.end_bookmark("ToRemove");
         builder.writeln("This paragraph will also stay.");
-        doc.save();
+        cdocx::CDocx::save_document(doc, "output_delete.docx");
     }
     
     // Delete content
@@ -290,13 +284,12 @@ void example_search_and_process() {
     
     // Create a document
     {
-        Document doc("output_search.docx");
-        doc.create_empty();
-        DocumentBuilder builder(&doc);
+        auto doc = cdocx::CDocx::create_document();
+        DocumentBuilder builder(doc.get());
         builder.writeln("Invoice #12345 for Customer A");
         builder.writeln("Invoice #12346 for Customer B");
         builder.writeln("Invoice #12347 for Customer C");
-        doc.save();
+        cdocx::CDocx::save_document(doc, "output_search.docx");
     }
     
     // Process the document
