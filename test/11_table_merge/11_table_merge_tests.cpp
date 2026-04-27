@@ -7,15 +7,18 @@
 #include <gtest/gtest.h>
 #include <cdocx.h>
 #include <filesystem>
+#include "../test_helpers.h"
 
 using namespace cdocx;
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 
 // ============================================================================
 // Horizontal Merge Tests
 // ============================================================================
 
 TEST(TableMergeTest, HorizontalMergeTwoCells) {
+    TempDoc temp_doc("test_hmerge.docx");
     Document doc("test_hmerge.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -43,10 +46,10 @@ TEST(TableMergeTest, HorizontalMergeTwoCells) {
     EXPECT_EQ(table->get_row(1)->get_cells().get_count(), 3u);
 
     doc.save();
-    fs::remove("test_hmerge.docx");
 }
 
 TEST(TableMergeTest, VerticalMergeTwoCells) {
+    TempDoc temp_doc("test_vmerge.docx");
     Document doc("test_vmerge.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -66,10 +69,10 @@ TEST(TableMergeTest, VerticalMergeTwoCells) {
     EXPECT_TRUE(row1_cell->is_vertical_merge_continue());
 
     doc.save();
-    fs::remove("test_vmerge.docx");
 }
 
 TEST(TableMergeTest, RectangularMerge2x2) {
+    TempDoc temp_doc("test_rect_merge.docx");
     Document doc("test_rect_merge.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -94,10 +97,10 @@ TEST(TableMergeTest, RectangularMerge2x2) {
     EXPECT_TRUE(row1_merged->is_vertical_merge_continue());
 
     doc.save();
-    fs::remove("test_rect_merge.docx");
 }
 
 TEST(TableMergeTest, MergeByCellPointers) {
+    TempDoc temp_doc("test_ptr_merge.docx");
     Document doc("test_ptr_merge.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -111,7 +114,6 @@ TEST(TableMergeTest, MergeByCellPointers) {
     EXPECT_EQ(merged->get_horizontal_merge_span(), 2);
 
     doc.save();
-    fs::remove("test_ptr_merge.docx");
 }
 
 // ============================================================================
@@ -119,6 +121,7 @@ TEST(TableMergeTest, MergeByCellPointers) {
 // ============================================================================
 
 TEST(TableMergeTest, SplitHorizontalMerge) {
+    TempDoc temp_doc("test_split_h.docx");
     Document doc("test_split_h.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -136,10 +139,10 @@ TEST(TableMergeTest, SplitHorizontalMerge) {
     EXPECT_EQ(table->get_cell(0, 1)->get_horizontal_merge_span(), 1);
 
     doc.save();
-    fs::remove("test_split_h.docx");
 }
 
 TEST(TableMergeTest, SplitVerticalMerge) {
+    TempDoc temp_doc("test_split_v.docx");
     Document doc("test_split_v.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -154,7 +157,6 @@ TEST(TableMergeTest, SplitVerticalMerge) {
     EXPECT_FALSE(table->get_cell(1, 0)->get_cell_format().vertical_merge);
 
     doc.save();
-    fs::remove("test_split_v.docx");
 }
 
 // ============================================================================
@@ -162,6 +164,7 @@ TEST(TableMergeTest, SplitVerticalMerge) {
 // ============================================================================
 
 TEST(TableMergeTest, MergeRoundTrip) {
+    TempDoc temp_doc("test_merge_rt.docx");
     Document doc("test_merge_rt.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -188,10 +191,10 @@ TEST(TableMergeTest, MergeRoundTrip) {
     EXPECT_EQ(cell00->get_horizontal_merge_span(), 2);
 
     doc2.close();
-    fs::remove("test_merge_rt.docx");
 }
 
 TEST(TableMergeTest, GetCellAfterMerge) {
+    TempDoc temp_doc("test_getcell_merge.docx");
     Document doc("test_getcell_merge.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -207,10 +210,10 @@ TEST(TableMergeTest, GetCellAfterMerge) {
     EXPECT_EQ(table->get_cell(0, 4), nullptr); // Out of bounds
 
     doc.save();
-    fs::remove("test_getcell_merge.docx");
 }
 
 TEST(TableMergeTest, InvalidMergeReturnsNull) {
+    TempDoc temp_doc("test_invalid_merge.docx");
     Document doc("test_invalid_merge.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -224,7 +227,6 @@ TEST(TableMergeTest, InvalidMergeReturnsNull) {
     EXPECT_NE(table->merge_cells(1, 1, 0, 0), nullptr);
 
     doc.save();
-    fs::remove("test_invalid_merge.docx");
 }
 
 // ============================================================================
@@ -232,6 +234,7 @@ TEST(TableMergeTest, InvalidMergeReturnsNull) {
 // ============================================================================
 
 TEST(TableColumnTest, InsertColumnAtIndex) {
+    TempDoc temp_doc("test_insert_col.docx");
     Document doc("test_insert_col.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -251,10 +254,10 @@ TEST(TableColumnTest, InsertColumnAtIndex) {
     EXPECT_EQ(table->get_cell(0, 3)->get_text(), "02");
 
     doc.save();
-    fs::remove("test_insert_col.docx");
 }
 
 TEST(TableColumnTest, DeleteColumnAtIndex) {
+    TempDoc temp_doc("test_delete_col.docx");
     Document doc("test_delete_col.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -273,10 +276,10 @@ TEST(TableColumnTest, DeleteColumnAtIndex) {
     EXPECT_EQ(table->get_cell(0, 2)->get_text(), "03");
 
     doc.save();
-    fs::remove("test_delete_col.docx");
 }
 
 TEST(TableColumnTest, InsertDeleteColumnRoundTrip) {
+    TempDoc temp_doc("test_col_rt.docx");
     Document doc("test_col_rt.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -300,7 +303,6 @@ TEST(TableColumnTest, InsertDeleteColumnRoundTrip) {
     EXPECT_EQ(loaded_table->get_cell(0, 2)->get_text(), "B");
 
     doc2.close();
-    fs::remove("test_col_rt.docx");
 }
 
 // ============================================================================
@@ -308,6 +310,7 @@ TEST(TableColumnTest, InsertDeleteColumnRoundTrip) {
 // ============================================================================
 
 TEST(TableAutoFitTest, AutoFitToContents) {
+    TempDoc temp_doc("test_autofit_contents.docx");
     Document doc("test_autofit_contents.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -330,10 +333,10 @@ TEST(TableAutoFitTest, AutoFitToContents) {
     EXPECT_STREQ(tblLayout.attribute("w:type").value(), "autofit");
 
     doc2.close();
-    fs::remove("test_autofit_contents.docx");
 }
 
 TEST(TableAutoFitTest, AutoFitToWindow) {
+    TempDoc temp_doc("test_autofit_window.docx");
     Document doc("test_autofit_window.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -360,10 +363,10 @@ TEST(TableAutoFitTest, AutoFitToWindow) {
     EXPECT_STREQ(tblLayout.attribute("w:type").value(), "autofit");
 
     doc2.close();
-    fs::remove("test_autofit_window.docx");
 }
 
 TEST(TableAutoFitTest, FixedColumnWidth) {
+    TempDoc temp_doc("test_autofit_fixed.docx");
     Document doc("test_autofit_fixed.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -386,10 +389,10 @@ TEST(TableAutoFitTest, FixedColumnWidth) {
     EXPECT_STREQ(tblLayout.attribute("w:type").value(), "fixed");
 
     doc2.close();
-    fs::remove("test_autofit_fixed.docx");
 }
 
 TEST(TableAutoFitTest, AutoFitRoundTrip) {
+    TempDoc temp_doc("test_autofit_rt.docx");
     Document doc("test_autofit_rt.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -408,7 +411,6 @@ TEST(TableAutoFitTest, AutoFitRoundTrip) {
     EXPECT_TRUE(loaded_table->get_table_format().allow_auto_fit);
 
     doc2.close();
-    fs::remove("test_autofit_rt.docx");
 }
 
 // ============================================================================
@@ -416,6 +418,7 @@ TEST(TableAutoFitTest, AutoFitRoundTrip) {
 // ============================================================================
 
 TEST(TableOperationsTest, InsertRow) {
+    TempDoc temp_doc("test_ops_insert_row.docx");
     Document doc("test_ops_insert_row.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -430,10 +433,10 @@ TEST(TableOperationsTest, InsertRow) {
     EXPECT_EQ(table->get_cell(2, 0)->get_text(), "R1C0");
 
     doc.save();
-    fs::remove("test_ops_insert_row.docx");
 }
 
 TEST(TableOperationsTest, AppendRow) {
+    TempDoc temp_doc("test_ops_append_row.docx");
     Document doc("test_ops_append_row.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -445,10 +448,10 @@ TEST(TableOperationsTest, AppendRow) {
     EXPECT_EQ(TableOperations::get_column_count(*table), 2u);
 
     doc.save();
-    fs::remove("test_ops_append_row.docx");
 }
 
 TEST(TableOperationsTest, DeleteRow) {
+    TempDoc temp_doc("test_ops_delete_row.docx");
     Document doc("test_ops_delete_row.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -464,10 +467,10 @@ TEST(TableOperationsTest, DeleteRow) {
     EXPECT_EQ(table->get_cell(1, 0)->get_text(), "C");
 
     doc.save();
-    fs::remove("test_ops_delete_row.docx");
 }
 
 TEST(TableOperationsTest, InsertAndDeleteCell) {
+    TempDoc temp_doc("test_ops_cell.docx");
     Document doc("test_ops_cell.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -483,10 +486,10 @@ TEST(TableOperationsTest, InsertAndDeleteCell) {
     EXPECT_EQ(row->get_cells().get_count(), 2u);
 
     doc.save();
-    fs::remove("test_ops_cell.docx");
 }
 
 TEST(TableOperationsTest, MergeCellsHorizontal) {
+    TempDoc temp_doc("test_ops_merge_h.docx");
     Document doc("test_ops_merge_h.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -500,10 +503,10 @@ TEST(TableOperationsTest, MergeCellsHorizontal) {
     EXPECT_EQ(table->get_cell(0, 0)->get_horizontal_merge_span(), 2);
 
     doc.save();
-    fs::remove("test_ops_merge_h.docx");
 }
 
 TEST(TableOperationsTest, SetAndGetCellText) {
+    TempDoc temp_doc("test_ops_cell_text.docx");
     Document doc("test_ops_cell_text.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -516,10 +519,10 @@ TEST(TableOperationsTest, SetAndGetCellText) {
     EXPECT_EQ(TableOperations::get_cell_text(*cell), "Hello TableOperations");
 
     doc.save();
-    fs::remove("test_ops_cell_text.docx");
 }
 
 TEST(TableLegacyIteratorTest, CellParagraphsAccess) {
+    TempDoc temp_doc("test_legacy_cell_para.docx");
     Document doc("test_legacy_cell_para.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -571,10 +574,10 @@ TEST(TableLegacyIteratorTest, CellParagraphsAccess) {
     EXPECT_NE(para->get_text().find("Cell 0,1"), std::string::npos);
 
     doc2.close();
-    fs::remove("test_legacy_cell_para.docx");
 }
 
 TEST(TablePropertiesTest, ApplyToXmlNode) {
+    TempDoc temp_doc("test_table_props.docx");
     Document doc("test_table_props.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -637,5 +640,4 @@ TEST(TablePropertiesTest, ApplyToXmlNode) {
     EXPECT_EQ(mar_left.attribute("w:w").as_int(), 200);
 
     doc.save();
-    fs::remove("test_table_props.docx");
 }
