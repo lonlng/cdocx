@@ -167,6 +167,12 @@ std::shared_ptr<Field> Paragraph::append_field(FieldType type) {
     return field;
 }
 
+std::shared_ptr<Field> Paragraph::insert_field(int index, FieldType type) {
+    auto field = std::make_shared<Field>(get_document(), type);
+    insert_child(index, field);
+    return field;
+}
+
 // ============================================================================
 // Special Character Operations (DOM API)
 // ============================================================================
@@ -255,6 +261,42 @@ void Paragraph::prepend_text(const std::string& text) {
         first_run->prepend_text(text);
     } else {
         append_run(text);
+    }
+}
+
+// ============================================================================
+// Utility Methods
+// ============================================================================
+
+int Paragraph::join_runs_with_same_formatting() {
+    int merged_count = 0;
+    auto children = get_children();
+
+    for (size_t i = 0; i + 1 < children.size();) {
+        auto run1 = std::dynamic_pointer_cast<Run>(children[i]);
+        auto run2 = std::dynamic_pointer_cast<Run>(children[i + 1]);
+
+        if (!run1 || !run2) {
+            ++i;
+            continue;
+        }
+
+        if (run1->get_font() == run2->get_font()) {
+            run1->append_text(run2->get_text());
+            remove_child(run2);
+            children.erase(children.begin() + i + 1);
+            ++merged_count;
+        } else {
+            ++i;
+        }
+    }
+
+    return merged_count;
+}
+
+void Paragraph::ensure_minimum() {
+    if (!get_first_run()) {
+        append_run("");
     }
 }
 

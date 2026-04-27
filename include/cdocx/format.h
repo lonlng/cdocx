@@ -181,6 +181,13 @@ class Shading {
         background = Color::auto_color();
         texture = "clear";
     }
+
+    bool operator==(const Shading& other) const {
+        return foreground == other.foreground && background == other.background &&
+               texture == other.texture;
+    }
+
+    bool operator!=(const Shading& other) const { return !(*this == other); }
 };
 
 // ============================================================================
@@ -337,6 +344,22 @@ class Font {
         hidden = false;
         shading.clear();
     }
+
+    bool operator==(const Font& other) const {
+        return name == other.name && name_ascii == other.name_ascii &&
+               name_far_east == other.name_far_east && name_other == other.name_other &&
+               size == other.size && color == other.color && bold == other.bold &&
+               italic == other.italic && underline == other.underline &&
+               underline_color == other.underline_color && strike == other.strike &&
+               double_strike == other.double_strike &&
+               strikethrough == other.strikethrough && script_type == other.script_type &&
+               highlight == other.highlight && spacing == other.spacing &&
+               scale == other.scale && kerning == other.kerning &&
+               small_caps == other.small_caps && all_caps == other.all_caps &&
+               shading == other.shading;
+    }
+
+    bool operator!=(const Font& other) const { return !(*this == other); }
 };
 
 // ============================================================================
