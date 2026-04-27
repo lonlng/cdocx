@@ -731,3 +731,187 @@ TEST(ShadingSyncTest, TableShadingRoundTrip) {
 
     doc2.close();
 }
+
+// ============================================================================
+// Form Field Tests
+// ============================================================================
+
+TEST(DocumentBuilderFormFieldTest, InsertTextInput) {
+    Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    DocumentBuilder builder(&doc);
+    auto field = builder.insert_text_input(
+        "NameField",
+        TextFormFieldType::Regular,
+        "UPPERCASE",
+        "John Doe",
+        50);
+
+    ASSERT_NE(field, nullptr);
+    EXPECT_EQ(field->get_name(), "NameField");
+    EXPECT_EQ(field->get_form_field_type(), FormFieldType::TextInput);
+    EXPECT_EQ(field->get_text_input_type(), TextFormFieldType::Regular);
+    EXPECT_EQ(field->get_text_input_format(), "UPPERCASE");
+    EXPECT_EQ(field->get_text_input_default(), "John Doe");
+    EXPECT_EQ(field->get_max_length(), 50);
+}
+
+TEST(DocumentBuilderFormFieldTest, InsertCheckBox) {
+    Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    DocumentBuilder builder(&doc);
+    auto field = builder.insert_check_box("AgreeField", true, 12);
+
+    ASSERT_NE(field, nullptr);
+    EXPECT_EQ(field->get_name(), "AgreeField");
+    EXPECT_EQ(field->get_form_field_type(), FormFieldType::CheckBox);
+    EXPECT_TRUE(field->get_checked());
+    EXPECT_TRUE(field->get_default_value());
+    EXPECT_EQ(field->get_check_box_size(), 12.0);
+}
+
+TEST(DocumentBuilderFormFieldTest, InsertComboBox) {
+    Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    DocumentBuilder builder(&doc);
+    std::vector<std::string> items = {"Option A", "Option B", "Option C"};
+    auto field = builder.insert_combo_box("SelectField", items, 1);
+
+    ASSERT_NE(field, nullptr);
+    EXPECT_EQ(field->get_name(), "SelectField");
+    EXPECT_EQ(field->get_form_field_type(), FormFieldType::ComboBox);
+    EXPECT_EQ(field->get_drop_down_items().size(), 3u);
+    EXPECT_EQ(field->get_drop_down_items()[0], "Option A");
+    EXPECT_EQ(field->get_drop_down_items()[1], "Option B");
+    EXPECT_EQ(field->get_drop_down_items()[2], "Option C");
+    EXPECT_EQ(field->get_drop_down_selected_index(), 1);
+}
+
+TEST(DocumentBuilderFormFieldTest, TextInputRoundTrip) {
+    TempDoc temp_doc("test_ff_textinput.docx");
+    Document doc("test_ff_textinput.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    DocumentBuilder builder(&doc);
+    builder.insert_text_input(
+        "RTField",
+        TextFormFieldType::Number,
+        "0.00",
+        "100",
+        10);
+    doc.sync_from_physical_tree();
+    doc.save();
+
+    Document doc2("test_ff_textinput.docx");
+    doc2.open();
+    auto* doc_xml = doc2.get_document_xml();
+    ASSERT_NE(doc_xml, nullptr);
+
+    bool found_ffdata = false;
+    for (auto p = doc_xml->child("w:document").child("w:body").child("w:p"); p; p = p.next_sibling("w:p")) {
+        for (auto r = p.child("w:r"); r; r = r.next_sibling("w:r")) {
+            auto fld_char = r.child("w:fldChar");
+            if (fld_char && std::string(fld_char.attribute("w:fldCharType").value()) == "begin") {
+                auto ffdata = fld_char.child("w:ffData");
+                if (ffdata) {
+                    auto text_input = ffdata.child("w:textInput");
+                    if (text_input) {
+                        found_ffdata = true;
+                        EXPECT_EQ(ffdata.child("w:name").attribute("w:val").value(), std::string("RTField"));
+                        EXPECT_EQ(text_input.child("w:type").attribute("w:val").value(), std::string("number"));
+                        EXPECT_EQ(text_input.child("w:default").attribute("w:val").value(), std::string("100"));
+                        EXPECT_EQ(text_input.child("w:maxLength").attribute("w:val").as_int(), 10);
+                    }
+                }
+            }
+        }
+    }
+    EXPECT_TRUE(found_ffdata);
+
+    doc2.close();
+}
+
+TEST(DocumentBuilderFormFieldTest, CheckBoxRoundTrip) {
+    TempDoc temp_doc("test_ff_checkbox.docx");
+    Document doc("test_ff_checkbox.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    DocumentBuilder builder(&doc);
+    builder.insert_check_box("CBField", false, true, 10);
+    doc.sync_from_physical_tree();
+    doc.save();
+
+    Document doc2("test_ff_checkbox.docx");
+    doc2.open();
+    auto* doc_xml = doc2.get_document_xml();
+    ASSERT_NE(doc_xml, nullptr);
+
+    bool found_ffdata = false;
+    for (auto p = doc_xml->child("w:document").child("w:body").child("w:p"); p; p = p.next_sibling("w:p")) {
+        for (auto r = p.child("w:r"); r; r = r.next_sibling("w:r")) {
+            auto fld_char = r.child("w:fldChar");
+            if (fld_char && std::string(fld_char.attribute("w:fldCharType").value()) == "begin") {
+                auto ffdata = fld_char.child("w:ffData");
+                if (ffdata) {
+                    auto check_box = ffdata.child("w:checkBox");
+                    if (check_box) {
+                        found_ffdata = true;
+                        EXPECT_EQ(ffdata.child("w:name").attribute("w:val").value(), std::string("CBField"));
+                        EXPECT_EQ(check_box.child("w:size").attribute("w:val").as_int(), 20);
+                        auto checked = check_box.child("w:checked");
+                        auto default_checked = check_box.child("w:default");
+                        EXPECT_TRUE(checked || default_checked);
+                    }
+                }
+            }
+        }
+    }
+    EXPECT_TRUE(found_ffdata);
+
+    doc2.close();
+}
+
+TEST(DocumentBuilderFormFieldTest, ComboBoxRoundTrip) {
+    TempDoc temp_doc("test_ff_combobox.docx");
+    Document doc("test_ff_combobox.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    DocumentBuilder builder(&doc);
+    std::vector<std::string> items = {"Red", "Green", "Blue"};
+    builder.insert_combo_box("DDField", items, 2);
+    doc.sync_from_physical_tree();
+    doc.save();
+
+    Document doc2("test_ff_combobox.docx");
+    doc2.open();
+    auto* doc_xml = doc2.get_document_xml();
+    ASSERT_NE(doc_xml, nullptr);
+
+    bool found_ffdata = false;
+    for (auto p = doc_xml->child("w:document").child("w:body").child("w:p"); p; p = p.next_sibling("w:p")) {
+        for (auto r = p.child("w:r"); r; r = r.next_sibling("w:r")) {
+            auto fld_char = r.child("w:fldChar");
+            if (fld_char && std::string(fld_char.attribute("w:fldCharType").value()) == "begin") {
+                auto ffdata = fld_char.child("w:ffData");
+                if (ffdata) {
+                    auto dd_list = ffdata.child("w:ddList");
+                    if (dd_list) {
+                        found_ffdata = true;
+                        EXPECT_EQ(ffdata.child("w:name").attribute("w:val").value(), std::string("DDField"));
+                        int item_count = 0;
+                        for (auto li = dd_list.child("w:listEntry"); li; li = li.next_sibling("w:listEntry")) {
+                            ++item_count;
+                        }
+                        EXPECT_EQ(item_count, 3);
+                    }
+                }
+            }
+        }
+    }
+    EXPECT_TRUE(found_ffdata);
+
+    doc2.close();
+}
