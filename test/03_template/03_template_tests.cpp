@@ -4,8 +4,10 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
+#include "../test_helpers.h"
 
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 
 TEST(TemplateTest, TemplateImagePlaceholderDetection) {
     cdocx::Document doc("template.docx");
@@ -63,7 +65,8 @@ TEST(TemplateTest, TemplateSetAndReplaceOperations) {
 }
 
 TEST(TemplateTest, ReplaceInHeadersAndFooters) {
-    cdocx::Document doc("test_hf_template.docx");
+    TempDoc temp_doc("test_hf_template.docx");
+    cdocx::Document doc(temp_doc.path());
     ASSERT_TRUE(doc.create_empty());
 
     auto sect = doc.get_first_section();
@@ -106,7 +109,7 @@ TEST(TemplateTest, ReplaceInHeadersAndFooters) {
     doc.sync_to_physical_tree();
     doc.save();
 
-    cdocx::Document doc2("test_hf_template.docx");
+    cdocx::Document doc2(temp_doc.path());
     doc2.open();
     ASSERT_TRUE(doc2.is_open());
 
@@ -126,7 +129,6 @@ TEST(TemplateTest, ReplaceInHeadersAndFooters) {
     EXPECT_NE(fparas.front()->get_text().find("1 of 10"), std::string::npos);
 
     doc2.close();
-    std::filesystem::remove("test_hf_template.docx");
 }
 
 // Minimal 1x1 pixel PNG image data (for testing image placeholder replacement)
@@ -143,8 +145,9 @@ const unsigned char MINIMAL_PNG[] = {
 };
 
 TEST(TemplateTest, ReplaceImagePlaceholder) {
-    std::string test_docx = "test_image_template.docx";
+    TempDoc temp_doc("test_image_template.docx");
     std::string test_image = "test_image_logo.png";
+    TempDoc temp_img(test_image);
 
     // Create minimal test image
     {
@@ -154,7 +157,7 @@ TEST(TemplateTest, ReplaceImagePlaceholder) {
 
     // Create document with image placeholder
     {
-        cdocx::Document doc(test_docx);
+        cdocx::Document doc(temp_doc.path());
         ASSERT_TRUE(doc.create_empty());
 
         auto sect = doc.get_first_section();
@@ -173,7 +176,7 @@ TEST(TemplateTest, ReplaceImagePlaceholder) {
 
     // Reopen and verify image was embedded
     {
-        cdocx::Document doc2(test_docx);
+        cdocx::Document doc2(temp_doc.path());
         doc2.open();
         ASSERT_TRUE(doc2.is_open());
 
@@ -206,17 +209,14 @@ TEST(TemplateTest, ReplaceImagePlaceholder) {
 
         doc2.close();
     }
-
-    std::filesystem::remove(test_docx);
-    std::filesystem::remove(test_image);
 }
 
 TEST(TemplateTest, ReplaceCrossRunPlaceholder) {
-    std::string test_docx = "test_cross_run_template.docx";
+    TempDoc temp_doc("test_cross_run_template.docx");
 
     // Create document with placeholder split across multiple runs
     {
-        cdocx::Document doc(test_docx);
+        cdocx::Document doc(temp_doc.path());
         ASSERT_TRUE(doc.create_empty());
 
         auto sect = doc.get_first_section();
@@ -243,7 +243,7 @@ TEST(TemplateTest, ReplaceCrossRunPlaceholder) {
 
     // Reopen and verify replacement
     {
-        cdocx::Document doc2(test_docx);
+        cdocx::Document doc2(temp_doc.path());
         doc2.open();
         ASSERT_TRUE(doc2.is_open());
 
@@ -268,16 +268,14 @@ TEST(TemplateTest, ReplaceCrossRunPlaceholder) {
 
         doc2.close();
     }
-
-    std::filesystem::remove(test_docx);
 }
 
 TEST(TemplateTest, ReplaceCrossRunPlaceholderWithSurroundingText) {
-    std::string test_docx = "test_cross_run_surround_template.docx";
+    TempDoc temp_doc("test_cross_run_surround_template.docx");
 
     // Create document with text before and after the split placeholder
     {
-        cdocx::Document doc(test_docx);
+        cdocx::Document doc(temp_doc.path());
         ASSERT_TRUE(doc.create_empty());
 
         auto sect = doc.get_first_section();
@@ -302,7 +300,7 @@ TEST(TemplateTest, ReplaceCrossRunPlaceholderWithSurroundingText) {
 
     // Reopen and verify replacement preserved surrounding text
     {
-        cdocx::Document doc2(test_docx);
+        cdocx::Document doc2(temp_doc.path());
         doc2.open();
         ASSERT_TRUE(doc2.is_open());
 
@@ -327,8 +325,6 @@ TEST(TemplateTest, ReplaceCrossRunPlaceholderWithSurroundingText) {
 
         doc2.close();
     }
-
-    std::filesystem::remove(test_docx);
 }
 
 /*

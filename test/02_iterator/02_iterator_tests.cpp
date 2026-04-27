@@ -1,15 +1,13 @@
 #include <sstream>
 #include <gtest/gtest.h>
 #include <cdocx.h>
+#include "../test_helpers.h"
 
 TEST(IteratorTest, CheckContentsOfMyTestDocxWithIterator) {
     cdocx::Document doc("data/my_test.docx");
     doc.open();
 
-    // Skip test if document cannot be opened
-    if (!doc.is_open()) {
-        GTEST_SKIP() << "Could not open data/my_test.docx, skipping test";
-    }
+    cdocx::test::skip_if_not_open(doc, "data/my_test.docx");
 
     std::ostringstream ss;
 

@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <gtest/gtest.h>
 #include "cdocx.h"
+#include "../test_helpers.h"
 
 namespace fs = std::filesystem;
 
@@ -10,10 +11,7 @@ TEST(BasicTest, CheckContentsOfMyTestDocx) {
     cdocx::Document doc("data/my_test.docx");
     doc.open();
 
-    // Skip test if document cannot be opened
-    if (!doc.is_open()) {
-        GTEST_SKIP() << "Could not open data/my_test.docx, skipping test";
-    }
+    cdocx::test::skip_if_not_open(doc, "data/my_test.docx");
 
     std::ostringstream ss;
 
@@ -38,21 +36,17 @@ TEST(BasicTest, IsOpenReflectsStateCorrectly) {
     EXPECT_FALSE(doc.is_open());
 
     doc.open();
-    if (doc.is_open()) {
-        EXPECT_TRUE(doc.is_open());
-        doc.close();
-        EXPECT_FALSE(doc.is_open());
-    } else {
-        GTEST_SKIP() << "Could not open data/my_test.docx, skipping test";
-    }
+    cdocx::test::skip_if_not_open(doc, "data/my_test.docx");
+
+    EXPECT_TRUE(doc.is_open());
+    doc.close();
+    EXPECT_FALSE(doc.is_open());
 }
 
 TEST(BasicTest, CloseThenReopenSameDocument) {
     cdocx::Document doc("data/my_test.docx");
     doc.open();
-    if (!doc.is_open()) {
-        GTEST_SKIP() << "Could not open data/my_test.docx, skipping test";
-    }
+    cdocx::test::skip_if_not_open(doc, "data/my_test.docx");
 
     doc.close();
     EXPECT_FALSE(doc.is_open());
@@ -92,9 +86,7 @@ TEST(BasicTest, OpenCorruptedZipFailsGracefully) {
 TEST(BasicTest, DomApiCanIterateExistingDocument) {
     cdocx::Document doc("data/my_test.docx");
     doc.open();
-    if (!doc.is_open()) {
-        GTEST_SKIP() << "Could not open data/my_test.docx, skipping test";
-    }
+    cdocx::test::skip_if_not_open(doc, "data/my_test.docx");
 
     auto sections = doc.get_sections();
     EXPECT_GE(sections.get_count(), 1u);
