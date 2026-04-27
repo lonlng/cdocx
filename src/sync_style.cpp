@@ -15,30 +15,31 @@ namespace cdocx {
 // Style Serialization Helpers
 // ============================================================================
 
+struct StyleTypeMapping {
+    StyleType type{};
+    const char* xml_value{};
+};
+
+static const StyleTypeMapping kStyleTypeMappings[] = {
+    {StyleType::Character, "character"},
+    {StyleType::Table, "table"},
+    {StyleType::List, "numbering"},
+};
+
 static const char* style_type_to_string(StyleType type) {
-    switch (type) {
-        case StyleType::Paragraph:
-            return "paragraph";
-        case StyleType::Character:
-            return "character";
-        case StyleType::Table:
-            return "table";
-        case StyleType::List:
-            return "numbering";
-        default:
-            return "paragraph";
+    for (const auto& m : kStyleTypeMappings) {
+        if (m.type == type) {
+            return m.xml_value;
+        }
     }
+    return "paragraph";
 }
 
 static StyleType string_to_style_type(const char* str) {
-    if (std::strcmp(str, "character") == 0) {
-        return StyleType::Character;
-    }
-    if (std::strcmp(str, "table") == 0) {
-        return StyleType::Table;
-    }
-    if (std::strcmp(str, "numbering") == 0) {
-        return StyleType::List;
+    for (const auto& m : kStyleTypeMappings) {
+        if (std::strcmp(m.xml_value, str) == 0) {
+            return m.type;
+        }
     }
     return StyleType::Paragraph;
 }
