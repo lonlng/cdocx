@@ -233,6 +233,20 @@ int main() {
     builder.writeln("This is the summary section.");
     builder.end_bookmark("SUMMARY");
 
+    // Form fields
+    builder.write("Name: ");
+    builder.insert_text_input("Name", cdocx::TextFormFieldType::Regular, "", "Enter name", 50);
+    builder.writeln();
+
+    builder.write("Agree: ");
+    builder.insert_check_box("Agree", true, 10);
+    builder.writeln();
+
+    std::vector<std::string> options = {"Option A", "Option B", "Option C"};
+    builder.write("Select: ");
+    builder.insert_combo_box("Selection", options, 0);
+    builder.writeln();
+
     cdocx::CDocx::save_document(*doc, "output.docx");
     return 0;
 }
