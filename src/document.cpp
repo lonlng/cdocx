@@ -7,7 +7,7 @@
  * @author lonlng
  * @copyright MIT License
  * @date 2026
- * @version 0.7.0 - DOM Architecture
+ * @version 0.8.0 - DOM Architecture
  */
 
 #include <cdocx/advanced.h>
@@ -329,28 +329,24 @@ void Document::protect(ProtectionType type, const std::string& password) {
 
     auto doc_prot = root.append_child("w:documentProtection");
 
-    const char* edit_val = nullptr;
-    switch (type) {
-        case ProtectionType::AllowOnlyRevisions:
-            edit_val = "trackedChanges";
+    struct ProtectionTypeMapping {
+        ProtectionType type{};
+        const char* xml_value{};
+    };
+    static const ProtectionTypeMapping kProtectionTypeMappings[] = {
+        {ProtectionType::AllowOnlyRevisions, "trackedChanges"},
+        {ProtectionType::AllowOnlyComments, "comments"},
+        {ProtectionType::AllowOnlyFormFields, "forms"},
+        {ProtectionType::ReadOnly, "readOnly"},
+    };
+    const char* edit_val = "none";
+    for (const auto& m : kProtectionTypeMappings) {
+        if (m.type == type) {
+            edit_val = m.xml_value;
             break;
-        case ProtectionType::AllowOnlyComments:
-            edit_val = "comments";
-            break;
-        case ProtectionType::AllowOnlyFormFields:
-            edit_val = "forms";
-            break;
-        case ProtectionType::ReadOnly:
-            edit_val = "readOnly";
-            break;
-        default:
-            edit_val = "none";
-            break;
+        }
     }
-
-    if (edit_val) {
-        doc_prot.append_attribute("w:edit").set_value(edit_val);
-    }
+    doc_prot.append_attribute("w:edit").set_value(edit_val);
     doc_prot.append_attribute("w:enforcement").set_value("1");
 
     if (!password.empty()) {

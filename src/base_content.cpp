@@ -1,7 +1,7 @@
 /**
  * @file base_content.cpp
  * @brief Implementation of base content classes (Run, SpecialChar, Field, etc.)
- * @version 0.7.0 - DOM Style
+ * @version 0.8.0 - DOM Style
  */
 
 #include <cdocx/base.h>

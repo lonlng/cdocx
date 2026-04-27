@@ -4,7 +4,7 @@
  * @author Claude Code
  * @copyright MIT License
  * @date 2026
- * @version 0.7.0
+ * @version 0.8.0
  */
 
 #include <cdocx/bookmark_inserter.h>
