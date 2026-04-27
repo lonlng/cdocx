@@ -32,6 +32,14 @@ namespace cdocx {
 
 namespace {
 
+// Default page setup constants (US Letter, 1-inch margins) in twips
+// 1 inch = 1440 twips = 72 points * 20 twips/point
+constexpr int kTwipsPerInch = 1440;
+constexpr int kDefaultPageWidthTwips = 8 * kTwipsPerInch + 720;   // 8.5"
+constexpr int kDefaultPageHeightTwips = 11 * kTwipsPerInch;       // 11"
+constexpr int kDefaultMarginTwips = kTwipsPerInch;                // 1"
+constexpr int kDefaultTabStopTwips = 720;                         // 0.5"
+
 pugi::xml_node get_settings_root(const Document* doc) {
     const pugi::xml_document* settings = doc->get_settings();
     if (!settings) {
@@ -405,7 +413,7 @@ double Document::get_default_tab_stop() const {
         return 36.0;
     }
 
-    const int twips = default_tab_stop.attribute("w:val").as_int(720);
+    const int twips = default_tab_stop.attribute("w:val").as_int(kDefaultTabStopTwips);
     return twips / 20.0;  // twips to points
 }
 
@@ -1194,14 +1202,14 @@ bool Document::create_empty_document() {
         // Add section properties
         auto sect_pr = body.append_child("w:sectPr");
         auto pg_sz = sect_pr.append_child("w:pgSz");
-        pg_sz.append_attribute("w:w").set_value("12240");
-        pg_sz.append_attribute("w:h").set_value("15840");
+        pg_sz.append_attribute("w:w").set_value(kDefaultPageWidthTwips);
+        pg_sz.append_attribute("w:h").set_value(kDefaultPageHeightTwips);
 
         auto pg_mar = sect_pr.append_child("w:pgMar");
-        pg_mar.append_attribute("w:top").set_value("1440");
-        pg_mar.append_attribute("w:right").set_value("1440");
-        pg_mar.append_attribute("w:bottom").set_value("1440");
-        pg_mar.append_attribute("w:left").set_value("1440");
+        pg_mar.append_attribute("w:top").set_value(kDefaultMarginTwips);
+        pg_mar.append_attribute("w:right").set_value(kDefaultMarginTwips);
+        pg_mar.append_attribute("w:bottom").set_value(kDefaultMarginTwips);
+        pg_mar.append_attribute("w:left").set_value(kDefaultMarginTwips);
     }
 
     // Create word/styles.xml with default Normal style
@@ -1227,7 +1235,9 @@ bool Document::create_empty_document() {
         root.append_attribute("xmlns:w").set_value(
             "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
         root.append_child("w:zoom").append_attribute("w:percent").set_value("100");
-        root.append_child("w:defaultTabStop").append_attribute("w:val").set_value("720");
+        root.append_child("w:defaultTabStop")
+            .append_attribute("w:val")
+            .set_value(kDefaultTabStopTwips);
         root.append_child("w:characterSpacingControl")
             .append_attribute("w:val")
             .set_value("doNotCompress");
