@@ -6,11 +6,13 @@
 
 #include <gtest/gtest.h>
 #include <cdocx.h>
+#include "../test_helpers.h"
 #include <filesystem>
 #include <fstream>
 
 using namespace cdocx;
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 
 // ============================================================================
 // NumberStyle String Round-Trip Tests
@@ -46,6 +48,7 @@ TEST(SectionAndListTest, NumberStyleStringRoundTrip) {
 }
 
 TEST(SectionAndListTest, NumberStyleRoundTripInDocument) {
+    TempDoc temp_doc("test_numbering_style_rt.docx");
     Document doc("test_numbering_style_rt.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -78,7 +81,6 @@ TEST(SectionAndListTest, NumberStyleRoundTripInDocument) {
     ASSERT_NE(numFmt, pugi::xml_node());
     EXPECT_STREQ(numFmt.attribute("w:val").value(), "upperRoman");
 
-    fs::remove("test_numbering_style_rt.docx");
 }
 
 // ============================================================================
@@ -86,6 +88,7 @@ TEST(SectionAndListTest, NumberStyleRoundTripInDocument) {
 // ============================================================================
 
 TEST(SectionAndListTest, GetFirstSection) {
+    TempDoc temp_doc("test_section.docx");
     Document doc("test_section.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -94,10 +97,10 @@ TEST(SectionAndListTest, GetFirstSection) {
 
     doc.save();
     EXPECT_TRUE(fs::exists("test_section.docx"));
-    fs::remove("test_section.docx");
 }
 
 TEST(SectionAndListTest, SectionCount) {
+    TempDoc temp_doc("test_section.docx");
     Document doc("test_section.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -105,10 +108,10 @@ TEST(SectionAndListTest, SectionCount) {
 
     doc.save();
     EXPECT_TRUE(fs::exists("test_section.docx"));
-    fs::remove("test_section.docx");
 }
 
 TEST(SectionAndListTest, SectionProperties) {
+    TempDoc temp_doc("test_section.docx");
     Document doc("test_section.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -125,10 +128,10 @@ TEST(SectionAndListTest, SectionProperties) {
 
     doc.save();
     EXPECT_TRUE(fs::exists("test_section.docx"));
-    fs::remove("test_section.docx");
 }
 
 TEST(SectionAndListTest, AddSection) {
+    TempDoc temp_doc("test_section.docx");
     Document doc("test_section.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -140,7 +143,6 @@ TEST(SectionAndListTest, AddSection) {
 
     doc.save();
     EXPECT_TRUE(fs::exists("test_section.docx"));
-    fs::remove("test_section.docx");
 }
 
 // ============================================================================
@@ -148,6 +150,7 @@ TEST(SectionAndListTest, AddSection) {
 // ============================================================================
 
 TEST(SectionAndListTest, AddBulletedListDefinition) {
+    TempDoc temp_doc("test_numbering.docx");
     Document doc("test_numbering.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -160,10 +163,10 @@ TEST(SectionAndListTest, AddBulletedListDefinition) {
 
     doc.save();
     EXPECT_TRUE(fs::exists("test_numbering.docx"));
-    fs::remove("test_numbering.docx");
 }
 
 TEST(SectionAndListTest, AddNumberedListDefinition) {
+    TempDoc temp_doc("test_numbering.docx");
     Document doc("test_numbering.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -172,10 +175,10 @@ TEST(SectionAndListTest, AddNumberedListDefinition) {
 
     doc.save();
     EXPECT_TRUE(fs::exists("test_numbering.docx"));
-    fs::remove("test_numbering.docx");
 }
 
 TEST(SectionAndListTest, AddChineseListDefinition) {
+    TempDoc temp_doc("test_numbering.docx");
     Document doc("test_numbering.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -184,10 +187,10 @@ TEST(SectionAndListTest, AddChineseListDefinition) {
 
     doc.save();
     EXPECT_TRUE(fs::exists("test_numbering.docx"));
-    fs::remove("test_numbering.docx");
 }
 
 TEST(SectionAndListTest, AddOutlineListDefinition) {
+    TempDoc temp_doc("test_numbering.docx");
     Document doc("test_numbering.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -196,7 +199,6 @@ TEST(SectionAndListTest, AddOutlineListDefinition) {
 
     doc.save();
     EXPECT_TRUE(fs::exists("test_numbering.docx"));
-    fs::remove("test_numbering.docx");
 }
 
 // ============================================================================
@@ -204,6 +206,7 @@ TEST(SectionAndListTest, AddOutlineListDefinition) {
 // ============================================================================
 
 TEST(SectionAndListTest, ApplyNumberingToParagraph) {
+    TempDoc temp_doc("test_para_numbering.docx");
     Document doc("test_para_numbering.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -229,10 +232,10 @@ TEST(SectionAndListTest, ApplyNumberingToParagraph) {
         EXPECT_TRUE(check.good());
     }
 
-    fs::remove("test_para_numbering.docx");
 }
 
 TEST(SectionAndListTest, RemoveNumbering) {
+    TempDoc temp_doc("test_para_numbering.docx");
     Document doc("test_para_numbering.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -252,10 +255,10 @@ TEST(SectionAndListTest, RemoveNumbering) {
 
     doc.save();
     EXPECT_TRUE(fs::exists("test_para_numbering.docx"));
-    fs::remove("test_para_numbering.docx");
 }
 
 TEST(SectionAndListTest, ChangeListLevel) {
+    TempDoc temp_doc("test_para_numbering.docx");
     Document doc("test_para_numbering.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -275,7 +278,6 @@ TEST(SectionAndListTest, ChangeListLevel) {
 
     doc.save();
     EXPECT_TRUE(fs::exists("test_para_numbering.docx"));
-    fs::remove("test_para_numbering.docx");
 }
 
 // ============================================================================
@@ -283,6 +285,7 @@ TEST(SectionAndListTest, ChangeListLevel) {
 // ============================================================================
 
 TEST(SectionAndListTest, NumberingXmlSerialization) {
+    TempDoc temp_doc("test_numbering_xml.docx");
     Document doc("test_numbering_xml.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -321,7 +324,6 @@ TEST(SectionAndListTest, NumberingXmlSerialization) {
         }
     }
 
-    fs::remove("test_numbering_xml.docx");
 }
 
 // ============================================================================
@@ -331,6 +333,7 @@ TEST(SectionAndListTest, NumberingXmlSerialization) {
 TEST(SectionAndListTest, SectionLoadingFromXml) {
     // Create document with custom section properties
     {
+        TempDoc temp_doc("test_section_load.docx");
         Document doc("test_section_load.docx");
         ASSERT_TRUE(doc.create_empty());
 
@@ -356,7 +359,6 @@ TEST(SectionAndListTest, SectionLoadingFromXml) {
         }
     }
 
-    fs::remove("test_section_load.docx");
 }
 
 // ============================================================================
@@ -364,6 +366,7 @@ TEST(SectionAndListTest, SectionLoadingFromXml) {
 // ============================================================================
 
 TEST(SectionAndListTest, HeaderFooterLinkToPrevious) {
+    TempDoc temp_doc("test_hf_link.docx");
     Document doc("test_hf_link.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -415,10 +418,10 @@ TEST(SectionAndListTest, HeaderFooterLinkToPrevious) {
     EXPECT_TRUE(s2->has_footer());
 
     doc2.close();
-    fs::remove("test_hf_link.docx");
 }
 
 TEST(SectionAndListTest, HeaderFooterLinkToPreviousByType) {
+    TempDoc temp_doc("test_hf_link_type.docx");
     Document doc("test_hf_link_type.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -450,5 +453,4 @@ TEST(SectionAndListTest, HeaderFooterLinkToPreviousByType) {
     EXPECT_TRUE(s2->has_header(HeaderFooterType::Default));
 
     doc2.close();
-    fs::remove("test_hf_link_type.docx");
 }

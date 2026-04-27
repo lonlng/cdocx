@@ -5,15 +5,18 @@
  */
 
 #include <cdocx.h>
+#include "../test_helpers.h"
 #include <gtest/gtest.h>
 #include <filesystem>
 #include <vector>
 #include <map>
 
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 using namespace cdocx;
 
 TEST(MailMergeTest, GetFieldNamesEmpty) {
+    TempDoc temp_doc("test_mail_empty.docx");
     Document doc("test_mail_empty.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -21,10 +24,10 @@ TEST(MailMergeTest, GetFieldNamesEmpty) {
     auto names = mail_merge.get_field_names();
     EXPECT_TRUE(names.empty());
 
-    fs::remove("test_mail_empty.docx");
 }
 
 TEST(MailMergeTest, GetFieldNamesFromDom) {
+    TempDoc temp_doc("test_mail_names.docx");
     Document doc("test_mail_names.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -52,10 +55,10 @@ TEST(MailMergeTest, GetFieldNamesFromDom) {
     EXPECT_EQ(names[0], "FirstName");
     EXPECT_EQ(names[1], "LastName");
 
-    fs::remove("test_mail_names.docx");
 }
 
 TEST(MailMergeTest, ExecuteSimpleMerge) {
+    TempDoc temp_doc("test_mail_exec.docx");
     Document doc("test_mail_exec.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -88,10 +91,10 @@ TEST(MailMergeTest, ExecuteSimpleMerge) {
     auto text = doc2.get_text();
     EXPECT_NE(text.find("Dear Alice, your score is 95."), std::string::npos);
 
-    fs::remove("test_mail_exec.docx");
 }
 
 TEST(MailMergeTest, ExecuteWithMissingField) {
+    TempDoc temp_doc("test_mail_missing.docx");
     Document doc("test_mail_missing.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -118,10 +121,10 @@ TEST(MailMergeTest, ExecuteWithMissingField) {
     auto text = doc2.get_text();
     EXPECT_NE(text.find("Hello !"), std::string::npos);
 
-    fs::remove("test_mail_missing.docx");
 }
 
 TEST(MailMergeTest, ExecuteWithVectorPairs) {
+    TempDoc temp_doc("test_mail_vec.docx");
     Document doc("test_mail_vec.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -146,10 +149,10 @@ TEST(MailMergeTest, ExecuteWithVectorPairs) {
     auto text = doc2.get_text();
     EXPECT_NE(text.find("ELEGANCE Labs"), std::string::npos);
 
-    fs::remove("test_mail_vec.docx");
 }
 
 TEST(MailMergeTest, DeleteFields) {
+    TempDoc temp_doc("test_mail_delete.docx");
     Document doc("test_mail_delete.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -177,7 +180,6 @@ TEST(MailMergeTest, DeleteFields) {
     auto text = doc2.get_text();
     EXPECT_NE(text.find("AB"), std::string::npos);
 
-    fs::remove("test_mail_delete.docx");
 }
 
 // ============================================================================
@@ -185,6 +187,7 @@ TEST(MailMergeTest, DeleteFields) {
 // ============================================================================
 
 TEST(MailMergeTest, GetAndSetCleanupOptions) {
+    TempDoc temp_doc("test_mail_opts.docx");
     Document doc("test_mail_opts.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -203,10 +206,10 @@ TEST(MailMergeTest, GetAndSetCleanupOptions) {
                                         MailMergeCleanupOptions::RemoveEmptyParagraphs),
               0);
 
-    fs::remove("test_mail_opts.docx");
 }
 
 TEST(MailMergeTest, CleanupOptionsNonePreservesEmptyParagraph) {
+    TempDoc temp_doc("test_mail_none.docx");
     Document doc("test_mail_none.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -237,10 +240,10 @@ TEST(MailMergeTest, CleanupOptionsNonePreservesEmptyParagraph) {
     // With None cleanup, the empty paragraph should be preserved
     EXPECT_GE(paras.get_count(), 2u);
 
-    fs::remove("test_mail_none.docx");
 }
 
 TEST(MailMergeTest, CleanupOptionsRemoveEmptyParagraphs) {
+    TempDoc temp_doc("test_mail_empty_para.docx");
     Document doc("test_mail_empty_para.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -280,10 +283,10 @@ TEST(MailMergeTest, CleanupOptionsRemoveEmptyParagraphs) {
     auto text = doc2.get_text();
     EXPECT_NE(text.find("Remaining text"), std::string::npos);
 
-    fs::remove("test_mail_empty_para.docx");
 }
 
 TEST(MailMergeTest, MultipleParagraphsMerge) {
+    TempDoc temp_doc("test_mail_multi_para.docx");
     Document doc("test_mail_multi_para.docx");
     ASSERT_TRUE(doc.create_empty());
 
@@ -317,5 +320,4 @@ TEST(MailMergeTest, MultipleParagraphsMerge) {
     EXPECT_NE(text.find("Hello Bob"), std::string::npos);
     EXPECT_NE(text.find("Score: 88"), std::string::npos);
 
-    fs::remove("test_mail_multi_para.docx");
 }
