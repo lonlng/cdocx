@@ -17,6 +17,63 @@
 
 namespace cdocx {
 
+namespace {
+
+// ============================================================================
+// Lookup Tables for TextProperties enum↔string mapping
+// ============================================================================
+
+struct UnderlineStyleMapping {
+    TextProperties::UnderlineStyle style;
+    const char* xml_value;
+};
+
+static const UnderlineStyleMapping kUnderlineStyleMappings[] = {
+    {TextProperties::UnderlineStyle::Words, "words"},
+    {TextProperties::UnderlineStyle::Single, "single"},
+    {TextProperties::UnderlineStyle::Double, "double"},
+    {TextProperties::UnderlineStyle::Thick, "thick"},
+    {TextProperties::UnderlineStyle::Dotted, "dotted"},
+    {TextProperties::UnderlineStyle::DottedHeavy, "dottedHeavy"},
+    {TextProperties::UnderlineStyle::Dash, "dash"},
+    {TextProperties::UnderlineStyle::DashedHeavy, "dashedHeavy"},
+    {TextProperties::UnderlineStyle::DashLong, "dashLong"},
+    {TextProperties::UnderlineStyle::DashLongHeavy, "dashLongHeavy"},
+    {TextProperties::UnderlineStyle::DotDash, "dotDash"},
+    {TextProperties::UnderlineStyle::DashDotHeavy, "dashDotHeavy"},
+    {TextProperties::UnderlineStyle::DotDotDash, "dotDotDash"},
+    {TextProperties::UnderlineStyle::DashDotDotHeavy, "dashDotDotHeavy"},
+    {TextProperties::UnderlineStyle::Wave, "wave"},
+    {TextProperties::UnderlineStyle::WavyDouble, "wavyDouble"},
+    {TextProperties::UnderlineStyle::WavyHeavy, "wavyHeavy"},
+};
+
+struct HighlightMapping {
+    TextProperties::Highlight value;
+    const char* name;
+};
+
+static const HighlightMapping kHighlightMappings[] = {
+    {TextProperties::Highlight::Black, "black"},
+    {TextProperties::Highlight::White, "white"},
+    {TextProperties::Highlight::Red, "red"},
+    {TextProperties::Highlight::Green, "green"},
+    {TextProperties::Highlight::Blue, "blue"},
+    {TextProperties::Highlight::Yellow, "yellow"},
+    {TextProperties::Highlight::Cyan, "cyan"},
+    {TextProperties::Highlight::Magenta, "magenta"},
+    {TextProperties::Highlight::DarkRed, "darkRed"},
+    {TextProperties::Highlight::DarkGreen, "darkGreen"},
+    {TextProperties::Highlight::DarkBlue, "darkBlue"},
+    {TextProperties::Highlight::DarkYellow, "darkYellow"},
+    {TextProperties::Highlight::DarkCyan, "darkCyan"},
+    {TextProperties::Highlight::DarkMagenta, "darkMagenta"},
+    {TextProperties::Highlight::DarkGray, "darkGray"},
+    {TextProperties::Highlight::LightGray, "lightGray"},
+};
+
+}  // namespace
+
 // ============================================================================
 // TextProperties Implementation
 // ============================================================================
@@ -89,62 +146,12 @@ void TextProperties::apply_to(pugi::xml_node run_node) const {
     // Underline
     if (underline.style != UnderlineStyle::None) {
         pugi::xml_node u = r_pr.append_child("w:u");
-        const char* style_str = "single";  // NOLINT(clang-analyzer-deadcode.DeadStores)
-        switch (underline.style) {
-            case UnderlineStyle::Words:
-                style_str = "words";
+        const char* style_str = "single";
+        for (const auto& m : kUnderlineStyleMappings) {
+            if (m.style == underline.style) {
+                style_str = m.xml_value;
                 break;
-            case UnderlineStyle::Single:
-                style_str = "single";
-                break;
-            case UnderlineStyle::Double:
-                style_str = "double";
-                break;
-            case UnderlineStyle::Thick:
-                style_str = "thick";
-                break;
-            case UnderlineStyle::Dotted:
-                style_str = "dotted";
-                break;
-            case UnderlineStyle::DottedHeavy:
-                style_str = "dottedHeavy";
-                break;
-            case UnderlineStyle::Dash:
-                style_str = "dash";
-                break;
-            case UnderlineStyle::DashedHeavy:
-                style_str = "dashedHeavy";
-                break;
-            case UnderlineStyle::DashLong:
-                style_str = "dashLong";
-                break;
-            case UnderlineStyle::DashLongHeavy:
-                style_str = "dashLongHeavy";
-                break;
-            case UnderlineStyle::DotDash:
-                style_str = "dotDash";
-                break;
-            case UnderlineStyle::DashDotHeavy:
-                style_str = "dashDotHeavy";
-                break;
-            case UnderlineStyle::DotDotDash:
-                style_str = "dotDotDash";
-                break;
-            case UnderlineStyle::DashDotDotHeavy:
-                style_str = "dashDotDotHeavy";
-                break;
-            case UnderlineStyle::Wave:
-                style_str = "wave";
-                break;
-            case UnderlineStyle::WavyDouble:
-                style_str = "wavyDouble";
-                break;
-            case UnderlineStyle::WavyHeavy:
-                style_str = "wavyHeavy";
-                break;
-            default:
-                style_str = "single";
-                break;
+            }
         }
         u.append_attribute("w:val").set_value(style_str);
         if (underline.color != "auto") {
@@ -171,27 +178,12 @@ void TextProperties::apply_to(pugi::xml_node run_node) const {
 
     // Highlight
     if (highlight != Highlight::None) {
-        static const char* highlight_names[] = {"none",
-                                                "black",
-                                                "white",
-                                                "red",
-                                                "green",
-                                                "blue",
-                                                "yellow",
-                                                "cyan",
-                                                "magenta",
-                                                "darkRed",
-                                                "darkGreen",
-                                                "darkBlue",
-                                                "darkYellow",
-                                                "darkCyan",
-                                                "darkMagenta",
-                                                "darkGray",
-                                                "lightGray"};
-        const int idx = static_cast<int>(highlight);
-        if (idx >= 0 && idx < sizeof(highlight_names) / sizeof(highlight_names[0])) {
-            pugi::xml_node highlight_node = r_pr.append_child("w:highlight");
-            highlight_node.append_attribute("w:val").set_value(highlight_names[idx]);
+        for (const auto& m : kHighlightMappings) {
+            if (m.value == highlight) {
+                pugi::xml_node highlight_node = r_pr.append_child("w:highlight");
+                highlight_node.append_attribute("w:val").set_value(m.name);
+                break;
+            }
         }
     }
 
@@ -271,40 +263,12 @@ TextProperties TextProperties::extract_from(pugi::xml_node run_node) {
         const char* val = u.attribute("w:val").value();
         props.underline.color = u.attribute("w:color").value();
 
-        if (strcmp(val, "words") == 0) {
-            props.underline.style = UnderlineStyle::Words;
-        } else if (strcmp(val, "double") == 0) {
-            props.underline.style = UnderlineStyle::Double;
-        } else if (strcmp(val, "thick") == 0) {
-            props.underline.style = UnderlineStyle::Thick;
-        } else if (strcmp(val, "dotted") == 0) {
-            props.underline.style = UnderlineStyle::Dotted;
-        } else if (strcmp(val, "dottedHeavy") == 0) {
-            props.underline.style = UnderlineStyle::DottedHeavy;
-        } else if (strcmp(val, "dash") == 0) {
-            props.underline.style = UnderlineStyle::Dash;
-        } else if (strcmp(val, "dashedHeavy") == 0) {
-            props.underline.style = UnderlineStyle::DashedHeavy;
-        } else if (strcmp(val, "dashLong") == 0) {
-            props.underline.style = UnderlineStyle::DashLong;
-        } else if (strcmp(val, "dashLongHeavy") == 0) {
-            props.underline.style = UnderlineStyle::DashLongHeavy;
-        } else if (strcmp(val, "dotDash") == 0) {
-            props.underline.style = UnderlineStyle::DotDash;
-        } else if (strcmp(val, "dashDotHeavy") == 0) {
-            props.underline.style = UnderlineStyle::DashDotHeavy;
-        } else if (strcmp(val, "dotDotDash") == 0) {
-            props.underline.style = UnderlineStyle::DotDotDash;
-        } else if (strcmp(val, "dashDotDotHeavy") == 0) {
-            props.underline.style = UnderlineStyle::DashDotDotHeavy;
-        } else if (strcmp(val, "wave") == 0) {
-            props.underline.style = UnderlineStyle::Wave;
-        } else if (strcmp(val, "wavyDouble") == 0) {
-            props.underline.style = UnderlineStyle::WavyDouble;
-        } else if (strcmp(val, "wavyHeavy") == 0) {
-            props.underline.style = UnderlineStyle::WavyHeavy;
-        } else {
-            props.underline.style = UnderlineStyle::Single;
+        props.underline.style = UnderlineStyle::Single;
+        for (const auto& m : kUnderlineStyleMappings) {
+            if (strcmp(val, m.xml_value) == 0) {
+                props.underline.style = m.style;
+                break;
+            }
         }
     }
 
@@ -330,28 +294,9 @@ TextProperties TextProperties::extract_from(pugi::xml_node run_node) {
     const pugi::xml_node highlight = r_pr.child("w:highlight");
     if (highlight) {
         const char* val = highlight.attribute("w:val").value();
-        static const struct {
-            const char* name;
-            Highlight value;
-        } kHighlightMap[] = {{"black", Highlight::Black},
-                             {"white", Highlight::White},
-                             {"red", Highlight::Red},
-                             {"green", Highlight::Green},
-                             {"blue", Highlight::Blue},
-                             {"yellow", Highlight::Yellow},
-                             {"cyan", Highlight::Cyan},
-                             {"magenta", Highlight::Magenta},
-                             {"darkRed", Highlight::DarkRed},
-                             {"darkGreen", Highlight::DarkGreen},
-                             {"darkBlue", Highlight::DarkBlue},
-                             {"darkYellow", Highlight::DarkYellow},
-                             {"darkCyan", Highlight::DarkCyan},
-                             {"darkMagenta", Highlight::DarkMagenta},
-                             {"darkGray", Highlight::DarkGray},
-                             {"lightGray", Highlight::LightGray}};
-        for (const auto& item : kHighlightMap) {
-            if (strcmp(val, item.name) == 0) {
-                props.highlight = item.value;
+        for (const auto& m : kHighlightMappings) {
+            if (strcmp(val, m.name) == 0) {
+                props.highlight = m.value;
                 break;
             }
         }
