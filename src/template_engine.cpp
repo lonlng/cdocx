@@ -4,7 +4,7 @@
  * @author lonlng
  * @copyright MIT License
  * @date 2026
- * @version 0.1.0
+ * @version 0.8.0
  */
 
 #include <cdocx/bookmark_replacer.h>
@@ -560,84 +560,7 @@ static bool insert_image_run_after(pugi::xml_node para,
 // ============================================================================
 
 TemplateEngine::Result TemplateEngine::apply() {
-    last_result_ = Result();
-    if (!doc_ || !doc_->is_open() || queue_.empty()) {
-        return last_result_;
-    }
-
-    // Two-phase execution to handle DOM/physical XML sync correctly:
-    // Phase 1: placeholder replacements (DOM modification)
-    // Phase 2: bookmark replacements (physical XML modification)
-
-    std::vector<std::pair<std::string, TemplateValue>> placeholders;
-    std::vector<std::pair<std::string, TemplateValue>> bookmarks;
-
-    for (const auto& [key, value] : queue_) {
-        if (value.is_text() && value.text_content().empty()) {
-            last_result_.skipped++;
-            continue;
-        }
-        if (value.is_image() && value.image_path().empty()) {
-            last_result_.skipped++;
-            continue;
-        }
-        auto actual = resolve_target(doc_, key, default_target_,
-                                     delimiter_prefix_, delimiter_suffix_);
-        if (actual == TemplateTarget::Placeholder) {
-            placeholders.emplace_back(key, value);
-        } else {
-            bookmarks.emplace_back(key, value);
-        }
-    }
-
-    // Phase 1: DOM modifications (Template placeholder replacement)
-    if (!placeholders.empty()) {
-        for (const auto& [key, value] : placeholders) {
-            auto r = apply_placeholder(key, value);
-            last_result_.success += r.success;
-            last_result_.failed += r.failed;
-        }
-        // Flush DOM changes to physical XML before physical manipulation
-        doc_->sync_to_physical_tree();
-    }
-
-    // Phase 2: Physical XML modifications (Bookmark replacement)
-    if (!bookmarks.empty()) {
-        // Pre-sync DOM to physical once before all physical modifications.
-        // Then collect all bookmarks into a single collection so that
-        // individual replacements do not trigger intermediate syncs that
-        // would overwrite earlier physical changes.
-        doc_->sync_to_physical_tree();
-        auto collection = doc_->get_bookmarks();
-
-        for (const auto& [key, value] : bookmarks) {
-            auto bm_opt = collection.get(key);
-            if (!bm_opt) {
-                last_result_.failed++;
-                continue;
-            }
-            if (value.is_text()) {
-                const bool ok = apply_text_to_bookmark(
-                    *bm_opt, value.text_content(), value.text_format(), default_format_policy_);
-                if (ok) {
-                    last_result_.success++;
-                } else {
-                    last_result_.failed++;
-                }
-            } else if (value.is_image()) {
-                const bool ok = apply_image_to_bookmark(*bm_opt, value);
-                if (ok) {
-                    last_result_.success++;
-                } else {
-                    last_result_.failed++;
-                }
-            }
-        }
-        // Capture physical XML changes into DOM so save() preserves them
-        doc_->sync_from_physical_tree();
-    }
-
-    return last_result_;
+    return apply_if([](const std::string&) { return true; });
 }
 
 TemplateEngine::Result TemplateEngine::apply(const std::string& key) {
@@ -652,11 +575,7 @@ TemplateEngine::Result TemplateEngine::apply(const std::string& key) {
     }
 
     const auto& value = it->second;
-    if (value.is_text() && value.text_content().empty()) {
-        last_result_.skipped++;
-        return last_result_;
-    }
-    if (value.is_image() && value.image_path().empty()) {
+    if (value.is_empty()) {
         last_result_.skipped++;
         return last_result_;
     }
@@ -687,11 +606,7 @@ TemplateEngine::Result TemplateEngine::apply_if(
             last_result_.skipped++;
             continue;
         }
-        if (value.is_text() && value.text_content().empty()) {
-            last_result_.skipped++;
-            continue;
-        }
-        if (value.is_image() && value.image_path().empty()) {
+        if (value.is_empty()) {
             last_result_.skipped++;
             continue;
         }
@@ -755,11 +670,7 @@ TemplateEngine::Result TemplateEngine::apply_single(const std::string& key,
                                                    TemplateTarget target) {
     Result r;
 
-    if (value.is_text() && value.text_content().empty()) {
-        r.skipped++;
-        return r;
-    }
-    if (value.is_image() && value.image_path().empty()) {
+    if (value.is_empty()) {
         r.skipped++;
         return r;
     }

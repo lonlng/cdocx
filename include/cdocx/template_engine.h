@@ -322,6 +322,9 @@ class TemplateValue {
     bool is_text() const { return type_ == TemplateValueType::Text; }
     bool is_image() const { return type_ == TemplateValueType::Image; }
 
+    /** @brief True if this value has no meaningful content (empty text or no image path) */
+    bool is_empty() const { return (is_text() && text_content().empty()) || (is_image() && image_path().empty()); }
+
     const std::string& text_content() const;
     const TemplateFormat& text_format() const;
 
