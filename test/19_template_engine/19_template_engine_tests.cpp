@@ -15,9 +15,11 @@
 #include <cdocx/template_engine.h>
 #include <filesystem>
 #include <map>
+#include "../test_helpers.h"
 
 namespace fs = std::filesystem;
 using namespace cdocx;
+using cdocx::test::TempDoc;
 
 // ============================================================================
 // TemplateFormat Tests
@@ -172,8 +174,8 @@ TEST(TemplateEngineTest, RemoveAndClear) {
 // ============================================================================
 
 TEST(TemplateEngineTest, PlaceholderTextReplacement) {
-    const std::string test_file = "test_te_placeholder.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_placeholder.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -212,12 +214,11 @@ TEST(TemplateEngineTest, PlaceholderTextReplacement) {
         EXPECT_EQ(paras[0]->get_text(), "Company: Acme Inc.");
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, MultiplePlaceholderReplacement) {
-    const std::string test_file = "test_te_multi_placeholder.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_multi_placeholder.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -251,12 +252,11 @@ TEST(TemplateEngineTest, MultiplePlaceholderReplacement) {
         EXPECT_EQ(paras[0]->get_text(), "Hello World!");
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, PlaceholderReplacementWithFormat) {
-    const std::string test_file = "test_te_fmt_placeholder.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_fmt_placeholder.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -280,7 +280,6 @@ TEST(TemplateEngineTest, PlaceholderReplacementWithFormat) {
         doc.save();
     }
 
-    fs::remove(test_file);
 }
 
 // ============================================================================
@@ -288,8 +287,8 @@ TEST(TemplateEngineTest, PlaceholderReplacementWithFormat) {
 // ============================================================================
 
 TEST(TemplateEngineTest, BookmarkTextReplacement) {
-    const std::string test_file = "test_te_bookmark.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_bookmark.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -329,12 +328,11 @@ TEST(TemplateEngineTest, BookmarkTextReplacement) {
         EXPECT_EQ(bm->get_text(), "Jane Doe");
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, MultipleBookmarkReplacement) {
-    const std::string test_file = "test_te_multi_bookmark.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_multi_bookmark.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -383,12 +381,11 @@ TEST(TemplateEngineTest, MultipleBookmarkReplacement) {
         EXPECT_EQ(reviewer->get_text(), "Bob Jones");
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, MixedPlaceholderAndBookmark) {
-    const std::string test_file = "test_te_mixed.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_mixed.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -434,7 +431,6 @@ TEST(TemplateEngineTest, MixedPlaceholderAndBookmark) {
         EXPECT_EQ(author->get_text(), "Jane Doe");
     }
 
-    fs::remove(test_file);
 }
 
 // ============================================================================
@@ -442,8 +438,8 @@ TEST(TemplateEngineTest, MixedPlaceholderAndBookmark) {
 // ============================================================================
 
 TEST(TemplateEngineTest, BatchStringReplacement) {
-    const std::string test_file = "test_te_batch.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_batch.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -477,12 +473,11 @@ TEST(TemplateEngineTest, BatchStringReplacement) {
         EXPECT_EQ(paras[0]->get_text(), "Apple and Banana");
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, ApplyIfPredicate) {
-    const std::string test_file = "test_te_apply_if.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_apply_if.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -523,12 +518,11 @@ TEST(TemplateEngineTest, ApplyIfPredicate) {
         EXPECT_EQ(paras[0]->get_text(), "{{foo}} BAR BAZ");
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, EmptyValuesAreSkipped) {
-    const std::string test_file = "test_te_skip_empty.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_skip_empty.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -553,12 +547,11 @@ TEST(TemplateEngineTest, EmptyValuesAreSkipped) {
         doc.save();
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, ApplySingleKey) {
-    const std::string test_file = "test_te_single.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_single.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -593,12 +586,11 @@ TEST(TemplateEngineTest, ApplySingleKey) {
         EXPECT_EQ(paras[0]->get_text(), "A {{b}}");
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, CustomDelimiters) {
-    const std::string test_file = "test_te_delims.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_delims.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -632,7 +624,6 @@ TEST(TemplateEngineTest, CustomDelimiters) {
         EXPECT_EQ(paras[0]->get_text(), "Name: John");
     }
 
-    fs::remove(test_file);
 }
 
 // ============================================================================
@@ -655,8 +646,8 @@ TEST(TemplateEngineTest, GlobalConfigurationChaining) {
 }
 
 TEST(TemplateEngineTest, ScopeFirstReplacesOnlyFirstOccurrence) {
-    const std::string test_file = "test_te_scope_first.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_scope_first.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -691,12 +682,11 @@ TEST(TemplateEngineTest, ScopeFirstReplacesOnlyFirstOccurrence) {
         EXPECT_EQ(paras[0]->get_text(), "X {{item}} {{item}}");
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, ScopeAllReplacesAllOccurrences) {
-    const std::string test_file = "test_te_scope_all.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_scope_all.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -731,7 +721,6 @@ TEST(TemplateEngineTest, ScopeAllReplacesAllOccurrences) {
         EXPECT_EQ(paras[0]->get_text(), "X X X");
     }
 
-    fs::remove(test_file);
 }
 
 // ============================================================================
@@ -739,8 +728,8 @@ TEST(TemplateEngineTest, ScopeAllReplacesAllOccurrences) {
 // ============================================================================
 
 TEST(TemplateEngineTest, PlaceholderInsertMode) {
-    const std::string test_file = "test_te_insert_placeholder.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_insert_placeholder.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -775,12 +764,11 @@ TEST(TemplateEngineTest, PlaceholderInsertMode) {
         EXPECT_EQ(paras[0]->get_text(), "Prefix INSERTED{{item}} Suffix");
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, PlaceholderInsertModeFirstScope) {
-    const std::string test_file = "test_te_insert_first.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_insert_first.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -815,12 +803,11 @@ TEST(TemplateEngineTest, PlaceholderInsertModeFirstScope) {
         EXPECT_EQ(paras[0]->get_text(), "X{{item}} and {{item}}");
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, BookmarkInsertMode) {
-    const std::string test_file = "test_te_insert_bookmark.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_insert_bookmark.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -861,12 +848,11 @@ TEST(TemplateEngineTest, BookmarkInsertMode) {
         EXPECT_EQ(bm->get_text(), " [INSERTED]Original text");
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, BookmarkInsertModeWithFormat) {
-    const std::string test_file = "test_te_insert_fmt.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_insert_fmt.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -910,7 +896,6 @@ TEST(TemplateEngineTest, BookmarkInsertModeWithFormat) {
         EXPECT_TRUE(bm->get_text().find("Target") != std::string::npos);
     }
 
-    fs::remove(test_file);
 }
 
 // ============================================================================
@@ -918,8 +903,8 @@ TEST(TemplateEngineTest, BookmarkInsertModeWithFormat) {
 // ============================================================================
 
 TEST(TemplateEngineTest, PlaceholderReplacementInHeader) {
-    const std::string test_file = "test_te_header.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_header.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -963,12 +948,11 @@ TEST(TemplateEngineTest, PlaceholderReplacementInHeader) {
         EXPECT_TRUE(found);
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, PlaceholderReplacementInFooter) {
-    const std::string test_file = "test_te_footer.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_footer.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -1012,12 +996,11 @@ TEST(TemplateEngineTest, PlaceholderReplacementInFooter) {
         EXPECT_TRUE(found);
     }
 
-    fs::remove(test_file);
 }
 
 TEST(TemplateEngineTest, PlaceholderReplacementInHeaderAndFooterTogether) {
-    const std::string test_file = "test_te_hf.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_te_hf.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -1076,7 +1059,6 @@ TEST(TemplateEngineTest, PlaceholderReplacementInHeaderAndFooterTogether) {
         EXPECT_TRUE(footer_ok);
     }
 
-    fs::remove(test_file);
 }
 
 /** @} */
