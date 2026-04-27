@@ -31,7 +31,6 @@ TEST(StyleCollectionTest, AddAndRetrieveStyle) {
     EXPECT_EQ(found->get_paragraph_format().alignment, cdocx::ParagraphAlignment::Center);
 
     doc2.close();
-    if (fs::exists("test_styles.docx")) fs::remove("test_styles.docx");
 }
 
 TEST(StyleCollectionTest, GetByIdentifierNormal) {
@@ -44,7 +43,6 @@ TEST(StyleCollectionTest, GetByIdentifierNormal) {
     EXPECT_EQ(normal->get_name(), "Normal");
 
     doc.close();
-    if (fs::exists("test_style_id.docx")) fs::remove("test_style_id.docx");
 }
 
 TEST(StyleCollectionTest, RemoveStyle) {
@@ -61,7 +59,6 @@ TEST(StyleCollectionTest, RemoveStyle) {
     EXPECT_EQ(styles.get_by_name("ToRemove"), nullptr);
 
     doc.close();
-    if (fs::exists("test_remove_style.docx")) fs::remove("test_remove_style.docx");
 }
 
 TEST(StyleCollectionTest, XmlRoundTrip) {
@@ -108,7 +105,6 @@ TEST(StyleCollectionTest, XmlRoundTrip) {
     EXPECT_TRUE(found);
 
     doc2.close();
-    if (fs::exists("test_style_xml.docx")) fs::remove("test_style_xml.docx");
 }
 
 TEST(StyleCollectionTest, CharacterStyleRoundTrip) {
@@ -143,7 +139,6 @@ TEST(StyleCollectionTest, CharacterStyleRoundTrip) {
     EXPECT_TRUE(found);
 
     doc2.close();
-    if (fs::exists("test_char_style.docx")) fs::remove("test_char_style.docx");
 }
 
 TEST(StyleCollectionTest, GetByStyleId) {
@@ -158,7 +153,6 @@ TEST(StyleCollectionTest, GetByStyleId) {
     EXPECT_EQ(styles.get_by_style_id("NonExistent"), nullptr);
 
     doc.close();
-    if (fs::exists("test_by_id.docx")) fs::remove("test_by_id.docx");
 }
 
 TEST(StyleCollectionTest, DuplicateNameNotCreated) {
@@ -181,7 +175,6 @@ TEST(StyleCollectionTest, DuplicateNameNotCreated) {
     EXPECT_EQ(found, s1);
 
     doc.close();
-    if (fs::exists("test_dup.docx")) fs::remove("test_dup.docx");
 }
 
 TEST(StyleCollectionTest, ClearRemovesAllStyles) {
@@ -200,5 +193,4 @@ TEST(StyleCollectionTest, ClearRemovesAllStyles) {
     EXPECT_EQ(styles.get_count(), 0u);
 
     doc.close();
-    if (fs::exists("test_clear.docx")) fs::remove("test_clear.docx");
 }

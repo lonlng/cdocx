@@ -305,8 +305,8 @@ TEST(DomSyncTest, PreserveUnknownXmlNodes) {
 // ============================================================================
 
 TEST(DomSyncTest, CellVerticalAlignmentRoundTrip) {
-    const std::string test_file = "test_cell_valign.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_cell_valign.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -336,12 +336,11 @@ TEST(DomSyncTest, CellVerticalAlignmentRoundTrip) {
                   CellVerticalAlignment::Bottom);
     }
 
-    fs::remove(test_file);
 }
 
 TEST(DomSyncTest, TableAlignmentRoundTrip) {
-    const std::string test_file = "test_tbl_align.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_tbl_align.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -382,12 +381,11 @@ TEST(DomSyncTest, TableAlignmentRoundTrip) {
         EXPECT_EQ(tables[2]->get_table_format().alignment, TableAlignment::Right);
     }
 
-    fs::remove(test_file);
 }
 
 TEST(DomSyncTest, ScriptTypeRoundTrip) {
-    const std::string test_file = "test_script.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_script.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -422,12 +420,11 @@ TEST(DomSyncTest, ScriptTypeRoundTrip) {
         EXPECT_EQ(runs[2]->get_font().script_type, ScriptType::Subscript);
     }
 
-    fs::remove(test_file);
 }
 
 TEST(DomSyncTest, LineSpacingRuleRoundTrip) {
-    const std::string test_file = "test_line_rule.docx";
-    if (fs::exists(test_file)) fs::remove(test_file);
+    TempDoc temp_doc("test_line_rule.docx");
+    const std::string& test_file = temp_doc.path();
 
     {
         Document doc;
@@ -470,5 +467,4 @@ TEST(DomSyncTest, LineSpacingRuleRoundTrip) {
         EXPECT_EQ(p3->get_paragraph_format().line_spacing_rule, LineSpacingRule::AtLeast);
     }
 
-    fs::remove(test_file);
 }

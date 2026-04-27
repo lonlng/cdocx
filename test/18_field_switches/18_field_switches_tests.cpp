@@ -6,9 +6,11 @@
 
 #include <gtest/gtest.h>
 #include <cdocx.h>
+#include "../test_helpers.h"
 #include <filesystem>
 
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 using namespace cdocx;
 
 TEST(FieldSwitchesTest, PageNumberWithSwitches) {
@@ -25,7 +27,6 @@ TEST(FieldSwitchesTest, PageNumberWithSwitches) {
     EXPECT_EQ(field->get_switches_text(), "\\* ROMAN");
     EXPECT_EQ(field->get_full_field_code(), "PAGE \\* ROMAN");
 
-    fs::remove("test_field_page.docx");
 }
 
 TEST(FieldSwitchesTest, DateWithFormatSwitch) {
@@ -41,7 +42,6 @@ TEST(FieldSwitchesTest, DateWithFormatSwitch) {
     EXPECT_EQ(field->get_field_code(), "DATE");
     EXPECT_EQ(field->get_switches_text(), "\\@ \"yyyy-MM-dd\"");
 
-    fs::remove("test_field_date.docx");
 }
 
 TEST(FieldSwitchesTest, MergeFieldWithSwitches) {
@@ -56,7 +56,6 @@ TEST(FieldSwitchesTest, MergeFieldWithSwitches) {
     EXPECT_EQ(field->get_field_code(), "MERGEFIELD Name");
     EXPECT_EQ(field->get_switches_text(), "\\* Upper");
 
-    fs::remove("test_field_merge.docx");
 }
 
 TEST(FieldSwitchesTest, FieldAddMultipleSwitches) {
@@ -143,7 +142,6 @@ TEST(FieldSwitchesTest, TableOfContentsUsesSwitches) {
     EXPECT_EQ(field->get_field_code(), "TOC");
     EXPECT_NE(field->get_switches_text().find("1-3"), std::string::npos);
 
-    fs::remove("test_field_toc.docx");
 }
 
 TEST(FieldSwitchesTest, FieldClonePreservesSwitches) {
@@ -176,7 +174,6 @@ TEST(FieldSwitchesTest, InsertTimeField) {
     EXPECT_EQ(field->get_field_code(), "TIME");
     EXPECT_NE(field->get_switches_text().find("HH:mm"), std::string::npos);
 
-    fs::remove("test_field_time.docx");
 }
 
 TEST(FieldSwitchesTest, FieldLockedAndDirty) {

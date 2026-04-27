@@ -6,9 +6,11 @@
 
 #include <gtest/gtest.h>
 #include <cdocx.h>
+#include "../test_helpers.h"
 #include <filesystem>
 
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 using namespace cdocx;
 
 TEST(CommentCollectionTest, EmptyDocument) {
@@ -21,7 +23,6 @@ TEST(CommentCollectionTest, EmptyDocument) {
     EXPECT_EQ(comments.get_by_id(1), nullptr);
     EXPECT_FALSE(comments.contains(1));
 
-    fs::remove("test_comments_empty.docx");
 }
 
 TEST(CommentCollectionTest, AddAndRetrieve) {
@@ -45,7 +46,6 @@ TEST(CommentCollectionTest, AddAndRetrieve) {
     ASSERT_NE(retrieved, nullptr);
     EXPECT_EQ(retrieved->get_text(), "First comment");
 
-    fs::remove("test_comments_add.docx");
 }
 
 TEST(CommentCollectionTest, IteratorAccess) {
@@ -63,7 +63,6 @@ TEST(CommentCollectionTest, IteratorAccess) {
     }
     EXPECT_EQ(count, 2);
 
-    fs::remove("test_comments_iter.docx");
 }
 
 TEST(CommentCollectionTest, RemoveById) {
@@ -79,7 +78,6 @@ TEST(CommentCollectionTest, RemoveById) {
     EXPECT_EQ(comments.count(), 0u);
     EXPECT_FALSE(comments.contains(id));
 
-    fs::remove("test_comments_remove.docx");
 }
 
 TEST(CommentCollectionTest, RemoveAtIndex) {
@@ -94,7 +92,6 @@ TEST(CommentCollectionTest, RemoveAtIndex) {
     EXPECT_TRUE(comments.remove_at(0));
     EXPECT_EQ(comments.count(), 1u);
 
-    fs::remove("test_comments_remove_idx.docx");
 }
 
 TEST(CommentCollectionTest, ClearAll) {
@@ -110,7 +107,6 @@ TEST(CommentCollectionTest, ClearAll) {
     comments.clear();
     EXPECT_EQ(comments.count(), 0u);
 
-    fs::remove("test_comments_clear.docx");
 }
 
 TEST(CommentCollectionTest, RoundTripAfterSave) {
@@ -159,7 +155,6 @@ TEST(CommentCollectionTest, ModifyCommentText) {
     c->set_text("Updated text");
     EXPECT_EQ(c->get_text(), "Updated text");
 
-    fs::remove("test_comments_mod.docx");
 }
 
 TEST(CommentCollectionTest, CommentProperties) {
@@ -183,7 +178,6 @@ TEST(CommentCollectionTest, CommentProperties) {
     auto diff = std::chrono::duration_cast<std::chrono::seconds>(c->get_date_time() - now).count();
     EXPECT_LE(std::abs(diff), 1);
 
-    fs::remove("test_comments_props.docx");
 }
 
 TEST(CommentCollectionTest, AppendParagraphToComment) {
@@ -199,7 +193,6 @@ TEST(CommentCollectionTest, AppendParagraphToComment) {
     EXPECT_NE(text.find("First paragraph."), std::string::npos);
     EXPECT_NE(text.find("Second paragraph."), std::string::npos);
 
-    fs::remove("test_comments_para.docx");
 }
 
 TEST(CommentCollectionTest, RemoveInvalidIndex) {
@@ -214,7 +207,6 @@ TEST(CommentCollectionTest, RemoveInvalidIndex) {
     EXPECT_FALSE(comments.remove_at(1));   // Out of range
     EXPECT_TRUE(comments.remove_at(0));    // Valid
 
-    fs::remove("test_comments_bad_idx.docx");
 }
 
 TEST(CommentCollectionTest, RemoveNonExistentId) {
@@ -229,7 +221,6 @@ TEST(CommentCollectionTest, RemoveNonExistentId) {
     EXPECT_FALSE(comments.remove(real_id + 999));
     EXPECT_TRUE(comments.remove(real_id));
 
-    fs::remove("test_comments_bad_id.docx");
 }
 
 TEST(CommentCollectionTest, MultipleCommentsSameAuthor) {

@@ -6,9 +6,11 @@
 
 #include <gtest/gtest.h>
 #include <cdocx.h>
+#include "../test_helpers.h"
 #include <filesystem>
 
 namespace fs = std::filesystem;
+using cdocx::test::TempDoc;
 using namespace cdocx;
 
 TEST(FootnoteCollectionTest, EmptyDocument) {
@@ -21,7 +23,6 @@ TEST(FootnoteCollectionTest, EmptyDocument) {
     EXPECT_EQ(footnotes.get_by_id(1), nullptr);
     EXPECT_FALSE(footnotes.contains(1));
 
-    fs::remove("test_footnotes_empty.docx");
 }
 
 TEST(FootnoteCollectionTest, AddAndRetrieve) {
@@ -47,7 +48,6 @@ TEST(FootnoteCollectionTest, AddAndRetrieve) {
     ASSERT_NE(retrieved, nullptr);
     EXPECT_EQ(retrieved->get_text(), "First footnote");
 
-    fs::remove("test_footnotes_add.docx");
 }
 
 TEST(FootnoteCollectionTest, IteratorAccess) {
@@ -65,7 +65,6 @@ TEST(FootnoteCollectionTest, IteratorAccess) {
     }
     EXPECT_EQ(count, 2);
 
-    fs::remove("test_footnotes_iter.docx");
 }
 
 TEST(FootnoteCollectionTest, RemoveById) {
@@ -81,7 +80,6 @@ TEST(FootnoteCollectionTest, RemoveById) {
     EXPECT_EQ(footnotes.count(), 0u);
     EXPECT_FALSE(footnotes.contains(id));
 
-    fs::remove("test_footnotes_remove.docx");
 }
 
 TEST(FootnoteCollectionTest, ClearAll) {
@@ -96,7 +94,6 @@ TEST(FootnoteCollectionTest, ClearAll) {
     footnotes.clear();
     EXPECT_EQ(footnotes.count(), 0u);
 
-    fs::remove("test_footnotes_clear.docx");
 }
 
 TEST(FootnoteCollectionTest, RoundTripAfterSave) {
@@ -142,7 +139,6 @@ TEST(EndnoteCollectionTest, AddAndRetrieve) {
 
     EXPECT_EQ(endnotes.count(), 2u);
 
-    fs::remove("test_endnotes_add.docx");
 }
 
 TEST(EndnoteCollectionTest, RoundTripAfterSave) {
@@ -222,7 +218,6 @@ TEST(FootnoteCollectionTest, RemoveAtFootnote) {
     EXPECT_EQ(footnotes.count(), 1u);
     EXPECT_FALSE(footnotes.remove_at(5));  // Invalid index
 
-    fs::remove("test_footnotes_remove_at.docx");
 }
 
 TEST(EndnoteCollectionTest, ClearAllEndnotes) {
@@ -237,7 +232,6 @@ TEST(EndnoteCollectionTest, ClearAllEndnotes) {
     endnotes.clear();
     EXPECT_EQ(endnotes.count(), 0u);
 
-    fs::remove("test_endnotes_clear.docx");
 }
 
 TEST(EndnoteCollectionTest, CustomReferenceMarkRoundTrip) {
