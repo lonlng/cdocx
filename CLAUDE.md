@@ -52,6 +52,7 @@ When deciding how to implement a feature, use this quick reference.
 - `MailMerge` simple field replacement with cleanup options
 - `Watermark` text and image watermarks in headers
 - `CommentCollection` (add/get/remove comments)
+- `FootnoteCollection` / `EndnoteCollection` document-level managers with DOM ↔ XML round-trip sync, including custom reference mark preservation
 - `TemplateEngine` unified dictionary-style template API (`engine["key"] = value`, `set()`, `apply()`) supporting text/image placeholders and bookmarks, with format policies, action modes (replace/insert), and scope modes (first/all)
 
 ### Stubs / Roadmap Only
@@ -59,7 +60,6 @@ When deciding how to implement a feature, use this quick reference.
 Do not assume these are fully implemented:
 
 - Advanced field configuration (custom date formats, page number formats, formula evaluation, etc.) — basic `Field` DOM class and `DocumentBuilder::insert_page_number` / `insert_date` / `insert_time` / `insert_merge_field` / `insert_table_of_contents` exist, but deep customization and DOM ↔ XML round-trip for all field types are limited
-- Footnote/endnote DOM wrappers — `Footnote` and `FootnoteReference` DOM classes exist, but there is no document-level collection API and no DOM ↔ XML round-trip sync in `document_sync.cpp`
 - PDF / HTML / Markdown export
 
 ### Which API to Use
