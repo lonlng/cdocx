@@ -133,25 +133,39 @@ static std::shared_ptr<FileFormatInfo> detect_from_zip(zip_t* za) {
         info->set_is_encrypted(true);
     }
 
-    // Determine exact Word format
-    if (contains(ct_lower, "wordprocessingml.document.macroenabled.main+xml")) {
-        info->set_load_format(LoadFormat::Docm);
-    } else if (contains(ct_lower, "wordprocessingml.template.macroenabled.main+xml")) {
-        info->set_load_format(LoadFormat::Dotm);
-    } else if (contains(ct_lower, "wordprocessingml.template.main+xml")) {
-        info->set_load_format(LoadFormat::Dotx);
-    } else if (contains(ct_lower, "wordprocessingml.document.main+xml")) {
-        info->set_load_format(LoadFormat::Docx);
-    } else if (contains(ct_lower, "spreadsheetml") || contains(ct_lower, "presentationml")) {
-        info->set_load_format(LoadFormat::Unknown);
-    } else {
-        // Could be ODT - check mimetype
-        const std::string mimetype = read_zip_entry(za, "mimetype");
-        const std::string mime_lower = to_lower(mimetype);
-        if (contains(mime_lower, "application/vnd.oasis.opendocument.text")) {
-            info->set_load_format(LoadFormat::Odt);
-        } else {
+    // Determine exact Word format via lookup table
+    struct ContentTypeMapping {
+        const char* pattern;
+        LoadFormat format;
+    };
+    static const ContentTypeMapping kContentTypeMappings[] = {
+        {"wordprocessingml.document.macroenabled.main+xml", LoadFormat::Docm},
+        {"wordprocessingml.template.macroenabled.main+xml", LoadFormat::Dotm},
+        {"wordprocessingml.template.main+xml", LoadFormat::Dotx},
+        {"wordprocessingml.document.main+xml", LoadFormat::Docx},
+    };
+
+    bool found = false;
+    for (const auto& m : kContentTypeMappings) {
+        if (contains(ct_lower, m.pattern)) {
+            info->set_load_format(m.format);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        if (contains(ct_lower, "spreadsheetml") || contains(ct_lower, "presentationml")) {
             info->set_load_format(LoadFormat::Unknown);
+        } else {
+            // Could be ODT - check mimetype
+            const std::string mimetype = read_zip_entry(za, "mimetype");
+            const std::string mime_lower = to_lower(mimetype);
+            if (contains(mime_lower, "application/vnd.oasis.opendocument.text")) {
+                info->set_load_format(LoadFormat::Odt);
+            } else {
+                info->set_load_format(LoadFormat::Unknown);
+            }
         }
     }
 
@@ -297,17 +311,24 @@ SaveFormat FileFormatUtil::extension_to_save_format(const std::string& extension
     if (!ext.empty() && ext[0] != '.') {
         ext = "." + ext;
     }
-    // Handle alias extensions
-    if (ext == ".flatopc") {
-        ext = ".fopc";
-    } else if (ext == ".htm") {
-        ext = ".html";
-    } else if (ext == ".text") {
-        ext = ".txt";
-    } else if (ext == ".markdown") {
-        ext = ".md";
-    } else if (ext == ".wordml" || ext == ".wml") {
-        ext = ".xml";
+    // Handle alias extensions via lookup table
+    struct AliasMapping {
+        const char* alias;
+        const char* canonical;
+    };
+    static const AliasMapping kAliasMappings[] = {
+        {".flatopc", ".fopc"},
+        {".htm", ".html"},
+        {".text", ".txt"},
+        {".markdown", ".md"},
+        {".wordml", ".xml"},
+        {".wml", ".xml"},
+    };
+    for (const auto& m : kAliasMappings) {
+        if (ext == m.alias) {
+            ext = m.canonical;
+            break;
+        }
     }
     const std::uint8_t value = extension_to_format_value(ext);
     return static_cast<SaveFormat>(value);
