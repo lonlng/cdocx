@@ -26,6 +26,7 @@
 - **🎨 Style Collection**: Manage and apply paragraph/table styles
 - **✉️ Mail Merge**: Simple field replacement with cleanup options
 - **💬 Comments**: Add, get, and remove document comments
+- **📎 Footnotes & Endnotes**: Document-level collection API with custom reference mark support
 - **💧 Watermark**: Text and image watermarks in headers
 - **🌳 XML Parts API**: Direct access to all DOCX internal components
 - **⚡ Modern C++17**: Iterator-based API with range-based for loop support
