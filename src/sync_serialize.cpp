@@ -471,38 +471,37 @@ static void serialize_hyperlink_to_xml(pugi::xml_node parent, Hyperlink* link) {
     }
 }
 
+struct SpecialCharMapping {
+    char16_t code;
+    const char* element_name;
+    const char* break_type;  // nullptr if no type attribute
+};
+
+static const SpecialCharMapping kSpecialCharMappings[] = {
+    {0x0009, "w:tab", nullptr},
+    {0x000A, "w:br", nullptr},
+    {0x000C, "w:br", "page"},
+    {0x000E, "w:br", "column"},
+};
+
 static void serialize_special_char_to_xml(pugi::xml_node parent, SpecialChar* sc) {
     if (!sc) {
         return;
     }
     const char16_t code = sc->get_char();
-    switch (code) {
-        case 0x0009:  // Tab
-            parent.append_child("w:tab");
-            break;
-        case 0x000A:  // Line break
-            parent.append_child("w:br");
-            break;
-        case 0x000C:  // Page break
-        {
-            auto br = parent.append_child("w:br");
-            br.append_attribute("w:type").set_value("page");
-            break;
-        }
-        case 0x000E:  // Column break
-        {
-            auto br = parent.append_child("w:br");
-            br.append_attribute("w:type").set_value("column");
-            break;
-        }
-        default:
-            // For other special chars, append as text in a run
-            {
-                auto run = parent.append_child("w:r");
-                auto t = run.append_child("w:t");
-                t.text().set(sc->get_text().c_str());
+    for (const auto& mapping : kSpecialCharMappings) {
+        if (mapping.code == code) {
+            auto node = parent.append_child(mapping.element_name);
+            if (mapping.break_type) {
+                node.append_attribute("w:type").set_value(mapping.break_type);
             }
+            return;
+        }
     }
+    // For other special chars, append as text in a run
+    auto run = parent.append_child("w:r");
+    auto t = run.append_child("w:t");
+    t.text().set(sc->get_text().c_str());
 }
 
 void serialize_paragraph_format_children_to_xml(pugi::xml_node p_pr,

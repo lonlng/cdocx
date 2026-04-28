@@ -596,8 +596,6 @@ class TemplateEngine {
     Result apply_bookmark(const std::string& key, const TemplateValue& value);
     Result apply_bookmark(Bookmark& bookmark, const TemplateValue& value);
     Result apply_placeholder(const std::string& key, const TemplateValue& value);
-    Result apply_single(const std::string& key, const TemplateValue& value,
-                        TemplateTarget target);
 
     // Helpers (string-based — look up bookmark by name)
     bool apply_text_to_bookmark(const std::string& name,

@@ -344,19 +344,10 @@ static TemplateTarget resolve_target(Document* doc,
                                     TemplateTarget preferred,
                                     const std::string& /*prefix*/,
                                     const std::string& /*suffix*/) {
-    switch (preferred) {
-        case TemplateTarget::Auto: {
-            // Check if bookmark exists
-            const BookmarkReplacer replacer(doc);
-            if (replacer.has_bookmark(key)) {
-                return TemplateTarget::BookmarkTarget;
-            }
-            return TemplateTarget::Placeholder;
-        }
-        case TemplateTarget::BookmarkTarget:
-            return TemplateTarget::BookmarkTarget;
-        case TemplateTarget::Placeholder:
-            return TemplateTarget::Placeholder;
+    if (preferred == TemplateTarget::Auto) {
+        const BookmarkReplacer replacer(doc);
+        return replacer.has_bookmark(key) ? TemplateTarget::BookmarkTarget
+                                          : TemplateTarget::Placeholder;
     }
     return preferred;
 }
@@ -553,36 +544,6 @@ TemplateEngine::Result TemplateEngine::apply_if(
 // ============================================================================
 // Internal Execution
 // ============================================================================
-
-TemplateEngine::Result TemplateEngine::apply_single(const std::string& key,
-                                                   const TemplateValue& value,
-                                                   TemplateTarget target) {
-    Result r;
-
-    if (value.is_empty()) {
-        r.skipped++;
-        return r;
-    }
-
-    switch (target) {
-        case TemplateTarget::Auto: {
-            // Try bookmark first, then placeholder
-            r = apply_bookmark(key, value);
-            if (r.success == 0 && r.failed == 0) {
-                r = apply_placeholder(key, value);
-            }
-            break;
-        }
-        case TemplateTarget::BookmarkTarget:
-            r = apply_bookmark(key, value);
-            break;
-        case TemplateTarget::Placeholder:
-            r = apply_placeholder(key, value);
-            break;
-    }
-
-    return r;
-}
 
 TemplateEngine::Result TemplateEngine::apply_bookmark(const std::string& key,
                                                      const TemplateValue& value) {
