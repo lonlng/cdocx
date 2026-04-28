@@ -28,15 +28,17 @@ struct BreakTypeMapping {
     const char* xml_value;
 };
 
-static const BreakTypeMapping kSectionBreakMappings[] = {
+static const BreakTypeMapping kBreakTypeMappings[] = {
+    {BreakType::PageBreak, "page"},
+    {BreakType::ColumnBreak, "column"},
     {BreakType::SectionBreakNextPage, "nextPage"},
     {BreakType::SectionBreakContinuous, "continuous"},
     {BreakType::SectionBreakEvenPage, "evenPage"},
     {BreakType::SectionBreakOddPage, "oddPage"},
 };
 
-static const char* section_break_type_to_string(BreakType type) {
-    for (const auto& mapping : kSectionBreakMappings) {
+static const char* break_type_to_string(BreakType type) {
+    for (const auto& mapping : kBreakTypeMappings) {
         if (mapping.type == type) {
             return mapping.xml_value;
         }
@@ -477,15 +479,8 @@ DocumentBuilder& DocumentBuilder::insert_break(BreakType break_type) {
             ensure_paragraph();
             pugi::xml_node run = current_paragraph_.append_child("w:r");
             pugi::xml_node br = run.append_child("w:br");
-            if (break_type == BreakType::PageBreak) {
-                br.append_attribute("w:type").set_value("page");
-            } else if (break_type == BreakType::ColumnBreak) {
-                br.append_attribute("w:type").set_value("column");
-            } else {
-                const char* typeval = section_break_type_to_string(break_type);
-                if (typeval) {
-                    br.append_attribute("w:type").set_value(typeval);
-                }
+            if (const char* typeval = break_type_to_string(break_type)) {
+                br.append_attribute("w:type").set_value(typeval);
             }
             break;
         }
