@@ -49,6 +49,347 @@ pugi::xml_node get_settings_root(const Document* doc) {
     return settings->child("w:settings");
 }
 
+// ============================================================================
+// Empty Document XML Part Creation Helpers
+// ============================================================================
+
+void create_empty_content_types(Document* doc) {
+    auto& xml = doc->create_xml_part("[Content_Types].xml");
+    auto root = xml.append_child("Types");
+    root.append_attribute("xmlns").set_value(
+        "http://schemas.openxmlformats.org/package/2006/content-types");
+
+    auto rels = root.append_child("Default");
+    rels.append_attribute("Extension").set_value("rels");
+    rels.append_attribute("ContentType")
+        .set_value("application/vnd.openxmlformats-package.relationships+xml");
+
+    auto xml_def = root.append_child("Default");
+    xml_def.append_attribute("Extension").set_value("xml");
+    xml_def.append_attribute("ContentType").set_value("application/xml");
+
+    auto doc_override = root.append_child("Override");
+    doc_override.append_attribute("PartName").set_value("/word/document.xml");
+    doc_override.append_attribute("ContentType")
+        .set_value(
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml");
+}
+
+void create_empty_package_rels(Document* doc) {
+    auto& xml = doc->create_xml_part("_rels/.rels");
+    auto root = xml.append_child("Relationships");
+    root.append_attribute("xmlns").set_value(
+        "http://schemas.openxmlformats.org/package/2006/relationships");
+
+    auto add_rel = [&root](const char* id, const char* type, const char* target) {
+        auto rel = root.append_child("Relationship");
+        rel.append_attribute("Id").set_value(id);
+        rel.append_attribute("Type").set_value(type);
+        rel.append_attribute("Target").set_value(target);
+    };
+
+    add_rel("rId1",
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument",
+            "word/document.xml");
+    add_rel("rId2",
+            "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties",
+            "docProps/core.xml");
+    add_rel("rId3",
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties",
+            "docProps/app.xml");
+}
+
+void create_empty_document_rels(Document* doc) {
+    auto& xml = doc->create_xml_part("word/_rels/document.xml.rels");
+    auto root = xml.append_child("Relationships");
+    root.append_attribute("xmlns").set_value(
+        "http://schemas.openxmlformats.org/package/2006/relationships");
+
+    auto add_rel = [&root](const char* id, const char* type, const char* target) {
+        auto rel = root.append_child("Relationship");
+        rel.append_attribute("Id").set_value(id);
+        rel.append_attribute("Type").set_value(type);
+        rel.append_attribute("Target").set_value(target);
+    };
+
+    add_rel("rId1",
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
+            "styles.xml");
+    add_rel("rId2",
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings",
+            "settings.xml");
+    add_rel("rId3",
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable",
+            "fontTable.xml");
+    add_rel("rId4",
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
+            "theme/theme1.xml");
+    add_rel("rId5",
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings",
+            "webSettings.xml");
+}
+
+void create_empty_document_xml(Document* doc) {
+    auto& xml = doc->create_xml_part("word/document.xml");
+    auto root = xml.append_child("w:document");
+    root.append_attribute("xmlns:w").set_value(
+        "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+    root.append_attribute("xmlns:r").set_value(
+        "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+
+    auto body = root.append_child("w:body");
+
+    // Add empty paragraph placeholder
+    auto para = body.append_child("w:p");
+    auto run = para.append_child("w:r");
+    run.append_child("w:t");
+
+    // Add section properties
+    auto sect_pr = body.append_child("w:sectPr");
+    auto pg_sz = sect_pr.append_child("w:pgSz");
+    pg_sz.append_attribute("w:w").set_value(kDefaultPageWidthTwips);
+    pg_sz.append_attribute("w:h").set_value(kDefaultPageHeightTwips);
+
+    auto pg_mar = sect_pr.append_child("w:pgMar");
+    pg_mar.append_attribute("w:top").set_value(kDefaultMarginTwips);
+    pg_mar.append_attribute("w:right").set_value(kDefaultMarginTwips);
+    pg_mar.append_attribute("w:bottom").set_value(kDefaultMarginTwips);
+    pg_mar.append_attribute("w:left").set_value(kDefaultMarginTwips);
+}
+
+void create_empty_styles_xml(Document* doc) {
+    auto& xml = doc->create_xml_part("word/styles.xml");
+    auto root = xml.append_child("w:styles");
+    root.append_attribute("xmlns:w").set_value(
+        "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+
+    auto style = root.append_child("w:style");
+    style.append_attribute("w:type").set_value("paragraph");
+    style.append_attribute("w:default").set_value("1");
+    style.append_attribute("w:styleId").set_value("Normal");
+
+    auto name = style.append_child("w:name");
+    name.append_attribute("w:val").set_value("Normal");
+}
+
+void create_empty_settings_xml(Document* doc) {
+    auto& xml = doc->create_xml_part("word/settings.xml");
+    auto root = xml.append_child("w:settings");
+    root.append_attribute("xmlns:w").set_value(
+        "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+    root.append_child("w:zoom").append_attribute("w:percent").set_value("100");
+    root.append_child("w:defaultTabStop").append_attribute("w:val").set_value(kDefaultTabStopTwips);
+    root.append_child("w:characterSpacingControl")
+        .append_attribute("w:val")
+        .set_value("doNotCompress");
+    root.append_child("w:compat");
+    root.append_child("w:docVars");
+}
+
+void create_empty_font_table_xml(Document* doc) {
+    auto& xml = doc->create_xml_part("word/fontTable.xml");
+    auto root = xml.append_child("w:fonts");
+    root.append_attribute("xmlns:w").set_value(
+        "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+    auto font = root.append_child("w:font");
+    font.append_attribute("w:name").set_value("Calibri");
+    font.append_child("w:panose1").append_attribute("w:val").set_value("020F0502020204030204");
+    font.append_child("w:charset").append_attribute("w:val").set_value("00");
+    font.append_child("w:family").append_attribute("w:val").set_value("swiss");
+    font.append_child("w:pitch").append_attribute("w:val").set_value("variable");
+}
+
+void create_empty_theme_xml(Document* doc) {
+    auto& xml = doc->create_xml_part("word/theme/theme1.xml");
+    auto root = xml.append_child("a:theme");
+    root.append_attribute("xmlns:a").set_value(
+        "http://schemas.openxmlformats.org/drawingml/2006/main");
+    root.append_attribute("name").set_value("Office Theme");
+    auto theme_elem = root.append_child("a:themeElements");
+    auto clr_scheme = theme_elem.append_child("a:clrScheme");
+    clr_scheme.append_attribute("name").set_value("Office");
+    auto font_scheme = theme_elem.append_child("a:fontScheme");
+    font_scheme.append_attribute("name").set_value("Office");
+    auto fmt_scheme = theme_elem.append_child("a:fmtScheme");
+    fmt_scheme.append_attribute("name").set_value("Office");
+}
+
+void create_empty_web_settings_xml(Document* doc) {
+    auto& xml = doc->create_xml_part("word/webSettings.xml");
+    auto root = xml.append_child("w:webSettings");
+    root.append_attribute("xmlns:w").set_value(
+        "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+    root.append_child("w:optimizeForBrowser");
+}
+
+void create_empty_core_properties_xml(Document* doc) {
+    auto& xml = doc->create_xml_part("docProps/core.xml");
+    auto root = xml.append_child("cp:coreProperties");
+    root.append_attribute("xmlns:cp")
+        .set_value("http://schemas.openxmlformats.org/package/2006/metadata/core-properties");
+    root.append_attribute("xmlns:dc").set_value("http://purl.org/dc/elements/1.1/");
+    root.append_attribute("xmlns:dcterms").set_value("http://purl.org/dc/terms/");
+    root.append_attribute("xmlns:dcmitype").set_value("http://purl.org/dc/dcmitype/");
+    root.append_attribute("xmlns:xsi").set_value("http://www.w3.org/2001/XMLSchema-instance");
+    root.append_child("dc:title");
+    root.append_child("dc:subject");
+    root.append_child("dc:creator");
+    root.append_child("cp:keywords");
+    root.append_child("dc:description");
+    root.append_child("cp:lastModifiedBy");
+    root.append_child("cp:revision").append_child(pugi::node_pcdata).set_value("1");
+    root.append_child("dcterms:created").append_attribute("xsi:type").set_value("dcterms:W3CDTF");
+    root.append_child("dcterms:modified").append_attribute("xsi:type").set_value("dcterms:W3CDTF");
+}
+
+void create_empty_extended_properties_xml(Document* doc) {
+    auto& xml = doc->create_xml_part("docProps/app.xml");
+    auto root = xml.append_child("Properties");
+    root.append_attribute("xmlns").set_value(
+        "http://schemas.openxmlformats.org/officeDocument/2006/extended-properties");
+    root.append_attribute("xmlns:vt")
+        .set_value("http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes");
+    root.append_child("Template").append_child(pugi::node_pcdata).set_value("Normal.dotm");
+    root.append_child("TotalTime").append_child(pugi::node_pcdata).set_value("0");
+    root.append_child("Pages").append_child(pugi::node_pcdata).set_value("1");
+    root.append_child("Words").append_child(pugi::node_pcdata).set_value("0");
+    root.append_child("Characters").append_child(pugi::node_pcdata).set_value("0");
+    root.append_child("Application").append_child(pugi::node_pcdata).set_value(
+        "Microsoft Office Word");
+    root.append_child("DocSecurity").append_child(pugi::node_pcdata).set_value("0");
+    root.append_child("Lines").append_child(pugi::node_pcdata).set_value("1");
+    root.append_child("Paragraphs").append_child(pugi::node_pcdata).set_value("1");
+    root.append_child("Company");
+    root.append_child("AppVersion").append_child(pugi::node_pcdata).set_value("16.0000");
+}
+
+void register_empty_doc_content_types(Document* doc) {
+    doc->add_content_type_default("rels",
+                                  "application/vnd.openxmlformats-package.relationships+xml");
+    doc->add_content_type_default("xml", "application/xml");
+
+    doc->add_content_type_override(
+        "/word/styles.xml",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml");
+    doc->add_content_type_override(
+        "/word/settings.xml",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml");
+    doc->add_content_type_override(
+        "/word/webSettings.xml",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml");
+    doc->add_content_type_override(
+        "/word/fontTable.xml",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml");
+    doc->add_content_type_override("/word/theme/theme1.xml",
+                                   "application/vnd.openxmlformats-officedocument.theme+xml");
+    doc->add_content_type_override("/docProps/core.xml",
+                                   "application/vnd.openxmlformats-package.core-properties+xml");
+    doc->add_content_type_override(
+        "/docProps/app.xml",
+        "application/vnd.openxmlformats-officedocument.extended-properties+xml");
+    doc->add_content_type_override(
+        "/word/document.xml",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml");
+}
+
+void initialize_default_styles(Document* doc) {
+    auto& styles = doc->styles();
+    styles.clear();
+
+    auto add_builtin = [doc](StyleType type,
+                             const char* style_id,
+                             const char* name,
+                             StyleIdentifier identifier) {
+        auto style = std::make_shared<Style>(doc, type);
+        style->set_style_id(style_id);
+        style->set_name(name);
+        style->set_style_identifier(identifier);
+        style->set_is_built_in(true);
+        return style;
+    };
+
+    // Normal - default paragraph style
+    auto normal =
+        add_builtin(StyleType::Paragraph, "Normal", "Normal", StyleIdentifier::Normal);
+    normal->set_is_default(true);
+    styles.add(normal);
+
+    // Heading 1-9 - paragraph styles with outline levels
+    struct HeadingDef {
+        const char* style_id;
+        const char* name;
+        double font_size;
+        double space_before;
+        StyleIdentifier identifier;
+        OutlineLevel outline_level;
+    };
+    static const HeadingDef kHeadings[] = {
+        {"Heading1", "heading 1", 16, 24, StyleIdentifier::Heading1, OutlineLevel::Level1},
+        {"Heading2", "heading 2", 14, 18, StyleIdentifier::Heading2, OutlineLevel::Level2},
+        {"Heading3", "heading 3", 12, 12, StyleIdentifier::Heading3, OutlineLevel::Level3},
+        {"Heading4", "heading 4", 12, 12, StyleIdentifier::Heading4, OutlineLevel::Level4},
+        {"Heading5", "heading 5", 11, 12, StyleIdentifier::Heading5, OutlineLevel::Level5},
+        {"Heading6", "heading 6", 11, 12, StyleIdentifier::Heading6, OutlineLevel::Level6},
+        {"Heading7", "heading 7", 11, 12, StyleIdentifier::Heading7, OutlineLevel::Level7},
+        {"Heading8", "heading 8", 11, 12, StyleIdentifier::Heading8, OutlineLevel::Level8},
+        {"Heading9", "heading 9", 11, 12, StyleIdentifier::Heading9, OutlineLevel::Level9},
+    };
+    for (const auto& def : kHeadings) {
+        auto heading = add_builtin(StyleType::Paragraph, def.style_id, def.name, def.identifier);
+        heading->set_base_style_name("Normal");
+        heading->get_font().bold = true;
+        heading->get_font().size = def.font_size;
+        heading->get_paragraph_format().space_before = def.space_before;
+        heading->get_paragraph_format().space_after = 6;
+        heading->get_paragraph_format().keep_with_next = true;
+        heading->get_paragraph_format().keep_together = true;
+        heading->get_paragraph_format().outline_level = def.outline_level;
+        styles.add(heading);
+    }
+
+    // Title
+    auto title = add_builtin(StyleType::Paragraph, "Title", "Title", StyleIdentifier::Title);
+    title->set_base_style_name("Normal");
+    title->get_font().size = 28;
+    title->get_paragraph_format().alignment = ParagraphAlignment::Center;
+    title->get_paragraph_format().space_after = 0;
+    styles.add(title);
+
+    // Subtitle
+    auto subtitle =
+        add_builtin(StyleType::Paragraph, "Subtitle", "Subtitle", StyleIdentifier::Subtitle);
+    subtitle->set_base_style_name("Normal");
+    subtitle->get_font().size = 24;
+    subtitle->get_paragraph_format().alignment = ParagraphAlignment::Center;
+    subtitle->get_paragraph_format().space_after = 0;
+    styles.add(subtitle);
+
+    // List Paragraph
+    auto list_para = add_builtin(
+        StyleType::Paragraph, "ListParagraph", "List Paragraph", StyleIdentifier::ListParagraph);
+    list_para->set_base_style_name("Normal");
+    styles.add(list_para);
+
+    // Strong - character style
+    auto strong =
+        add_builtin(StyleType::Character, "Strong", "Strong", StyleIdentifier::Strong);
+    strong->get_font().bold = true;
+    styles.add(strong);
+
+    // Emphasis - character style
+    auto emphasis =
+        add_builtin(StyleType::Character, "Emphasis", "Emphasis", StyleIdentifier::Emphasis);
+    emphasis->get_font().italic = true;
+    styles.add(emphasis);
+
+    // Hyperlink - character style
+    auto hyperlink =
+        add_builtin(StyleType::Character, "Hyperlink", "Hyperlink", StyleIdentifier::Hyperlink);
+    hyperlink->get_font().color = Color::from_rgb(0x00, 0x00, 0xFF);
+    hyperlink->get_font().underline = UnderlineType::Single;
+    styles.add(hyperlink);
+}
+
 }  // namespace
 
 // ============================================================================
@@ -1094,365 +1435,19 @@ int Document::get_next_endnote_id() {
 bool Document::create_empty_document() {
     tree_.clear();
 
-    // Create [Content_Types].xml
-    {
-        auto& doc = create_xml_part("[Content_Types].xml");
-        auto root = doc.append_child("Types");
-        root.append_attribute("xmlns").set_value(
-            "http://schemas.openxmlformats.org/package/2006/content-types");
-
-        auto rels = root.append_child("Default");
-        rels.append_attribute("Extension").set_value("rels");
-        rels.append_attribute("ContentType")
-            .set_value("application/vnd.openxmlformats-package.relationships+xml");
-
-        auto xml = root.append_child("Default");
-        xml.append_attribute("Extension").set_value("xml");
-        xml.append_attribute("ContentType").set_value("application/xml");
-
-        auto doc_override = root.append_child("Override");
-        doc_override.append_attribute("PartName").set_value("/word/document.xml");
-        doc_override.append_attribute("ContentType")
-            .set_value(
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml");
-    }
-
-    // Create _rels/.rels
-    {
-        auto& doc = create_xml_part("_rels/.rels");
-        auto root = doc.append_child("Relationships");
-        root.append_attribute("xmlns").set_value(
-            "http://schemas.openxmlformats.org/package/2006/relationships");
-
-        auto rel1 = root.append_child("Relationship");
-        rel1.append_attribute("Id").set_value("rId1");
-        rel1.append_attribute("Type").set_value(
-            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument");
-        rel1.append_attribute("Target").set_value("word/document.xml");
-
-        auto rel2 = root.append_child("Relationship");
-        rel2.append_attribute("Id").set_value("rId2");
-        rel2.append_attribute("Type").set_value(
-            "http://schemas.openxmlformats.org/package/2006/relationships/metadata/"
-            "core-properties");
-        rel2.append_attribute("Target").set_value("docProps/core.xml");
-
-        auto rel3 = root.append_child("Relationship");
-        rel3.append_attribute("Id").set_value("rId3");
-        rel3.append_attribute("Type").set_value(
-            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/"
-            "extended-properties");
-        rel3.append_attribute("Target").set_value("docProps/app.xml");
-    }
-
-    // Create word/_rels/document.xml.rels
-    {
-        auto& doc = create_xml_part("word/_rels/document.xml.rels");
-        auto root = doc.append_child("Relationships");
-        root.append_attribute("xmlns").set_value(
-            "http://schemas.openxmlformats.org/package/2006/relationships");
-
-        auto add_rel = [&root](const char* id, const char* type, const char* target) {
-            auto rel = root.append_child("Relationship");
-            rel.append_attribute("Id").set_value(id);
-            rel.append_attribute("Type").set_value(type);
-            rel.append_attribute("Target").set_value(target);
-        };
-
-        add_rel("rId1",
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
-                "styles.xml");
-        add_rel("rId2",
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings",
-                "settings.xml");
-        add_rel("rId3",
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable",
-                "fontTable.xml");
-        add_rel("rId4",
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
-                "theme/theme1.xml");
-        add_rel("rId5",
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings",
-                "webSettings.xml");
-    }
-
-    // Create word/document.xml
-    {
-        auto& doc = create_xml_part("word/document.xml");
-        auto root = doc.append_child("w:document");
-        root.append_attribute("xmlns:w").set_value(
-            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
-        root.append_attribute("xmlns:r").set_value(
-            "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-
-        auto body = root.append_child("w:body");
-
-        // Add empty paragraph
-        auto para = body.append_child("w:p");
-        auto run = para.append_child("w:r");
-        run.append_child("w:t");
-
-        // Add section properties
-        auto sect_pr = body.append_child("w:sectPr");
-        auto pg_sz = sect_pr.append_child("w:pgSz");
-        pg_sz.append_attribute("w:w").set_value(kDefaultPageWidthTwips);
-        pg_sz.append_attribute("w:h").set_value(kDefaultPageHeightTwips);
-
-        auto pg_mar = sect_pr.append_child("w:pgMar");
-        pg_mar.append_attribute("w:top").set_value(kDefaultMarginTwips);
-        pg_mar.append_attribute("w:right").set_value(kDefaultMarginTwips);
-        pg_mar.append_attribute("w:bottom").set_value(kDefaultMarginTwips);
-        pg_mar.append_attribute("w:left").set_value(kDefaultMarginTwips);
-    }
-
-    // Create word/styles.xml with default Normal style
-    {
-        auto& doc = create_xml_part("word/styles.xml");
-        auto root = doc.append_child("w:styles");
-        root.append_attribute("xmlns:w").set_value(
-            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
-
-        auto style = root.append_child("w:style");
-        style.append_attribute("w:type").set_value("paragraph");
-        style.append_attribute("w:default").set_value("1");
-        style.append_attribute("w:styleId").set_value("Normal");
-
-        auto name = style.append_child("w:name");
-        name.append_attribute("w:val").set_value("Normal");
-    }
-
-    // Create word/settings.xml
-    {
-        auto& doc = create_xml_part("word/settings.xml");
-        auto root = doc.append_child("w:settings");
-        root.append_attribute("xmlns:w").set_value(
-            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
-        root.append_child("w:zoom").append_attribute("w:percent").set_value("100");
-        root.append_child("w:defaultTabStop")
-            .append_attribute("w:val")
-            .set_value(kDefaultTabStopTwips);
-        root.append_child("w:characterSpacingControl")
-            .append_attribute("w:val")
-            .set_value("doNotCompress");
-        root.append_child("w:compat");
-        root.append_child("w:docVars");
-    }
-
-    // Create word/fontTable.xml
-    {
-        auto& doc = create_xml_part("word/fontTable.xml");
-        auto root = doc.append_child("w:fonts");
-        root.append_attribute("xmlns:w").set_value(
-            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
-        auto font = root.append_child("w:font");
-        font.append_attribute("w:name").set_value("Calibri");
-        font.append_child("w:panose1").append_attribute("w:val").set_value("020F0502020204030204");
-        font.append_child("w:charset").append_attribute("w:val").set_value("00");
-        font.append_child("w:family").append_attribute("w:val").set_value("swiss");
-        font.append_child("w:pitch").append_attribute("w:val").set_value("variable");
-    }
-
-    // Create word/theme/theme1.xml
-    {
-        auto& doc = create_xml_part("word/theme/theme1.xml");
-        auto root = doc.append_child("a:theme");
-        root.append_attribute("xmlns:a").set_value(
-            "http://schemas.openxmlformats.org/drawingml/2006/main");
-        root.append_attribute("name").set_value("Office Theme");
-        auto theme_elem = root.append_child("a:themeElements");
-        auto clr_scheme = theme_elem.append_child("a:clrScheme");
-        clr_scheme.append_attribute("name").set_value("Office");
-        auto font_scheme = theme_elem.append_child("a:fontScheme");
-        font_scheme.append_attribute("name").set_value("Office");
-        auto fmt_scheme = theme_elem.append_child("a:fmtScheme");
-        fmt_scheme.append_attribute("name").set_value("Office");
-    }
-
-    // Create word/webSettings.xml
-    {
-        auto& doc = create_xml_part("word/webSettings.xml");
-        auto root = doc.append_child("w:webSettings");
-        root.append_attribute("xmlns:w").set_value(
-            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
-        root.append_child("w:optimizeForBrowser");
-    }
-
-    // Create docProps/core.xml
-    {
-        auto& doc = create_xml_part("docProps/core.xml");
-        auto root = doc.append_child("cp:coreProperties");
-        root.append_attribute("xmlns:cp")
-            .set_value("http://schemas.openxmlformats.org/package/2006/metadata/core-properties");
-        root.append_attribute("xmlns:dc").set_value("http://purl.org/dc/elements/1.1/");
-        root.append_attribute("xmlns:dcterms").set_value("http://purl.org/dc/terms/");
-        root.append_attribute("xmlns:dcmitype").set_value("http://purl.org/dc/dcmitype/");
-        root.append_attribute("xmlns:xsi").set_value("http://www.w3.org/2001/XMLSchema-instance");
-        root.append_child("dc:title");
-        root.append_child("dc:subject");
-        root.append_child("dc:creator");
-        root.append_child("cp:keywords");
-        root.append_child("dc:description");
-        root.append_child("cp:lastModifiedBy");
-        root.append_child("cp:revision").append_child(pugi::node_pcdata).set_value("1");
-        root.append_child("dcterms:created")
-            .append_attribute("xsi:type")
-            .set_value("dcterms:W3CDTF");
-        root.append_child("dcterms:modified")
-            .append_attribute("xsi:type")
-            .set_value("dcterms:W3CDTF");
-    }
-
-    // Create docProps/app.xml
-    {
-        auto& doc = create_xml_part("docProps/app.xml");
-        auto root = doc.append_child("Properties");
-        root.append_attribute("xmlns").set_value(
-            "http://schemas.openxmlformats.org/officeDocument/2006/extended-properties");
-        root.append_attribute("xmlns:vt")
-            .set_value("http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes");
-        root.append_child("Template").append_child(pugi::node_pcdata).set_value("Normal.dotm");
-        root.append_child("TotalTime").append_child(pugi::node_pcdata).set_value("0");
-        root.append_child("Pages").append_child(pugi::node_pcdata).set_value("1");
-        root.append_child("Words").append_child(pugi::node_pcdata).set_value("0");
-        root.append_child("Characters").append_child(pugi::node_pcdata).set_value("0");
-        root.append_child("Application")
-            .append_child(pugi::node_pcdata)
-            .set_value("Microsoft Office Word");
-        root.append_child("DocSecurity").append_child(pugi::node_pcdata).set_value("0");
-        root.append_child("Lines").append_child(pugi::node_pcdata).set_value("1");
-        root.append_child("Paragraphs").append_child(pugi::node_pcdata).set_value("1");
-        root.append_child("Company");
-        root.append_child("AppVersion").append_child(pugi::node_pcdata).set_value("16.0000");
-    }
-
-    // Register content types for all parts
-    add_content_type_default("rels", "application/vnd.openxmlformats-package.relationships+xml");
-    add_content_type_default("xml", "application/xml");
-
-    add_content_type_override(
-        "/word/styles.xml",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml");
-    add_content_type_override(
-        "/word/settings.xml",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml");
-    add_content_type_override(
-        "/word/webSettings.xml",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml");
-    add_content_type_override(
-        "/word/fontTable.xml",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml");
-    add_content_type_override("/word/theme/theme1.xml",
-                              "application/vnd.openxmlformats-officedocument.theme+xml");
-    add_content_type_override("/docProps/core.xml",
-                              "application/vnd.openxmlformats-package.core-properties+xml");
-    add_content_type_override(
-        "/docProps/app.xml",
-        "application/vnd.openxmlformats-officedocument.extended-properties+xml");
-    add_content_type_override(
-        "/word/document.xml",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml");
-
-    // Initialize default styles in DOM
-    if (styles_) {
-        styles_->clear();
-
-        auto add_builtin_style = [this](StyleType type,
-                                        const char* style_id,
-                                        const char* name,
-                                        StyleIdentifier identifier) {
-            auto style = std::make_shared<Style>(this, type);
-            style->set_style_id(style_id);
-            style->set_name(name);
-            style->set_style_identifier(identifier);
-            style->set_is_built_in(true);
-            return style;
-        };
-
-        // Normal - default paragraph style
-        auto normal =
-            add_builtin_style(StyleType::Paragraph, "Normal", "Normal", StyleIdentifier::Normal);
-        normal->set_is_default(true);
-        styles_->add(normal);
-
-        // Heading 1-9 - paragraph styles with outline levels
-        struct HeadingDef {
-            const char* style_id;
-            const char* name;
-            double font_size;
-            double space_before;
-            StyleIdentifier identifier;
-            OutlineLevel outline_level;
-        };
-        static const HeadingDef kHeadings[] = {
-            {"Heading1", "heading 1", 16, 24, StyleIdentifier::Heading1, OutlineLevel::Level1},
-            {"Heading2", "heading 2", 14, 18, StyleIdentifier::Heading2, OutlineLevel::Level2},
-            {"Heading3", "heading 3", 12, 12, StyleIdentifier::Heading3, OutlineLevel::Level3},
-            {"Heading4", "heading 4", 12, 12, StyleIdentifier::Heading4, OutlineLevel::Level4},
-            {"Heading5", "heading 5", 11, 12, StyleIdentifier::Heading5, OutlineLevel::Level5},
-            {"Heading6", "heading 6", 11, 12, StyleIdentifier::Heading6, OutlineLevel::Level6},
-            {"Heading7", "heading 7", 11, 12, StyleIdentifier::Heading7, OutlineLevel::Level7},
-            {"Heading8", "heading 8", 11, 12, StyleIdentifier::Heading8, OutlineLevel::Level8},
-            {"Heading9", "heading 9", 11, 12, StyleIdentifier::Heading9, OutlineLevel::Level9},
-        };
-        for (const auto& def : kHeadings) {
-            auto heading =
-                add_builtin_style(StyleType::Paragraph, def.style_id, def.name, def.identifier);
-            heading->set_base_style_name("Normal");
-            heading->get_font().bold = true;
-            heading->get_font().size = def.font_size;
-            heading->get_paragraph_format().space_before = def.space_before;
-            heading->get_paragraph_format().space_after = 6;
-            heading->get_paragraph_format().keep_with_next = true;
-            heading->get_paragraph_format().keep_together = true;
-            heading->get_paragraph_format().outline_level = def.outline_level;
-            styles_->add(heading);
-        }
-
-        // Title
-        auto title =
-            add_builtin_style(StyleType::Paragraph, "Title", "Title", StyleIdentifier::Title);
-        title->set_base_style_name("Normal");
-        title->get_font().size = 28;
-        title->get_paragraph_format().alignment = ParagraphAlignment::Center;
-        title->get_paragraph_format().space_after = 0;
-        styles_->add(title);
-
-        // Subtitle
-        auto subtitle = add_builtin_style(
-            StyleType::Paragraph, "Subtitle", "Subtitle", StyleIdentifier::Subtitle);
-        subtitle->set_base_style_name("Normal");
-        subtitle->get_font().size = 24;
-        subtitle->get_paragraph_format().alignment = ParagraphAlignment::Center;
-        subtitle->get_paragraph_format().space_after = 0;
-        styles_->add(subtitle);
-
-        // List Paragraph
-        auto list_para = add_builtin_style(StyleType::Paragraph,
-                                           "ListParagraph",
-                                           "List Paragraph",
-                                           StyleIdentifier::ListParagraph);
-        list_para->set_base_style_name("Normal");
-        styles_->add(list_para);
-
-        // Strong - character style
-        auto strong =
-            add_builtin_style(StyleType::Character, "Strong", "Strong", StyleIdentifier::Strong);
-        strong->get_font().bold = true;
-        styles_->add(strong);
-
-        // Emphasis - character style
-        auto emphasis = add_builtin_style(
-            StyleType::Character, "Emphasis", "Emphasis", StyleIdentifier::Emphasis);
-        emphasis->get_font().italic = true;
-        styles_->add(emphasis);
-
-        // Hyperlink - character style
-        auto hyperlink = add_builtin_style(
-            StyleType::Character, "Hyperlink", "Hyperlink", StyleIdentifier::Hyperlink);
-        hyperlink->get_font().color = Color::from_rgb(0x00, 0x00, 0xFF);
-        hyperlink->get_font().underline = UnderlineType::Single;
-        styles_->add(hyperlink);
-    }
+    create_empty_content_types(this);
+    create_empty_package_rels(this);
+    create_empty_document_rels(this);
+    create_empty_document_xml(this);
+    create_empty_styles_xml(this);
+    create_empty_settings_xml(this);
+    create_empty_font_table_xml(this);
+    create_empty_theme_xml(this);
+    create_empty_web_settings_xml(this);
+    create_empty_core_properties_xml(this);
+    create_empty_extended_properties_xml(this);
+    register_empty_doc_content_types(this);
+    initialize_default_styles(this);
 
     return true;
 }
