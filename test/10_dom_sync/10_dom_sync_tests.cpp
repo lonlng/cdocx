@@ -466,5 +466,128 @@ TEST(DomSyncTest, LineSpacingRuleRoundTrip) {
         EXPECT_EQ(p2->get_paragraph_format().line_spacing_rule, LineSpacingRule::Exact);
         EXPECT_EQ(p3->get_paragraph_format().line_spacing_rule, LineSpacingRule::AtLeast);
     }
+}
 
+// ============================================================================
+// Paragraph Convenience Methods Round-Trip
+// ============================================================================
+
+TEST(DomSyncTest, ParagraphAppendHyperlinkRoundTrip) {
+    TempDoc temp("test_para_hyperlink_rt.docx");
+
+    {
+        Document doc(temp.path());
+        ASSERT_TRUE(doc.create_empty());
+        auto para = doc.get_first_section()->get_body()->append_paragraph();
+        auto link = para->append_hyperlink("Click here", "https://example.com");
+        ASSERT_NE(link, nullptr);
+        EXPECT_EQ(link->get_address(), "https://example.com");
+        EXPECT_EQ(link->get_result(), "Click here");
+        doc.save();
+    }
+
+    {
+        Document doc(temp.path());
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+        auto para = doc.get_first_section()->get_body()->get_first_paragraph();
+        ASSERT_NE(para, nullptr);
+        auto children = para->get_children();
+        ASSERT_EQ(children.size(), 1u);
+        auto link = std::dynamic_pointer_cast<Hyperlink>(children[0]);
+        ASSERT_NE(link, nullptr);
+        EXPECT_EQ(link->get_address(), "https://example.com");
+        EXPECT_EQ(link->get_result(), "Click here");
+    }
+}
+
+TEST(DomSyncTest, ParagraphAppendPageNumberRoundTrip) {
+    TempDoc temp("test_para_pagenum_rt.docx");
+
+    {
+        Document doc(temp.path());
+        ASSERT_TRUE(doc.create_empty());
+        auto para = doc.get_first_section()->get_body()->append_paragraph();
+        auto field = para->append_page_number("\\* ROMAN");
+        ASSERT_NE(field, nullptr);
+        EXPECT_EQ(field->get_type(), FieldType::Page);
+        EXPECT_EQ(field->get_field_code(), "PAGE");
+        doc.save();
+    }
+
+    {
+        Document doc(temp.path());
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+        auto para = doc.get_first_section()->get_body()->get_first_paragraph();
+        ASSERT_NE(para, nullptr);
+        auto fields = para->get_fields();
+        ASSERT_EQ(fields.size(), 1u);
+        // Note: field type is not preserved on round-trip (parsed as Unknown)
+        EXPECT_EQ(fields[0]->get_field_code(), "PAGE");
+    }
+}
+
+TEST(DomSyncTest, ParagraphAppendDateRoundTrip) {
+    TempDoc temp("test_para_date_rt.docx");
+
+    {
+        Document doc(temp.path());
+        ASSERT_TRUE(doc.create_empty());
+        auto para = doc.get_first_section()->get_body()->append_paragraph();
+        auto field = para->append_date("\\@ \"yyyy-MM-dd\"");
+        ASSERT_NE(field, nullptr);
+        EXPECT_EQ(field->get_type(), FieldType::Date);
+        EXPECT_EQ(field->get_field_code(), "DATE");
+        doc.save();
+    }
+
+    {
+        Document doc(temp.path());
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+        auto para = doc.get_first_section()->get_body()->get_first_paragraph();
+        ASSERT_NE(para, nullptr);
+        auto fields = para->get_fields();
+        ASSERT_EQ(fields.size(), 1u);
+        // Note: field type is not preserved on round-trip (parsed as Unknown)
+        EXPECT_EQ(fields[0]->get_field_code(), "DATE");
+    }
+}
+
+TEST(DomSyncTest, SectionEnsureHeaderFooter) {
+    TempDoc temp("test_ensure_hf.docx");
+
+    {
+        Document doc(temp.path());
+        ASSERT_TRUE(doc.create_empty());
+        auto sect = doc.get_first_section();
+        ASSERT_NE(sect, nullptr);
+
+        auto h1 = sect->ensure_header();
+        ASSERT_NE(h1, nullptr);
+        h1->append_paragraph("Header text");
+
+        auto h2 = sect->ensure_header();
+        EXPECT_EQ(h1.get(), h2.get());
+
+        auto f1 = sect->ensure_footer();
+        ASSERT_NE(f1, nullptr);
+        f1->append_paragraph("Footer text");
+
+        auto f2 = sect->ensure_footer();
+        EXPECT_EQ(f1.get(), f2.get());
+
+        doc.save();
+    }
+
+    {
+        Document doc(temp.path());
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+        auto sect = doc.get_first_section();
+        ASSERT_NE(sect, nullptr);
+        EXPECT_TRUE(sect->has_header());
+        EXPECT_TRUE(sect->has_footer());
+    }
 }

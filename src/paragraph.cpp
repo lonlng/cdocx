@@ -308,6 +308,10 @@ RunCollection Paragraph::get_runs() const {
     return RunCollection(runs);
 }
 
+std::vector<std::shared_ptr<Field>> Paragraph::get_fields() const {
+    return get_children_of_type<Field>();
+}
+
 void Paragraph::set_text(const std::string& text) {
     remove_all_children();
     append_run(text);
