@@ -1,10 +1,8 @@
 # CDocx API 使用示例
 
-> **版本说明**：本文档基于 **v0.8.0** 实际已实现 API 编写，所有标注为"可用"的接口均已在 `.cpp` 中有完整实现，可直接使用。部分高级便捷方法（如 `Paragraph::append_page_number()`、`Section::ensure_header()` 等）仍在开发中，已在相应示例中标注。
+> **版本说明**：本文档基于 **v0.8.0** 实际已实现 API 编写，所有标注为"可用"的接口均已在 `.cpp` 中有完整实现，可直接使用。
 >
-> **已实现的 DOM API（v0.8.0）**：`Document::open/save/clone`、`CDocx::create_document/load_document/save_document`、`get_body`、`append_paragraph`、`append_run`、`append_table`、`get_rows/get_cells`、`set_text`、`Section::add_header/footer/clone`、`Paragraph::clone`、`Table::clone`、`Row::clone`、`Cell::clone`、`BookmarkStart/End`、`Field`（序列化/反序列化）、`Hyperlink`（序列化/反序列化）、`Node::get_next_node_in_document` / `get_previous_node_in_document`、`HeaderFooter::append_paragraph` / `append_table` / `get_paragraphs`、基础 `Font`/`ParagraphFormat` 设置、`DocumentSearch::find` / `find_all` / `replace` / `replace_all` / `replace_with_formatting` / `find_and_process`、`Table::auto_fit` / `insert_column` / `delete_column`、`TableOperations` 静态辅助方法、`TemplateEngine` 统一模板引擎、`DocumentBuilder`（含 `insert_hyperlink`、`insert_image`、`start_bookmark`/`end_bookmark`）、`CommentCollection`、`MailMerge`、`Watermark`、`StyleCollection`。
->
-> **尚未实现的便捷 API**：`Paragraph::append_hyperlink()`（段落级便捷方法）、`Paragraph::append_page_number()`、`Paragraph::append_date()`、`Paragraph::append_time()`、`Section::ensure_header/footer()`（请使用 `Section::add_header/footer()`）。
+> **已实现的 DOM API（v0.8.0）**：`Document::open/save/clone`、`CDocx::create_document/load_document/save_document`、`get_body`、`append_paragraph`、`append_run`、`append_table`、`get_rows/get_cells`、`set_text`、`Section::add_header/footer/ensure_header/ensure_footer/clone`、`Paragraph::clone`、`Paragraph::append_hyperlink` / `append_page_number` / `append_date` / `append_time` / `append_merge_field`、`Table::clone`、`Row::clone`、`Cell::clone`、`BookmarkStart/End`、`Field`（序列化/反序列化）、`Hyperlink`（序列化/反序列化）、`Node::get_next_node_in_document` / `get_previous_node_in_document`、`HeaderFooter::append_paragraph` / `append_table` / `get_paragraphs`、基础 `Font`/`ParagraphFormat` 设置、`DocumentSearch::find` / `find_all` / `replace` / `replace_all` / `replace_with_formatting` / `find_and_process`、`Table::auto_fit` / `insert_column` / `delete_column`、`TableOperations` 静态辅助方法、`TemplateEngine` 统一模板引擎、`DocumentBuilder`（含 `insert_hyperlink`、`insert_image`、`start_bookmark`/`end_bookmark`）、`CommentCollection`、`MailMerge`、`Watermark`、`StyleCollection`。
 
 ## 概述
 
@@ -110,6 +108,30 @@ if (paras.get_count() > 0) {
     auto first = paras[0];
     auto last = paras.last();
 }
+```
+
+### 段落便捷方法 (v0.8.0+)
+
+```cpp
+auto para = doc->get_body()->append_paragraph();
+
+// 插入超链接
+para->append_hyperlink("访问示例", "https://example.com");
+
+// 插入书签链接
+para->append_hyperlink("跳转到第一章", "chapter1", true);
+
+// 插入页码字段
+para->append_page_number("\\* ROMAN");
+
+// 插入日期字段（带格式开关）
+para->append_date("\\@ \"yyyy-MM-dd\"");
+
+// 插入时间字段
+para->append_time("\\@ \"HH:mm:ss\"");
+
+// 插入 MERGEFIELD
+para->append_merge_field("Name", "\\* Upper");
 ```
 
 ---
@@ -492,6 +514,14 @@ header->append_paragraph("Header Text");
 // 添加页脚
 auto footer = section->add_footer(cdocx::HeaderFooterType::Primary);
 footer->append_paragraph("Footer Text");
+
+// 确保页眉存在（存在则返回，不存在则创建）
+auto h = section->ensure_header();  // 等价于 get_header() ?? add_header()
+h->append_paragraph("Safe header");
+
+// 确保页脚存在
+auto f = section->ensure_footer();
+f->append_paragraph("Safe footer");
 
 // 链接到前一节（取消独立页眉页脚）
 section->link_to_previous(cdocx::HeaderFooterType::Primary, true);
