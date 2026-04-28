@@ -34,6 +34,17 @@ void apply_formatting_flags(pugi::xml_node r_pr, FormattingFlag f) {
     }
 }
 
+struct BreakCharMapping {
+    BreakType type;
+    char16_t char_code;
+};
+
+static const BreakCharMapping kBreakCharMappings[] = {
+    {BreakType::PageBreak, 0x0C},
+    {BreakType::LineBreak, 0x0B},
+    {BreakType::ColumnBreak, 0x0E},
+};
+
 }  // namespace
 
 // ============================================================================
@@ -184,16 +195,14 @@ std::shared_ptr<SpecialChar> Paragraph::append_special_char(char16_t char_code) 
 }
 
 std::shared_ptr<SpecialChar> Paragraph::append_break(BreakType break_type) {
-    switch (break_type) {
-        case BreakType::PageBreak:
-            return append_page_break();
-        case BreakType::LineBreak:
-            return append_line_break();
-        case BreakType::ColumnBreak:
-            return append_special_char(0x0E);  // column break
-        default:
-            return append_special_char(0x0D);  // paragraph break
+    for (const auto& mapping : kBreakCharMappings) {
+        if (mapping.type == break_type) {
+            auto special = std::make_shared<SpecialChar>(mapping.char_code);
+            append_child(special);
+            return special;
+        }
     }
+    return append_special_char(0x0D);  // paragraph break
 }
 
 std::shared_ptr<SpecialChar> Paragraph::append_page_break() {
