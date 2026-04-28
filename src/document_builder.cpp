@@ -12,7 +12,6 @@
 #include <cdocx/paragraph.h>
 #include <cdocx/section.h>
 
-#include <cctype>
 #include <cstring>
 #include <filesystem>
 #include <fstream>

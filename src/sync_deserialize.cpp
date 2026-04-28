@@ -14,7 +14,6 @@
 #include <cdocx/section.h>
 #include <cdocx/table.h>
 
-#include <cctype>
 #include <cstring>
 
 namespace cdocx {

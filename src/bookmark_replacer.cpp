@@ -15,7 +15,6 @@
 #include "sync_common.h"
 
 #include <algorithm>
-#include <cctype>
 #include <fstream>
 
 namespace cdocx {
