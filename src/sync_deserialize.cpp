@@ -19,6 +19,22 @@
 
 namespace cdocx {
 
+static bool is_para_node(const char* name) {
+    return std::strcmp(name, "w:p") == 0;
+}
+
+static bool is_table_node(const char* name) {
+    return std::strcmp(name, "w:tbl") == 0;
+}
+
+static bool is_sectpr_node(const char* name) {
+    return std::strcmp(name, "w:sectPr") == 0;
+}
+
+static bool is_content_node(const char* name) {
+    return is_para_node(name) || is_table_node(name);
+}
+
 static void parse_content_children(Document* doc,
                                  pugi::xml_node start,
                                  pugi::xml_node end,
@@ -54,7 +70,7 @@ void Document::sync_sections_from_physical() {
 
     pugi::xml_node current_begin = body.first_child();
     for (auto node = body.first_child(); node; node = node.next_sibling()) {
-        if (std::strcmp(node.name(), "w:sectPr") == 0) {
+        if (is_sectpr_node(node.name())) {
             ranges.push_back({current_begin, node});
             current_begin = node.next_sibling();
         }
@@ -402,11 +418,11 @@ static void parse_content_children(Document* doc,
                                  CompositeNode* container) {
     for (auto node = start; node && node != end; node = node.next_sibling()) {
         const char* name = node.name();
-        if (std::strcmp(name, "w:p") == 0) {
+        if (is_para_node(name)) {
             if (auto para = doc->parse_paragraph_from_xml(node)) {
                 container->append_child(para);
             }
-        } else if (std::strcmp(name, "w:tbl") == 0) {
+        } else if (is_table_node(name)) {
             if (auto table = doc->parse_table_from_xml(node)) {
                 container->append_child(table);
             }
@@ -761,15 +777,15 @@ std::shared_ptr<Body> Document::parse_body_from_xml(pugi::xml_node body_node) {
     // Parse paragraphs and tables (stop at sect_pr)
     for (auto node = body_node.first_child(); node; node = node.next_sibling()) {
         const char* name = node.name();
-        if (std::strcmp(name, "w:p") == 0) {
+        if (is_para_node(name)) {
             if (auto para = parse_paragraph_from_xml(node)) {
                 body->append_child(para);
             }
-        } else if (std::strcmp(name, "w:tbl") == 0) {
+        } else if (is_table_node(name)) {
             if (auto table = parse_table_from_xml(node)) {
                 body->append_child(table);
             }
-        } else if (std::strcmp(name, "w:sectPr") == 0) {
+        } else if (is_sectpr_node(name)) {
             break;
         }
     }
