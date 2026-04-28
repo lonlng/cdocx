@@ -629,6 +629,15 @@ static void serialize_list_format_to_xml(pugi::xml_node para_xml, const ListForm
     num_id.append_attribute("w:val").set_value(static_cast<unsigned int>(list_format.list_id));
 }
 
+template <typename T>
+static void serialize_id_node_to_xml(pugi::xml_node parent, const char* tag_name, T* node) {
+    if (!node) {
+        return;
+    }
+    auto xml = parent.append_child(tag_name);
+    xml.append_attribute("w:id").set_value(node->get_id());
+}
+
 static void serialize_bookmark_start_to_xml(pugi::xml_node parent, BookmarkStart* bookmark) {
     if (!bookmark) {
         return;
@@ -639,27 +648,15 @@ static void serialize_bookmark_start_to_xml(pugi::xml_node parent, BookmarkStart
 }
 
 static void serialize_bookmark_end_to_xml(pugi::xml_node parent, BookmarkEnd* bookmark) {
-    if (!bookmark) {
-        return;
-    }
-    auto xml = parent.append_child("w:bookmarkEnd");
-    xml.append_attribute("w:id").set_value(bookmark->get_id());
+    serialize_id_node_to_xml(parent, "w:bookmarkEnd", bookmark);
 }
 
 static void serialize_comment_range_start_to_xml(pugi::xml_node parent, CommentRangeStart* comment) {
-    if (!comment) {
-        return;
-    }
-    auto xml = parent.append_child("w:commentRangeStart");
-    xml.append_attribute("w:id").set_value(comment->get_id());
+    serialize_id_node_to_xml(parent, "w:commentRangeStart", comment);
 }
 
 static void serialize_comment_range_end_to_xml(pugi::xml_node parent, CommentRangeEnd* comment) {
-    if (!comment) {
-        return;
-    }
-    auto xml = parent.append_child("w:commentRangeEnd");
-    xml.append_attribute("w:id").set_value(comment->get_id());
+    serialize_id_node_to_xml(parent, "w:commentRangeEnd", comment);
 }
 
 static void serialize_comment_reference_to_xml(pugi::xml_node parent, int id) {
@@ -669,19 +666,11 @@ static void serialize_comment_reference_to_xml(pugi::xml_node parent, int id) {
 }
 
 static void serialize_footnote_reference_to_xml(pugi::xml_node parent, FootnoteReference* ref) {
-    if (!ref) {
-        return;
-    }
-    auto xml = parent.append_child("w:footnoteReference");
-    xml.append_attribute("w:id").set_value(ref->get_id());
+    serialize_id_node_to_xml(parent, "w:footnoteReference", ref);
 }
 
 static void serialize_endnote_reference_to_xml(pugi::xml_node parent, EndnoteReference* ref) {
-    if (!ref) {
-        return;
-    }
-    auto xml = parent.append_child("w:endnoteReference");
-    xml.append_attribute("w:id").set_value(ref->get_id());
+    serialize_id_node_to_xml(parent, "w:endnoteReference", ref);
 }
 
 void serialize_paragraph_to_xml(pugi::xml_node parent, const Paragraph* para) {
