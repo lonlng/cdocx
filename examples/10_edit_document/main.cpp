@@ -33,7 +33,10 @@ bool contains_ignore_case(const std::string& text, const std::string& search) {
     auto it = std::search(
         text.begin(), text.end(),
         search.begin(), search.end(),
-        [](char ch1, char ch2) { return std::tolower(ch1) == std::tolower(ch2); }
+        [](char ch1, char ch2) {
+            return std::tolower(static_cast<unsigned char>(ch1)) ==
+                   std::tolower(static_cast<unsigned char>(ch2));
+        }
     );
     return it != text.end();
 }

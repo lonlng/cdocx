@@ -79,7 +79,8 @@ inline bool starts_with_ci(const std::string& str, const std::string& prefix) {
         return false;
     }
     return std::equal(prefix.begin(), prefix.end(), str.begin(), [](char a, char b) {
-        return std::tolower(a) == std::tolower(b);
+        return std::tolower(static_cast<unsigned char>(a)) ==
+               std::tolower(static_cast<unsigned char>(b));
     });
 }
 
@@ -91,14 +92,16 @@ inline bool contains_ci(const std::string& str, const std::string& substr) {
         return false;
     }
     auto it = std::search(str.begin(), str.end(), substr.begin(), substr.end(), [](char a, char b) {
-        return std::tolower(a) == std::tolower(b);
+        return std::tolower(static_cast<unsigned char>(a)) ==
+               std::tolower(static_cast<unsigned char>(b));
     });
     return it != str.end();
 }
 
 inline std::string to_lower(const std::string& str) {
     std::string result = str;
-    std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+    std::transform(result.begin(), result.end(), result.begin(),
+                   [](char c) { return static_cast<char>(std::tolower(static_cast<unsigned char>(c))); });
     return result;
 }
 
