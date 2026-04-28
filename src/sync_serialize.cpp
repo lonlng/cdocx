@@ -22,22 +22,6 @@ namespace cdocx {
 static void serialize_section_to_xml(pugi::xml_node body_xml, const Section* section);
 static void serialize_table_to_xml(pugi::xml_node parent, const Table* table);
 
-static bool is_para_node(const char* name) {
-    return std::strcmp(name, "w:p") == 0;
-}
-
-static bool is_table_node(const char* name) {
-    return std::strcmp(name, "w:tbl") == 0;
-}
-
-static bool is_sectpr_node(const char* name) {
-    return std::strcmp(name, "w:sectPr") == 0;
-}
-
-static bool is_content_node(const char* name) {
-    return is_para_node(name) || is_table_node(name);
-}
-
 // ============================================================================
 // DOM -> Physical (Serialization)
 // ============================================================================

@@ -41,6 +41,14 @@ void parse_field_code_and_switches(const std::string& code, Field* field);
 void strip_whitespace_text_nodes(pugi::xml_node node);
 
 // ---------------------------------------------------------------------------
+// Node name helpers (shared between serialize and deserialize)
+// ---------------------------------------------------------------------------
+bool is_para_node(const char* name);
+bool is_table_node(const char* name);
+bool is_sectpr_node(const char* name);
+bool is_content_node(const char* name);
+
+// ---------------------------------------------------------------------------
 // Time / property helpers
 // ---------------------------------------------------------------------------
 std::string time_to_w3cdtf(std::time_t t);

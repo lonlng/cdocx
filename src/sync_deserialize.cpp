@@ -19,18 +19,6 @@
 
 namespace cdocx {
 
-static bool is_para_node(const char* name) {
-    return std::strcmp(name, "w:p") == 0;
-}
-
-static bool is_table_node(const char* name) {
-    return std::strcmp(name, "w:tbl") == 0;
-}
-
-static bool is_sectpr_node(const char* name) {
-    return std::strcmp(name, "w:sectPr") == 0;
-}
-
 static void parse_content_children(Document* doc,
                                  pugi::xml_node start,
                                  pugi::xml_node end,

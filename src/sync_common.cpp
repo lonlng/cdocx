@@ -29,6 +29,22 @@ void remove_managed_children(pugi::xml_node parent, std::initializer_list<const 
     }
 }
 
+bool is_para_node(const char* name) {
+    return std::strcmp(name, "w:p") == 0;
+}
+
+bool is_table_node(const char* name) {
+    return std::strcmp(name, "w:tbl") == 0;
+}
+
+bool is_sectpr_node(const char* name) {
+    return std::strcmp(name, "w:sectPr") == 0;
+}
+
+bool is_content_node(const char* name) {
+    return is_para_node(name) || is_table_node(name);
+}
+
 struct HeaderFooterTypeMapping {
     HeaderFooterType type;
     const char* xml_value;
