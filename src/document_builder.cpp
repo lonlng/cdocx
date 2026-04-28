@@ -21,6 +21,31 @@
 
 namespace cdocx {
 
+namespace {
+
+struct BreakTypeMapping {
+    BreakType type;
+    const char* xml_value;
+};
+
+static const BreakTypeMapping kSectionBreakMappings[] = {
+    {BreakType::SectionBreakNextPage, "nextPage"},
+    {BreakType::SectionBreakContinuous, "continuous"},
+    {BreakType::SectionBreakEvenPage, "evenPage"},
+    {BreakType::SectionBreakOddPage, "oddPage"},
+};
+
+static const char* section_break_type_to_string(BreakType type) {
+    for (const auto& mapping : kSectionBreakMappings) {
+        if (mapping.type == type) {
+            return mapping.xml_value;
+        }
+    }
+    return nullptr;
+}
+
+}  // namespace
+
 // DocumentBuilder Implementation
 // ============================================================================
 
@@ -466,23 +491,7 @@ DocumentBuilder& DocumentBuilder::insert_break(BreakType break_type) {
             } else if (break_type == BreakType::ColumnBreak) {
                 br.append_attribute("w:type").set_value("column");
             } else {
-                const char* typeval = nullptr;
-                switch (break_type) {
-                    case BreakType::SectionBreakNextPage:
-                        typeval = "nextPage";
-                        break;
-                    case BreakType::SectionBreakContinuous:
-                        typeval = "continuous";
-                        break;
-                    case BreakType::SectionBreakEvenPage:
-                        typeval = "evenPage";
-                        break;
-                    case BreakType::SectionBreakOddPage:
-                        typeval = "oddPage";
-                        break;
-                    default:
-                        break;
-                }
+                const char* typeval = section_break_type_to_string(break_type);
                 if (typeval) {
                     br.append_attribute("w:type").set_value(typeval);
                 }
