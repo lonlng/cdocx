@@ -31,15 +31,20 @@ static bool is_sectpr_node(const char* name) {
     return std::strcmp(name, "w:sectPr") == 0;
 }
 
-static bool is_content_node(const char* name) {
-    return is_para_node(name) || is_table_node(name);
-}
-
 static void parse_content_children(Document* doc,
                                  pugi::xml_node start,
                                  pugi::xml_node end,
                                  CompositeNode* container);
 static void parse_header_footer_content(Document* doc, HeaderFooter* hf);
+
+// Helper: create a DOM node that only needs an ID set from XML
+// (BookmarkEnd, CommentRangeStart, CommentRangeEnd, FootnoteReference, EndnoteReference)
+template <typename T>
+static void append_id_node(Paragraph* para, Document* doc, pugi::xml_node node) {
+    auto obj = std::make_shared<T>(doc);
+    obj->set_id(node.attribute("w:id").as_int());
+    para->append_child(obj);
+}
 
 // ============================================================================
 // Physical -> DOM (Deserialization)
@@ -605,28 +610,18 @@ std::shared_ptr<Paragraph> Document::parse_paragraph_from_xml(pugi::xml_node par
             bookmark->set_name(child.attribute("w:name").value());
             para->append_child(bookmark);
         } else if (std::strcmp(name, "w:bookmarkEnd") == 0) {
-            auto bookmark = std::make_shared<BookmarkEnd>(this);
-            bookmark->set_id(child.attribute("w:id").as_int());
-            para->append_child(bookmark);
+            append_id_node<BookmarkEnd>(para.get(), this, child);
         } else if (std::strcmp(name, "w:commentRangeStart") == 0) {
-            auto comment = std::make_shared<CommentRangeStart>(this);
-            comment->set_id(child.attribute("w:id").as_int());
-            para->append_child(comment);
+            append_id_node<CommentRangeStart>(para.get(), this, child);
         } else if (std::strcmp(name, "w:commentRangeEnd") == 0) {
-            auto comment = std::make_shared<CommentRangeEnd>(this);
-            comment->set_id(child.attribute("w:id").as_int());
-            para->append_child(comment);
+            append_id_node<CommentRangeEnd>(para.get(), this, child);
         } else if (std::strcmp(name, "w:commentReference") == 0) {
             // Skip comment references - they are auto-generated during serialization
             continue;
         } else if (std::strcmp(name, "w:footnoteReference") == 0) {
-            auto ref = std::make_shared<FootnoteReference>(this);
-            ref->set_id(child.attribute("w:id").as_int());
-            para->append_child(ref);
+            append_id_node<FootnoteReference>(para.get(), this, child);
         } else if (std::strcmp(name, "w:endnoteReference") == 0) {
-            auto ref = std::make_shared<EndnoteReference>(this);
-            ref->set_id(child.attribute("w:id").as_int());
-            para->append_child(ref);
+            append_id_node<EndnoteReference>(para.get(), this, child);
         }
     }
 
