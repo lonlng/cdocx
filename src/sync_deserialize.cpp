@@ -572,12 +572,12 @@ std::shared_ptr<Paragraph> Document::parse_paragraph_from_xml(pugi::xml_node par
             }
         } else if (std::strcmp(name, "w:tab") == 0) {
             para->append_child(SpecialChar::tab());
-        } else if (std::strcmp(name, "w:bookmarkStart") == 0) {
+        } else if (is_bookmark_start_node(name)) {
             auto bookmark = std::make_shared<BookmarkStart>(this);
             bookmark->set_id(child.attribute("w:id").as_int());
             bookmark->set_name(child.attribute("w:name").value());
             para->append_child(bookmark);
-        } else if (std::strcmp(name, "w:bookmarkEnd") == 0) {
+        } else if (is_bookmark_end_node(name)) {
             append_id_node<BookmarkEnd>(para.get(), this, child);
         } else if (std::strcmp(name, "w:commentRangeStart") == 0) {
             append_id_node<CommentRangeStart>(para.get(), this, child);
