@@ -560,6 +560,33 @@ const FieldTypeMapping* find_field_mapping(FieldType type) {
     return nullptr;
 }
 
+// Appends a standard field sequence (begin → instr → separate → result → end)
+// to the given paragraph XML node.
+static void append_field_sequence(pugi::xml_node para,
+                                  const std::string& instr_text,
+                                  const std::string& result_text) {
+    pugi::xml_node run_start = para.append_child("w:r");
+    run_start.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("begin");
+
+    if (!instr_text.empty()) {
+        pugi::xml_node run_instr = para.append_child("w:r");
+        pugi::xml_node instr = run_instr.append_child("w:instrText");
+        instr.append_attribute("xml:space").set_value("preserve");
+        instr.text().set(instr_text.c_str());
+    }
+
+    pugi::xml_node run_sep = para.append_child("w:r");
+    run_sep.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("separate");
+
+    if (!result_text.empty()) {
+        pugi::xml_node run_result = para.append_child("w:r");
+        run_result.append_child("w:t").text().set(result_text.c_str());
+    }
+
+    pugi::xml_node run_end = para.append_child("w:r");
+    run_end.append_child("w:fldChar").append_attribute("w:fldCharType").set_value("end");
+}
+
 }  // anonymous namespace
 
 std::shared_ptr<Field> DocumentBuilder::insert_field(FieldType field_type, bool /*update_field*/) {
@@ -592,32 +619,9 @@ std::shared_ptr<Field> DocumentBuilder::insert_field_node(const std::shared_ptr<
         return nullptr;
     }
 
-    pugi::xml_node run_start = current_paragraph_.append_child("w:r");
-    pugi::xml_node fld_char_start = run_start.append_child("w:fldChar");
-    fld_char_start.append_attribute("w:fldCharType").set_value("begin");
-
     const std::string full_code = field->get_full_field_code();
-    if (!full_code.empty()) {
-        pugi::xml_node run_instr = current_paragraph_.append_child("w:r");
-        pugi::xml_node instr_text = run_instr.append_child("w:instrText");
-        instr_text.append_attribute("xml:space").set_value("preserve");
-        instr_text.text().set((" " + full_code + " \\* MERGEFORMAT").c_str());
-    }
-
-    pugi::xml_node run_sep = current_paragraph_.append_child("w:r");
-    pugi::xml_node fld_char_sep = run_sep.append_child("w:fldChar");
-    fld_char_sep.append_attribute("w:fldCharType").set_value("separate");
-
-    const std::string result = field->get_result();
-    if (!result.empty()) {
-        pugi::xml_node run_result = current_paragraph_.append_child("w:r");
-        const pugi::xml_node t = run_result.append_child("w:t");
-        t.text().set(result.c_str());
-    }
-
-    pugi::xml_node run_end = current_paragraph_.append_child("w:r");
-    pugi::xml_node fld_char_end = run_end.append_child("w:fldChar");
-    fld_char_end.append_attribute("w:fldCharType").set_value("end");
+    const std::string instr = full_code.empty() ? "" : (" " + full_code + " \\* MERGEFORMAT");
+    append_field_sequence(current_paragraph_, instr, field->get_result());
 
     if (doc_) {
         doc_->mark_xml_paragraph_dirty(current_paragraph_);
@@ -678,27 +682,8 @@ std::shared_ptr<Field> DocumentBuilder::insert_table_of_contents(const std::stri
     }
 
     const std::string full_code = field->get_full_field_code();
-
-    pugi::xml_node run_start = current_paragraph_.append_child("w:r");
-    pugi::xml_node fld_char_start = run_start.append_child("w:fldChar");
-    fld_char_start.append_attribute("w:fldCharType").set_value("begin");
-
-    pugi::xml_node run_instr = current_paragraph_.append_child("w:r");
-    pugi::xml_node instr_text = run_instr.append_child("w:instrText");
-    instr_text.append_attribute("xml:space").set_value("preserve");
-    instr_text.text().set((" " + full_code + " \\h").c_str());
-
-    pugi::xml_node run_sep = current_paragraph_.append_child("w:r");
-    pugi::xml_node fld_char_sep = run_sep.append_child("w:fldChar");
-    fld_char_sep.append_attribute("w:fldCharType").set_value("separate");
-
-    pugi::xml_node run_result = current_paragraph_.append_child("w:r");
-    const pugi::xml_node t = run_result.append_child("w:t");
-    t.text().set(field->get_result().c_str());
-
-    pugi::xml_node run_end = current_paragraph_.append_child("w:r");
-    pugi::xml_node fld_char_end = run_end.append_child("w:fldChar");
-    fld_char_end.append_attribute("w:fldCharType").set_value("end");
+    const std::string instr = " " + full_code + " \\h";
+    append_field_sequence(current_paragraph_, instr, field->get_result());
 
     if (doc_) {
         doc_->mark_xml_paragraph_dirty(current_paragraph_);
