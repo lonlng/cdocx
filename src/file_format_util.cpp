@@ -7,6 +7,8 @@
 #include <cdocx/file_format_util.h>
 #include <zip.h>
 
+#include "sync_common.h"
+
 #include <cctype>
 #include <cstring>
 #include <fstream>
@@ -23,13 +25,6 @@ FileFormatInfo::FileFormatInfo() = default;
 // ============================================================================
 // Helpers
 // ============================================================================
-
-static std::string to_lower(std::string s) {
-    for (auto& c : s) {
-        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
-    }
-    return s;
-}
 
 static bool starts_with(const std::vector<uint8_t>& data, const char* prefix, size_t len) {
     if (data.size() < len) {

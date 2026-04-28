@@ -457,9 +457,7 @@ std::string BookmarkReplacer::get_file_extension(const std::string& path) const 
         return "";
     }
 
-    std::string ext = path.substr(dot_pos + 1);
-    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-    return ext;
+    return to_lower(path.substr(dot_pos + 1));
 }
 
 std::string BookmarkReplacer::get_content_type(const std::string& ext) const {

@@ -6,6 +6,8 @@
 
 #include <cdocx/document.h>
 
+#include "sync_common.h"
+
 #include <cctype>
 #include <filesystem>
 #include <fstream>
@@ -354,10 +356,7 @@ std::string Document::get_mime_type(const std::string& filename) const {
     if (!ext.empty() && ext[0] == '.') {
         ext = ext.substr(1);
     }
-    // Convert to lowercase
-    for (auto& c : ext) {
-        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
-    }
+    ext = to_lower(ext);
 
     static const std::map<std::string, std::string> kMimeMap = {
         {"png", "image/png"},

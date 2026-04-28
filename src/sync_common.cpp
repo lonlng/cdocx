@@ -54,6 +54,13 @@ bool iequals(const std::string& a, const std::string& b) {
     return true;
 }
 
+std::string to_lower(std::string s) {
+    for (auto& c : s) {
+        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    }
+    return s;
+}
+
 bool is_para_node(const char* name) {
     return std::strcmp(name, "w:p") == 0;
 }
