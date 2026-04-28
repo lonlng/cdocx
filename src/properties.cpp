@@ -102,6 +102,76 @@ static const char* border_style_to_string(ParagraphProperties::Border::Style sty
     return "single";
 }
 
+// ---------------------------------------------------------------------------
+// Font Hint
+// ---------------------------------------------------------------------------
+
+struct FontHintMapping {
+    TextProperties::Font::Hint hint;
+    const char* xml_value;
+};
+
+static const FontHintMapping kFontHintMappings[] = {
+    {TextProperties::Font::Hint::EastAsia, "eastAsia"},
+    {TextProperties::Font::Hint::ComplexScript, "cs"},
+};
+
+static const char* font_hint_to_string(TextProperties::Font::Hint hint) {
+    for (const auto& mapping : kFontHintMappings) {
+        if (mapping.hint == hint) {
+            return mapping.xml_value;
+        }
+    }
+    return nullptr;
+}
+
+static TextProperties::Font::Hint string_to_font_hint(const char* val) {
+    if (!val || !*val) {
+        return TextProperties::Font::Hint::Default;
+    }
+    for (const auto& mapping : kFontHintMappings) {
+        if (std::strcmp(mapping.xml_value, val) == 0) {
+            return mapping.hint;
+        }
+    }
+    return TextProperties::Font::Hint::Default;
+}
+
+// ---------------------------------------------------------------------------
+// Vertical Alignment
+// ---------------------------------------------------------------------------
+
+struct VertAlignMapping {
+    TextProperties::VertAlign align;
+    const char* xml_value;
+};
+
+static const VertAlignMapping kVertAlignMappings[] = {
+    {TextProperties::VertAlign::Superscript, "superscript"},
+    {TextProperties::VertAlign::Subscript, "subscript"},
+};
+
+static const char* vert_align_to_string(TextProperties::VertAlign align) {
+    for (const auto& mapping : kVertAlignMappings) {
+        if (mapping.align == align) {
+            return mapping.xml_value;
+        }
+    }
+    return nullptr;
+}
+
+static TextProperties::VertAlign string_to_vert_align(const char* val) {
+    if (!val || !*val) {
+        return TextProperties::VertAlign::None;
+    }
+    for (const auto& mapping : kVertAlignMappings) {
+        if (std::strcmp(mapping.xml_value, val) == 0) {
+            return mapping.align;
+        }
+    }
+    return TextProperties::VertAlign::None;
+}
+
 }  // namespace
 
 // ============================================================================
@@ -146,8 +216,9 @@ void TextProperties::apply_to(pugi::xml_node run_node) const {
         }
         // Font hint
         if (font->hint != Font::Hint::Default) {
-            const char* hint_str = (font->hint == Font::Hint::EastAsia) ? "eastAsia" : "cs";
-            r_fonts.append_attribute("w:hint").set_value(hint_str);
+            if (const char* hint_str = font_hint_to_string(font->hint)) {
+                r_fonts.append_attribute("w:hint").set_value(hint_str);
+            }
         }
     }
 
@@ -198,12 +269,9 @@ void TextProperties::apply_to(pugi::xml_node run_node) const {
     }
 
     // Vertical align
-    if (vert_align == VertAlign::Superscript) {
+    if (const char* align_str = vert_align_to_string(vert_align)) {
         pugi::xml_node v_align = r_pr.append_child("w:vertAlign");
-        v_align.append_attribute("w:val").set_value("superscript");
-    } else if (vert_align == VertAlign::Subscript) {
-        pugi::xml_node v_align = r_pr.append_child("w:vertAlign");
-        v_align.append_attribute("w:val").set_value("subscript");
+        v_align.append_attribute("w:val").set_value(align_str);
     }
 
     // Highlight
@@ -262,12 +330,7 @@ TextProperties TextProperties::extract_from(pugi::xml_node run_node) {
         font.h_ansi = r_fonts.attribute("w:hAnsi").value();
         font.cs = r_fonts.attribute("w:cs").value();
 
-        const char* hint = r_fonts.attribute("w:hint").value();
-        if (strcmp(hint, "eastAsia") == 0) {
-            font.hint = Font::Hint::EastAsia;
-        } else if (strcmp(hint, "cs") == 0) {
-            font.hint = Font::Hint::ComplexScript;
-        }
+        font.hint = string_to_font_hint(r_fonts.attribute("w:hint").value());
         props.font = font;
     }
 
@@ -310,14 +373,8 @@ TextProperties TextProperties::extract_from(pugi::xml_node run_node) {
     }
 
     // Extract vertical align
-    const pugi::xml_node v_align = r_pr.child("w:vertAlign");
-    if (v_align) {
-        const char* val = v_align.attribute("w:val").value();
-        if (strcmp(val, "superscript") == 0) {
-            props.vert_align = VertAlign::Superscript;
-        } else if (strcmp(val, "subscript") == 0) {
-            props.vert_align = VertAlign::Subscript;
-        }
+    if (const pugi::xml_node v_align = r_pr.child("w:vertAlign")) {
+        props.vert_align = string_to_vert_align(v_align.attribute("w:val").value());
     }
 
     // Extract highlight
