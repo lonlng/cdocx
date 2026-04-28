@@ -29,25 +29,34 @@ void remove_managed_children(pugi::xml_node parent, std::initializer_list<const 
     }
 }
 
+struct HeaderFooterTypeMapping {
+    HeaderFooterType type;
+    const char* xml_value;
+};
+
+static const HeaderFooterTypeMapping kHeaderFooterTypeMappings[] = {
+    {HeaderFooterType::Default, "default"},
+    {HeaderFooterType::Primary, "default"},
+    {HeaderFooterType::FirstPage, "first"},
+    {HeaderFooterType::First, "first"},
+    {HeaderFooterType::EvenPages, "even"},
+    {HeaderFooterType::Even, "even"},
+};
+
 const char* header_footer_type_to_string(HeaderFooterType type) {
-    switch (type) {
-        case HeaderFooterType::First:
-        case HeaderFooterType::FirstPage:
-            return "first";
-        case HeaderFooterType::Even:
-        case HeaderFooterType::EvenPages:
-            return "even";
-        default:
-            return "default";
+    for (const auto& mapping : kHeaderFooterTypeMappings) {
+        if (mapping.type == type) {
+            return mapping.xml_value;
+        }
     }
+    return "default";
 }
 
 HeaderFooterType string_to_header_footer_type(const char* val) {
-    if (std::strcmp(val, "first") == 0) {
-        return HeaderFooterType::First;
-    }
-    if (std::strcmp(val, "even") == 0) {
-        return HeaderFooterType::Even;
+    for (const auto& mapping : kHeaderFooterTypeMappings) {
+        if (std::strcmp(mapping.xml_value, val) == 0) {
+            return mapping.type;
+        }
     }
     return HeaderFooterType::Default;
 }
@@ -877,11 +886,21 @@ void append_form_field_sequence(pugi::xml_node parent, const FormField* field, D
     serialize_ffdata_to_fld_char(fld_char, field);
 
     // Instruction text
+    struct FormFieldInstrMapping {
+        FormFieldType type;
+        const char* instr;
+    };
+    static const FormFieldInstrMapping kFormFieldInstrMappings[] = {
+        {FormFieldType::TextInput, "FORMTEXT"},
+        {FormFieldType::CheckBox, "FORMCHECKBOX"},
+        {FormFieldType::ComboBox, "FORMDROPDOWN"},
+    };
     const char* instr = "FORMTEXT";
-    if (field->get_form_field_type() == FormFieldType::CheckBox) {
-        instr = "FORMCHECKBOX";
-    } else if (field->get_form_field_type() == FormFieldType::ComboBox) {
-        instr = "FORMDROPDOWN";
+    for (const auto& mapping : kFormFieldInstrMappings) {
+        if (mapping.type == field->get_form_field_type()) {
+            instr = mapping.instr;
+            break;
+        }
     }
     auto instr_run = parent.append_child("w:r");
     auto instr_text = instr_run.append_child("w:instrText");
