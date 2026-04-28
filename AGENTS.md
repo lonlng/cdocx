@@ -171,7 +171,10 @@ cdocx/
 │   ├── 17_style_collection/
 │   ├── 18_new_features/
 │   ├── 19_mail_merge/
+│   ├── 20_comments/
 │   ├── 21_template_engine/
+│   ├── 22_watermark/
+│   ├── 23_bookmark_inserter/
 │   ├── test_dom_sync/
 │   └── CMakeLists.txt
 │
@@ -401,7 +404,7 @@ CDocx provides **three API paths** to the same underlying DOCX package:
 ### Recommended API Selection
 
 - **Creating or editing document content** → DOM API (`Paragraph::append_run`, `Body::append_table`, etc.)
-- **Replacing placeholders in existing documents** → `Template` or `BookmarkReplacer`
+- **Replacing placeholders in existing documents** → `TemplateEngine` (recommended), `Template`, or `BookmarkReplacer`
 - **Merging documents** → `DocumentInserter`
 - **Modifying styles, settings, or raw XML** → XML Parts API (`doc.get_styles()`, `doc.get_settings()`)
 - **Legacy code maintenance only** → Iterator API (`doc.paragraphs()`, `para.runs()`)
