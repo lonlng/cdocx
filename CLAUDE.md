@@ -290,6 +290,7 @@ Recurring patterns across the codebase are extracted as file-local static functi
 - `serialize_footnote_reference_to_xml()` / `serialize_endnote_reference_to_xml()` in `sync_serialize.cpp` — dedicated serializers extracted from inline XML generation.
 - `create_empty_*` helpers in `document.cpp` — each XML part for an empty DOCX (`[Content_Types].xml`, `_rels/.rels`, `word/document.xml`, etc.) has its own static helper. `create_empty_document()` reads as a 13-line recipe.
 - `link_hf_to_previous()` in `section.cpp` — unifies header and footer `link_to_previous` logic by parameterizing over refs vector, collection vector, XML tag names, part prefix, relationship type, and `is_header` flag.
+- `is_para_node()` / `is_table_node()` / `is_sectpr_node()` / `is_content_node()` in `sync_common.cpp` — shared node-name predicates used by both serialization and deserialization modules.
 
 ### Field Sequence Walking
 
