@@ -263,18 +263,6 @@ void parse_paragraph_format_children_from_xml(pugi::xml_node p_pr, ParagraphForm
     }
 }
 
-std::string trim_whitespace(const std::string& str) {
-    size_t start = 0;
-    while (start < str.size() && std::isspace(static_cast<unsigned char>(str[start]))) {
-        ++start;
-    }
-    size_t end = str.size();
-    while (end > start && std::isspace(static_cast<unsigned char>(str[end - 1]))) {
-        --end;
-    }
-    return str.substr(start, end - start);
-}
-
 // Walks a field sequence starting from the given run (which should be the begin run).
 // Returns the node containing w:fld_char[end], or empty node if not found.
 pugi::xml_node walk_field_sequence(pugi::xml_node start_run,
