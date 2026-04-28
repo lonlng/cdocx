@@ -102,6 +102,96 @@ static void remove_header_footer(HeaderFooterType type,
         refs.end());
 }
 
+static void link_hf_to_previous(Document* doc,
+                                const HeaderFooterRef* prev_ref,
+                                const HeaderFooterRef* curr_ref,
+                                std::vector<HeaderFooterRef>& refs,
+                                std::vector<std::shared_ptr<HeaderFooter>>& collection,
+                                pugi::xml_node sect_pr,
+                                HeaderFooterType type,
+                                bool is_header,
+                                bool is_link_to_previous) {
+    const char* ref_tag = is_header ? "w:header_reference" : "w:footer_reference";
+    const char* part_prefix = is_header ? "word/header" : "word/footer";
+    const char* root_tag = is_header ? "w:hdr" : "w:ftr";
+    const char* rel_type =
+        is_header
+            ? "http://schemas.openxmlformats.org/officeDocument/2006/relationships/header"
+            : "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer";
+
+    auto add_ref = [&](const HeaderFooterRef& ref) {
+        auto node = sect_pr.append_child(ref_tag);
+        node.append_attribute("r:id").set_value(ref.relationship_id.c_str());
+        node.append_attribute("w:type").set_value(header_footer_type_to_string(type));
+        refs.push_back(ref);
+        auto hf = std::make_shared<HeaderFooter>(doc, type, is_header);
+        hf->set_part_path(ref.part_path);
+        hf->set_relationship_id(ref.relationship_id);
+        collection.push_back(hf);
+    };
+
+    if (is_link_to_previous) {
+        if (curr_ref) {
+            if (prev_ref && curr_ref->part_path == prev_ref->part_path) {
+                // already linked
+            } else if (prev_ref) {
+                remove_header_footer(type, collection, refs, sect_pr, is_header);
+                add_ref(*prev_ref);
+            } else {
+                remove_header_footer(type, collection, refs, sect_pr, is_header);
+            }
+        } else if (prev_ref) {
+            add_ref(*prev_ref);
+        }
+    } else if (prev_ref) {
+        const bool need_copy = (!curr_ref) || (curr_ref->part_path == prev_ref->part_path);
+        if (need_copy) {
+            const std::string new_part =
+                part_prefix +
+                std::to_string(is_header ? doc->get_next_header_number()
+                                         : doc->get_next_footer_number()) +
+                ".xml";
+
+            auto* prev_xml = doc->get_xml_part(prev_ref->part_path);
+            if (prev_xml) {
+                auto& new_xml = doc->create_xml_part(new_part);
+                new_xml.reset();
+                for (auto child = prev_xml->first_child(); child;
+                     child = child.next_sibling()) {
+                    new_xml.append_copy(child);
+                }
+            } else {
+                auto& new_xml = doc->create_xml_part(new_part);
+                auto root = new_xml.append_child(root_tag);
+                root.append_attribute("xmlns:w").set_value(
+                    "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+                root.append_attribute("xmlns:r").set_value(
+                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+            }
+
+            const std::string new_rel_id =
+                doc->add_relationship("word/_rels/document.xml.rels", rel_type,
+                                      new_part.substr(5));
+
+            remove_header_footer(type, collection, refs, sect_pr, is_header);
+
+            auto node = sect_pr.append_child(ref_tag);
+            node.append_attribute("r:id").set_value(new_rel_id.c_str());
+            node.append_attribute("w:type").set_value(header_footer_type_to_string(type));
+
+            HeaderFooterRef ref;
+            ref.type = type;
+            ref.relationship_id = new_rel_id;
+            ref.part_path = new_part;
+            refs.push_back(ref);
+            auto hf = std::make_shared<HeaderFooter>(doc, type, is_header);
+            hf->set_part_path(new_part);
+            hf->set_relationship_id(new_rel_id);
+            collection.push_back(hf);
+        }
+    }
+}
+
 // ============================================================================
 // Section Implementation
 // ============================================================================
@@ -561,228 +651,25 @@ void Section::link_to_previous(HeaderFooterType type, bool is_link_to_previous) 
         return;
     }
 
-    // Handle header
-    {
-        const auto* prev_ref = find_ref(prev->get_header_refs(), type);
-        const auto* curr_ref = find_ref(header_refs_, type);
-        if (is_link_to_previous) {
-            if (curr_ref) {
-                // Already has a header; if it's already linked, nothing to do
-                if (prev_ref && curr_ref->part_path == prev_ref->part_path) {
-                    // already linked
-                } else if (prev_ref) {
-                    // Link to previous
-                    remove_ref_from_node(sect_pr_node_, type, true);
-                    header_refs_.erase(
-                        std::remove_if(header_refs_.begin(),
-                                       header_refs_.end(),
-                                       [type](const HeaderFooterRef& r) { return r.type == type; }),
-                        header_refs_.end());
-                    remove_header(type);
-                    const HeaderFooterRef new_ref = *prev_ref;
-                    auto header_ref = sect_pr_node_.append_child("w:header_reference");
-                    header_ref.append_attribute("r:id").set_value(new_ref.relationship_id.c_str());
-                    header_ref.append_attribute("w:type").set_value(
-                        header_footer_type_to_string(type));
-                    header_refs_.push_back(new_ref);
-                    auto header = std::make_shared<HeaderFooter>(document_, type, true);
-                    header->set_part_path(new_ref.part_path);
-                    header->set_relationship_id(new_ref.relationship_id);
-                    headers_.push_back(header);
-                } else {
-                    // Previous has no header of this type; remove current to inherit
-                    remove_ref_from_node(sect_pr_node_, type, true);
-                    header_refs_.erase(
-                        std::remove_if(header_refs_.begin(),
-                                       header_refs_.end(),
-                                       [type](const HeaderFooterRef& r) { return r.type == type; }),
-                        header_refs_.end());
-                    remove_header(type);
-                }
-            } else {
-                // Current has no header; link to previous if previous has one
-                if (prev_ref) {
-                    const HeaderFooterRef new_ref = *prev_ref;
-                    auto header_ref = sect_pr_node_.append_child("w:header_reference");
-                    header_ref.append_attribute("r:id").set_value(new_ref.relationship_id.c_str());
-                    header_ref.append_attribute("w:type").set_value(
-                        header_footer_type_to_string(type));
-                    header_refs_.push_back(new_ref);
-                    auto header = std::make_shared<HeaderFooter>(document_, type, true);
-                    header->set_part_path(new_ref.part_path);
-                    header->set_relationship_id(new_ref.relationship_id);
-                    headers_.push_back(header);
-                }
-            }
-        } else {
-            // Unlink: copy previous header to a new part if needed
-            if (prev_ref) {
-                const bool need_copy = (!curr_ref) || (curr_ref->part_path == prev_ref->part_path);
-                if (need_copy) {
-                    // Generate new part name
-                    const std::string new_part =
-                        "word/header" + std::to_string(document_->get_next_header_number()) +
-                        ".xml";
+    link_hf_to_previous(document_,
+                        find_ref(prev->get_header_refs(), type),
+                        find_ref(header_refs_, type),
+                        header_refs_,
+                        headers_,
+                        sect_pr_node_,
+                        type,
+                        true,
+                        is_link_to_previous);
 
-                    // Copy XML content from previous part
-                    auto* prev_doc = document_->get_xml_part(prev_ref->part_path);
-                    if (prev_doc) {
-                        auto& new_doc = document_->create_xml_part(new_part);
-                        new_doc.reset();
-                        for (auto child = prev_doc->first_child(); child;
-                             child = child.next_sibling()) {
-                            new_doc.append_copy(child);
-                        }
-                    } else {
-                        auto& new_doc = document_->create_xml_part(new_part);
-                        auto root = new_doc.append_child("w:hdr");
-                        root.append_attribute("xmlns:w").set_value(
-                            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
-                        root.append_attribute("xmlns:r").set_value(
-                            "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-                    }
-
-                    // Add relationship and capture the generated ID.
-                    const std::string new_rel_id = document_->add_relationship(
-                        "word/_rels/document.xml.rels",
-                        "http://schemas.openxmlformats.org/officeDocument/"
-                        "2006/relationships/header",
-                        new_part.substr(5));
-
-                    remove_ref_from_node(sect_pr_node_, type, true);
-                    header_refs_.erase(
-                        std::remove_if(header_refs_.begin(),
-                                       header_refs_.end(),
-                                       [type](const HeaderFooterRef& r) { return r.type == type; }),
-                        header_refs_.end());
-                    remove_header(type);
-
-                    auto header_ref = sect_pr_node_.append_child("w:header_reference");
-                    header_ref.append_attribute("r:id").set_value(new_rel_id.c_str());
-                    header_ref.append_attribute("w:type").set_value(
-                        header_footer_type_to_string(type));
-
-                    HeaderFooterRef ref;
-                    ref.type = type;
-                    ref.relationship_id = new_rel_id;
-                    ref.part_path = new_part;
-                    header_refs_.push_back(ref);
-                    auto header = std::make_shared<HeaderFooter>(document_, type, true);
-                    header->set_part_path(new_part);
-                    header->set_relationship_id(new_rel_id);
-                    headers_.push_back(header);
-                }
-            }
-        }
-    }
-
-    // Handle footer (mirror of header logic)
-    {
-        const auto* prev_ref = find_ref(prev->get_footer_refs(), type);
-        const auto* curr_ref = find_ref(footer_refs_, type);
-        if (is_link_to_previous) {
-            if (curr_ref) {
-                if (prev_ref && curr_ref->part_path == prev_ref->part_path) {
-                    // already linked
-                } else if (prev_ref) {
-                    remove_ref_from_node(sect_pr_node_, type, false);
-                    footer_refs_.erase(
-                        std::remove_if(footer_refs_.begin(),
-                                       footer_refs_.end(),
-                                       [type](const HeaderFooterRef& r) { return r.type == type; }),
-                        footer_refs_.end());
-                    remove_footer(type);
-                    const HeaderFooterRef new_ref = *prev_ref;
-                    auto footer_ref = sect_pr_node_.append_child("w:footer_reference");
-                    footer_ref.append_attribute("r:id").set_value(new_ref.relationship_id.c_str());
-                    footer_ref.append_attribute("w:type").set_value(
-                        header_footer_type_to_string(type));
-                    footer_refs_.push_back(new_ref);
-                    auto footer = std::make_shared<HeaderFooter>(document_, type, false);
-                    footer->set_part_path(new_ref.part_path);
-                    footer->set_relationship_id(new_ref.relationship_id);
-                    footers_.push_back(footer);
-                } else {
-                    remove_ref_from_node(sect_pr_node_, type, false);
-                    footer_refs_.erase(
-                        std::remove_if(footer_refs_.begin(),
-                                       footer_refs_.end(),
-                                       [type](const HeaderFooterRef& r) { return r.type == type; }),
-                        footer_refs_.end());
-                    remove_footer(type);
-                }
-            } else {
-                if (prev_ref) {
-                    const HeaderFooterRef new_ref = *prev_ref;
-                    auto footer_ref = sect_pr_node_.append_child("w:footer_reference");
-                    footer_ref.append_attribute("r:id").set_value(new_ref.relationship_id.c_str());
-                    footer_ref.append_attribute("w:type").set_value(
-                        header_footer_type_to_string(type));
-                    footer_refs_.push_back(new_ref);
-                    auto footer = std::make_shared<HeaderFooter>(document_, type, false);
-                    footer->set_part_path(new_ref.part_path);
-                    footer->set_relationship_id(new_ref.relationship_id);
-                    footers_.push_back(footer);
-                }
-            }
-        } else {
-            if (prev_ref) {
-                const bool need_copy = (!curr_ref) || (curr_ref->part_path == prev_ref->part_path);
-                if (need_copy) {
-                    const std::string new_part =
-                        "word/footer" + std::to_string(document_->get_next_footer_number()) +
-                        ".xml";
-
-                    auto* prev_doc = document_->get_xml_part(prev_ref->part_path);
-                    if (prev_doc) {
-                        auto& new_doc = document_->create_xml_part(new_part);
-                        new_doc.reset();
-                        for (auto child = prev_doc->first_child(); child;
-                             child = child.next_sibling()) {
-                            new_doc.append_copy(child);
-                        }
-                    } else {
-                        auto& new_doc = document_->create_xml_part(new_part);
-                        auto root = new_doc.append_child("w:ftr");
-                        root.append_attribute("xmlns:w").set_value(
-                            "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
-                        root.append_attribute("xmlns:r").set_value(
-                            "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-                    }
-
-                    // Add relationship and capture the generated ID.
-                    const std::string new_rel_id = document_->add_relationship(
-                        "word/_rels/document.xml.rels",
-                        "http://schemas.openxmlformats.org/officeDocument/"
-                        "2006/relationships/footer",
-                        new_part.substr(5));
-
-                    remove_ref_from_node(sect_pr_node_, type, false);
-                    footer_refs_.erase(
-                        std::remove_if(footer_refs_.begin(),
-                                       footer_refs_.end(),
-                                       [type](const HeaderFooterRef& r) { return r.type == type; }),
-                        footer_refs_.end());
-                    remove_footer(type);
-
-                    auto footer_ref = sect_pr_node_.append_child("w:footer_reference");
-                    footer_ref.append_attribute("r:id").set_value(new_rel_id.c_str());
-                    footer_ref.append_attribute("w:type").set_value(
-                        header_footer_type_to_string(type));
-
-                    HeaderFooterRef ref;
-                    ref.type = type;
-                    ref.relationship_id = new_rel_id;
-                    ref.part_path = new_part;
-                    footer_refs_.push_back(ref);
-                    auto footer = std::make_shared<HeaderFooter>(document_, type, false);
-                    footer->set_part_path(new_part);
-                    footer->set_relationship_id(new_rel_id);
-                    footers_.push_back(footer);
-                }
-            }
-        }
-    }
+    link_hf_to_previous(document_,
+                        find_ref(prev->get_footer_refs(), type),
+                        find_ref(footer_refs_, type),
+                        footer_refs_,
+                        footers_,
+                        sect_pr_node_,
+                        type,
+                        false,
+                        is_link_to_previous);
 }
 
 bool Section::is_linked_to_previous(HeaderFooterType type, bool is_header) const {
