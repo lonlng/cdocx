@@ -38,19 +38,19 @@ list(APPEND CDOCX_EXAMPLES 12_caption_generation)
 list(APPEND CDOCX_EXAMPLES 13_enhanced_properties)
 list(APPEND CDOCX_EXAMPLES 13_section_and_list)
 
-# v0.8.0: Table merge/split example
+# v0.7.0: Table merge/split example
 list(APPEND CDOCX_EXAMPLES 14_table_merge)
 
-# v0.8.0: Document search and replace example
+# v0.7.0: Document search and replace example
 list(APPEND CDOCX_EXAMPLES 15_document_search)
 
-# v0.8.0: DocumentBuilder example
+# v0.7.0: DocumentBuilder example
 list(APPEND CDOCX_EXAMPLES 16_document_builder)
 
-# v0.8.0: StyleCollection example
+# v0.7.0: StyleCollection example
 list(APPEND CDOCX_EXAMPLES 17_style_collection)
 
-# v0.8.0: New features alignment example
+# v0.7.0: New features alignment example
 list(APPEND CDOCX_EXAMPLES 18_new_features)
 
 # v0.8.0: MailMerge example
