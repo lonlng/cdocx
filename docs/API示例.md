@@ -2,7 +2,7 @@
 
 > **版本说明**：本文档基于 **v0.8.0** 实际已实现 API 编写，所有标注为"可用"的接口均已在 `.cpp` 中有完整实现，可直接使用。
 >
-> **已实现的 DOM API（v0.8.0）**：`Document::open/save/clone`、`CDocx::create_document/load_document/save_document`、`get_body`、`append_paragraph`、`append_run`、`append_table`、`get_rows/get_cells`、`set_text`、`Section::add_header/footer/ensure_header/ensure_footer/clone`、`Paragraph::clone`、`Paragraph::append_hyperlink` / `append_page_number` / `append_date` / `append_time` / `append_merge_field`、`Table::clone`、`Row::clone`、`Cell::clone`、`BookmarkStart/End`、`Field`（序列化/反序列化）、`Hyperlink`（序列化/反序列化）、`Node::get_next_node_in_document` / `get_previous_node_in_document`、`HeaderFooter::append_paragraph` / `append_table` / `get_paragraphs`、基础 `Font`/`ParagraphFormat` 设置、`DocumentSearch::find` / `find_all` / `replace` / `replace_all` / `replace_with_formatting` / `find_and_process`、`Table::auto_fit` / `insert_column` / `delete_column`、`TableOperations` 静态辅助方法、`TemplateEngine` 统一模板引擎、`DocumentBuilder`（含 `insert_hyperlink`、`insert_image`、`insert_page_number`/`insert_date`/`insert_time`/`insert_merge_field`/`insert_table_of_contents` 带字段开关）、`CommentCollection`、`MailMerge`、`Watermark`、`StyleCollection`。
+> **已实现的 DOM API（v0.8.0）**：`Document::open/save/clone`、`CDocx::create_document/load_document/save_document`、`get_body`、`append_paragraph`、`append_run`、`append_table`、`get_rows/get_cells`、`set_text`、`Section::add_header/footer/ensure_header/ensure_footer/clone`、`Paragraph::clone`、`Paragraph::append_hyperlink` / `append_page_number` / `append_date` / `append_time` / `append_merge_field`、`Paragraph::get_parent_body` / `get_parent_cell` / `get_parent_section` / `is_in_cell` / `is_end_of_cell` / `is_end_of_section`、`Table::clone`、`Row::clone`、`Cell::clone`、`Cell::get_tables`、`Table::append_row(const vector<string>&)` / `insert_row(int, const vector<string>&)`、`BookmarkStart/End`、`Field`（序列化/反序列化）、`Hyperlink`（序列化/反序列化）、`Node::get_next_node_in_document` / `get_previous_node_in_document`、`HeaderFooter::append_paragraph` / `append_table` / `get_paragraphs`、基础 `Font`/`ParagraphFormat` 设置、`DocumentSearch::find` / `find_all` / `replace` / `replace_all` / `replace_with_formatting` / `find_and_process`、`Table::auto_fit` / `insert_column` / `delete_column`、`TableOperations` 静态辅助方法、`TemplateEngine` 统一模板引擎、`DocumentBuilder`（默认构造从零构建、`with_title/author/subject/keywords`、`with_page_size/margins/orientation`、`add_paragraph/add_table/build`、以及 `insert_hyperlink`、`insert_image`、`insert_page_number`/`insert_date`/`insert_time`/`insert_merge_field`/`insert_table_of_contents` 带字段开关）、`CommentCollection`、`MailMerge`、`Watermark`、`StyleCollection`。
 
 ## 概述
 
@@ -132,6 +132,37 @@ para->append_time("\\@ \"HH:mm:ss\"");
 
 // 插入 MERGEFIELD
 para->append_merge_field("Name", "\\* Upper");
+```
+
+### 段落父级访问 (v0.8.0+)
+
+```cpp
+auto para = doc->get_body()->append_paragraph("Sample text");
+
+// 获取段落所在的 Body
+auto body = para->get_parent_body();
+
+// 获取段落所在的单元格（如果在表格中）
+auto cell = para->get_parent_cell();
+if (cell) {
+    std::cout << "Paragraph is inside a cell" << std::endl;
+}
+
+// 获取段落所在的分节
+auto section = para->get_parent_section();
+
+// 快捷判断
+if (para->is_in_cell()) {
+    // 段落位于表格单元格内
+}
+
+if (para->is_end_of_cell()) {
+    // 段落是单元格中的最后一个段落
+}
+
+if (para->is_end_of_section()) {
+    // 段落是该节正文中的最后一个段落
+}
 ```
 
 ---
@@ -318,6 +349,39 @@ cdocx::TableOperations::delete_row(*table, 0);    // 删除第0行
 cdocx::TableOperations::set_cell_text(*table->get_cell(0, 0), "Hello");
 ```
 
+### 便捷行列填充 (v0.8.0+)
+
+```cpp
+auto table = doc->get_body()->append_table(0, 3);  // 先创建0行3列
+
+// 直接添加一行并填充文本
+table->append_row({"Name", "Age", "City"});
+
+// 在指定位置插入并填充
+table->insert_row(1, {"John", "30", "New York"});
+table->insert_row(2, {"Jane", "25", "London"});
+```
+
+### 嵌套表格 (v0.8.0+)
+
+```cpp
+// 在单元格内创建嵌套表格
+auto outer = doc->get_body()->append_table(2, 2);
+auto cell = outer->get_cell(0, 0);
+
+// 单元格内添加嵌套表格
+auto inner = cell->append_table(2, 2);
+inner->get_cell(0, 0)->set_text("Nested A1");
+inner->get_cell(0, 1)->set_text("Nested A2");
+
+// 获取单元格内的所有表格
+auto nested_tables = cell->get_tables();
+for (auto& t : nested_tables) {
+    std::cout << "Nested table: " << t->get_row_count()
+              << "x" << t->get_column_count() << std::endl;
+}
+```
+
 ### 遍历表格
 
 ```cpp
@@ -416,6 +480,51 @@ auto cloned = std::dynamic_pointer_cast<cdocx::Field>(field.clone(true));
 
 // 取消链接：将字段替换为静态结果文本
 field.unlink();
+```
+
+### DocumentBuilder 从零构建文档 (v0.8.0+)
+
+```cpp
+#include <cdocx/advanced.h>
+
+// 默认构造：自动创建空文档
+cdocx::DocumentBuilder builder;
+
+// 配置文档属性（链式调用）
+builder
+    .with_title("年度报告")
+    .with_author("张三")
+    .with_subject("2024年度销售总结")
+    .with_keywords("销售, 报告, 2024");
+
+// 配置页面设置（单位：英寸）
+builder
+    .with_page_size(8.5, 11.0)           // Letter 尺寸
+    .with_margins(1.0, 1.0, 1.25, 1.25)  // 上下左右边距
+    .with_orientation(cdocx::PageOrientation::Portrait);
+
+// 添加段落
+builder.add_paragraph("第一章：概述")
+    ->get_first_run()->get_font().set_bold(true).set_size(16);
+
+builder.add_paragraph("这是报告的正文内容。");
+
+// 添加表格
+builder.add_table(3, 3);
+
+// 获取构建完成的文档
+auto doc = builder.build();
+doc->save("report.docx");
+```
+
+也可在已有文档上使用 DocumentBuilder：
+
+```cpp
+// 在现有文档上操作
+cdocx::DocumentBuilder builder(doc.get());
+builder.insert_hyperlink("点击访问", "https://example.com");
+builder.insert_image("photo.png", 400, 300);
+builder.insert_page_number("\\* ROMAN");
 ```
 
 ### 超链接
