@@ -225,14 +225,19 @@ void parse_paragraph_format_children_from_xml(pugi::xml_node p_pr, ParagraphForm
         }
     }
 
-    if (p_pr.child("w:keepNext")) {
-        format.keep_with_next = true;
-    }
-    if (p_pr.child("w:keepLines")) {
-        format.keep_together = true;
-    }
-    if (p_pr.child("w:pageBreakBefore")) {
-        format.page_break_before = true;
+    struct ParagraphBoolFlagMapping {
+        const char* child_name;
+        bool ParagraphFormat::*flag;
+    };
+    static const ParagraphBoolFlagMapping kParagraphBoolFlagMappings[] = {
+        {"w:keepNext", &ParagraphFormat::keep_with_next},
+        {"w:keepLines", &ParagraphFormat::keep_together},
+        {"w:pageBreakBefore", &ParagraphFormat::page_break_before},
+    };
+    for (const auto& mapping : kParagraphBoolFlagMappings) {
+        if (p_pr.child(mapping.child_name)) {
+            format.*mapping.flag = true;
+        }
     }
     auto widow_control = p_pr.child("w:widowControl");
     if (widow_control) {
@@ -682,11 +687,19 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
                 const char* rule = tr_height.attribute("w:hRule").value();
                 row->get_row_format().height_rule_exact = (std::strcmp(rule, "exact") == 0);
             }
-            if (tr_pr.child("w:tblHeader")) {
-                row->get_row_format().heading = true;
-            }
-            if (tr_pr.child("w:cantSplit")) {
-                row->get_row_format().allow_break_across_pages = false;
+            struct RowBoolFlagMapping {
+                const char* child_name;
+                bool RowFormat::*flag;
+                bool value;
+            };
+            static const RowBoolFlagMapping kRowBoolFlagMappings[] = {
+                {"w:tblHeader", &RowFormat::heading, true},
+                {"w:cantSplit", &RowFormat::allow_break_across_pages, false},
+            };
+            for (const auto& mapping : kRowBoolFlagMappings) {
+                if (tr_pr.child(mapping.child_name)) {
+                    row->get_row_format().*mapping.flag = mapping.value;
+                }
             }
         }
 

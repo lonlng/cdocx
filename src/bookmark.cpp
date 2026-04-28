@@ -8,6 +8,8 @@
 #include <cdocx/document.h>
 #include <cdocx/paragraph.h>
 
+#include "sync_common.h"
+
 #include <algorithm>
 #include <cctype>
 #include <map>
@@ -412,23 +414,17 @@ bool Bookmark::set_text_formatted(const std::string& text, const BookmarkFormat&
 
     // Keep with next (w:keepNext)
     if (format.keep_next) {
-        if (!p_pr.child("w:keepNext")) {
-            p_pr.append_child("w:keepNext");
-        }
+        ensure_child(p_pr, "w:keepNext");
     }
 
     // Keep lines together (w:keepLines)
     if (format.keep_lines) {
-        if (!p_pr.child("w:keepLines")) {
-            p_pr.append_child("w:keepLines");
-        }
+        ensure_child(p_pr, "w:keepLines");
     }
 
     // Page break before (w:pageBreakBefore)
     if (format.page_break_before) {
-        if (!p_pr.child("w:pageBreakBefore")) {
-            p_pr.append_child("w:pageBreakBefore");
-        }
+        ensure_child(p_pr, "w:pageBreakBefore");
     }
 
     // ========== Handle Run Content ==========

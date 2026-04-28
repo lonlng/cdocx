@@ -11,6 +11,8 @@
 
 #include <cdocx/format_context.h>
 
+#include "sync_common.h"
+
 namespace cdocx {
 
 // ============================================================================
@@ -102,12 +104,8 @@ bool TextFormatContext::apply_bold(pugi::xml_node run, bool bold) {
     pugi::xml_node r_pr = get_or_create_r_pr(run);
 
     if (bold) {
-        // Add bold element if not present
-        if (!r_pr.child("w:b")) {
-            r_pr.append_child("w:b");
-        }
+        ensure_child(r_pr, "w:b");
     } else {
-        // Remove bold element
         r_pr.remove_child("w:b");
     }
     return true;
@@ -121,9 +119,7 @@ bool TextFormatContext::apply_italic(pugi::xml_node run, bool italic) {
     pugi::xml_node r_pr = get_or_create_r_pr(run);
 
     if (italic) {
-        if (!r_pr.child("w:i")) {
-            r_pr.append_child("w:i");
-        }
+        ensure_child(r_pr, "w:i");
     } else {
         r_pr.remove_child("w:i");
     }

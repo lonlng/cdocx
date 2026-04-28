@@ -442,34 +442,31 @@ void parse_border_from_xml(pugi::xml_node border_node, Border& border) {
     }
 }
 
+struct BorderParseMapping {
+    const char* child_name;
+    bool Borders::*defined_flag;
+    Border Borders::*border_member;
+};
+
+static const BorderParseMapping kBorderParseMappings[] = {
+    {"w:top", &Borders::top_defined, &Borders::top},
+    {"w:left", &Borders::left_defined, &Borders::left},
+    {"w:bottom", &Borders::bottom_defined, &Borders::bottom},
+    {"w:right", &Borders::right_defined, &Borders::right},
+    {"w:insideH", &Borders::inside_h_defined, &Borders::inside_horizontal},
+    {"w:insideV", &Borders::inside_v_defined, &Borders::inside_vertical},
+};
+
 void parse_borders_from_xml(pugi::xml_node borders_node, Borders& borders) {
     if (!borders_node) {
         return;
     }
     borders.explicitly_defined = true;
-    if (borders_node.child("w:top")) {
-        borders.top_defined = true;
-        parse_border_from_xml(borders_node.child("w:top"), borders.top);
-    }
-    if (borders_node.child("w:left")) {
-        borders.left_defined = true;
-        parse_border_from_xml(borders_node.child("w:left"), borders.left);
-    }
-    if (borders_node.child("w:bottom")) {
-        borders.bottom_defined = true;
-        parse_border_from_xml(borders_node.child("w:bottom"), borders.bottom);
-    }
-    if (borders_node.child("w:right")) {
-        borders.right_defined = true;
-        parse_border_from_xml(borders_node.child("w:right"), borders.right);
-    }
-    if (borders_node.child("w:insideH")) {
-        borders.inside_h_defined = true;
-        parse_border_from_xml(borders_node.child("w:insideH"), borders.inside_horizontal);
-    }
-    if (borders_node.child("w:insideV")) {
-        borders.inside_v_defined = true;
-        parse_border_from_xml(borders_node.child("w:insideV"), borders.inside_vertical);
+    for (const auto& mapping : kBorderParseMappings) {
+        if (auto child = borders_node.child(mapping.child_name)) {
+            borders.*mapping.defined_flag = true;
+            parse_border_from_xml(child, borders.*mapping.border_member);
+        }
     }
 }
 
@@ -496,6 +493,21 @@ static void serialize_border_to_xml(pugi::xml_node parent,
     }
 }
 
+struct BorderSerializeMapping {
+    const char* child_name;
+    const Border Borders::*border_member;
+    bool Borders::*defined_flag;
+};
+
+static const BorderSerializeMapping kBorderSerializeMappings[] = {
+    {"w:top", &Borders::top, &Borders::top_defined},
+    {"w:left", &Borders::left, &Borders::left_defined},
+    {"w:bottom", &Borders::bottom, &Borders::bottom_defined},
+    {"w:right", &Borders::right, &Borders::right_defined},
+    {"w:insideH", &Borders::inside_horizontal, &Borders::inside_h_defined},
+    {"w:insideV", &Borders::inside_vertical, &Borders::inside_v_defined},
+};
+
 void serialize_borders_to_xml(pugi::xml_node parent,
                                   const char* container_name,
                                   const Borders& borders) {
@@ -503,14 +515,10 @@ void serialize_borders_to_xml(pugi::xml_node parent,
         return;
     }
     auto container = parent.append_child(container_name);
-    serialize_border_to_xml(container, "w:top", borders.top, borders.top_defined);
-    serialize_border_to_xml(container, "w:left", borders.left, borders.left_defined);
-    serialize_border_to_xml(container, "w:bottom", borders.bottom, borders.bottom_defined);
-    serialize_border_to_xml(container, "w:right", borders.right, borders.right_defined);
-    serialize_border_to_xml(
-        container, "w:insideH", borders.inside_horizontal, borders.inside_h_defined);
-    serialize_border_to_xml(
-        container, "w:insideV", borders.inside_vertical, borders.inside_v_defined);
+    for (const auto& mapping : kBorderSerializeMappings) {
+        serialize_border_to_xml(
+            container, mapping.child_name, borders.*mapping.border_member, borders.*mapping.defined_flag);
+    }
 }
 
 // ============================================================================
@@ -579,6 +587,14 @@ pugi::xml_node get_or_create_child(pugi::xml_node parent, const char* name) {
         child = parent.append_child(name);
     } else {
         child.remove_children();
+    }
+    return child;
+}
+
+pugi::xml_node ensure_child(pugi::xml_node parent, const char* name) {
+    pugi::xml_node child = parent.child(name);
+    if (!child) {
+        child = parent.append_child(name);
     }
     return child;
 }

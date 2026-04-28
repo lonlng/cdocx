@@ -59,14 +59,19 @@ void parse_font_from_xml(pugi::xml_node r_pr, Font& font) {
     font.name_far_east = "";
     font.color = Color::auto_color();
 
-    if (r_pr.child("w:b")) {
-        font.bold = true;
-    }
-    if (r_pr.child("w:i")) {
-        font.italic = true;
-    }
-    if (r_pr.child("w:strike")) {
-        font.strikethrough = true;
+    struct FontBoolFlagMapping {
+        const char* child_name;
+        bool Font::*flag;
+    };
+    static const FontBoolFlagMapping kFontBoolFlagMappings[] = {
+        {"w:b", &Font::bold},
+        {"w:i", &Font::italic},
+        {"w:strike", &Font::strikethrough},
+    };
+    for (const auto& mapping : kFontBoolFlagMappings) {
+        if (r_pr.child(mapping.child_name)) {
+            font.*mapping.flag = true;
+        }
     }
 
     if (auto u = r_pr.child("w:u")) {

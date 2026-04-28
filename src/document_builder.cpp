@@ -104,26 +104,17 @@ void DocumentBuilder::apply_formatting(pugi::xml_node run) const {
 
     // Apply formatting flags
     if (format_.bold) {
-        if (!r_pr.child("w:b")) {
-            r_pr.append_child("w:b");
-        }
+        ensure_child(r_pr, "w:b");
     }
     if (format_.italic) {
-        if (!r_pr.child("w:i")) {
-            r_pr.append_child("w:i");
-        }
+        ensure_child(r_pr, "w:i");
     }
     if (format_.underline) {
-        pugi::xml_node u = r_pr.child("w:u");
-        if (!u) {
-            u = r_pr.append_child("w:u");
-        }
+        pugi::xml_node u = ensure_child(r_pr, "w:u");
         u.append_attribute("w:val").set_value("single");
     }
     if (format_.strikethrough) {
-        if (!r_pr.child("w:strike")) {
-            r_pr.append_child("w:strike");
-        }
+        ensure_child(r_pr, "w:strike");
     }
     if (!format_.font_name.empty()) {
         pugi::xml_node r_fonts = r_pr.child("w:rFonts");

@@ -401,9 +401,7 @@ bool Run::set_bold_xml(bool bold) {
     }
     auto r_pr = ensure_r_pr(current_xml_);
     if (bold) {
-        if (!r_pr.child("w:b")) {
-            r_pr.append_child("w:b");
-        }
+        ensure_child(r_pr, "w:b");
     } else {
         r_pr.remove_child("w:b");
     }
@@ -416,9 +414,7 @@ bool Run::set_italic_xml(bool italic) {
     }
     auto r_pr = ensure_r_pr(current_xml_);
     if (italic) {
-        if (!r_pr.child("w:i")) {
-            r_pr.append_child("w:i");
-        }
+        ensure_child(r_pr, "w:i");
     } else {
         r_pr.remove_child("w:i");
     }

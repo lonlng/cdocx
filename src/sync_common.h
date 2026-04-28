@@ -48,6 +48,7 @@ std::time_t timegm_wrapper(std::tm* tm);
 std::time_t w3cdtf_to_time(const std::string& s);
 
 pugi::xml_node get_or_create_child(pugi::xml_node parent, const char* name);
+pugi::xml_node ensure_child(pugi::xml_node parent, const char* name);
 void set_text_child(pugi::xml_node parent, const char* name, const std::string& value);
 
 // ---------------------------------------------------------------------------
