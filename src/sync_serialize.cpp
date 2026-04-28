@@ -738,6 +738,8 @@ void serialize_paragraph_to_xml(pugi::xml_node parent, const Paragraph* para) {
     }
 }
 
+static void serialize_node_child_to_xml(pugi::xml_node parent, const Node* child);
+
 static void serialize_cell_to_xml(pugi::xml_node parent, Cell* cell) {
     if (!cell) {
         return;
@@ -778,11 +780,7 @@ static void serialize_cell_to_xml(pugi::xml_node parent, Cell* cell) {
     serialize_shading_to_xml(tc_pr, fmt.shading);
 
     for (const auto& child : cell->get_children()) {
-        if (child->node_type() == NodeType::Paragraph) {
-            serialize_paragraph_to_xml(tc, dynamic_cast<Paragraph*>(child.get()));
-        } else if (child->node_type() == NodeType::Table) {
-            serialize_table_to_xml(tc, dynamic_cast<Table*>(child.get()));
-        }
+        serialize_node_child_to_xml(tc, child.get());
     }
 
     // Ensure at least one paragraph
