@@ -915,3 +915,117 @@ TEST(DocumentBuilderFormFieldTest, ComboBoxRoundTrip) {
 
     doc2.close();
 }
+
+// ============================================================================
+// DocumentBuilder Build-from-Scratch Tests
+// ============================================================================
+
+TEST(DocumentBuilderScratchTest, DefaultConstructorCreatesDocument) {
+    cdocx::DocumentBuilder builder;
+    auto doc = builder.build();
+
+    ASSERT_NE(doc, nullptr);
+    EXPECT_GT(doc->get_first_section()->get_body()->get_paragraphs().size(), 0u);
+}
+
+TEST(DocumentBuilderScratchTest, WithMetadata) {
+    cdocx::DocumentBuilder builder;
+    builder.with_title("Test Title")
+           .with_author("Test Author")
+           .with_subject("Test Subject")
+           .with_keywords("test, keywords");
+
+    auto doc = builder.build();
+    ASSERT_NE(doc, nullptr);
+
+    auto* core = doc->get_core_properties();
+    ASSERT_NE(core, nullptr);
+
+    auto dc = core->child("cp:coreProperties");
+    ASSERT_TRUE(dc);
+
+    EXPECT_EQ(std::string(dc.child("dc:title").text().get()), "Test Title");
+    EXPECT_EQ(std::string(dc.child("dc:creator").text().get()), "Test Author");
+    EXPECT_EQ(std::string(dc.child("dc:subject").text().get()), "Test Subject");
+}
+
+TEST(DocumentBuilderScratchTest, WithPageSize) {
+    cdocx::DocumentBuilder builder;
+    builder.with_page_size(8.5, 11.0);
+
+    auto doc = builder.build();
+    auto section = doc->get_first_section();
+    auto& props = section->get_properties();
+
+    EXPECT_EQ(props.page_size.width, static_cast<int>(8.5 * 1440));
+    EXPECT_EQ(props.page_size.height, static_cast<int>(11.0 * 1440));
+}
+
+TEST(DocumentBuilderScratchTest, WithMargins) {
+    cdocx::DocumentBuilder builder;
+    builder.with_margins(1.0, 1.0, 1.25, 1.25);
+
+    auto doc = builder.build();
+    auto section = doc->get_first_section();
+    auto& props = section->get_properties();
+
+    EXPECT_EQ(props.page_margins.top, static_cast<int>(1.0 * 1440));
+    EXPECT_EQ(props.page_margins.bottom, static_cast<int>(1.0 * 1440));
+    EXPECT_EQ(props.page_margins.left, static_cast<int>(1.25 * 1440));
+    EXPECT_EQ(props.page_margins.right, static_cast<int>(1.25 * 1440));
+}
+
+TEST(DocumentBuilderScratchTest, WithOrientation) {
+    cdocx::DocumentBuilder builder;
+    builder.with_orientation(cdocx::PageOrientation::Landscape);
+
+    auto doc = builder.build();
+    auto section = doc->get_first_section();
+    auto& props = section->get_properties();
+
+    EXPECT_EQ(props.orientation, cdocx::SectionProperties::Orientation::Landscape);
+}
+
+TEST(DocumentBuilderScratchTest, AddParagraph) {
+    cdocx::DocumentBuilder builder;
+    builder.add_paragraph("First paragraph");
+    builder.add_paragraph("Second paragraph");
+
+    auto doc = builder.build();
+    auto paras = doc->get_first_section()->get_body()->get_paragraphs();
+    EXPECT_GE(paras.size(), 2u);
+
+    std::string all_text;
+    for (size_t i = 0; i < paras.size(); ++i) {
+        all_text += paras[i]->get_text();
+    }
+    EXPECT_NE(all_text.find("First paragraph"), std::string::npos);
+    EXPECT_NE(all_text.find("Second paragraph"), std::string::npos);
+}
+
+TEST(DocumentBuilderScratchTest, AddTable) {
+    cdocx::DocumentBuilder builder;
+    builder.add_table(2, 3);
+
+    auto doc = builder.build();
+    auto tables = doc->get_first_section()->get_body()->get_tables();
+    EXPECT_EQ(tables.size(), 1u);
+    EXPECT_EQ(tables[0]->get_row_count(), 2u);
+    EXPECT_EQ(tables[0]->get_column_count(), 3u);
+}
+
+TEST(DocumentBuilderScratchTest, ChainedConfiguration) {
+    cdocx::DocumentBuilder builder;
+    auto doc = builder
+        .with_title("Chained")
+        .with_page_size(8.5, 11.0)
+        .with_margins(1.0, 1.0, 1.0, 1.0)
+        .with_orientation(cdocx::PageOrientation::Portrait)
+        .add_paragraph("Hello")
+        .add_table(1, 1)
+        .build();
+
+    ASSERT_NE(doc, nullptr);
+    EXPECT_EQ(doc->get_first_section()->get_properties().orientation,
+              cdocx::SectionProperties::Orientation::Portrait);
+}

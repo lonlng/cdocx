@@ -591,3 +591,78 @@ TEST(DomSyncTest, SectionEnsureHeaderFooter) {
         EXPECT_TRUE(sect->has_footer());
     }
 }
+
+// ============================================================================
+// Paragraph Parent Access Tests
+// ============================================================================
+
+TEST(ParagraphParentTest, GetParentBody) {
+    Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    auto para = doc.get_first_section()->get_body()->append_paragraph("Test");
+    auto body = para->get_parent_body();
+
+    ASSERT_NE(body, nullptr);
+    EXPECT_EQ(body.get(), doc.get_first_section()->get_body().get());
+}
+
+TEST(ParagraphParentTest, GetParentSection) {
+    Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    auto para = doc.get_first_section()->get_body()->append_paragraph("Test");
+    auto section = para->get_parent_section();
+
+    ASSERT_NE(section, nullptr);
+    EXPECT_EQ(section.get(), doc.get_first_section().get());
+}
+
+TEST(ParagraphParentTest, GetParentCellInTable) {
+    Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    auto table = doc.get_first_section()->get_body()->append_table(2, 2);
+    auto cell = table->get_cell(0, 0);
+    auto para = cell->append_paragraph("In cell");
+
+    auto parent_cell = para->get_parent_cell();
+    ASSERT_NE(parent_cell, nullptr);
+    EXPECT_EQ(parent_cell.get(), cell.get());
+    EXPECT_TRUE(para->is_in_cell());
+}
+
+TEST(ParagraphParentTest, NoParentCellOutsideTable) {
+    Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    auto para = doc.get_first_section()->get_body()->append_paragraph("Not in cell");
+
+    EXPECT_EQ(para->get_parent_cell(), nullptr);
+    EXPECT_FALSE(para->is_in_cell());
+}
+
+TEST(ParagraphParentTest, IsEndOfCell) {
+    Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    auto table = doc.get_first_section()->get_body()->append_table(1, 1);
+    auto cell = table->get_cell(0, 0);
+    auto para1 = cell->append_paragraph("First");
+    auto para2 = cell->append_paragraph("Last");
+
+    EXPECT_FALSE(para1->is_end_of_cell());
+    EXPECT_TRUE(para2->is_end_of_cell());
+}
+
+TEST(ParagraphParentTest, IsEndOfSection) {
+    Document doc;
+    ASSERT_TRUE(doc.create_empty());
+
+    auto body = doc.get_first_section()->get_body();
+    auto para1 = body->append_paragraph("First");
+    auto para2 = body->append_paragraph("Last");
+
+    EXPECT_FALSE(para1->is_end_of_section());
+    EXPECT_TRUE(para2->is_end_of_section());
+}

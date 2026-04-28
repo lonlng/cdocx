@@ -641,3 +641,64 @@ TEST(TablePropertiesTest, ApplyToXmlNode) {
 
     doc.save();
 }
+
+// ============================================================================
+// Table Convenience Methods Tests
+// ============================================================================
+
+TEST(TableConvenienceTest, AppendRowWithCellTexts) {
+    TempDoc temp_doc("test_append_row_vec.docx");
+    Document doc("test_append_row_vec.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto body = doc.get_first_section()->get_body();
+    auto table = body->append_table(0, 3);
+    auto row = table->append_row({"Name", "Age", "City"});
+
+    ASSERT_NE(row, nullptr);
+    EXPECT_EQ(table->get_row_count(), 1u);
+    EXPECT_EQ(row->get_cells().get_count(), 3u);
+    EXPECT_EQ(row->get_cell(0)->get_text(), "Name");
+    EXPECT_EQ(row->get_cell(1)->get_text(), "Age");
+    EXPECT_EQ(row->get_cell(2)->get_text(), "City");
+
+    doc.save();
+}
+
+TEST(TableConvenienceTest, InsertRowWithCellTexts) {
+    TempDoc temp_doc("test_insert_row_vec.docx");
+    Document doc("test_insert_row_vec.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto body = doc.get_first_section()->get_body();
+    auto table = body->append_table(0, 2);
+    table->append_row({"A1", "A2"});
+    table->insert_row(0, {"Header1", "Header2"});
+
+    EXPECT_EQ(table->get_row_count(), 2u);
+    EXPECT_EQ(table->get_row(0)->get_cell(0)->get_text(), "Header1");
+    EXPECT_EQ(table->get_row(1)->get_cell(0)->get_text(), "A1");
+
+    doc.save();
+}
+
+TEST(TableConvenienceTest, NestedTablesInCell) {
+    TempDoc temp_doc("test_nested_tables.docx");
+    Document doc("test_nested_tables.docx");
+    ASSERT_TRUE(doc.create_empty());
+
+    auto body = doc.get_first_section()->get_body();
+    auto outer = body->append_table(2, 2);
+    auto cell = outer->get_cell(0, 0);
+
+    // Add nested table
+    auto inner = cell->append_table(1, 1);
+    inner->get_cell(0, 0)->set_text("Nested");
+
+    // Get tables from cell
+    auto nested = cell->get_tables();
+    EXPECT_EQ(nested.size(), 1u);
+    EXPECT_EQ(nested[0]->get_cell(0, 0)->get_text(), "Nested");
+
+    doc.save();
+}
