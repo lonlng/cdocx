@@ -22,6 +22,22 @@ namespace cdocx {
 static void serialize_section_to_xml(pugi::xml_node body_xml, const Section* section);
 static void serialize_table_to_xml(pugi::xml_node parent, const Table* table);
 
+static bool is_para_node(const char* name) {
+    return std::strcmp(name, "w:p") == 0;
+}
+
+static bool is_table_node(const char* name) {
+    return std::strcmp(name, "w:tbl") == 0;
+}
+
+static bool is_sectpr_node(const char* name) {
+    return std::strcmp(name, "w:sectPr") == 0;
+}
+
+static bool is_content_node(const char* name) {
+    return is_para_node(name) || is_table_node(name);
+}
+
 // ============================================================================
 // DOM -> Physical (Serialization)
 // ============================================================================
@@ -46,7 +62,7 @@ void Document::merge_sections_from_physical() {
 
     pugi::xml_node current_begin = body.first_child();
     for (auto node = body.first_child(); node; node = node.next_sibling()) {
-        if (std::strcmp(node.name(), "w:sectPr") == 0) {
+        if (is_sectpr_node(node.name())) {
             ranges.push_back({current_begin, node});
             current_begin = node.next_sibling();
         }
@@ -92,11 +108,11 @@ void Document::merge_sections_from_physical() {
         for (auto node = ranges[i].begin; node && node != ranges[i].end;
              node = node.next_sibling()) {
             const char* name = node.name();
-            if (std::strcmp(name, "w:p") == 0) {
+            if (is_para_node(name)) {
                 if (auto para = parse_paragraph_from_xml(node)) {
                     xml_children.push_back(para);
                 }
-            } else if (std::strcmp(name, "w:tbl") == 0) {
+            } else if (is_table_node(name)) {
                 if (auto table = parse_table_from_xml(node)) {
                     xml_children.push_back(table);
                 }
@@ -158,7 +174,7 @@ void Document::sync_sections_to_physical() {
     int xml_child_count = 0;
     for (auto child = body.first_child(); child; child = child.next_sibling()) {
         const char* name = child.name();
-        if (std::strcmp(name, "w:p") == 0 || std::strcmp(name, "w:tbl") == 0) {
+        if (is_content_node(name)) {
             ++xml_child_count;
         }
     }
@@ -224,8 +240,7 @@ void Document::sync_sections_to_physical() {
     for (auto child = body.first_child(); child;) {
         auto next = child.next_sibling();
         const char* name = child.name();
-        if (std::strcmp(name, "w:p") != 0 && std::strcmp(name, "w:tbl") != 0 &&
-            std::strcmp(name, "w:sectPr") != 0) {
+        if (!is_content_node(name) && !is_sectpr_node(name)) {
             preserved_doc.append_copy(child);
         }
         child = next;
@@ -251,7 +266,7 @@ void Document::sync_sections_to_physical() {
     int synced_count = 0;
     for (auto child = body.first_child(); child; child = child.next_sibling()) {
         const char* name = child.name();
-        if (std::strcmp(name, "w:p") == 0 || std::strcmp(name, "w:tbl") == 0) {
+        if (is_content_node(name)) {
             ++synced_count;
         }
     }
