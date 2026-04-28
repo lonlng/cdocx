@@ -409,6 +409,16 @@ static void parse_content_children(Document* doc,
     }
 }
 
+struct BreakTypeMapping {
+    const char* xml_value;
+    std::shared_ptr<SpecialChar> (*factory)();
+};
+
+static const BreakTypeMapping kBreakTypeMappings[] = {
+    {"page", &SpecialChar::page_break},
+    {"column", &SpecialChar::column_break},
+};
+
 std::shared_ptr<Paragraph> Document::parse_paragraph_from_xml(pugi::xml_node para_node) {
     if (!para_node) {
         return nullptr;
@@ -555,11 +565,15 @@ std::shared_ptr<Paragraph> Document::parse_paragraph_from_xml(pugi::xml_node par
             parse_hyperlink_from_xml(this, child, para);
         } else if (std::strcmp(name, "w:br") == 0) {
             const char* type = child.attribute("w:type").value();
-            if (std::strcmp(type, "page") == 0) {
-                para->append_child(SpecialChar::page_break());
-            } else if (std::strcmp(type, "column") == 0) {
-                para->append_child(SpecialChar::column_break());
-            } else {
+            bool found = false;
+            for (const auto& mapping : kBreakTypeMappings) {
+                if (std::strcmp(type, mapping.xml_value) == 0) {
+                    para->append_child(mapping.factory());
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
                 para->append_child(SpecialChar::line_break());
             }
         } else if (std::strcmp(name, "w:tab") == 0) {
