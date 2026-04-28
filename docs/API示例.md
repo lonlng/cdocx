@@ -911,6 +911,29 @@ for (auto& c : *doc->get_comments()) {
 }
 ```
 
+### 脚注和尾注 (FootnoteCollection / EndnoteCollection)
+
+```cpp
+// 添加脚注
+auto footnotes = doc->footnotes();
+auto fn = footnotes.add("This is a footnote text.");
+
+// 添加带自定义引用标记的脚注
+auto fn2 = footnotes.add("See also page 12.", "*");
+
+// 遍历脚注
+for (const auto& f : footnotes) {
+    std::cout << "[" << f->get_id() << "] " << f->get_text() << std::endl;
+}
+
+// 删除脚注
+footnotes.remove(fn->get_id());
+
+// 尾注与脚注 API 完全一致
+auto endnotes = doc->endnotes();
+auto en = endnotes.add("This is an endnote.");
+```
+
 ### 表单字段 (FormField)
 
 ```cpp
