@@ -50,6 +50,9 @@ bool is_para_node(const char* name);
 bool is_table_node(const char* name);
 bool is_sectpr_node(const char* name);
 bool is_content_node(const char* name);
+bool is_bookmark_start_node(const char* name);
+bool is_bookmark_end_node(const char* name);
+bool is_run_node(const char* name);
 
 // ---------------------------------------------------------------------------
 // Section range helpers (shared between serialize and deserialize)

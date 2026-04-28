@@ -88,6 +88,18 @@ bool is_content_node(const char* name) {
     return is_para_node(name) || is_table_node(name);
 }
 
+bool is_bookmark_start_node(const char* name) {
+    return std::strcmp(name, "w:bookmarkStart") == 0;
+}
+
+bool is_bookmark_end_node(const char* name) {
+    return std::strcmp(name, "w:bookmarkEnd") == 0;
+}
+
+bool is_run_node(const char* name) {
+    return std::strcmp(name, "w:r") == 0;
+}
+
 std::vector<SectionRange> collect_section_ranges(pugi::xml_node body) {
     std::vector<SectionRange> ranges;
     pugi::xml_node current_begin = body.first_child();

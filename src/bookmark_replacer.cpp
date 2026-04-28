@@ -348,7 +348,7 @@ bool BookmarkReplacer::clear_bookmark_content(Bookmark& bookmark) {
     std::string bookmark_id;
 
     for (pugi::xml_node child = start_para.first_child(); child; child = child.next_sibling()) {
-        if (std::string(child.name()) == "w:bookmarkStart") {
+        if (is_bookmark_start_node(child.name())) {
             bookmark_start = child;
             bookmark_id = child.attribute("w:id").value();
             break;
@@ -356,7 +356,7 @@ bool BookmarkReplacer::clear_bookmark_content(Bookmark& bookmark) {
     }
 
     for (pugi::xml_node child = end_para.first_child(); child; child = child.next_sibling()) {
-        if (std::string(child.name()) == "w:bookmarkEnd") {
+        if (is_bookmark_end_node(child.name())) {
             if (std::string(child.attribute("w:id").value()) == bookmark_id) {
                 bookmark_end = child;
                 break;
@@ -432,7 +432,7 @@ bool BookmarkReplacer::insert_image_at_bookmark(Bookmark& bookmark,
     // Find bookmark_end node
     pugi::xml_node bookmark_end;
     for (pugi::xml_node child = para.first_child(); child; child = child.next_sibling()) {
-        if (std::string(child.name()) == "w:bookmarkEnd") {
+        if (is_bookmark_end_node(child.name())) {
             bookmark_end = child;
             break;
         }

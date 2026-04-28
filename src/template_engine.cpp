@@ -358,7 +358,7 @@ static TemplateTarget resolve_target(Document* doc,
 
 static pugi::xml_node find_bookmark_start(pugi::xml_node para) {
     for (pugi::xml_node child = para.first_child(); child; child = child.next_sibling()) {
-        if (std::string(child.name()) == "w:bookmarkStart") {
+        if (is_bookmark_start_node(child.name())) {
             return child;
         }
     }

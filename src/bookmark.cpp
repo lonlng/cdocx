@@ -402,7 +402,7 @@ bool Bookmark::set_text_formatted(const std::string& text, const BookmarkFormat&
     pugi::xml_node current = start_node_.next_sibling();
     while (current && current != end_node_) {
         const pugi::xml_node next = current.next_sibling();
-        if (std::string(current.name()) == "w:r") {
+        if (is_run_node(current.name())) {
             para.remove_child(current);
         }
         current = next;
@@ -561,7 +561,7 @@ bool Bookmark::set_text_cross_paragraph(const std::string& text) {
     const std::string bookmark_id = start_node_.attribute("w:id").value();
 
     for (pugi::xml_node node = last_para.first_child(); node; node = node.next_sibling()) {
-        if (std::string(node.name()) == "w:bookmarkEnd") {
+        if (is_bookmark_end_node(node.name())) {
             if (node.attribute("w:id").value() == bookmark_id) {
                 // Move to first paragraph
                 paragraphs[0].append_copy(node);

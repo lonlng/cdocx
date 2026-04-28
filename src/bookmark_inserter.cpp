@@ -9,6 +9,8 @@
 
 #include <cdocx/bookmark_inserter.h>
 
+#include "sync_common.h"
+
 #include <algorithm>
 #include <vector>
 
@@ -125,7 +127,7 @@ int BookmarkInserter::insert_all(const std::string& bookmark_name, const std::st
         found = false;
         std::function<bool(pugi::xml_node)> search = [&](pugi::xml_node node) -> bool {
             for (pugi::xml_node child = node.first_child(); child; child = child.next_sibling()) {
-                if (std::string(child.name()) == "w:p") {
+                if (is_para_node(child.name())) {
                     if (insert_in_paragraph(child, bookmark_name, text)) {
                         found = true;
                         ++count;

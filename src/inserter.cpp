@@ -13,6 +13,8 @@
 #include <cdocx/inserter.h>
 #include <cdocx/paragraph.h>
 
+#include "sync_common.h"
+
 namespace cdocx {
 
 // ============================================================================
@@ -285,7 +287,7 @@ void DocumentInserter::insert_paragraphs(Document* source, int position) {
         int count = 0;
         for (pugi::xml_node child = target_body.first_child(); child;
              child = child.next_sibling()) {
-            if (std::string(child.name()) == "w:p" || std::string(child.name()) == "w:tbl") {
+            if (is_content_node(child.name())) {
                 count++;
                 if (count == position) {
                     insert_before = child.next_sibling();
@@ -298,7 +300,7 @@ void DocumentInserter::insert_paragraphs(Document* source, int position) {
     // Collect and clone only paragraphs
     std::vector<pugi::xml_node> paras_to_clone;
     for (pugi::xml_node child = source_body.first_child(); child; child = child.next_sibling()) {
-        if (std::string(child.name()) == "w:p") {
+        if (is_para_node(child.name())) {
             paras_to_clone.push_back(child);
         }
     }
@@ -346,7 +348,7 @@ void DocumentInserter::insert_tables(Document* source, int position) {
         int count = 0;
         for (pugi::xml_node child = target_body.first_child(); child;
              child = child.next_sibling()) {
-            if (std::string(child.name()) == "w:p" || std::string(child.name()) == "w:tbl") {
+            if (is_content_node(child.name())) {
                 count++;
                 if (count == position) {
                     insert_before = child.next_sibling();
@@ -359,7 +361,7 @@ void DocumentInserter::insert_tables(Document* source, int position) {
     // Collect and clone only tables
     std::vector<pugi::xml_node> tables_to_clone;
     for (pugi::xml_node child = source_body.first_child(); child; child = child.next_sibling()) {
-        if (std::string(child.name()) == "w:tbl") {
+        if (is_table_node(child.name())) {
             tables_to_clone.push_back(child);
         }
     }
