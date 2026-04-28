@@ -68,6 +68,12 @@ list(APPEND CDOCX_EXAMPLES 24_watermark)
 # v0.8.0: BookmarkInserter example
 list(APPEND CDOCX_EXAMPLES 25_bookmark_inserter)
 
+# v0.8.0: FootnoteCollection / EndnoteCollection example
+list(APPEND CDOCX_EXAMPLES 26_footnote_collection)
+
+# v0.8.0: Field switches example
+list(APPEND CDOCX_EXAMPLES 27_field_switches)
+
 # DOM sync validation
 list(APPEND CDOCX_EXAMPLES test_dom_sync)
 
