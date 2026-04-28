@@ -20,6 +20,27 @@ namespace cdocx {
 // Helper Functions
 // ============================================================================
 
+struct OrientationMapping {
+    SectionProperties::Orientation orientation;
+    const char* xml_value;
+};
+
+static const OrientationMapping kOrientationMappings[] = {
+    {SectionProperties::Orientation::Landscape, "landscape"},
+};
+
+static SectionProperties::Orientation string_to_orientation(const char* val) {
+    if (!val || !*val) {
+        return SectionProperties::Orientation::Portrait;
+    }
+    for (const auto& mapping : kOrientationMappings) {
+        if (std::strcmp(mapping.xml_value, val) == 0) {
+            return mapping.orientation;
+        }
+    }
+    return SectionProperties::Orientation::Portrait;
+}
+
 static void remove_ref_from_node(pugi::xml_node sect_pr, HeaderFooterType type, bool is_header) {
     if (!sect_pr) {
         return;
@@ -466,12 +487,7 @@ void Section::load_properties() {
     if (pg_sz) {
         properties_.page_size.width = pg_sz.attribute("w:w").as_int();
         properties_.page_size.height = pg_sz.attribute("w:h").as_int();
-        const char* orient = pg_sz.attribute("w:orient").value();
-        if (std::strcmp(orient, "landscape") == 0) {
-            properties_.orientation = SectionProperties::Orientation::Landscape;
-        } else {
-            properties_.orientation = SectionProperties::Orientation::Portrait;
-        }
+        properties_.orientation = string_to_orientation(pg_sz.attribute("w:orient").value());
     }
 
     auto pg_mar = sect_pr_node_.child("w:pgMar");
