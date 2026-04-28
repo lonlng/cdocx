@@ -110,10 +110,10 @@ TEST(CommentCollectionTest, ClearAll) {
 }
 
 TEST(CommentCollectionTest, RoundTripAfterSave) {
-    const std::string path = "test_comments_rt.docx";
+    TempDoc temp("test_comments_rt.docx");
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         ASSERT_TRUE(doc.create_empty());
         auto comments = doc.get_comments();
         auto c = comments.add("Reviewer", "Please check this section.");
@@ -122,7 +122,7 @@ TEST(CommentCollectionTest, RoundTripAfterSave) {
     }
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         doc.open();
         ASSERT_TRUE(doc.is_open());
 
@@ -135,8 +135,6 @@ TEST(CommentCollectionTest, RoundTripAfterSave) {
         EXPECT_EQ(c->get_initial(), "R");
         EXPECT_NE(c->get_text().find("Please check"), std::string::npos);
     }
-
-    fs::remove(path);
 }
 
 // ============================================================================
@@ -224,10 +222,10 @@ TEST(CommentCollectionTest, RemoveNonExistentId) {
 }
 
 TEST(CommentCollectionTest, MultipleCommentsSameAuthor) {
-    const std::string path = "test_comments_same_author.docx";
+    TempDoc temp("test_comments_same_author.docx");
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         ASSERT_TRUE(doc.create_empty());
         auto comments = doc.get_comments();
         comments.add("Alice", "Comment one");
@@ -237,7 +235,7 @@ TEST(CommentCollectionTest, MultipleCommentsSameAuthor) {
     }
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         doc.open();
         ASSERT_TRUE(doc.is_open());
 
@@ -253,6 +251,4 @@ TEST(CommentCollectionTest, MultipleCommentsSameAuthor) {
         EXPECT_EQ(alice_count, 2);
         EXPECT_EQ(bob_count, 1);
     }
-
-    fs::remove(path);
 }

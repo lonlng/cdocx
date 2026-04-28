@@ -73,10 +73,10 @@ TEST(FieldSwitchesTest, FieldAddMultipleSwitches) {
 }
 
 TEST(FieldSwitchesTest, RoundTripAfterSaveAndLoad) {
-    const std::string path = "test_field_rt.docx";
+    TempDoc temp("test_field_rt.docx");
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         ASSERT_TRUE(doc.create_empty());
         DocumentBuilder builder(&doc);
         builder.move_to_document_start();
@@ -87,7 +87,7 @@ TEST(FieldSwitchesTest, RoundTripAfterSaveAndLoad) {
     }
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         doc.open();
         ASSERT_TRUE(doc.is_open());
 
@@ -126,8 +126,6 @@ TEST(FieldSwitchesTest, RoundTripAfterSaveAndLoad) {
         }
         EXPECT_TRUE(found_date_field);
     }
-
-    fs::remove(path);
 }
 
 TEST(FieldSwitchesTest, TableOfContentsUsesSwitches) {
@@ -201,10 +199,10 @@ TEST(FieldSwitchesTest, FieldUnlink) {
 }
 
 TEST(FieldSwitchesTest, FieldResultRoundTrip) {
-    const std::string path = "test_field_result_rt.docx";
+    TempDoc temp("test_field_result_rt.docx");
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         ASSERT_TRUE(doc.create_empty());
 
         // Use pure DOM API (not DocumentBuilder) so the result is written
@@ -219,7 +217,7 @@ TEST(FieldSwitchesTest, FieldResultRoundTrip) {
     }
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         doc.open();
         ASSERT_TRUE(doc.is_open());
 
@@ -242,8 +240,6 @@ TEST(FieldSwitchesTest, FieldResultRoundTrip) {
         }
         EXPECT_TRUE(found_result);
     }
-
-    fs::remove(path);
 }
 
 TEST(FieldSwitchesTest, EmptyFieldCodeEdgeCase) {

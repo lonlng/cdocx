@@ -97,10 +97,10 @@ TEST(FootnoteCollectionTest, ClearAll) {
 }
 
 TEST(FootnoteCollectionTest, RoundTripAfterSave) {
-    const std::string path = "test_footnotes_rt.docx";
+    TempDoc temp("test_footnotes_rt.docx");
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         ASSERT_TRUE(doc.create_empty());
         auto footnotes = doc.footnotes();
         footnotes.add("Please check this reference.");
@@ -108,7 +108,7 @@ TEST(FootnoteCollectionTest, RoundTripAfterSave) {
     }
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         doc.open();
         ASSERT_TRUE(doc.is_open());
 
@@ -119,8 +119,6 @@ TEST(FootnoteCollectionTest, RoundTripAfterSave) {
         ASSERT_NE(f, nullptr);
         EXPECT_NE(f->get_text().find("Please check"), std::string::npos);
     }
-
-    fs::remove(path);
 }
 
 TEST(EndnoteCollectionTest, AddAndRetrieve) {
@@ -142,10 +140,10 @@ TEST(EndnoteCollectionTest, AddAndRetrieve) {
 }
 
 TEST(EndnoteCollectionTest, RoundTripAfterSave) {
-    const std::string path = "test_endnotes_rt.docx";
+    TempDoc temp("test_endnotes_rt.docx");
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         ASSERT_TRUE(doc.create_empty());
         auto endnotes = doc.endnotes();
         endnotes.add("See appendix for details.");
@@ -153,7 +151,7 @@ TEST(EndnoteCollectionTest, RoundTripAfterSave) {
     }
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         doc.open();
         ASSERT_TRUE(doc.is_open());
 
@@ -165,15 +163,13 @@ TEST(EndnoteCollectionTest, RoundTripAfterSave) {
         EXPECT_EQ(e->get_footnote_type(), FootnoteType::Endnote);
         EXPECT_NE(e->get_text().find("appendix"), std::string::npos);
     }
-
-    fs::remove(path);
 }
 
 TEST(FootnoteCollectionTest, DocumentBuilderInsertsFootnote) {
-    const std::string path = "test_footnotes_builder.docx";
+    TempDoc temp("test_footnotes_builder.docx");
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         ASSERT_TRUE(doc.create_empty());
         DocumentBuilder builder(&doc);
         builder.move_to_document_start();
@@ -183,7 +179,7 @@ TEST(FootnoteCollectionTest, DocumentBuilderInsertsFootnote) {
     }
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         doc.open();
         ASSERT_TRUE(doc.is_open());
 
@@ -194,8 +190,6 @@ TEST(FootnoteCollectionTest, DocumentBuilderInsertsFootnote) {
         ASSERT_NE(f, nullptr);
         EXPECT_EQ(f->get_text(), "Builder footnote text");
     }
-
-    fs::remove(path);
 }
 
 // ============================================================================
@@ -235,10 +229,10 @@ TEST(EndnoteCollectionTest, ClearAllEndnotes) {
 }
 
 TEST(EndnoteCollectionTest, CustomReferenceMarkRoundTrip) {
-    const std::string path = "test_endnotes_mark_rt.docx";
+    TempDoc temp("test_endnotes_mark_rt.docx");
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         ASSERT_TRUE(doc.create_empty());
         auto endnotes = doc.endnotes();
         auto e = endnotes.add("See references.", "*");
@@ -248,7 +242,7 @@ TEST(EndnoteCollectionTest, CustomReferenceMarkRoundTrip) {
     }
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         doc.open();
         ASSERT_TRUE(doc.is_open());
 
@@ -264,15 +258,13 @@ TEST(EndnoteCollectionTest, CustomReferenceMarkRoundTrip) {
         EXPECT_FALSE(e->is_auto());
         EXPECT_TRUE(e->get_reference_mark().empty());
     }
-
-    fs::remove(path);
 }
 
 TEST(EndnoteCollectionTest, DocumentBuilderInsertsEndnote) {
-    const std::string path = "test_endnotes_builder.docx";
+    TempDoc temp("test_endnotes_builder.docx");
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         ASSERT_TRUE(doc.create_empty());
         DocumentBuilder builder(&doc);
         builder.move_to_document_start();
@@ -282,7 +274,7 @@ TEST(EndnoteCollectionTest, DocumentBuilderInsertsEndnote) {
     }
 
     {
-        Document doc(path);
+        Document doc(temp.path());
         doc.open();
         ASSERT_TRUE(doc.is_open());
 
@@ -294,6 +286,4 @@ TEST(EndnoteCollectionTest, DocumentBuilderInsertsEndnote) {
         EXPECT_EQ(e->get_text(), "Builder endnote text");
         EXPECT_EQ(e->get_footnote_type(), FootnoteType::Endnote);
     }
-
-    fs::remove(path);
 }

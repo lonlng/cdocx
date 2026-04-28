@@ -156,32 +156,22 @@ TEST(CreateEmptyTest, CreateEmptyWithoutFilepathUsesEmptyPath) {
 }
 
 TEST(CreateEmptyTest, CreateEmptyClosesPreviousDocument) {
-    const std::string test_file1 = "test_close_prev1.docx";
-    const std::string test_file2 = "test_close_prev2.docx";
-
-    // Clean up
-    for (const auto& f : {test_file1, test_file2}) {
-        if (fs::exists(f)) fs::remove(f);
-    }
+    TempDoc temp1("test_close_prev1.docx");
+    TempDoc temp2("test_close_prev2.docx");
 
     cdocx::Document doc;
 
     // Create first document
-    ASSERT_EQ(doc.create_empty(test_file1), true);
-    EXPECT_EQ(doc.get_filepath(), test_file1);
+    ASSERT_EQ(doc.create_empty(temp1.path()), true);
+    EXPECT_EQ(doc.get_filepath(), temp1.path());
 
     // Create second document (should close first)
-    ASSERT_EQ(doc.create_empty(test_file2), true);
-    EXPECT_EQ(doc.get_filepath(), test_file2);
+    ASSERT_EQ(doc.create_empty(temp2.path()), true);
+    EXPECT_EQ(doc.get_filepath(), temp2.path());
     EXPECT_EQ(doc.is_open(), true);
 
     doc.save();
-    EXPECT_EQ(fs::exists(test_file2), true);
-
-    // Clean up
-    for (const auto& f : {test_file1, test_file2}) {
-        if (fs::exists(f)) fs::remove(f);
-    }
+    EXPECT_EQ(fs::exists(temp2.path()), true);
 }
 
 TEST(CreateEmptyTest, CreatedDocumentHasValidDocumentStructure) {

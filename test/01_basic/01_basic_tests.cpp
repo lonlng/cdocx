@@ -68,19 +68,17 @@ TEST(BasicTest, CloseThenReopenSameDocument) {
 
 TEST(BasicTest, OpenCorruptedZipFailsGracefully) {
     // Create a file that is not a valid ZIP
-    const std::string bad_file = "not_a_valid_docx.docx";
+    cdocx::test::TempDoc bad_file("not_a_valid_docx.docx");
     {
-        std::ofstream f(bad_file);
+        std::ofstream f(bad_file.path());
         f << "This is not a valid ZIP file";
     }
 
-    cdocx::Document doc(bad_file);
+    cdocx::Document doc(bad_file.path());
     doc.open();
 
     // Should not crash and should not be open
     EXPECT_FALSE(doc.is_open());
-
-    fs::remove(bad_file);
 }
 
 TEST(BasicTest, DomApiCanIterateExistingDocument) {
