@@ -159,13 +159,13 @@ class CDocx {
 
     /**
      * @brief Get the library version string
-     * @return Version string (e.g., "0.7.0")
+     * @return Version string (e.g., "0.8.0")
      */
     static std::string version();
 
     /**
      * @brief Get the full library version string
-     * @return Full version string (e.g., "CDocx v0.7.0")
+     * @return Full version string (e.g., "CDocx v0.8.0")
      */
     static std::string version_string();
 };
