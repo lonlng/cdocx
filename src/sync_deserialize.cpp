@@ -34,6 +34,97 @@ static void append_id_node(Paragraph* para, Document* doc, pugi::xml_node node) 
     para->append_child(obj);
 }
 
+static std::shared_ptr<FormField> parse_form_field_from_xml(Document* doc,
+                                                            pugi::xml_node fld_char,
+                                                            pugi::xml_node& child) {
+    auto ff_data = fld_char.child("w:ffData");
+    if (!ff_data) {
+        return nullptr;
+    }
+
+    FormFieldType fftype = FormFieldType::TextInput;
+    auto ff_text_input = ff_data.child("w:textInput");
+    auto ff_check_box = ff_data.child("w:checkBox");
+    auto ff_dd_list = ff_data.child("w:ddList");
+    if (ff_check_box) {
+        fftype = FormFieldType::CheckBox;
+    } else if (ff_dd_list) {
+        fftype = FormFieldType::ComboBox;
+    }
+
+    auto form_field = std::make_shared<FormField>(doc, fftype);
+
+    auto ff_name = ff_data.child("w:name");
+    if (ff_name) {
+        form_field->set_name(ff_name.attribute("w:val").value());
+    }
+
+    auto ff_enabled = ff_data.child("w:enabled");
+    if (ff_enabled) {
+        form_field->set_enabled(ff_enabled.attribute("w:val").as_int() != 0);
+    }
+
+    auto ff_calc = ff_data.child("w:calcOnExit");
+    if (ff_calc) {
+        form_field->set_calculate_on_exit(ff_calc.attribute("w:val").as_int() != 0);
+    }
+
+    if (ff_text_input) {
+        auto ttype = ff_text_input.child("w:type");
+        if (ttype) {
+            const char* tv = ttype.attribute("w:val").value();
+            form_field->set_text_input_type(string_to_text_form_field_type(tv));
+        }
+        auto tdef = ff_text_input.child("w:default");
+        if (tdef) {
+            form_field->set_text_input_default(tdef.attribute("w:val").value());
+        }
+        auto tmax = ff_text_input.child("w:maxLength");
+        if (tmax) {
+            form_field->set_max_length(tmax.attribute("w:val").as_int());
+        }
+        auto tfmt = ff_text_input.child("w:format");
+        if (tfmt) {
+            form_field->set_text_input_format(tfmt.attribute("w:val").value());
+        }
+    } else if (ff_check_box) {
+        auto cb_default = ff_check_box.child("w:default");
+        if (cb_default) {
+            form_field->set_default_value(cb_default.attribute("w:val").as_int() != 0);
+        }
+        auto cb_checked = ff_check_box.child("w:checked");
+        if (cb_checked) {
+            form_field->set_checked(cb_checked.attribute("w:val").as_int() != 0);
+        }
+        auto cb_size = ff_check_box.child("w:size");
+        if (cb_size) {
+            form_field->set_is_check_box_exact_size(true);
+            form_field->set_check_box_size(cb_size.attribute("w:val").as_int() / 2.0);
+        } else {
+            form_field->set_is_check_box_exact_size(false);
+        }
+    } else if (ff_dd_list) {
+        std::vector<std::string> items;
+        for (auto entry = ff_dd_list.child("w:listEntry"); entry;
+             entry = entry.next_sibling("w:listEntry")) {
+            items.emplace_back(entry.attribute("w:val").value());
+        }
+        form_field->set_drop_down_items(items);
+        auto dd_default = ff_dd_list.child("w:default");
+        if (dd_default) {
+            form_field->set_drop_down_selected_index(dd_default.attribute("w:val").as_int());
+        }
+    }
+
+    std::string field_result;
+    auto end_node = walk_field_sequence(child, nullptr, &field_result);
+    if (end_node) {
+        child = end_node;
+    }
+    form_field->set_result(field_result);
+    return form_field;
+}
+
 // ============================================================================
 // Physical -> DOM (Deserialization)
 // ============================================================================
@@ -445,90 +536,10 @@ std::shared_ptr<Paragraph> Document::parse_paragraph_from_xml(pugi::xml_node par
                 // Check if this is a form field
                 auto ff_data = fld_char.child("w:ffData");
                 if (ff_data) {
-                    FormFieldType fftype = FormFieldType::TextInput;
-                    auto ff_text_input = ff_data.child("w:textInput");
-                    auto ff_check_box = ff_data.child("w:checkBox");
-                    auto ff_dd_list = ff_data.child("w:ddList");
-                    if (ff_check_box) {
-                        fftype = FormFieldType::CheckBox;
-                    } else if (ff_dd_list) {
-                        fftype = FormFieldType::ComboBox;
+                    auto form_field = parse_form_field_from_xml(this, fld_char, child);
+                    if (form_field) {
+                        para->append_child(form_field);
                     }
-
-                    auto form_field = std::make_shared<FormField>(this, fftype);
-
-                    auto ff_name = ff_data.child("w:name");
-                    if (ff_name) {
-                        form_field->set_name(ff_name.attribute("w:val").value());
-                    }
-
-                    auto ff_enabled = ff_data.child("w:enabled");
-                    if (ff_enabled) {
-                        form_field->set_enabled(ff_enabled.attribute("w:val").as_int() != 0);
-                    }
-
-                    auto ff_calc = ff_data.child("w:calcOnExit");
-                    if (ff_calc) {
-                        form_field->set_calculate_on_exit(ff_calc.attribute("w:val").as_int() != 0);
-                    }
-
-                    if (ff_text_input) {
-                        auto ttype = ff_text_input.child("w:type");
-                        if (ttype) {
-                            const char* tv = ttype.attribute("w:val").value();
-                            form_field->set_text_input_type(string_to_text_form_field_type(tv));
-                        }
-                        auto tdef = ff_text_input.child("w:default");
-                        if (tdef) {
-                            form_field->set_text_input_default(tdef.attribute("w:val").value());
-                        }
-                        auto tmax = ff_text_input.child("w:maxLength");
-                        if (tmax) {
-                            form_field->set_max_length(tmax.attribute("w:val").as_int());
-                        }
-                        auto tfmt = ff_text_input.child("w:format");
-                        if (tfmt) {
-                            form_field->set_text_input_format(tfmt.attribute("w:val").value());
-                        }
-                    } else if (ff_check_box) {
-                        auto cb_default = ff_check_box.child("w:default");
-                        if (cb_default) {
-                            form_field->set_default_value(cb_default.attribute("w:val").as_int() !=
-                                                          0);
-                        }
-                        auto cb_checked = ff_check_box.child("w:checked");
-                        if (cb_checked) {
-                            form_field->set_checked(cb_checked.attribute("w:val").as_int() != 0);
-                        }
-                        auto cb_size = ff_check_box.child("w:size");
-                        if (cb_size) {
-                            form_field->set_is_check_box_exact_size(true);
-                            form_field->set_check_box_size(cb_size.attribute("w:val").as_int() /
-                                                           2.0);
-                        } else {
-                            form_field->set_is_check_box_exact_size(false);
-                        }
-                    } else if (ff_dd_list) {
-                        std::vector<std::string> items;
-                        for (auto entry = ff_dd_list.child("w:listEntry"); entry;
-                             entry = entry.next_sibling("w:listEntry")) {
-                            items.emplace_back(entry.attribute("w:val").value());
-                        }
-                        form_field->set_drop_down_items(items);
-                        auto dd_default = ff_dd_list.child("w:default");
-                        if (dd_default) {
-                            form_field->set_drop_down_selected_index(
-                                dd_default.attribute("w:val").as_int());
-                        }
-                    }
-
-                    std::string field_result;
-                    auto end_node = walk_field_sequence(child, nullptr, &field_result);
-                    if (end_node) {
-                        child = end_node;
-                    }
-                    form_field->set_result(field_result);
-                    para->append_child(form_field);
                 } else {
                     auto field = std::make_shared<Field>(this, FieldType::Unknown);
                     std::string field_code;
