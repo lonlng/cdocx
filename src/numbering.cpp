@@ -56,8 +56,8 @@ LevelDefinition LevelDefinition::make_numbered_level(NumberStyle style, int leve
     // Set numbering style
     def.number_style = style;
 
-    // Set format based on style
-    // TODO: Implement distinct formats for Roman and Letter styles.
+    // Set format based on style.  w:numFmt is driven by number_style (see
+    // number_style_to_string); w:lvlText %1. is correct for all styles.
     def.number_format = "%1.";
     def.level_text = "%1.";
 
