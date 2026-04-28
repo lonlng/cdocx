@@ -57,7 +57,7 @@ list(APPEND CDOCX_EXAMPLES 20_new_features)
 list(APPEND CDOCX_EXAMPLES 21_mail_merge)
 
 # v0.8.0: TemplateEngine unified API example
-list(APPEND CDOCX_EXAMPLES 21_template_engine)
+list(APPEND CDOCX_EXAMPLES 23_template_engine)
 
 # v0.8.0: CommentCollection example
 list(APPEND CDOCX_EXAMPLES 22_comments)
@@ -109,11 +109,11 @@ endforeach()
 # ----------------------------------------------------------------------------
 # Additional source variants within existing example directories
 # ----------------------------------------------------------------------------
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/21_template_engine/main_2.cpp)
-    set(example_dir ${CMAKE_CURRENT_SOURCE_DIR}/21_template_engine)
-    set(example_bin_dir ${CMAKE_CURRENT_BINARY_DIR}/21_template_engine)
-    add_cdocx_executable(21_template_engine_2 SOURCES ${example_dir}/main_2.cpp)
-    set_target_properties(21_template_engine_2 PROPERTIES
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/23_template_engine/main_2.cpp)
+    set(example_dir ${CMAKE_CURRENT_SOURCE_DIR}/23_template_engine)
+    set(example_bin_dir ${CMAKE_CURRENT_BINARY_DIR}/23_template_engine)
+    add_cdocx_executable(23_template_engine_2 SOURCES ${example_dir}/main_2.cpp)
+    set_target_properties(23_template_engine_2 PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${example_bin_dir}
         RUNTIME_OUTPUT_DIRECTORY_DEBUG ${example_bin_dir}
         RUNTIME_OUTPUT_DIRECTORY_RELEASE ${example_bin_dir}
@@ -121,7 +121,7 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/21_template_engine/main_2.cpp)
     if(EXISTS ${example_dir}/data)
         file(COPY ${example_dir}/data DESTINATION ${example_bin_dir})
     endif()
-    list(APPEND ALL_EXAMPLE_TARGETS 21_template_engine_2)
+    list(APPEND ALL_EXAMPLE_TARGETS 23_template_engine_2)
 endif()
 
 # ----------------------------------------------------------------------------
