@@ -74,6 +74,9 @@ list(APPEND CDOCX_EXAMPLES 26_footnote_collection)
 # v0.8.0: Field switches example
 list(APPEND CDOCX_EXAMPLES 27_field_switches)
 
+# v0.8.0: Build-from-scratch and convenience APIs
+list(APPEND CDOCX_EXAMPLES 28_build_from_scratch)
+
 # DOM sync validation
 list(APPEND CDOCX_EXAMPLES test_dom_sync)
 
