@@ -2,11 +2,11 @@
 
 > **版本说明**：本文档基于 **v0.8.0** 实际已实现 API 编写，所有标注为"可用"的接口均已在 `.cpp` 中有完整实现，可直接使用。
 >
-> **已实现的 DOM API（v0.8.0）**：`Document::open/save/clone`、`CDocx::create_document/load_document/save_document`、`get_body`、`append_paragraph`、`append_run`、`append_table`、`get_rows/get_cells`、`set_text`、`Section::add_header/footer/ensure_header/ensure_footer/clone`、`Paragraph::clone`、`Paragraph::append_hyperlink` / `append_page_number` / `append_date` / `append_time` / `append_merge_field`、`Table::clone`、`Row::clone`、`Cell::clone`、`BookmarkStart/End`、`Field`（序列化/反序列化）、`Hyperlink`（序列化/反序列化）、`Node::get_next_node_in_document` / `get_previous_node_in_document`、`HeaderFooter::append_paragraph` / `append_table` / `get_paragraphs`、基础 `Font`/`ParagraphFormat` 设置、`DocumentSearch::find` / `find_all` / `replace` / `replace_all` / `replace_with_formatting` / `find_and_process`、`Table::auto_fit` / `insert_column` / `delete_column`、`TableOperations` 静态辅助方法、`TemplateEngine` 统一模板引擎、`DocumentBuilder`（含 `insert_hyperlink`、`insert_image`、`start_bookmark`/`end_bookmark`）、`CommentCollection`、`MailMerge`、`Watermark`、`StyleCollection`。
+> **已实现的 DOM API（v0.8.0）**：`Document::open/save/clone`、`CDocx::create_document/load_document/save_document`、`get_body`、`append_paragraph`、`append_run`、`append_table`、`get_rows/get_cells`、`set_text`、`Section::add_header/footer/ensure_header/ensure_footer/clone`、`Paragraph::clone`、`Paragraph::append_hyperlink` / `append_page_number` / `append_date` / `append_time` / `append_merge_field`、`Table::clone`、`Row::clone`、`Cell::clone`、`BookmarkStart/End`、`Field`（序列化/反序列化）、`Hyperlink`（序列化/反序列化）、`Node::get_next_node_in_document` / `get_previous_node_in_document`、`HeaderFooter::append_paragraph` / `append_table` / `get_paragraphs`、基础 `Font`/`ParagraphFormat` 设置、`DocumentSearch::find` / `find_all` / `replace` / `replace_all` / `replace_with_formatting` / `find_and_process`、`Table::auto_fit` / `insert_column` / `delete_column`、`TableOperations` 静态辅助方法、`TemplateEngine` 统一模板引擎、`DocumentBuilder`（含 `insert_hyperlink`、`insert_image`、`insert_page_number`/`insert_date`/`insert_time`/`insert_merge_field`/`insert_table_of_contents` 带字段开关）、`CommentCollection`、`MailMerge`、`Watermark`、`StyleCollection`。
 
 ## 概述
 
-CDocx v2.0 采用全新的 DOM 风格 API，灵感来自 Aspose.Words，更加直观易用。
+CDocx v0.8.0 采用 DOM 风格 API，灵感来自 Aspose.Words，更加直观易用。
 
 ---
 
@@ -374,6 +374,48 @@ builder.insert_time("HH:mm:ss");
 
 // 页数
 builder.insert_num_pages();
+```
+
+### 字段开关 (Field Switches)
+
+```cpp
+// 使用 DocumentBuilder 插入带开关的字段
+#include <cdocx/advanced.h>
+cdocx::DocumentBuilder builder(doc.get());
+
+// 页码字段使用罗马数字格式
+builder.insert_page_number("\\* ROMAN");
+
+// 日期字段使用自定义格式开关
+builder.insert_date("\\@ \"yyyy-MM-dd\"");
+
+// 时间字段使用 24 小时制格式
+builder.insert_time("\\@ \"HH:mm\"");
+
+// 合并字段使用大写转换开关
+builder.insert_merge_field("CustomerName", "\\* Upper");
+
+// 目录字段使用大纲级别和超链接开关
+builder.insert_table_of_contents("\\o \"1-3\" \\h \\z");
+
+// 手动创建字段并配置开关
+cdocx::Field field;
+field.set_field_code("PAGE");
+field.add_switch("\\* MERGEFORMAT");
+field.add_switch("\\# \"0\"");
+field.set_result("1");
+
+// 获取完整字段代码（含开关）
+std::string full_code = field.get_full_field_code();  // "PAGE \\* MERGEFORMAT \\# \"0\""
+
+// 清空所有开关
+field.clear_switches();
+
+// 字段克隆会保留开关和结果
+auto cloned = std::dynamic_pointer_cast<cdocx::Field>(field.clone(true));
+
+// 取消链接：将字段替换为静态结果文本
+field.unlink();
 ```
 
 ### 超链接
