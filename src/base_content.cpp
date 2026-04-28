@@ -18,6 +18,39 @@ namespace cdocx {
 
 namespace {
 
+struct HighlightMapping {
+    TextProperties::Highlight highlight;
+    HighlightColor color;
+};
+
+static const HighlightMapping kHighlightMappings[] = {
+    {TextProperties::Highlight::Yellow, HighlightColor::Yellow},
+    {TextProperties::Highlight::Green, HighlightColor::Green},
+    {TextProperties::Highlight::Cyan, HighlightColor::Turquoise},
+    {TextProperties::Highlight::Magenta, HighlightColor::Pink},
+    {TextProperties::Highlight::Blue, HighlightColor::Blue},
+    {TextProperties::Highlight::Red, HighlightColor::Red},
+    {TextProperties::Highlight::Black, HighlightColor::Black},
+    {TextProperties::Highlight::White, HighlightColor::White},
+    {TextProperties::Highlight::DarkRed, HighlightColor::DarkRed},
+    {TextProperties::Highlight::DarkGreen, HighlightColor::BrightGreen},
+    {TextProperties::Highlight::DarkBlue, HighlightColor::DarkBlue},
+    {TextProperties::Highlight::DarkYellow, HighlightColor::DarkYellow},
+    {TextProperties::Highlight::DarkCyan, HighlightColor::Teal},
+    {TextProperties::Highlight::DarkMagenta, HighlightColor::Violet},
+    {TextProperties::Highlight::DarkGray, HighlightColor::Gray50},
+    {TextProperties::Highlight::LightGray, HighlightColor::Gray25},
+};
+
+static HighlightColor highlight_to_color(TextProperties::Highlight highlight) {
+    for (const auto& mapping : kHighlightMappings) {
+        if (mapping.highlight == highlight) {
+            return mapping.color;
+        }
+    }
+    return HighlightColor::None;
+}
+
 struct UnderlineStyleMapping {
     TextProperties::UnderlineStyle style{};
     const char* xml_value{};
@@ -194,59 +227,7 @@ Run& Run::set_strike(TextProperties::StrikeStyle style) {
 }
 
 Run& Run::set_highlight(TextProperties::Highlight color) {
-    switch (color) {
-        case TextProperties::Highlight::Yellow:
-            font_.highlight = HighlightColor::Yellow;
-            break;
-        case TextProperties::Highlight::Green:
-            font_.highlight = HighlightColor::Green;
-            break;
-        case TextProperties::Highlight::Cyan:
-            font_.highlight = HighlightColor::Turquoise;
-            break;
-        case TextProperties::Highlight::Magenta:
-            font_.highlight = HighlightColor::Pink;
-            break;
-        case TextProperties::Highlight::Blue:
-            font_.highlight = HighlightColor::Blue;
-            break;
-        case TextProperties::Highlight::Red:
-            font_.highlight = HighlightColor::Red;
-            break;
-        case TextProperties::Highlight::Black:
-            font_.highlight = HighlightColor::Black;
-            break;
-        case TextProperties::Highlight::White:
-            font_.highlight = HighlightColor::White;
-            break;
-        case TextProperties::Highlight::DarkRed:
-            font_.highlight = HighlightColor::DarkRed;
-            break;
-        case TextProperties::Highlight::DarkGreen:
-            font_.highlight = HighlightColor::BrightGreen;
-            break;
-        case TextProperties::Highlight::DarkBlue:
-            font_.highlight = HighlightColor::DarkBlue;
-            break;
-        case TextProperties::Highlight::DarkYellow:
-            font_.highlight = HighlightColor::DarkYellow;
-            break;
-        case TextProperties::Highlight::DarkCyan:
-            font_.highlight = HighlightColor::Teal;
-            break;
-        case TextProperties::Highlight::DarkMagenta:
-            font_.highlight = HighlightColor::Violet;
-            break;
-        case TextProperties::Highlight::DarkGray:
-            font_.highlight = HighlightColor::Gray50;
-            break;
-        case TextProperties::Highlight::LightGray:
-            font_.highlight = HighlightColor::Gray25;
-            break;
-        default:
-            font_.highlight = HighlightColor::None;
-            break;
-    }
+    font_.highlight = highlight_to_color(color);
     return *this;
 }
 
