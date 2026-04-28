@@ -267,20 +267,27 @@ When refactoring or extending cdocx, prefer these established patterns:
 
 ### Enum↔String Mapping via Lookup Tables
 
-Replace large `switch` / `if-else` chains with static lookup arrays. Examples in `src/document_sync.cpp`:
-- `kBorderTypeMappings[]` for `BorderType` ↔ XML value
-- `kUnderlineTypeMappings[]` for `UnderlineType` ↔ XML value
-- `kParagraphAlignmentMappings[]` for `ParagraphAlignment` ↔ XML value
+Replace large `switch` / `if-else` chains with static lookup arrays. Examples across the codebase:
+- `src/properties.cpp`: `kBorderTypeMappings[]`, `kUnderlineStyleMappings[]`, `kFontHintMappings[]`, `kVertAlignMappings[]`
+- `src/base_content.cpp`: `kPositionTypeMappings[]`, `kSpacingSignMappings[]`, `kPositionScriptMappings[]`
+- `src/sync_common.cpp`: `kParagraphAlignmentMappings[]`, `kTableAlignmentMappings[]`, `kHighlightMappings[]`
+- `src/document_builder.cpp`: `kBreakTypeMappings[]`
+- `src/paragraph.cpp`: `kBreakCharMappings[]`
+- `src/section.cpp`: `kOrientationMappings[]`
+- `src/sync_style.cpp`: `kStyleTypeMappings[]`, `kFontBoolFlagMappings[]`
 
 This reduces code volume and makes additions a single-line change.
 
 ### Extract Static Helpers in Anonymous Namespaces
 
-Recurring patterns across the codebase are extracted as file-local static functions:
+Recurring patterns across the codebase are extracted as file-local static functions or templates:
 - `parse_content_children()` in `document_sync.cpp` — unifies paragraph/table parsing loops for body, header/footer, and table cells.
 - `get_settings_root()` in `document.cpp` — centralizes `word/settings.xml` root node access for `protect`, `unprotect`, `is_protected`, `get/set_default_tab_stop`.
 - `collect_text_from_runs()` in `advanced.cpp` — centralizes text extraction from `<w:r>` runs within a paragraph, used by `Bookmark`, `Range`, and `DocumentBuilder`.
 - `apply_formatting_flags()` in `paragraph.cpp` — unifies formatting flag application for `add_run` and `add_run_with_bookmark`.
+- `append_id_node<T>()` in `sync_deserialize.cpp` — template helper for creating DOM nodes with `w:id` assignment (BookmarkEnd, CommentRangeStart, CommentRangeEnd, FootnoteReference, EndnoteReference).
+- `serialize_id_node_to_xml<T>()` in `sync_serialize.cpp` — template helper for serializing id-only DOM nodes to XML.
+- `serialize_footnote_reference_to_xml()` / `serialize_endnote_reference_to_xml()` in `sync_serialize.cpp` — dedicated serializers extracted from inline XML generation.
 
 ### Field Sequence Walking
 
