@@ -18,20 +18,6 @@ namespace cdocx {
 
 namespace {
 
-// Case-insensitive string comparison
-bool iequals(const std::string& a, const std::string& b) {
-    if (a.size() != b.size()) {
-        return false;
-    }
-    for (size_t i = 0; i < a.size(); ++i) {
-        if (std::tolower(static_cast<unsigned char>(a[i])) !=
-            std::tolower(static_cast<unsigned char>(b[i]))) {
-            return false;
-        }
-    }
-    return true;
-}
-
 // Extract merge field name from field code like "MERGEFIELD Name \\* MERGEFORMAT"
 std::string parse_merge_field_name(const std::string& field_code) {
     const std::string code = trim_whitespace(field_code);

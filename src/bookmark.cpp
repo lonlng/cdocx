@@ -21,20 +21,6 @@ namespace cdocx {
 
 namespace {
 
-bool names_equal_ci(const std::string& a, const std::string& b) {
-    if (a.size() != b.size()) {
-        return false;
-    }
-    return std::equal(a.begin(), a.end(), b.begin(), [](char c1, char c2) {
-        return std::tolower(c1) == std::tolower(c2);
-    });
-}
-
-}  // namespace
-
-
-namespace {
-
 std::string collect_text_from_runs(pugi::xml_node para) {
     std::string result;
     for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
@@ -699,7 +685,7 @@ std::optional<Bookmark> BookmarkCollection::get(const std::string& name) const {
     collect_bookmarks();
 
     for (const auto& bm : bookmarks_) {
-        if (names_equal_ci(bm.get_name(), name)) {
+        if (iequals(bm.get_name(), name)) {
             return bm;
         }
     }
@@ -715,7 +701,7 @@ bool BookmarkCollection::remove(const std::string& name) {
     collect_bookmarks();
 
     for (auto it = bookmarks_.begin(); it != bookmarks_.end(); ++it) {
-        if (names_equal_ci(it->get_name(), name)) {
+        if (iequals(it->get_name(), name)) {
             it->remove();
             bookmarks_.erase(it);
             return true;

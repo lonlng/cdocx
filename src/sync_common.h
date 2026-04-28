@@ -32,6 +32,7 @@ const char* header_footer_type_to_string(HeaderFooterType type);
 HeaderFooterType string_to_header_footer_type(const char* val);
 
 std::string trim_whitespace(const std::string& str);
+bool iequals(const std::string& a, const std::string& b);
 
 pugi::xml_node walk_field_sequence(pugi::xml_node start_run,
                                  std::string* out_instr_text,
