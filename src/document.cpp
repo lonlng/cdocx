@@ -659,30 +659,22 @@ SectionProperties Document::get_default_section_properties() const {
 // ============================================================================
 
 NumberingId Document::add_bulleted_list_definition() {
-    if (!numbering_manager_) {
-        init_numbering_manager();
-    }
+    init_numbering_manager();
     return numbering_manager_->add_bulleted_list_definition();
 }
 
 NumberingId Document::add_numbered_list_definition(NumberStyle style) {
-    if (!numbering_manager_) {
-        init_numbering_manager();
-    }
+    init_numbering_manager();
     return numbering_manager_->add_numbered_list_definition(style);
 }
 
 NumberingId Document::add_chinese_numbered_list_definition() {
-    if (!numbering_manager_) {
-        init_numbering_manager();
-    }
+    init_numbering_manager();
     return numbering_manager_->add_chinese_numbered_list_definition();
 }
 
 NumberingId Document::add_outline_list_definition() {
-    if (!numbering_manager_) {
-        init_numbering_manager();
-    }
+    init_numbering_manager();
     return numbering_manager_->add_outline_list_definition();
 }
 
