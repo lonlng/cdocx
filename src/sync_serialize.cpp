@@ -920,21 +920,25 @@ static void serialize_table_to_xml(pugi::xml_node parent, const Table* table) {
     }
 }
 
+static void serialize_node_child_to_xml(pugi::xml_node parent, const Node* child) {
+    switch (child->node_type()) {
+        case NodeType::Paragraph:
+            serialize_paragraph_to_xml(parent, dynamic_cast<const Paragraph*>(child));
+            break;
+        case NodeType::Table:
+            serialize_table_to_xml(parent, dynamic_cast<const Table*>(child));
+            break;
+        default:
+            break;
+    }
+}
+
 static void serialize_body_to_xml(pugi::xml_node body_xml, Body* body) {
     if (!body) {
         return;
     }
     for (const auto& child : body->get_children()) {
-        switch (child->node_type()) {
-            case NodeType::Paragraph:
-                serialize_paragraph_to_xml(body_xml, dynamic_cast<Paragraph*>(child.get()));
-                break;
-            case NodeType::Table:
-                serialize_table_to_xml(body_xml, dynamic_cast<Table*>(child.get()));
-                break;
-            default:
-                break;
-        }
+        serialize_node_child_to_xml(body_xml, child.get());
     }
 }
 
@@ -964,16 +968,7 @@ static void serialize_header_footer_to_xml(HeaderFooter* hf, Document* doc) {
     }
 
     for (const auto& child : hf->get_children()) {
-        switch (child->node_type()) {
-            case NodeType::Paragraph:
-                serialize_paragraph_to_xml(root, dynamic_cast<Paragraph*>(child.get()));
-                break;
-            case NodeType::Table:
-                serialize_table_to_xml(root, dynamic_cast<Table*>(child.get()));
-                break;
-            default:
-                break;
-        }
+        serialize_node_child_to_xml(root, child.get());
     }
 
     doc->mark_modified(hf->get_part_path());
