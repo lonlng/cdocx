@@ -252,11 +252,8 @@ TEST(EndnoteCollectionTest, CustomReferenceMarkRoundTrip) {
         auto e = endnotes.get(0);
         ASSERT_NE(e, nullptr);
         EXPECT_EQ(e->get_footnote_type(), FootnoteType::Endnote);
-        // TODO: custom reference mark text is not yet serialized to XML on save;
-        // it is lost on round-trip. The note survives and stays non-auto,
-        // but the mark string itself becomes empty.
         EXPECT_FALSE(e->is_auto());
-        EXPECT_TRUE(e->get_reference_mark().empty());
+        EXPECT_EQ(e->get_reference_mark(), "*");
     }
 }
 

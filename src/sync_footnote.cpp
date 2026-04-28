@@ -7,6 +7,7 @@
 
 #include <cdocx/document.h>
 #include <cdocx/footnote.h>
+#include <cdocx/paragraph.h>
 
 #include <cstring>
 
@@ -77,9 +78,22 @@ static void sync_notes_to_physical_impl(Document* doc,
         if (!note->is_auto() && !note->get_reference_mark().empty()) {
             node.append_attribute("w:type").set_value("normal");
         }
+        bool first_para = true;
         for (const auto& child : note->get_children()) {
             if (child->node_type() == NodeType::Paragraph) {
-                serialize_paragraph_to_xml(node, dynamic_cast<Paragraph*>(child.get()));
+                auto para = dynamic_cast<Paragraph*>(child.get());
+                std::shared_ptr<Run> temp_ref_run;
+                if (first_para && !note->is_auto() &&
+                    !note->get_reference_mark().empty()) {
+                    temp_ref_run = std::make_shared<Run>();
+                    temp_ref_run->set_text(note->get_reference_mark());
+                    para->insert_child(0, temp_ref_run);
+                }
+                serialize_paragraph_to_xml(node, para);
+                first_para = false;
+                if (temp_ref_run) {
+                    para->remove_child(temp_ref_run);
+                }
             }
         }
     }
@@ -115,15 +129,43 @@ static void sync_notes_from_physical_impl(Document* doc,
         auto note = std::make_shared<Footnote>(doc, type);
         note->set_id(id);
 
+        std::string reference_mark;
         const char* typeattr = node.attribute("w:type").value();
         if (typeattr && std::strcmp(typeattr, "normal") == 0) {
             note->set_auto(false);
+
+            // Extract reference mark from the first run of the first paragraph
+            auto first_para = node.child("w:p");
+            if (first_para) {
+                auto first_run = first_para.child("w:r");
+                if (first_run) {
+                    for (auto t = first_run.child("w:t"); t;
+                         t = t.next_sibling("w:t")) {
+                        reference_mark += t.text().get();
+                    }
+                }
+            }
         }
 
         for (auto para_node = node.child("w:p"); para_node;
              para_node = para_node.next_sibling("w:p")) {
             if (auto para = doc->parse_paragraph_from_xml(para_node)) {
                 note->append_child(para);
+            }
+        }
+
+        if (!reference_mark.empty()) {
+            note->set_reference_mark(reference_mark);
+            // Remove the reference-mark run from the first paragraph's DOM
+            // so get_text() returns only the body text.
+            if (!note->get_children().empty()) {
+                auto* first_para = dynamic_cast<Paragraph*>(note->get_children()[0].get());
+                if (first_para && !first_para->get_children().empty()) {
+                    auto first_child = first_para->get_children()[0];
+                    if (first_child->node_type() == NodeType::Run) {
+                        first_para->remove_child(0);
+                    }
+                }
             }
         }
 
