@@ -164,6 +164,34 @@ static TextProperties::PositionType string_to_position_type(const char* val) {
     return TextProperties::PositionType::Normal;
 }
 
+// ---------------------------------------------------------------------------
+// PositionType → ScriptType (for Run::set_position)
+// ---------------------------------------------------------------------------
+
+struct PositionScriptMapping {
+    TextProperties::PositionType position;
+    ScriptType script;
+};
+
+static const PositionScriptMapping kPositionScriptMappings[] = {
+    {TextProperties::PositionType::Raised, ScriptType::Superscript},
+    {TextProperties::PositionType::Lowered, ScriptType::Subscript},
+};
+
+// ---------------------------------------------------------------------------
+// SpacingType → sign multiplier (for Run::set_spacing)
+// ---------------------------------------------------------------------------
+
+struct SpacingSignMapping {
+    TextProperties::SpacingType type;
+    int sign;
+};
+
+static const SpacingSignMapping kSpacingSignMappings[] = {
+    {TextProperties::SpacingType::Expanded, 1},
+    {TextProperties::SpacingType::Condensed, -1},
+};
+
 }  // anonymous namespace
 
 // ============================================================================
@@ -220,34 +248,25 @@ Run& Run::set_underline_style(TextProperties::UnderlineStyle style, const std::s
 }
 
 Run& Run::set_spacing(TextProperties::SpacingType type, int value) {
-    switch (type) {
-        case TextProperties::SpacingType::Expanded:
-            font_.spacing = ConvertUtil::twips_to_point(value);
-            break;
-        case TextProperties::SpacingType::Condensed:
-            font_.spacing = -ConvertUtil::twips_to_point(value);
-            break;
-        case TextProperties::SpacingType::Normal:
-        default:
-            font_.spacing = 0;
-            break;
+    for (const auto& mapping : kSpacingSignMappings) {
+        if (mapping.type == type) {
+            font_.spacing = mapping.sign * ConvertUtil::twips_to_point(value);
+            return *this;
+        }
     }
+    font_.spacing = 0;
     return *this;
 }
 
 Run& Run::set_position(TextProperties::PositionType type, int value) {
     (void)value;
-    switch (type) {
-        case TextProperties::PositionType::Raised:
-            set_superscript();
-            break;
-        case TextProperties::PositionType::Lowered:
-            set_subscript();
-            break;
-        default:
-            font_.script_type = ScriptType::Normal;
-            break;
+    for (const auto& mapping : kPositionScriptMappings) {
+        if (mapping.position == type) {
+            font_.script_type = mapping.script;
+            return *this;
+        }
     }
+    font_.script_type = ScriptType::Normal;
     return *this;
 }
 
