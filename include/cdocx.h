@@ -79,11 +79,6 @@ inline constexpr char kVersion[] = "0.8.0";
 
 namespace cdocx {
 
-// Forward declarations for builder classes
-class DocumentBuilder;
-class ParagraphBuilder;
-class TableBuilder;
-
 /**
  * @brief Main CDocx API entry point
  *
