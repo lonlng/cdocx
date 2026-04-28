@@ -288,6 +288,8 @@ Recurring patterns across the codebase are extracted as file-local static functi
 - `append_id_node<T>()` in `sync_deserialize.cpp` — template helper for creating DOM nodes with `w:id` assignment (BookmarkEnd, CommentRangeStart, CommentRangeEnd, FootnoteReference, EndnoteReference).
 - `serialize_id_node_to_xml<T>()` in `sync_serialize.cpp` — template helper for serializing id-only DOM nodes to XML.
 - `serialize_footnote_reference_to_xml()` / `serialize_endnote_reference_to_xml()` in `sync_serialize.cpp` — dedicated serializers extracted from inline XML generation.
+- `create_empty_*` helpers in `document.cpp` — each XML part for an empty DOCX (`[Content_Types].xml`, `_rels/.rels`, `word/document.xml`, etc.) has its own static helper. `create_empty_document()` reads as a 13-line recipe.
+- `link_hf_to_previous()` in `section.cpp` — unifies header and footer `link_to_previous` logic by parameterizing over refs vector, collection vector, XML tag names, part prefix, relationship type, and `is_header` flag.
 
 ### Field Sequence Walking
 
