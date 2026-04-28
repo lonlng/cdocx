@@ -291,6 +291,8 @@ Recurring patterns across the codebase are extracted as file-local static functi
 - `create_empty_*` helpers in `document.cpp` — each XML part for an empty DOCX (`[Content_Types].xml`, `_rels/.rels`, `word/document.xml`, etc.) has its own static helper. `create_empty_document()` reads as a 13-line recipe.
 - `link_hf_to_previous()` in `section.cpp` — unifies header and footer `link_to_previous` logic by parameterizing over refs vector, collection vector, XML tag names, part prefix, relationship type, and `is_header` flag.
 - `is_para_node()` / `is_table_node()` / `is_sectpr_node()` / `is_content_node()` in `sync_common.cpp` — shared node-name predicates used by both serialization and deserialization modules.
+- `trim_whitespace()` / `iequals()` / `to_lower()` in `sync_common.cpp` — shared string utilities used by `mail_merge`, `bookmark`, `file_format_util`, `document_media`, `bookmark_replacer`, and `sync_deserialize`.
+- `SectionRange` + `collect_section_ranges()` in `sync_common.cpp` — unified section-boundary collection used by both `sync_serialize.cpp` and `sync_deserialize.cpp`.
 
 ### Field Sequence Walking
 
