@@ -18,6 +18,11 @@ namespace cdocx {
 
 // ============================================================================
 // Helper Functions
+
+static bool is_word_watermark_shape(const pugi::xml_node shape) {
+    const pugi::xml_attribute id_attr = shape.attribute("id");
+    return id_attr && std::strcmp(id_attr.value(), "PowerPlusWaterMarkObject") == 0;
+}
 // ============================================================================
 
 struct XmlEscapeMapping {
@@ -75,8 +80,7 @@ static void remove_watermark_nodes(pugi::xml_node header) {
                  pict = pict.next_sibling("w:pict")) {
                 const pugi::xml_node shape = pict.child("v:shape");
                 if (shape) {
-                    const pugi::xml_attribute id_attr = shape.attribute("id");
-                    if (id_attr && std::strcmp(id_attr.value(), "PowerPlusWaterMarkObject") == 0) {
+                    if (is_word_watermark_shape(shape)) {
                         is_watermark = true;
                         break;
                     }
@@ -168,8 +172,7 @@ bool Watermark::has_watermark() const {
                  pict = pict.next_sibling("w:pict")) {
                 const pugi::xml_node shape = pict.child("v:shape");
                 if (shape) {
-                    const pugi::xml_attribute id_attr = shape.attribute("id");
-                    if (id_attr && std::strcmp(id_attr.value(), "PowerPlusWaterMarkObject") == 0) {
+                    if (is_word_watermark_shape(shape)) {
                         return true;
                     }
                 }
