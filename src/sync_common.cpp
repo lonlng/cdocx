@@ -61,6 +61,17 @@ std::string to_lower(std::string s) {
     return s;
 }
 
+std::string collect_text_from_runs(pugi::xml_node para) {
+    std::string result;
+    for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
+        const pugi::xml_node t = run.child("w:t");
+        if (t) {
+            result += t.text().get();
+        }
+    }
+    return result;
+}
+
 bool is_para_node(const char* name) {
     return std::strcmp(name, "w:p") == 0;
 }

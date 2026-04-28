@@ -4,6 +4,8 @@
  * @since 0.3.0
  */
 
+#include "sync_common.h"
+
 #include <cdocx/advanced.h>
 #include <cdocx/range.h>
 #include <cdocx/document.h>
@@ -14,21 +16,6 @@
 #include <vector>
 
 namespace cdocx {
-
-namespace {
-
-std::string collect_text_from_runs(pugi::xml_node para) {
-    std::string result;
-    for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
-        const pugi::xml_node t = run.child("w:t");
-        if (t) {
-            result += t.text().get();
-        }
-    }
-    return result;
-}
-
-}  // namespace
 
 // Range Implementation
 // ============================================================================
