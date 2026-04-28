@@ -98,7 +98,8 @@ bool Range::replace(const std::string& old_text, const std::string& new_text) {
                     }
                     pugi::xml_node new_t = run.append_child("w:t");
                     if (!para_text.empty() &&
-                        (std::isspace(para_text.front()) || std::isspace(para_text.back()))) {
+                        (std::isspace(static_cast<unsigned char>(para_text.front())) ||
+                         std::isspace(static_cast<unsigned char>(para_text.back())))) {
                         new_t.append_attribute("xml:space").set_value("preserve");
                     }
                     new_t.text().set(para_text.c_str());
@@ -186,7 +187,8 @@ int Range::replace_all(const std::string& old_text, const std::string& new_text)
                     }
                     pugi::xml_node new_t = run.append_child("w:t");
                     if (!para_text.empty() &&
-                        (std::isspace(para_text.front()) || std::isspace(para_text.back()))) {
+                        (std::isspace(static_cast<unsigned char>(para_text.front())) ||
+                         std::isspace(static_cast<unsigned char>(para_text.back())))) {
                         new_t.append_attribute("xml:space").set_value("preserve");
                     }
                     new_t.text().set(para_text.c_str());
