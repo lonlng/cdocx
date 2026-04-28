@@ -49,30 +49,6 @@ static const UnderlineStyleMapping kUnderlineStyleMappings[] = {
     {TextProperties::UnderlineStyle::WavyHeavy, "wavyHeavy"},
 };
 
-struct HighlightMapping {
-    TextProperties::Highlight value;
-    const char* name;
-};
-
-static const HighlightMapping kHighlightMappings[] = {
-    {TextProperties::Highlight::Black, "black"},
-    {TextProperties::Highlight::White, "white"},
-    {TextProperties::Highlight::Red, "red"},
-    {TextProperties::Highlight::Green, "green"},
-    {TextProperties::Highlight::Blue, "blue"},
-    {TextProperties::Highlight::Yellow, "yellow"},
-    {TextProperties::Highlight::Cyan, "cyan"},
-    {TextProperties::Highlight::Magenta, "magenta"},
-    {TextProperties::Highlight::DarkRed, "darkRed"},
-    {TextProperties::Highlight::DarkGreen, "darkGreen"},
-    {TextProperties::Highlight::DarkBlue, "darkBlue"},
-    {TextProperties::Highlight::DarkYellow, "darkYellow"},
-    {TextProperties::Highlight::DarkCyan, "darkCyan"},
-    {TextProperties::Highlight::DarkMagenta, "darkMagenta"},
-    {TextProperties::Highlight::DarkGray, "darkGray"},
-    {TextProperties::Highlight::LightGray, "lightGray"},
-};
-
 // ---------------------------------------------------------------------------
 // Border Style
 // ---------------------------------------------------------------------------
@@ -276,12 +252,9 @@ void TextProperties::apply_to(pugi::xml_node run_node) const {
 
     // Highlight
     if (highlight != Highlight::None) {
-        for (const auto& m : kHighlightMappings) {
-            if (m.value == highlight) {
-                pugi::xml_node highlight_node = r_pr.append_child("w:highlight");
-                highlight_node.append_attribute("w:val").set_value(m.name);
-                break;
-            }
+        if (const char* hl_str = highlight_to_string(highlight)) {
+            pugi::xml_node highlight_node = r_pr.append_child("w:highlight");
+            highlight_node.append_attribute("w:val").set_value(hl_str);
         }
     }
 
@@ -378,15 +351,8 @@ TextProperties TextProperties::extract_from(pugi::xml_node run_node) {
     }
 
     // Extract highlight
-    const pugi::xml_node highlight = r_pr.child("w:highlight");
-    if (highlight) {
-        const char* val = highlight.attribute("w:val").value();
-        for (const auto& m : kHighlightMappings) {
-            if (strcmp(val, m.name) == 0) {
-                props.highlight = m.value;
-                break;
-            }
-        }
+    if (const pugi::xml_node highlight = r_pr.child("w:highlight")) {
+        props.highlight = string_to_highlight(highlight.attribute("w:val").value());
     }
 
     return props;
