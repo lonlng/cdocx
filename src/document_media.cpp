@@ -8,7 +8,6 @@
 
 #include "sync_common.h"
 
-#include <cctype>
 #include <filesystem>
 #include <fstream>
 #include <map>

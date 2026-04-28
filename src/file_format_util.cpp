@@ -9,7 +9,6 @@
 
 #include "sync_common.h"
 
-#include <cctype>
 #include <cstring>
 #include <fstream>
 #include <sstream>

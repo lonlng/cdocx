@@ -11,7 +11,6 @@
 #include "sync_common.h"
 
 #include <algorithm>
-#include <cctype>
 #include <map>
 #include <string>
 #include <utility>
