@@ -20,29 +20,33 @@ namespace cdocx {
 // Helper Functions
 // ============================================================================
 
+struct XmlEscapeMapping {
+    char c;
+    const char* replacement;
+};
+
+static const XmlEscapeMapping kXmlEscapeMappings[] = {
+    {'&', "&amp;"},
+    {'<', "&lt;"},
+    {'>', "&gt;"},
+    {'"', "&quot;"},
+    {'\'', "&apos;"},
+};
+
 static std::string escape_xml(const std::string& text) {
     std::string result;
     result.reserve(text.size());
     for (const char c : text) {
-        switch (c) {
-            case '&':
-                result += "&amp;";
+        bool found = false;
+        for (const auto& mapping : kXmlEscapeMappings) {
+            if (mapping.c == c) {
+                result += mapping.replacement;
+                found = true;
                 break;
-            case '<':
-                result += "&lt;";
-                break;
-            case '>':
-                result += "&gt;";
-                break;
-            case '"':
-                result += "&quot;";
-                break;
-            case '\'':
-                result += "&apos;";
-                break;
-            default:
-                result += c;
-                break;
+            }
+        }
+        if (!found) {
+            result += c;
         }
     }
     return result;
