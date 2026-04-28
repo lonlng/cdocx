@@ -398,7 +398,7 @@ CDocx provides **three API paths** to the same underlying DOCX package:
 | Mail merge | `MailMerge` | **Complete** |
 | Watermark | `Watermark` | **Complete** |
 | Complex fields (page numbers, dates, TOC) | `Field` DOM class | **Basic** (structure works; deep customization roadmap) |
-| Footnote / endnote DOM wrappers | `Footnote`, `FootnoteReference` | **Basic** (DOM classes exist; collection API roadmap) |
+| Footnote / endnote DOM wrappers | `FootnoteCollection`, `EndnoteCollection` | **Complete** |
 | Export to PDF / HTML / Markdown | — | Roadmap (v0.9.0+) |
 
 ### Recommended API Selection
@@ -745,7 +745,7 @@ cdocx::CDocx::save_document(*doc, "output.docx");
 | CommentCollection | Complete | Add/get/remove comments |
 | MailMerge | Complete | Simple field replacement with cleanup |
 | Watermark | Complete | Text and image watermarks |
-| Footnote/endnote DOM | Basic | `Footnote`/`FootnoteReference` classes exist; collection API roadmap |
+| Footnote/endnote DOM | Complete | `FootnoteCollection`/`EndnoteCollection` with DOM↔XML sync and custom reference marks |
 
 ---
 
