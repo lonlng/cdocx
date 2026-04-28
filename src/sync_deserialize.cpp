@@ -342,7 +342,7 @@ pugi::xml_node walk_field_sequence(pugi::xml_node start_run,
                                        std::string* out_resulttext) {
     bool in_result = false;
     for (auto node = start_run; node; node = node.next_sibling()) {
-        if (std::strcmp(node.name(), "w:r") != 0) {
+        if (!is_run_node(node.name())) {
             continue;
         }
 
