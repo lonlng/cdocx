@@ -192,6 +192,71 @@ static void link_hf_to_previous(Document* doc,
     }
 }
 
+static std::shared_ptr<HeaderFooter> add_header_footer_impl(
+    Document* doc,
+    HeaderFooterType type,
+    bool is_header,
+    std::vector<std::shared_ptr<HeaderFooter>>& collection,
+    std::vector<HeaderFooterRef>& refs,
+    pugi::xml_node sect_pr) {
+    // Check if already exists
+    if (auto existing = get_header_footer(collection, type)) {
+        return existing;
+    }
+
+    const char* part_prefix = is_header ? "word/header" : "word/footer";
+    const char* root_tag = is_header ? "w:hdr" : "w:ftr";
+    const char* ref_tag = is_header ? "w:header_reference" : "w:footer_reference";
+    const char* rel_type =
+        is_header
+            ? "http://schemas.openxmlformats.org/officeDocument/2006/relationships/header"
+            : "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer";
+
+    const std::string part_name =
+        part_prefix +
+        std::to_string(is_header ? doc->get_next_header_number() : doc->get_next_footer_number()) +
+        ".xml";
+
+    // Create XML
+    auto& xml_doc = doc->create_xml_part(part_name);
+    auto root = xml_doc.append_child(root_tag);
+    root.append_attribute("xmlns:w").set_value(
+        "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+    root.append_attribute("xmlns:r").set_value(
+        "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+
+    // Add paragraph
+    auto p = root.append_child("w:p");
+    auto r = p.append_child("w:r");
+    auto t = r.append_child("w:t");
+    t.text().set("");
+
+    // Add relationship
+    const std::string rel_id = doc->add_relationship(
+        "word/_rels/document.xml.rels", rel_type, part_name.substr(5));
+
+    // Add reference to section properties
+    if (sect_pr) {
+        auto ref_node = sect_pr.append_child(ref_tag);
+        ref_node.append_attribute("r:id").set_value(rel_id.c_str());
+        ref_node.append_attribute("w:type").set_value(header_footer_type_to_string(type));
+    }
+
+    // Create HeaderFooter object
+    auto hf = std::make_shared<HeaderFooter>(doc, type, is_header);
+    hf->set_part_path(part_name);
+    hf->set_relationship_id(rel_id);
+    collection.push_back(hf);
+
+    HeaderFooterRef ref;
+    ref.type = type;
+    ref.relationship_id = rel_id;
+    ref.part_path = part_name;
+    refs.push_back(ref);
+
+    return hf;
+}
+
 // ============================================================================
 // Section Implementation
 // ============================================================================
@@ -415,116 +480,16 @@ std::shared_ptr<HeaderFooter> Section::add_header(HeaderFooterType type) {
     if (!document_) {
         return nullptr;
     }
-
-    // Check if already exists
-    if (auto existing = get_header_footer(headers_, type)) {
-        return existing;
-    }
-
-    // Generate unique part name
-    const std::string part_name =
-        "word/header" + std::to_string(document_->get_next_header_number()) + ".xml";
-
-    // Create header XML
-    auto& header_doc = document_->create_xml_part(part_name);
-    auto root = header_doc.append_child("w:hdr");
-    root.append_attribute("xmlns:w").set_value(
-        "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
-    root.append_attribute("xmlns:r").set_value(
-        "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-
-    // Add paragraph to header
-    auto p = root.append_child("w:p");
-    auto r = p.append_child("w:r");
-    auto t = r.append_child("w:t");
-    t.text().set("");
-
-    // Add relationship and capture the generated ID so the sect_pr reference
-    // and the relationship entry stay in sync.
-    const std::string rel_id = document_->add_relationship(
-        "word/_rels/document.xml.rels",
-        "http://schemas.openxmlformats.org/officeDocument/2006/relationships/header",
-        part_name.substr(5));  // Remove "word/" prefix
-
-    // Add header reference to section properties if node exists
-    if (sect_pr_node_) {
-        auto header_ref = sect_pr_node_.append_child("w:header_reference");
-        header_ref.append_attribute("r:id").set_value(rel_id.c_str());
-        header_ref.append_attribute("w:type").set_value(header_footer_type_to_string(type));
-    }
-
-    // Create HeaderFooter object
-    auto header = std::make_shared<HeaderFooter>(document_, type, true);
-    header->set_part_path(part_name);
-    header->set_relationship_id(rel_id);
-    headers_.push_back(header);
-
-    // Add to refs
-    HeaderFooterRef ref;
-    ref.type = type;
-    ref.relationship_id = rel_id;
-    ref.part_path = part_name;
-    header_refs_.push_back(ref);
-
-    return header;
+    return add_header_footer_impl(
+        document_, type, true, headers_, header_refs_, sect_pr_node_);
 }
 
 std::shared_ptr<HeaderFooter> Section::add_footer(HeaderFooterType type) {
     if (!document_) {
         return nullptr;
     }
-
-    // Check if already exists
-    if (auto existing = get_header_footer(footers_, type)) {
-        return existing;
-    }
-
-    // Generate unique part name
-    const std::string part_name =
-        "word/footer" + std::to_string(document_->get_next_footer_number()) + ".xml";
-
-    // Create footer XML
-    auto& footer_doc = document_->create_xml_part(part_name);
-    auto root = footer_doc.append_child("w:ftr");
-    root.append_attribute("xmlns:w").set_value(
-        "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
-    root.append_attribute("xmlns:r").set_value(
-        "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-
-    // Add paragraph to footer
-    auto p = root.append_child("w:p");
-    auto r = p.append_child("w:r");
-    auto t = r.append_child("w:t");
-    t.text().set("");
-
-    // Add relationship and capture the generated ID so the sect_pr reference
-    // and the relationship entry stay in sync.
-    const std::string rel_id = document_->add_relationship(
-        "word/_rels/document.xml.rels",
-        "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer",
-        part_name.substr(5));
-
-    // Add footer reference to section properties if node exists
-    if (sect_pr_node_) {
-        auto footer_ref = sect_pr_node_.append_child("w:footer_reference");
-        footer_ref.append_attribute("r:id").set_value(rel_id.c_str());
-        footer_ref.append_attribute("w:type").set_value(header_footer_type_to_string(type));
-    }
-
-    // Create HeaderFooter object
-    auto footer = std::make_shared<HeaderFooter>(document_, type, false);
-    footer->set_part_path(part_name);
-    footer->set_relationship_id(rel_id);
-    footers_.push_back(footer);
-
-    // Add to refs
-    HeaderFooterRef ref;
-    ref.type = type;
-    ref.relationship_id = rel_id;
-    ref.part_path = part_name;
-    footer_refs_.push_back(ref);
-
-    return footer;
+    return add_header_footer_impl(
+        document_, type, false, footers_, footer_refs_, sect_pr_node_);
 }
 
 std::shared_ptr<HeaderFooter> Section::get_header(HeaderFooterType type) const {
