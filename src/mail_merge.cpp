@@ -11,7 +11,6 @@
 #include "sync_common.h"
 
 #include <algorithm>
-#include <cctype>
 #include <sstream>
 
 namespace cdocx {
@@ -27,12 +26,7 @@ std::string parse_merge_field_name(const std::string& field_code) {
         return "";
     }
 
-    // Check keyword (case-insensitive)
-    std::string kw_lower;
-    for (const char c : keyword) {
-        kw_lower += static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
-    }
-    if (kw_lower != "mergefield") {
+    if (to_lower(keyword) != "mergefield") {
         return "";
     }
 
