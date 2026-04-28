@@ -50,6 +50,15 @@ bool is_sectpr_node(const char* name);
 bool is_content_node(const char* name);
 
 // ---------------------------------------------------------------------------
+// Section range helpers (shared between serialize and deserialize)
+// ---------------------------------------------------------------------------
+struct SectionRange {
+    pugi::xml_node begin;
+    pugi::xml_node end;  // points to w:sectPr, or empty for trailing section
+};
+std::vector<SectionRange> collect_section_ranges(pugi::xml_node body);
+
+// ---------------------------------------------------------------------------
 // Time / property helpers
 // ---------------------------------------------------------------------------
 std::string time_to_w3cdtf(std::time_t t);

@@ -37,23 +37,7 @@ void Document::merge_sections_from_physical() {
         return;
     }
 
-    // Parse XML section ranges
-    struct SectionRange {
-        pugi::xml_node begin;
-        pugi::xml_node end;
-    };
-    std::vector<SectionRange> ranges;
-
-    pugi::xml_node current_begin = body.first_child();
-    for (auto node = body.first_child(); node; node = node.next_sibling()) {
-        if (is_sectpr_node(node.name())) {
-            ranges.push_back({current_begin, node});
-            current_begin = node.next_sibling();
-        }
-    }
-    if (ranges.empty() && body.first_child()) {
-        ranges.push_back({body.first_child(), pugi::xml_node()});
-    }
+    auto ranges = collect_section_ranges(body);
 
     auto dom_sections = get_sections();
     std::vector<std::shared_ptr<Section>> dom_sections_vec;

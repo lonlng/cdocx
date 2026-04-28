@@ -70,6 +70,21 @@ bool is_content_node(const char* name) {
     return is_para_node(name) || is_table_node(name);
 }
 
+std::vector<SectionRange> collect_section_ranges(pugi::xml_node body) {
+    std::vector<SectionRange> ranges;
+    pugi::xml_node current_begin = body.first_child();
+    for (auto node = body.first_child(); node; node = node.next_sibling()) {
+        if (is_sectpr_node(node.name())) {
+            ranges.push_back({current_begin, node});
+            current_begin = node.next_sibling();
+        }
+    }
+    if (ranges.empty() && body.first_child()) {
+        ranges.push_back({body.first_child(), pugi::xml_node()});
+    }
+    return ranges;
+}
+
 struct HeaderFooterTypeMapping {
     HeaderFooterType type;
     const char* xml_value;

@@ -54,25 +54,7 @@ void Document::sync_sections_from_physical() {
     sections_cache_.clear();
     sections_dirty_ = false;
 
-    // Collect section boundaries
-    struct SectionRange {
-        pugi::xml_node begin_node;
-        pugi::xml_node end_node;  // points to w:sect_pr
-    };
-    std::vector<SectionRange> ranges;
-
-    pugi::xml_node current_begin = body.first_child();
-    for (auto node = body.first_child(); node; node = node.next_sibling()) {
-        if (is_sectpr_node(node.name())) {
-            ranges.push_back({current_begin, node});
-            current_begin = node.next_sibling();
-        }
-    }
-
-    // If no sect_pr found, the entire body is one section
-    if (ranges.empty() && body.first_child()) {
-        ranges.push_back({body.first_child(), pugi::xml_node()});
-    }
+    auto ranges = collect_section_ranges(body);
 
     bool is_first = true;
     for (const auto& range : ranges) {
@@ -85,22 +67,22 @@ void Document::sync_sections_from_physical() {
         auto sect_body = std::make_shared<Body>(this);
 
         // Parse content nodes
-        parse_content_children(this, range.begin_node, range.end_node, sect_body.get());
+        parse_content_children(this, range.begin, range.end, sect_body.get());
 
         // Load section properties
-        if (range.end_node) {
-            section->set_sect_pr_node(range.end_node);
+        if (range.end) {
+            section->set_sect_pr_node(range.end);
             section->load_properties();
 
             // Parse header/footer references
-            for (auto ref = range.end_node.child("w:headerReference"); ref;
+            for (auto ref = range.end.child("w:headerReference"); ref;
                  ref = ref.next_sibling("w:headerReference")) {
                 HeaderFooterRef hf_ref;
                 hf_ref.relationship_id = ref.attribute("r:id").value();
                 hf_ref.type = string_to_header_footer_type(ref.attribute("w:type").value());
                 section->add_header_ref(hf_ref);
             }
-            for (auto ref = range.end_node.child("w:footerReference"); ref;
+            for (auto ref = range.end.child("w:footerReference"); ref;
                  ref = ref.next_sibling("w:footerReference")) {
                 HeaderFooterRef hf_ref;
                 hf_ref.relationship_id = ref.attribute("r:id").value();
