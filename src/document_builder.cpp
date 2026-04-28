@@ -60,7 +60,7 @@ DocumentBuilder::DocumentBuilder(const std::shared_ptr<Document>& doc)
 DocumentBuilder::~DocumentBuilder() = default;
 
 void DocumentBuilder::ensure_paragraph() {
-    if (!current_paragraph_ || std::strcmp(current_paragraph_.name(), "w:p") != 0) {
+    if (!current_paragraph_ || !is_para_node(current_paragraph_.name())) {
         pugi::xml_node body = get_body();
         const pugi::xml_node sect_pr = body.child("w:sectPr");
         if (sect_pr) {
@@ -226,7 +226,7 @@ DocumentBuilder& DocumentBuilder::move_to_section(size_t index) {
             sect_count++;
             if (sect_count == index) {
                 const pugi::xml_node next = para.next_sibling();
-                if (next && std::strcmp(next.name(), "w:p") == 0) {
+                if (next && is_para_node(next.name())) {
                     current_paragraph_ = next;
                     current_node_ = next;
                 } else {
