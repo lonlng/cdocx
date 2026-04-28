@@ -129,6 +129,41 @@ UnderlineType underline_style_to_type(TextProperties::UnderlineStyle style) {
     return UnderlineType::Single;
 }
 
+// ---------------------------------------------------------------------------
+// Position Type (vertAlign)
+// ---------------------------------------------------------------------------
+
+struct PositionTypeMapping {
+    TextProperties::PositionType type;
+    const char* xml_value;
+};
+
+static const PositionTypeMapping kPositionTypeMappings[] = {
+    {TextProperties::PositionType::Raised, "superscript"},
+    {TextProperties::PositionType::Lowered, "subscript"},
+};
+
+static const char* position_type_to_string(TextProperties::PositionType type) {
+    for (const auto& m : kPositionTypeMappings) {
+        if (m.type == type) {
+            return m.xml_value;
+        }
+    }
+    return nullptr;
+}
+
+static TextProperties::PositionType string_to_position_type(const char* val) {
+    if (!val || !*val) {
+        return TextProperties::PositionType::Normal;
+    }
+    for (const auto& m : kPositionTypeMappings) {
+        if (std::strcmp(m.xml_value, val) == 0) {
+            return m.type;
+        }
+    }
+    return TextProperties::PositionType::Normal;
+}
+
 }  // anonymous namespace
 
 // ============================================================================
@@ -580,16 +615,9 @@ TextProperties Run::get_properties_xml() const {
     }
 
     // Position (vertAlign / position)
-    auto va = r_pr.child("w:vertAlign");
-    if (va) {
-        const char* vval = va.attribute("w:val").value();
-        if (std::strcmp(vval, "superscript") == 0) {
-            props.position.type = TextProperties::PositionType::Raised;
-        } else if (std::strcmp(vval, "subscript") == 0) {
-            props.position.type = TextProperties::PositionType::Lowered;
-        }
-        auto pos = r_pr.child("w:position");
-        if (pos) {
+    if (auto va = r_pr.child("w:vertAlign")) {
+        props.position.type = string_to_position_type(va.attribute("w:val").value());
+        if (auto pos = r_pr.child("w:position")) {
             props.position.value = std::abs(pos.attribute("w:val").as_int());
         }
     }
@@ -697,8 +725,7 @@ bool Run::set_position_xml(TextProperties::PositionType type, int value) {
         r_pr.remove_child("w:position");
         return true;
     }
-    const char* valign =
-        (type == TextProperties::PositionType::Raised) ? "superscript" : "subscript";
+    const char* valign = position_type_to_string(type);
     auto va = r_pr.child("w:vertAlign");
     if (!va) {
         va = r_pr.append_child("w:vertAlign");
