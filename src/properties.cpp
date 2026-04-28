@@ -73,6 +73,35 @@ static const HighlightMapping kHighlightMappings[] = {
     {TextProperties::Highlight::LightGray, "lightGray"},
 };
 
+// ---------------------------------------------------------------------------
+// Border Style
+// ---------------------------------------------------------------------------
+
+struct BorderStyleMapping {
+    ParagraphProperties::Border::Style style;
+    const char* xml_value;
+};
+
+static const BorderStyleMapping kBorderStyleMappings[] = {
+    {ParagraphProperties::Border::Style::None, "nil"},
+    {ParagraphProperties::Border::Style::Single, "single"},
+    {ParagraphProperties::Border::Style::Double, "double"},
+    {ParagraphProperties::Border::Style::Thick, "thick"},
+    {ParagraphProperties::Border::Style::Dotted, "dotted"},
+    {ParagraphProperties::Border::Style::Dash, "dash"},
+    {ParagraphProperties::Border::Style::DotDash, "dotDash"},
+    {ParagraphProperties::Border::Style::Wave, "wave"},
+};
+
+static const char* border_style_to_string(ParagraphProperties::Border::Style style) {
+    for (const auto& mapping : kBorderStyleMappings) {
+        if (mapping.style == style) {
+            return mapping.xml_value;
+        }
+    }
+    return "single";
+}
+
 }  // namespace
 
 // ============================================================================
@@ -410,37 +439,7 @@ void ParagraphProperties::apply_to(pugi::xml_node para_node) const {
         auto add_border = [&p_bdr](const char* name, const std::optional<Border>& border) {
             if (border) {
                 pugi::xml_node b = p_bdr.append_child(name);
-                const char* style_str = "single";
-                switch (border->style) {
-                    case Border::Style::None:
-                        style_str = "nil";
-                        break;
-                    case Border::Style::Single:
-                        style_str = "single";
-                        break;
-                    case Border::Style::Double:
-                        style_str = "double";
-                        break;
-                    case Border::Style::Thick:
-                        style_str = "thick";
-                        break;
-                    case Border::Style::Dotted:
-                        style_str = "dotted";
-                        break;
-                    case Border::Style::Dash:
-                        style_str = "dash";
-                        break;
-                    case Border::Style::DotDash:
-                        style_str = "dotDash";
-                        break;
-                    case Border::Style::Wave:
-                        style_str = "wave";
-                        break;
-                    default:
-                        style_str = "single";
-                        break;
-                }
-                b.append_attribute("w:val").set_value(style_str);
+                b.append_attribute("w:val").set_value(border_style_to_string(border->style));
                 b.append_attribute("w:sz").set_value(border->size);
                 b.append_attribute("w:color").set_value(border->color.c_str());
                 b.append_attribute("w:space").set_value(border->space);
@@ -757,37 +756,7 @@ void TableProperties::apply_to(pugi::xml_node tbl_node) const {
             if (!b) {
                 b = tbl_borders.append_child(name);
             }
-            const char* style_str = "single";
-            switch (border->style) {
-                case ParagraphProperties::Border::Style::None:
-                    style_str = "nil";
-                    break;
-                case ParagraphProperties::Border::Style::Single:
-                    style_str = "single";
-                    break;
-                case ParagraphProperties::Border::Style::Double:
-                    style_str = "double";
-                    break;
-                case ParagraphProperties::Border::Style::Thick:
-                    style_str = "thick";
-                    break;
-                case ParagraphProperties::Border::Style::Dotted:
-                    style_str = "dotted";
-                    break;
-                case ParagraphProperties::Border::Style::Dash:
-                    style_str = "dash";
-                    break;
-                case ParagraphProperties::Border::Style::DotDash:
-                    style_str = "dotDash";
-                    break;
-                case ParagraphProperties::Border::Style::Wave:
-                    style_str = "wave";
-                    break;
-                default:
-                    style_str = "single";
-                    break;
-            }
-            ensure_attr(b, "w:val").set_value(style_str);
+            ensure_attr(b, "w:val").set_value(border_style_to_string(border->style));
             ensure_attr(b, "w:sz").set_value(border->size);
             ensure_attr(b, "w:color").set_value(border->color.c_str());
             ensure_attr(b, "w:space").set_value(border->space);
