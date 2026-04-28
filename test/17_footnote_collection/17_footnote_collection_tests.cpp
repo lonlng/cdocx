@@ -1,7 +1,7 @@
 /**
  * @file 17_footnote_collection_tests.cpp
  * @brief FootnoteCollection and EndnoteCollection functionality tests
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #include <gtest/gtest.h>

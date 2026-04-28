@@ -1,7 +1,7 @@
 /**
  * @file 16_comment_collection_tests.cpp
  * @brief CommentCollection functionality tests
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #include <gtest/gtest.h>

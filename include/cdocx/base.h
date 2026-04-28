@@ -8,7 +8,7 @@
  * @author lonlng
  * @copyright MIT License
  * @date 2026
- * @version 0.7.0
+ * @version 0.8.0
  *
  * @par Document Structure Hierarchy:
  * @code

@@ -10,7 +10,7 @@
  * builder.write("Column A" + cdocx::ControlChar::tab() + "Column B");
  * @endcode
  *
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #pragma once
@@ -22,7 +22,7 @@ namespace cdocx {
 /**
  * @class ControlChar
  * @brief Control characters commonly used in Word documents
- * @since 0.7.0
+ * @since 0.8.0
  */
 class ControlChar {
   public:

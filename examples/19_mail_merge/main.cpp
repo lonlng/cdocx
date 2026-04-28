@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
  * @brief MailMerge example - aligns with Aspose.Words MailMerge API
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #include <cdocx.h>

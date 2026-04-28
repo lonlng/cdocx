@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
  * @brief Example: Table cell merge and split operations
- * @version 0.7.0
+ * @version 0.8.0
  */
 
 #include <cdocx.h>

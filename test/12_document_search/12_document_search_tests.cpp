@@ -1,7 +1,7 @@
 /**
  * @file 12_document_search_tests.cpp
  * @brief Document search and replace unit tests
- * @version 0.7.0
+ * @version 0.8.0
  */
 
 #include <gtest/gtest.h>

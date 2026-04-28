@@ -8,7 +8,7 @@
  * @author lonlng
  * @copyright MIT License
  * @date 2026
- * @version 0.7.0 - DOM Architecture
+ * @version 0.8.0 - DOM Architecture
  *
  * @par Usage Example:
  * @code

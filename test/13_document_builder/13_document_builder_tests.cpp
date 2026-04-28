@@ -1,7 +1,7 @@
 /**
  * @file 13_document_builder_tests.cpp
  * @brief DocumentBuilder unit tests
- * @version 0.7.0
+ * @version 0.8.0
  */
 
 #include <gtest/gtest.h>

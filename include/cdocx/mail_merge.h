@@ -4,7 +4,7 @@
  * @details Aligns with Aspose.Words C++ MailMerge API.
  *          Replaces MERGEFIELD fields with data source values.
  *
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #pragma once

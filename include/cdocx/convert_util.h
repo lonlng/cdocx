@@ -12,7 +12,7 @@
  * int twips = cdocx::ConvertUtil::point_to_twips(72.0);              // 1440
  * @endcode
  *
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #pragma once
@@ -24,7 +24,7 @@ namespace cdocx {
 /**
  * @class ConvertUtil
  * @brief Static utility class for measurement unit conversions
- * @since 0.7.0
+ * @since 0.8.0
  */
 class ConvertUtil {
   public:

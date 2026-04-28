@@ -1,7 +1,7 @@
 /**
  * @file cdocx.cpp
  * @brief CDocx factory implementation
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #include <cdocx.h>

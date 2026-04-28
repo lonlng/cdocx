@@ -4,7 +4,7 @@
  * @details Provides legacy form field functionality including text input,
  *          checkbox, and dropdown (combobox) fields.
  *
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #pragma once

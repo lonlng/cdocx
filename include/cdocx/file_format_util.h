@@ -1,7 +1,7 @@
 /**
  * @file file_format_util.h
  * @brief File format detection and conversion utilities
- * @version 0.7.0
+ * @version 0.8.0
  *
  * Provides utility methods for working with file formats, such as detecting
  * file format or converting file extensions to/from file format enums.

@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
  * @brief Example: Document search and replace operations
- * @version 0.7.0
+ * @version 0.8.0
  */
 
 #include <cdocx.h>

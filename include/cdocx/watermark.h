@@ -4,7 +4,7 @@
  * @details Provides elegant text and image watermark functionality.
  *          Watermarks are rendered as shapes in the document header.
  *
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #pragma once

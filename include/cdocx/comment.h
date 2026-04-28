@@ -4,7 +4,7 @@
  * @details Provides document comment functionality including comment containers,
  *          comment ranges, and comment references.
  *
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #pragma once

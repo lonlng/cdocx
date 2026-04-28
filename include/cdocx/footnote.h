@@ -3,7 +3,7 @@
  * @brief Footnote/Endnote support for CDocx
  * @details Provides document footnote and endnote functionality.
  *
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #pragma once

@@ -1,7 +1,7 @@
 /**
  * @file 11_table_merge_tests.cpp
  * @brief Table cell merge/split unit tests
- * @version 0.7.0
+ * @version 0.8.0
  */
 
 #include <gtest/gtest.h>

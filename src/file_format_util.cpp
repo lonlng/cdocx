@@ -1,7 +1,7 @@
 /**
  * @file file_format_util.cpp
  * @brief FileFormatUtil implementation
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #include <cdocx/file_format_util.h>

@@ -5,7 +5,7 @@
  *          Word paragraphs with runs and formatting.
  *
  * @copyright MIT License
- * @version 0.7.0
+ * @version 0.8.0
  */
 
 #pragma once
@@ -24,7 +24,7 @@ class Run;
 /**
  * @class ParagraphBuilder
  * @brief Builder class for creating formatted paragraphs
- * @since 0.7.0
+ * @since 0.8.0
  *
  * @par Usage Example:
  * @code

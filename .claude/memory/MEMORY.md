@@ -1,0 +1,2 @@
+- [VS2022 Debug CMake Command](cmake_vs2022_debug.md) — 本地 Qt CMake + VS2022 生成器配置 CDocx Debug 构建的命令及验证结果
+- [CDocx 开发进度快照](project_progress.md) — 记录 CDocx 项目的功能对齐进度和下一步任务

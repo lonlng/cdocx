@@ -1,7 +1,7 @@
 /**
  * @file mail_merge.cpp
  * @brief Mail merge implementation for CDocx
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #include <cdocx/mail_merge.h>

@@ -1,7 +1,7 @@
 /**
  * @file 10_dom_sync_tests.cpp
  * @brief DOM-XML synchronization regression tests
- * @version 0.7.0
+ * @version 0.8.0
  */
 
 #include <gtest/gtest.h>

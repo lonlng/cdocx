@@ -1,7 +1,7 @@
 /**
  * @file 15_mail_merge_tests.cpp
  * @brief MailMerge functionality tests
- * @since 0.7.0
+ * @since 0.8.0
  */
 
 #include <cdocx.h>
