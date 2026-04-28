@@ -8,6 +8,8 @@
 #include <cdocx/node.h>
 #include <cdocx/paragraph.h>
 
+#include "sync_common.h"
+
 #include <algorithm>
 #include <cctype>
 #include <sstream>
@@ -15,19 +17,6 @@
 namespace cdocx {
 
 namespace {
-
-// trim leading and trailing whitespace
-std::string trim(const std::string& s) {
-    size_t start = 0;
-    while (start < s.size() && std::isspace(static_cast<unsigned char>(s[start]))) {
-        ++start;
-    }
-    size_t end = s.size();
-    while (end > start && std::isspace(static_cast<unsigned char>(s[end - 1]))) {
-        --end;
-    }
-    return s.substr(start, end - start);
-}
 
 // Case-insensitive string comparison
 bool iequals(const std::string& a, const std::string& b) {
@@ -45,7 +34,7 @@ bool iequals(const std::string& a, const std::string& b) {
 
 // Extract merge field name from field code like "MERGEFIELD Name \\* MERGEFORMAT"
 std::string parse_merge_field_name(const std::string& field_code) {
-    const std::string code = trim(field_code);
+    const std::string code = trim_whitespace(field_code);
     std::istringstream iss(code);
     std::string keyword;
     if (!(iss >> keyword)) {
@@ -64,15 +53,34 @@ std::string parse_merge_field_name(const std::string& field_code) {
     // The rest is the field name and optional switches
     std::string rest;
     std::getline(iss, rest);
-    rest = trim(rest);
+    rest = trim_whitespace(rest);
 
     // Remove switches (anything starting with \\)
     const size_t switch_pos = rest.find("\\\\");
     if (switch_pos != std::string::npos) {
-        rest = trim(rest.substr(0, switch_pos));
+        rest = trim_whitespace(rest.substr(0, switch_pos));
     }
 
     return rest;
+}
+
+// Structural nodes that do not contain visible paragraph content
+static bool is_structural_node(NodeType type) {
+    static const NodeType kStructuralTypes[] = {
+        NodeType::FieldStart,
+        NodeType::BookmarkStart,
+        NodeType::BookmarkEnd,
+        NodeType::CommentRangeStart,
+        NodeType::CommentRangeEnd,
+        NodeType::FootnoteReference,
+        NodeType::EndnoteReference,
+    };
+    for (const auto t : kStructuralTypes) {
+        if (type == t) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // Check if a paragraph contains only whitespace/empty runs
@@ -83,16 +91,10 @@ bool is_empty_paragraph(const Paragraph* para) {
     for (const auto& child : para->get_children()) {
         if (child->node_type() == NodeType::Run) {
             auto* run = dynamic_cast<Run*>(child.get());
-            if (run && !trim(run->get_text()).empty()) {
+            if (run && !trim_whitespace(run->get_text()).empty()) {
                 return false;
             }
-        } else if (child->node_type() != NodeType::FieldStart &&
-                   child->node_type() != NodeType::BookmarkStart &&
-                   child->node_type() != NodeType::BookmarkEnd &&
-                   child->node_type() != NodeType::CommentRangeStart &&
-                   child->node_type() != NodeType::CommentRangeEnd &&
-                   child->node_type() != NodeType::FootnoteReference &&
-                   child->node_type() != NodeType::EndnoteReference) {
+        } else if (!is_structural_node(child->node_type())) {
             return false;
         }
     }
