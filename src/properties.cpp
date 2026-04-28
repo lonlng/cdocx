@@ -722,18 +722,7 @@ void TableProperties::apply_to(pugi::xml_node tbl_node) const {
         if (!jc) {
             jc = tbl_pr.append_child("w:jc");
         }
-        const char* align_val = "left";
-        switch (alignment) {
-            case ParagraphProperties::Alignment::Centered:
-                align_val = "center";
-                break;
-            case ParagraphProperties::Alignment::Right:
-                align_val = "right";
-                break;
-            default:
-                break;
-        }
-        ensure_attr(jc, "w:val").set_value(align_val);
+        ensure_attr(jc, "w:val").set_value(pp_alignment_to_string(alignment));
     } else {
         tbl_pr.remove_child("w:jc");
     }
