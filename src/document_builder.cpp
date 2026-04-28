@@ -294,30 +294,16 @@ bool DocumentBuilder::move_to_merge_field(const std::string& field_name) {
          para = para.next_sibling("w:p")) {
         for (pugi::xml_node run = para.child("w:r"); run; run = run.next_sibling("w:r")) {
             const pugi::xml_node fld_char = run.child("w:fldChar");
-            if (fld_char && std::strcmp(fld_char.attribute("w:fldCharType").value(), "begin") == 0) {
-                // Found start of a field, look for instr_text in following runs
-                for (pugi::xml_node instr_run = run.next_sibling("w:r"); instr_run;
-                     instr_run = instr_run.next_sibling("w:r")) {
-                    const pugi::xml_node instr_text = instr_run.child("w:instrText");
-                    if (instr_text) {
-                        std::string code = instr_text.text().get();
-                        // trim leading space if present
-                        size_t start = 0;
-                        while (start < code.size() && std::isspace(code[start])) {
-                            start++;
-                        }
-                        const std::string trimmed = code.substr(start);
-                        if (trimmed.find(target_code) == 0) {
-                            target_xml_doc_ = doc_xml;
-                            current_paragraph_ = para;
-                            current_node_ = run;
-                            return true;
-                        }
-                    }
-                    const pugi::xml_node end_fld_char = instr_run.child("w:fldChar");
-                    if (end_fld_char && std::strcmp(end_fld_char.attribute("w:fldCharType").value(),
-                                                   "separate") == 0) {
-                        break;
+            if (fld_char &&
+                std::strcmp(fld_char.attribute("w:fldCharType").value(), "begin") == 0) {
+                std::string field_code;
+                if (walk_field_sequence(run, &field_code, nullptr)) {
+                    const std::string trimmed = trim_whitespace(field_code);
+                    if (trimmed.find(target_code) == 0) {
+                        target_xml_doc_ = doc_xml;
+                        current_paragraph_ = para;
+                        current_node_ = run;
+                        return true;
                     }
                 }
             }
