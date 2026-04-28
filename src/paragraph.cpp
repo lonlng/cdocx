@@ -877,39 +877,7 @@ Paragraph& Paragraph::set_properties(const ParagraphProperties& props) {
 }
 
 Paragraph& Paragraph::set_outline_level(cdocx::ParagraphProperties::OutlineLevel level) {
-    using OL = cdocx::ParagraphProperties::OutlineLevel;
-    switch (level) {
-        case OL::Level1:
-            format_.outline_level = OutlineLevel::Level1;
-            break;
-        case OL::Level2:
-            format_.outline_level = OutlineLevel::Level2;
-            break;
-        case OL::Level3:
-            format_.outline_level = OutlineLevel::Level3;
-            break;
-        case OL::Level4:
-            format_.outline_level = OutlineLevel::Level4;
-            break;
-        case OL::Level5:
-            format_.outline_level = OutlineLevel::Level5;
-            break;
-        case OL::Level6:
-            format_.outline_level = OutlineLevel::Level6;
-            break;
-        case OL::Level7:
-            format_.outline_level = OutlineLevel::Level7;
-            break;
-        case OL::Level8:
-            format_.outline_level = OutlineLevel::Level8;
-            break;
-        case OL::Level9:
-            format_.outline_level = OutlineLevel::Level9;
-            break;
-        default:
-            format_.outline_level = OutlineLevel::BodyText;
-            break;
-    }
+    format_.outline_level = static_cast<OutlineLevel>(level);
     return *this;
 }
 
