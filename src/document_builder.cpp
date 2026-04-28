@@ -1146,6 +1146,33 @@ bool read_bmp_dimensions(const std::vector<uint8_t>& data, int& width, int& heig
     return width > 0 && height > 0 && width < 100000 && height < 100000;
 }
 
+struct ImageFormatMapping {
+    bool (*detector)(const std::vector<uint8_t>&);
+    bool (*reader)(const std::vector<uint8_t>&, int&, int&);
+    const char* format_name;
+    const char* mime_type;
+};
+
+static const ImageFormatMapping kImageFormatMappings[] = {
+    {is_png, read_png_dimensions, "PNG", "image/png"},
+    {is_jpeg, read_jpeg_dimensions, "JPEG", "image/jpeg"},
+    {is_gif, read_gif_dimensions, "GIF", "image/gif"},
+    {is_bmp, read_bmp_dimensions, "BMP", "image/bmp"},
+};
+
+static bool detect_image_format_type(const std::vector<uint8_t>& data,
+                                     const char** out_format,
+                                     const char** out_mime) {
+    for (const auto& m : kImageFormatMappings) {
+        if (m.detector(data)) {
+            *out_format = m.format_name;
+            *out_mime = m.mime_type;
+            return true;
+        }
+    }
+    return false;
+}
+
 }  // anonymous namespace
 
 bool detect_image_size(const std::string& image_path, ImageSize& size) {
@@ -1173,14 +1200,11 @@ bool detect_image_size_from_memory(const std::vector<uint8_t>& data, ImageSize& 
     int height = 0;
     bool success = false;
 
-    if (is_png(data)) {
-        success = read_png_dimensions(data, width, height);
-    } else if (is_jpeg(data)) {
-        success = read_jpeg_dimensions(data, width, height);
-    } else if (is_gif(data)) {
-        success = read_gif_dimensions(data, width, height);
-    } else if (is_bmp(data)) {
-        success = read_bmp_dimensions(data, width, height);
+    for (const auto& m : kImageFormatMappings) {
+        if (m.detector(data)) {
+            success = m.reader(data, width, height);
+            break;
+        }
     }
 
     if (success) {
@@ -1217,22 +1241,14 @@ ImageFormatInfo validate_image_format_detailed(const std::string& image_path) {
     data.resize(file.gcount());
 
     // Detect format
-    if (is_png(data)) {
-        info.format = "PNG";
-        info.mime_type = "image/png";
-    } else if (is_jpeg(data)) {
-        info.format = "JPEG";
-        info.mime_type = "image/jpeg";
-    } else if (is_gif(data)) {
-        info.format = "GIF";
-        info.mime_type = "image/gif";
-    } else if (is_bmp(data)) {
-        info.format = "BMP";
-        info.mime_type = "image/bmp";
-    } else {
+    const char* format_name = nullptr;
+    const char* mime_type = nullptr;
+    if (!detect_image_format_type(data, &format_name, &mime_type)) {
         info.error_message = "Unknown or unsupported image format";
         return info;
     }
+    info.format = format_name;
+    info.mime_type = mime_type;
 
     // Try to read dimensions
     ImageSize size;
@@ -1256,22 +1272,14 @@ ImageFormatInfo validate_image_format_from_memory(const std::vector<uint8_t>& da
     }
 
     // Detect format
-    if (is_png(data)) {
-        info.format = "PNG";
-        info.mime_type = "image/png";
-    } else if (is_jpeg(data)) {
-        info.format = "JPEG";
-        info.mime_type = "image/jpeg";
-    } else if (is_gif(data)) {
-        info.format = "GIF";
-        info.mime_type = "image/gif";
-    } else if (is_bmp(data)) {
-        info.format = "BMP";
-        info.mime_type = "image/bmp";
-    } else {
+    const char* format_name = nullptr;
+    const char* mime_type = nullptr;
+    if (!detect_image_format_type(data, &format_name, &mime_type)) {
         info.error_message = "Unknown or unsupported image format";
         return info;
     }
+    info.format = format_name;
+    info.mime_type = mime_type;
 
     // Try to read dimensions
     ImageSize size;
