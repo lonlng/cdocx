@@ -58,6 +58,7 @@ inline constexpr char kVersion[] = "0.8.0";
 #include "cdocx/format.h"
 #include "cdocx/formfield.h"
 #include "cdocx/inserter.h"
+#include "cdocx/iterator.h"
 #include "cdocx/mail_merge.h"
 #include "cdocx/node.h"
 #include "cdocx/paragraph.h"
