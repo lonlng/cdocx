@@ -109,6 +109,22 @@ class Section : public CompositeNode {
     void remove_header(HeaderFooterType type = HeaderFooterType::Default);
     void remove_footer(HeaderFooterType type = HeaderFooterType::Default);
 
+    // Convenience: get if exists, otherwise create
+    std::shared_ptr<HeaderFooter> ensure_header(
+        HeaderFooterType type = HeaderFooterType::Default) {
+        if (auto h = get_header(type)) {
+            return h;
+        }
+        return add_header(type);
+    }
+    std::shared_ptr<HeaderFooter> ensure_footer(
+        HeaderFooterType type = HeaderFooterType::Default) {
+        if (auto f = get_footer(type)) {
+            return f;
+        }
+        return add_footer(type);
+    }
+
     // Get all headers/footers
     std::vector<std::shared_ptr<HeaderFooter>> get_all_headers() const;
     std::vector<std::shared_ptr<HeaderFooter>> get_all_footers() const;

@@ -215,6 +215,71 @@ std::shared_ptr<SpecialChar> Paragraph::append_tab() {
 }
 
 // ============================================================================
+// Convenience: Hyperlink and Field
+// ============================================================================
+
+std::shared_ptr<Hyperlink> Paragraph::append_hyperlink(const std::string& text,
+                                                       const std::string& url) {
+    auto link = std::make_shared<Hyperlink>(get_document());
+    link->set_address(url);
+    link->set_result(text);
+    append_child(link);
+    return link;
+}
+
+std::shared_ptr<Hyperlink> Paragraph::append_hyperlink(const std::string& text,
+                                                       const std::string& bookmark_name,
+                                                       bool /*is_bookmark*/) {
+    auto link = std::make_shared<Hyperlink>(get_document());
+    link->set_bookmark_name(bookmark_name);
+    link->set_result(text);
+    append_child(link);
+    return link;
+}
+
+std::shared_ptr<Field> Paragraph::append_page_number(const std::string& switches) {
+    auto field = std::make_shared<Field>(get_document(), FieldType::Page);
+    field->set_field_code("PAGE");
+    field->set_result("1");
+    if (!switches.empty()) {
+        field->add_switch(switches);
+    }
+    append_child(field);
+    return field;
+}
+
+std::shared_ptr<Field> Paragraph::append_date(const std::string& switches) {
+    auto field = std::make_shared<Field>(get_document(), FieldType::Date);
+    field->set_field_code("DATE");
+    if (!switches.empty()) {
+        field->add_switch(switches);
+    }
+    append_child(field);
+    return field;
+}
+
+std::shared_ptr<Field> Paragraph::append_time(const std::string& switches) {
+    auto field = std::make_shared<Field>(get_document(), FieldType::Time);
+    field->set_field_code("TIME");
+    if (!switches.empty()) {
+        field->add_switch(switches);
+    }
+    append_child(field);
+    return field;
+}
+
+std::shared_ptr<Field> Paragraph::append_merge_field(const std::string& field_name,
+                                                     const std::string& switches) {
+    auto field = std::make_shared<Field>(get_document(), FieldType::MergeField);
+    field->set_field_code("MERGEFIELD " + field_name);
+    if (!switches.empty()) {
+        field->add_switch(switches);
+    }
+    append_child(field);
+    return field;
+}
+
+// ============================================================================
 // Run Operations (DOM API)
 // ============================================================================
 

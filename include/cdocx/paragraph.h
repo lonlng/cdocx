@@ -86,6 +86,20 @@ class Paragraph : public CompositeNode {
     std::shared_ptr<SpecialChar> append_line_break();
     std::shared_ptr<SpecialChar> append_tab();
 
+    // Convenience: append hyperlink
+    std::shared_ptr<Hyperlink> append_hyperlink(const std::string& text,
+                                                const std::string& url);
+    std::shared_ptr<Hyperlink> append_hyperlink(const std::string& text,
+                                                const std::string& bookmark_name,
+                                                bool is_bookmark);
+
+    // Convenience: append common fields
+    std::shared_ptr<Field> append_page_number(const std::string& switches = "");
+    std::shared_ptr<Field> append_date(const std::string& switches = "");
+    std::shared_ptr<Field> append_time(const std::string& switches = "");
+    std::shared_ptr<Field> append_merge_field(const std::string& field_name,
+                                              const std::string& switches = "");
+
     // Parent access
     std::shared_ptr<Body> get_parent_body() const;
     std::shared_ptr<Cell> get_parent_cell() const;
