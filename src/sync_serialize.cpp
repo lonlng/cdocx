@@ -668,6 +668,22 @@ static void serialize_comment_reference_to_xml(pugi::xml_node parent, int id) {
     ref.append_attribute("w:id").set_value(id);
 }
 
+static void serialize_footnote_reference_to_xml(pugi::xml_node parent, FootnoteReference* ref) {
+    if (!ref) {
+        return;
+    }
+    auto xml = parent.append_child("w:footnoteReference");
+    xml.append_attribute("w:id").set_value(ref->get_id());
+}
+
+static void serialize_endnote_reference_to_xml(pugi::xml_node parent, EndnoteReference* ref) {
+    if (!ref) {
+        return;
+    }
+    auto xml = parent.append_child("w:endnoteReference");
+    xml.append_attribute("w:id").set_value(ref->get_id());
+}
+
 void serialize_paragraph_to_xml(pugi::xml_node parent, const Paragraph* para) {
     if (!para) {
         return;
@@ -743,20 +759,14 @@ void serialize_paragraph_to_xml(pugi::xml_node parent, const Paragraph* para) {
             case NodeType::Hyperlink:
                 serialize_hyperlink_to_xml(para_xml, dynamic_cast<Hyperlink*>(child.get()));
                 break;
-            case NodeType::FootnoteReference: {
-                auto ref = para_xml.append_child("w:footnoteReference");
-                if (auto* fnr = dynamic_cast<FootnoteReference*>(child.get())) {
-                    ref.append_attribute("w:id").set_value(fnr->get_id());
-                }
+            case NodeType::FootnoteReference:
+                serialize_footnote_reference_to_xml(para_xml,
+                                                    dynamic_cast<FootnoteReference*>(child.get()));
                 break;
-            }
-            case NodeType::EndnoteReference: {
-                auto ref = para_xml.append_child("w:endnoteReference");
-                if (auto* enr = dynamic_cast<EndnoteReference*>(child.get())) {
-                    ref.append_attribute("w:id").set_value(enr->get_id());
-                }
+            case NodeType::EndnoteReference:
+                serialize_endnote_reference_to_xml(para_xml,
+                                                   dynamic_cast<EndnoteReference*>(child.get()));
                 break;
-            }
             case NodeType::FieldSeparator:  // NOLINT(bugprone-branch-clone)
             case NodeType::FieldEnd:
                 // These node types are not used as standalone DOM nodes
