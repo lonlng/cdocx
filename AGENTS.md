@@ -160,21 +160,21 @@ cdocx/
 │   ├── 08_create_empty/
 │   ├── 09_text_formatting/
 │   ├── 10_edit_document/
-│   ├── 10_advanced_crud/       # Needs ENABLE_ADVANCED_FEATURES=ON
-│   ├── 11_bookmark_replacement/
-│   ├── 12_caption_generation/
-│   ├── 13_enhanced_properties/
-│   ├── 13_section_and_list/
-│   ├── 14_table_merge/
-│   ├── 15_document_search/
-│   ├── 16_document_builder/
-│   ├── 17_style_collection/
-│   ├── 18_new_features/
-│   ├── 19_mail_merge/
-│   ├── 20_comments/
+│   ├── 11_advanced_crud/       # Needs ENABLE_ADVANCED_FEATURES=ON
+│   ├── 12_bookmark_replacement/
+│   ├── 13_caption_generation/
+│   ├── 14_enhanced_properties/
+│   ├── 15_section_and_list/
+│   ├── 16_table_merge/
+│   ├── 17_document_search/
+│   ├── 18_document_builder/
+│   ├── 19_style_collection/
+│   ├── 20_new_features/
+│   ├── 21_mail_merge/
 │   ├── 21_template_engine/
-│   ├── 22_watermark/
-│   ├── 23_bookmark_inserter/
+│   ├── 22_comments/
+│   ├── 24_watermark/
+│   ├── 25_bookmark_inserter/
 │   ├── test_dom_sync/
 │   └── CMakeLists.txt
 │

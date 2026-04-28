@@ -27,46 +27,46 @@ set(CDOCX_EXAMPLES
 )
 
 if(ENABLE_ADVANCED_FEATURES)
-    list(APPEND CDOCX_EXAMPLES 10_advanced_crud)
+    list(APPEND CDOCX_EXAMPLES 11_advanced_crud)
 endif()
 
 # v0.3.0: Bookmark replacement and caption generation examples
-list(APPEND CDOCX_EXAMPLES 11_bookmark_replacement)
-list(APPEND CDOCX_EXAMPLES 12_caption_generation)
+list(APPEND CDOCX_EXAMPLES 12_bookmark_replacement)
+list(APPEND CDOCX_EXAMPLES 13_caption_generation)
 
 # v0.5.0: Section and list support examples
-list(APPEND CDOCX_EXAMPLES 13_enhanced_properties)
-list(APPEND CDOCX_EXAMPLES 13_section_and_list)
+list(APPEND CDOCX_EXAMPLES 14_enhanced_properties)
+list(APPEND CDOCX_EXAMPLES 15_section_and_list)
 
 # v0.7.0: Table merge/split example
-list(APPEND CDOCX_EXAMPLES 14_table_merge)
+list(APPEND CDOCX_EXAMPLES 16_table_merge)
 
 # v0.7.0: Document search and replace example
-list(APPEND CDOCX_EXAMPLES 15_document_search)
+list(APPEND CDOCX_EXAMPLES 17_document_search)
 
 # v0.7.0: DocumentBuilder example
-list(APPEND CDOCX_EXAMPLES 16_document_builder)
+list(APPEND CDOCX_EXAMPLES 18_document_builder)
 
 # v0.7.0: StyleCollection example
-list(APPEND CDOCX_EXAMPLES 17_style_collection)
+list(APPEND CDOCX_EXAMPLES 19_style_collection)
 
 # v0.7.0: New features alignment example
-list(APPEND CDOCX_EXAMPLES 18_new_features)
+list(APPEND CDOCX_EXAMPLES 20_new_features)
 
 # v0.8.0: MailMerge example
-list(APPEND CDOCX_EXAMPLES 19_mail_merge)
+list(APPEND CDOCX_EXAMPLES 21_mail_merge)
 
 # v0.8.0: TemplateEngine unified API example
 list(APPEND CDOCX_EXAMPLES 21_template_engine)
 
 # v0.8.0: CommentCollection example
-list(APPEND CDOCX_EXAMPLES 20_comments)
+list(APPEND CDOCX_EXAMPLES 22_comments)
 
 # v0.8.0: Watermark example
-list(APPEND CDOCX_EXAMPLES 22_watermark)
+list(APPEND CDOCX_EXAMPLES 24_watermark)
 
 # v0.8.0: BookmarkInserter example
-list(APPEND CDOCX_EXAMPLES 23_bookmark_inserter)
+list(APPEND CDOCX_EXAMPLES 25_bookmark_inserter)
 
 # DOM sync validation
 list(APPEND CDOCX_EXAMPLES test_dom_sync)
