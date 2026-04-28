@@ -880,3 +880,34 @@ for (auto& c : *doc->get_comments()) {
     std::cout << c->get_author() << ": " << c->get_text() << std::endl;
 }
 ```
+
+### 表单字段 (FormField)
+
+```cpp
+#include <cdocx/advanced.h>
+
+cdocx::DocumentBuilder builder(doc.get());
+
+// 文本输入框
+builder.write("姓名: ");
+builder.insert_text_input("Name", cdocx::TextFormFieldType::Regular,
+                          "", "请输入姓名", 50);
+builder.writeln();
+
+// 数字输入框
+builder.write("年龄: ");
+builder.insert_text_input("Age", cdocx::TextFormFieldType::Number,
+                          "", "0", 10);
+builder.writeln();
+
+// 复选框
+builder.write("同意条款: ");
+builder.insert_check_box("Agree", true, 10);
+builder.writeln();
+
+// 下拉框
+std::vector<std::string> options = {"选项 A", "选项 B", "选项 C"};
+builder.write("选择: ");
+builder.insert_combo_box("Selection", options, 0);
+builder.writeln();
+```
