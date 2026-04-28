@@ -44,6 +44,7 @@ inline constexpr char kVersion[] = "0.8.0";
 #include "cdocx/body.h"
 #include "cdocx/bookmark.h"
 #include "cdocx/bookmark_inserter.h"
+#include "cdocx/bookmark_replacer.h"
 #include "cdocx/caption_generator.h"
 #include "cdocx/comment.h"
 #include "cdocx/control_char.h"
