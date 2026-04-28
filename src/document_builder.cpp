@@ -58,6 +58,168 @@ DocumentBuilder::DocumentBuilder(const std::shared_ptr<Document>& doc)
 
 DocumentBuilder::~DocumentBuilder() = default;
 
+DocumentBuilder::DocumentBuilder() {
+    doc_sptr_ = std::make_shared<Document>();
+    doc_sptr_->create_empty();
+    doc_ = doc_sptr_.get();
+    target_xml_doc_ = doc_ ? doc_->get_document_xml() : nullptr;
+}
+
+std::shared_ptr<Document> DocumentBuilder::build() {
+    return doc_sptr_;
+}
+
+DocumentBuilder& DocumentBuilder::with_title(const std::string& title) {
+    if (doc_) {
+        auto* core = doc_->get_core_properties();
+        if (core) {
+            auto root = core->document_element();
+            if (root) {
+                auto node = root.child("dc:title");
+                if (!node) {
+                    node = root.prepend_child("dc:title");
+                }
+                node.text().set(title.c_str());
+            }
+        }
+    }
+    return *this;
+}
+
+DocumentBuilder& DocumentBuilder::with_author(const std::string& author) {
+    if (doc_) {
+        auto* core = doc_->get_core_properties();
+        if (core) {
+            auto root = core->document_element();
+            if (root) {
+                auto node = root.child("dc:creator");
+                if (!node) {
+                    node = root.prepend_child("dc:creator");
+                }
+                node.text().set(author.c_str());
+            }
+        }
+    }
+    return *this;
+}
+
+DocumentBuilder& DocumentBuilder::with_subject(const std::string& subject) {
+    if (doc_) {
+        auto* core = doc_->get_core_properties();
+        if (core) {
+            auto root = core->document_element();
+            if (root) {
+                auto node = root.child("dc:subject");
+                if (!node) {
+                    node = root.prepend_child("dc:subject");
+                }
+                node.text().set(subject.c_str());
+            }
+        }
+    }
+    return *this;
+}
+
+DocumentBuilder& DocumentBuilder::with_keywords(const std::string& keywords) {
+    if (doc_) {
+        auto* core = doc_->get_core_properties();
+        if (core) {
+            auto root = core->document_element();
+            if (root) {
+                auto node = root.child("cp:keywords");
+                if (!node) {
+                    node = root.append_child("cp:keywords");
+                }
+                node.text().set(keywords.c_str());
+            }
+        }
+    }
+    return *this;
+}
+
+DocumentBuilder& DocumentBuilder::with_page_size(double width, double height) {
+    if (doc_) {
+        auto section = doc_->get_first_section();
+        if (section) {
+            auto& props = section->get_properties();
+            props.page_size.width = static_cast<int>(width * 1440);
+            props.page_size.height = static_cast<int>(height * 1440);
+        }
+    }
+    return *this;
+}
+
+DocumentBuilder& DocumentBuilder::with_margins(double top,
+                                                double bottom,
+                                                double left,
+                                                double right) {
+    if (doc_) {
+        auto section = doc_->get_first_section();
+        if (section) {
+            auto& props = section->get_properties();
+            props.page_margins.top = static_cast<int>(top * 1440);
+            props.page_margins.bottom = static_cast<int>(bottom * 1440);
+            props.page_margins.left = static_cast<int>(left * 1440);
+            props.page_margins.right = static_cast<int>(right * 1440);
+        }
+    }
+    return *this;
+}
+
+DocumentBuilder& DocumentBuilder::with_orientation(PageOrientation orientation) {
+    if (doc_) {
+        auto section = doc_->get_first_section();
+        if (section) {
+            auto& props = section->get_properties();
+            props.orientation = static_cast<SectionProperties::Orientation>(orientation);
+        }
+    }
+    return *this;
+}
+
+DocumentBuilder& DocumentBuilder::add_paragraph(std::shared_ptr<Paragraph> paragraph) {
+    if (doc_ && paragraph) {
+        auto section = doc_->get_first_section();
+        if (section) {
+            section->get_body()->append_child(paragraph);
+        }
+    }
+    return *this;
+}
+
+DocumentBuilder& DocumentBuilder::add_paragraph(const std::string& text) {
+    if (doc_) {
+        auto section = doc_->get_first_section();
+        if (section) {
+            auto para = section->get_body()->append_paragraph(text);
+            if (para && !text.empty()) {
+                para->append_run(text);
+            }
+        }
+    }
+    return *this;
+}
+
+DocumentBuilder& DocumentBuilder::add_table(std::shared_ptr<Table> table) {
+    if (doc_ && table) {
+        auto section = doc_->get_first_section();
+        if (section) {
+            section->get_body()->append_child(table);
+        }
+    }
+    return *this;
+}
+
+DocumentBuilder& DocumentBuilder::add_table(size_t rows, size_t columns) {
+    if (doc_) {
+        auto section = doc_->get_first_section();
+        if (section) {
+            section->get_body()->append_table(static_cast<int>(rows), static_cast<int>(columns));
+        }
+    }
+    return *this;
+}
+
 void DocumentBuilder::ensure_paragraph() {
     if (!current_paragraph_ || !is_para_node(current_paragraph_.name())) {
         pugi::xml_node body = get_body();

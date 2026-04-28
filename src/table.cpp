@@ -57,6 +57,10 @@ std::vector<std::shared_ptr<Paragraph>> Cell::get_paragraphs() const {
     return get_children_of_type<Paragraph>();
 }
 
+std::vector<std::shared_ptr<Table>> Cell::get_tables() const {
+    return get_children_of_type<Table>();
+}
+
 std::shared_ptr<Paragraph> Cell::get_first_paragraph() const {
     return get_first_child<Paragraph>();
 }
@@ -436,6 +440,25 @@ std::shared_ptr<Row> Table::append_row() {
 std::shared_ptr<Row> Table::insert_row(int index) {
     auto row = std::make_shared<Row>(get_document());
     insert_child(index, row);
+    return row;
+}
+
+std::shared_ptr<Row> Table::append_row(const std::vector<std::string>& cell_texts) {
+    auto row = append_row();
+    for (const auto& text : cell_texts) {
+        auto cell = row->append_cell();
+        cell->append_paragraph(text);
+    }
+    return row;
+}
+
+std::shared_ptr<Row> Table::insert_row(int index,
+                                         const std::vector<std::string>& cell_texts) {
+    auto row = insert_row(index);
+    for (const auto& text : cell_texts) {
+        auto cell = row->append_cell();
+        cell->append_paragraph(text);
+    }
     return row;
 }
 

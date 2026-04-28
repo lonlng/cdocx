@@ -1,6 +1,8 @@
 #include <cdocx/document.h>
 #include <cdocx/format_context.h>
 #include <cdocx/paragraph.h>
+#include <cdocx/section.h>
+#include <cdocx/table.h>
 
 #include <cstring>
 
@@ -987,6 +989,71 @@ std::string ParagraphCollection::get_text() const {
         }
     }
     return result;
+}
+
+// ============================================================================
+// Parent Access
+// ============================================================================
+
+std::shared_ptr<Body> Paragraph::get_parent_body() const {
+    for (CompositeNode* current = Node::parent_; current; current = current->get_parent()) {
+        if (current->node_type() == NodeType::Body) {
+            return std::static_pointer_cast<Body>(current->shared_from_this());
+        }
+    }
+    return nullptr;
+}
+
+std::shared_ptr<Cell> Paragraph::get_parent_cell() const {
+    for (CompositeNode* current = Node::parent_; current; current = current->get_parent()) {
+        if (current->node_type() == NodeType::Cell) {
+            return std::static_pointer_cast<Cell>(current->shared_from_this());
+        }
+    }
+    return nullptr;
+}
+
+std::shared_ptr<Section> Paragraph::get_parent_section() const {
+    for (CompositeNode* current = Node::parent_; current; current = current->get_parent()) {
+        if (current->node_type() == NodeType::Section) {
+            return std::static_pointer_cast<Section>(current->shared_from_this());
+        }
+    }
+    return nullptr;
+}
+
+// ============================================================================
+// Position Checks
+// ============================================================================
+
+bool Paragraph::is_in_cell() const {
+    return get_parent_cell() != nullptr;
+}
+
+bool Paragraph::is_end_of_cell() const {
+    auto cell = get_parent_cell();
+    if (!cell) {
+        return false;
+    }
+    auto last = cell->get_last_child();
+    return last && last.get() == this;
+}
+
+bool Paragraph::is_end_of_section() const {
+    auto section = get_parent_section();
+    if (!section) {
+        return false;
+    }
+    auto body = section->get_body();
+    if (!body) {
+        return false;
+    }
+    auto last = body->get_last_child();
+    return last && last.get() == this;
+}
+
+bool Paragraph::is_list_item() const {
+    return list_format_.is_list_item();
 }
 
 }  // namespace cdocx
