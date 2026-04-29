@@ -269,10 +269,9 @@ bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
         run->set_text("");
 
         pugi::xml_document drawing_doc;
-        static int image_id_counter = 1;
         auto drawing = append_image_drawing(
             drawing_doc, rel_id, size, ImageAlignment::Center,
-            image_id_counter++, image_path);
+            image_id_counter_++, image_path);
         drawing.append_attribute("xmlns:wp")
             .set_value("http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing");
 

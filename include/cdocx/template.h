@@ -80,6 +80,7 @@ class Template {
     std::map<std::string, std::string> image_placeholders_;  ///< Image placeholders
     std::string pattern_prefix_ = "{{";                      ///< Placeholder start pattern
     std::string pattern_suffix_ = "}}";                      ///< Placeholder end pattern
+    int image_id_counter_ = 1;                               ///< Per-instance image ID counter
 
     /**
      * @struct PlaceholderContext
