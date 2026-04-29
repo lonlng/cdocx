@@ -15,6 +15,8 @@
 #include "sync_common.h"
 
 #include <filesystem>
+#include <memory>
+#include <unordered_set>
 
 namespace cdocx {
 
@@ -107,11 +109,9 @@ BookmarkFormat TemplateFormat::to_bookmark_format() const {
 }
 
 bool TemplateFormat::is_empty() const {
-    return !bold_.has_value() && !italic_.has_value() && !underline_.has_value() &&
-           !strikethrough_.has_value() && !size_.has_value() && !font_.has_value() &&
-           !font_ascii_.has_value() && !font_far_east_.has_value() && !color_.has_value() &&
-           !alignment_.has_value() && !line_spacing_.has_value() && !space_before_.has_value() &&
-           !space_after_.has_value();
+    const auto has = [](const auto&... opts) { return (!opts.has_value() && ...); };
+    return has(bold_, italic_, underline_, strikethrough_, size_, font_, font_ascii_,
+               font_far_east_, color_, alignment_, line_spacing_, space_before_, space_after_);
 }
 
 // ============================================================================
@@ -339,6 +339,36 @@ size_t TemplateEngine::size() const {
 // Target Resolution
 // ============================================================================
 
+/** @brief Cached bookmark name lookup for batch template operations. */
+class BookmarkNameCache {
+  public:
+    explicit BookmarkNameCache(Document* doc) {
+        if (doc) {
+            const BookmarkReplacer replacer(doc);
+            for (const auto& bm : doc->get_bookmarks()) {
+                names_.insert(bm.get_name());
+            }
+        }
+    }
+
+    bool contains(const std::string& name) const {
+        return names_.find(name) != names_.end();
+    }
+
+  private:
+    std::unordered_set<std::string> names_;
+};
+
+static TemplateTarget resolve_target(const BookmarkNameCache* cache,
+                                    const std::string& key,
+                                    TemplateTarget preferred) {
+    if (preferred == TemplateTarget::Auto) {
+        return (cache && cache->contains(key)) ? TemplateTarget::BookmarkTarget
+                                               : TemplateTarget::Placeholder;
+    }
+    return preferred;
+}
+
 static TemplateTarget resolve_target(Document* doc,
                                     const std::string& key,
                                     TemplateTarget preferred,
@@ -478,6 +508,12 @@ TemplateEngine::Result TemplateEngine::apply_if(
         return last_result_;
     }
 
+    // Cache bookmark names once for Auto target resolution (avoids O(n*m) DOM sync)
+    std::unique_ptr<BookmarkNameCache> bm_cache;
+    if (default_target_ == TemplateTarget::Auto) {
+        bm_cache = std::make_unique<BookmarkNameCache>(doc_);
+    }
+
     std::vector<std::pair<std::string, TemplateValue>> placeholders;
     std::vector<std::pair<std::string, TemplateValue>> bookmarks;
 
@@ -490,8 +526,7 @@ TemplateEngine::Result TemplateEngine::apply_if(
             last_result_.skipped++;
             continue;
         }
-        auto actual = resolve_target(doc_, key, default_target_,
-                                     delimiter_prefix_, delimiter_suffix_);
+        auto actual = resolve_target(bm_cache.get(), key, default_target_);
         if (actual == TemplateTarget::Placeholder) {
             placeholders.emplace_back(key, value);
         } else {
@@ -744,9 +779,8 @@ bool TemplateEngine::apply_image_to_bookmark(Bookmark& bookmark,
             return false;
         }
 
-        static int image_counter = 1;
         return insert_image_run_after(paras[0], bookmark_start, actual_size, align, rel_id,
-                                      image_counter++);
+                                      image_counter_++);
     }
 
     // Replace mode

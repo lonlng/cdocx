@@ -591,6 +591,7 @@ class TemplateEngine {
     std::string delimiter_suffix_ = "}}";
 
     Result last_result_;
+    int image_counter_ = 1;
 
     // Internal execution
     Result apply_bookmark(const std::string& key, const TemplateValue& value);
