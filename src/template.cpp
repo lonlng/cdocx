@@ -88,15 +88,24 @@ bool Template::try_replace_in_text(std::string& text) {
 bool Template::try_replace_single_run(Run& r, bool first_only) {
     std::string text = r.get_text();
     if (first_only) {
-        // Replace only the first occurrence across all keys
+        // Find the earliest match across all keys (text order, not key order)
+        size_t best_pos = std::string::npos;
+        std::string best_value;
+        std::string best_pattern;
         for (const auto& [key, value] : placeholders_) {
             const std::string pattern = pattern_prefix_ + key + pattern_suffix_;
             const size_t pos = text.find(pattern);
-            if (pos != std::string::npos) {
-                text.replace(pos, pattern.length(), value);
-                r.set_text(text);
-                return true;
+            if (pos != std::string::npos &&
+                (best_pos == std::string::npos || pos < best_pos)) {
+                best_pos = pos;
+                best_value = value;
+                best_pattern = pattern;
             }
+        }
+        if (best_pos != std::string::npos) {
+            text.replace(best_pos, best_pattern.length(), best_value);
+            r.set_text(text);
+            return true;
         }
         return false;
     }
@@ -258,7 +267,7 @@ bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
 
         ImageSize size;
         if (!detect_image_size(image_path, size)) {
-            continue;
+            size = ImageSize(400, 300);
         }
 
         const std::string rel_id = doc_->add_media_with_rel(image_path, nullptr);
@@ -272,8 +281,6 @@ bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
         auto drawing = append_image_drawing(
             drawing_doc, rel_id, size, ImageAlignment::Center,
             image_id_counter_++, image_path);
-        drawing.append_attribute("xmlns:wp")
-            .set_value("http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing");
 
         run->preserve_child(drawing);
         return true;

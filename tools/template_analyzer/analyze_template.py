@@ -46,18 +46,23 @@ class TemplateElement:
         """Return a valid C++ identifier derived from the element name."""
         raw = self.name.strip()
         raw = raw.replace("{{", "").replace("}}", "")
-        raw = re.sub(r"[^a-zA-Z0-9_]", "_", raw)
-        if raw and raw[0].isdigit():
-            raw = "_" + raw
-        raw = raw or "unnamed"
+        clean = re.sub(r"[^a-zA-Z0-9_]", "_", raw)
+        if clean and clean[0].isdigit():
+            clean = "_" + clean
+        # Fallback for all-non-ASCII names (e.g. Chinese, Japanese, Korean)
+        if not clean or set(clean) == {"_"}:
+            import hashlib
+            digest = hashlib.md5(raw.encode("utf-8")).hexdigest()[:6]
+            clean = f"key_{digest}"
+        clean = clean or "unnamed"
         if seen is not None:
-            base = raw
+            base = clean
             counter = 2
-            while raw in seen:
-                raw = f"{base}_{counter}"
+            while clean in seen:
+                clean = f"{base}_{counter}"
                 counter += 1
-            seen.add(raw)
-        return raw
+            seen.add(clean)
+        return clean
 
     def cpp_value_literal(self) -> str:
         """Return a C++ string literal, escaping quotes and backslashes."""
@@ -92,21 +97,21 @@ def parse_docx(docx_path: str) -> list:
         sys.exit(1)
 
     with zipfile.ZipFile(docx_path, "r") as zf:
-        content_parts = []
-        for name in zf.namelist():
-            if name.endswith(".xml") or name.endswith(".rels"):
-                if any(
-                    name.startswith(p)
-                    for p in (
-                        "word/document",
-                        "word/header",
-                        "word/footer",
-                        "word/endnotes",
-                        "word/footnotes",
-                        "word/comments",
-                    )
-                ):
-                    content_parts.append(name)
+        content_parts = [
+            name for name in zf.namelist()
+            if name.endswith(".xml")
+            and any(
+                name.startswith(p)
+                for p in (
+                    "word/document",
+                    "word/header",
+                    "word/footer",
+                    "word/endnotes",
+                    "word/footnotes",
+                    "word/comments",
+                )
+            )
+        ]
 
         for part in content_parts:
             try:
@@ -120,48 +125,35 @@ def parse_docx(docx_path: str) -> list:
                 print(f"Warning: could not parse {part}: {e}", file=sys.stderr)
                 continue
 
-            # Bookmarks
-            for bm_start in root.iter(qname("bookmarkStart")):
-                name = bm_start.get(qname("name"))
-                if name:
-                    ctx = ""
-                    parent_para = bm_start
-                    while parent_para is not None:
-                        if parent_para.tag == qname("p"):
-                            ctx = iter_text_in_element(parent_para)[:80]
-                            break
-                        parent_para = parent_para.find("..")
-                    elements.append(
-                        TemplateElement("bookmark", name, part, ctx)
-                    )
-
-            # Placeholders inside w:t text nodes
+            # Single-pass paragraph traversal: extract all element types per paragraph
             for para in root.iter(qname("p")):
                 para_text = iter_text_in_element(para)
-                if not para_text:
-                    continue
-                for key in extract_placeholders(para_text):
-                    elements.append(
-                        TemplateElement("placeholder", key, part, para_text[:80])
-                    )
+                ctx = para_text[:80] if para_text else ""
 
-            # MERGEFIELD / other fields
-            for instr in root.iter(qname("instrText")):
-                if instr.text:
-                    code = instr.text.strip()
-                    m = re.match(r"MERGEFIELD\s+(\S+)", code, re.IGNORECASE)
-                    if m:
-                        field_name = m.group(1)
-                        ctx = ""
-                        parent_para = instr
-                        while parent_para is not None:
-                            if parent_para.tag == qname("p"):
-                                ctx = iter_text_in_element(parent_para)[:80]
-                                break
-                            parent_para = parent_para.find("..")
+                # Placeholders
+                if para_text:
+                    for key in extract_placeholders(para_text):
                         elements.append(
-                            TemplateElement("mergefield", field_name, part, ctx)
+                            TemplateElement("placeholder", key, part, ctx)
                         )
+
+                # Bookmarks (look inside this paragraph only)
+                for bm_start in para.iter(qname("bookmarkStart")):
+                    name = bm_start.get(qname("name"))
+                    if name:
+                        elements.append(
+                            TemplateElement("bookmark", name, part, ctx)
+                        )
+
+                # MERGEFIELDs (look inside this paragraph only)
+                for instr in para.iter(qname("instrText")):
+                    if instr.text:
+                        code = instr.text.strip()
+                        m = re.match(r"MERGEFIELD\s+(\S+)", code, re.IGNORECASE)
+                        if m:
+                            elements.append(
+                                TemplateElement("mergefield", m.group(1), part, ctx)
+                            )
 
     # Deduplicate by (kind, name) keeping first source
     seen = set()

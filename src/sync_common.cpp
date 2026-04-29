@@ -783,6 +783,8 @@ pugi::xml_node append_image_drawing(pugi::xml_node parent,
                                     int image_id,
                                     const std::string& image_name) {
     pugi::xml_node drawing = parent.append_child("w:drawing");
+    drawing.append_attribute("xmlns:wp")
+        .set_value("http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing");
 
     // Build the picture subtree (shared between inline and anchor)
     auto build_pic = [&](pugi::xml_node container) {

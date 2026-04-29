@@ -422,6 +422,9 @@ class TemplateEngine {
         /** @brief Assign a TemplateValue */
         Setter& operator=(const TemplateValue& value);
 
+        /** @brief Assign a TemplateValue (move) */
+        Setter& operator=(TemplateValue&& value);
+
         /** @brief Assign a plain string (auto-wrapped as Text) */
         Setter& operator=(const std::string& text);
 
@@ -475,6 +478,7 @@ class TemplateEngine {
      * @return Reference to this for chaining
      */
     TemplateEngine& set(const std::string& key, const TemplateValue& value);
+    TemplateEngine& set(const std::string& key, TemplateValue&& value);
 
     /**
      * @brief Set a text value (convenience overload)

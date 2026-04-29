@@ -115,6 +115,7 @@ class DocumentBuilder {
     pugi::xml_node current_cell_;
 
     std::map<std::string, int> bookmark_stack_;
+    int image_counter_ = 1;
 
     std::shared_ptr<FormField> insert_form_field_impl(const std::shared_ptr<FormField>& field);
     void ensure_paragraph();

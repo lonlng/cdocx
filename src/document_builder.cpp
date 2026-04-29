@@ -1061,9 +1061,8 @@ bool DocumentBuilder::insert_image(const std::string& image_path, double width, 
 
     // Create run with drawing
     pugi::xml_node run = current_paragraph_.append_child("w:r");
-    static int image_id_counter = 1;
     append_image_drawing(run, rel_id, size, ImageAlignment::Center,
-                         image_id_counter++, image_path);
+                         image_counter_++, image_path);
 
     if (doc_) {
         doc_->mark_xml_paragraph_dirty(current_paragraph_);

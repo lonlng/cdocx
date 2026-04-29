@@ -18,6 +18,29 @@
 #include <memory>
 #include <unordered_set>
 
+namespace {
+
+// Helper: append a child node with a single attribute/value pair.
+pugi::xml_node append_attr_node(pugi::xml_node parent,
+                                const char* name,
+                                const char* attr,
+                                const char* value) {
+    pugi::xml_node n = parent.append_child(name);
+    n.append_attribute(attr).set_value(value);
+    return n;
+}
+
+pugi::xml_node append_attr_node(pugi::xml_node parent,
+                                const char* name,
+                                const char* attr,
+                                int value) {
+    pugi::xml_node n = parent.append_child(name);
+    n.append_attribute(attr).set_value(value);
+    return n;
+}
+
+}  // namespace
+
 namespace cdocx {
 
 // ============================================================================
@@ -232,6 +255,11 @@ TemplateEngine::Setter& TemplateEngine::Setter::operator=(const TemplateValue& v
     return *this;
 }
 
+TemplateEngine::Setter& TemplateEngine::Setter::operator=(TemplateValue&& value) {
+    engine_->set(key_, std::move(value));
+    return *this;
+}
+
 TemplateEngine::Setter& TemplateEngine::Setter::operator=(const std::string& text) {
     engine_->set(key_, text);
     return *this;
@@ -254,6 +282,11 @@ TemplateEngine::Setter TemplateEngine::operator[](const std::string& key) {
 
 TemplateEngine& TemplateEngine::set(const std::string& key, const TemplateValue& value) {
     queue_[key] = value;
+    return *this;
+}
+
+TemplateEngine& TemplateEngine::set(const std::string& key, TemplateValue&& value) {
+    queue_[key] = std::move(value);
     return *this;
 }
 
@@ -404,8 +437,10 @@ static bool insert_formatted_run_after(pugi::xml_node para,
         return false;
     }
 
-    if (format.is_valid() || format.bold || format.italic || format.underline ||
-        format.strikethrough) {
+    const bool has_run_props = format.is_valid() || format.bold || format.italic ||
+                               format.underline || format.strikethrough ||
+                               !format.color.empty();
+    if (has_run_props) {
         pugi::xml_node run_props = run.append_child("w:rPr");
 
         if (!format.font_ascii.empty() || !format.font_far_east.empty()) {
@@ -419,15 +454,12 @@ static bool insert_formatted_run_after(pugi::xml_node para,
         }
 
         if (format.font_size > 0) {
-            pugi::xml_node sz = run_props.append_child("w:sz");
-            sz.append_attribute("w:val").set_value(format.font_size);
-            pugi::xml_node sz_cs = run_props.append_child("w:szCs");
-            sz_cs.append_attribute("w:val").set_value(format.font_size);
+            append_attr_node(run_props, "w:sz", "w:val", format.font_size);
+            append_attr_node(run_props, "w:szCs", "w:val", format.font_size);
         }
 
         if (!format.color.empty()) {
-            pugi::xml_node color = run_props.append_child("w:color");
-            color.append_attribute("w:val").set_value(format.color.c_str());
+            append_attr_node(run_props, "w:color", "w:val", format.color.c_str());
         }
 
         if (format.bold) {
@@ -437,16 +469,14 @@ static bool insert_formatted_run_after(pugi::xml_node para,
             run_props.append_child("w:i");
         }
         if (format.underline) {
-            pugi::xml_node u = run_props.append_child("w:u");
-            u.append_attribute("w:val").set_value("single");
+            append_attr_node(run_props, "w:u", "w:val", "single");
         }
         if (format.strikethrough) {
             run_props.append_child("w:strike");
         }
     }
 
-    const pugi::xml_node t = run.append_child("w:t");
-    t.text().set(text.c_str());
+    run.append_child("w:t").text().set(text.c_str());
     return true;
 }
 
@@ -544,7 +574,9 @@ TemplateEngine::Result TemplateEngine::apply_if(
     }
 
     if (!bookmarks.empty()) {
-        doc_->sync_to_physical_tree();
+        if (placeholders.empty()) {
+            doc_->sync_to_physical_tree();
+        }
         auto collection = doc_->get_bookmarks();
 
         for (const auto& [key, value] : bookmarks) {
@@ -806,6 +838,11 @@ bool TemplateEngine::apply_text_to_placeholder(const std::string& key,
     Template tmpl(doc_, delimiter_prefix_, delimiter_suffix_);
     if (default_action_ == TemplateAction::Insert) {
         const std::string pattern = delimiter_prefix_ + key + delimiter_suffix_;
+        // Prevent unintended cascading replacements if the replacement text
+        // itself contains the placeholder pattern.
+        if (text.find(pattern) != std::string::npos || text.empty()) {
+            return false;
+        }
         tmpl.set(key, text + pattern);
     } else {
         tmpl.set(key, text);
