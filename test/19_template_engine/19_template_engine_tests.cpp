@@ -1062,3 +1062,116 @@ TEST(TemplateEngineTest, PlaceholderReplacementInHeaderAndFooterTogether) {
 }
 
 /** @} */
+
+// ============================================================================
+// TemplateEngine Image Replacement Tests
+// ============================================================================
+
+static std::string find_test_image() {
+    std::vector<std::string> candidates = {
+        "test/05_complete_structure/data/test_export.png",
+        "../test/05_complete_structure/data/test_export.png",
+        "../../test/05_complete_structure/data/test_export.png",
+    };
+    for (const auto& path : candidates) {
+        if (fs::exists(path)) {
+            return path;
+        }
+    }
+    return "";
+}
+
+TEST(TemplateEngineTest, BookmarkImageReplacement) {
+    std::string image_path = find_test_image();
+    if (image_path.empty()) {
+        GTEST_SKIP() << "Test image not found, skipping image test";
+    }
+
+    TempDoc temp_doc("test_te_img_bookmark.docx");
+    const std::string& test_file = temp_doc.path();
+
+    {
+        Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+        auto body = doc.get_first_section()->get_body();
+        body->append_paragraph("Logo placeholder");
+        doc.sync_to_physical_tree();
+
+        BookmarkInserter inserter(&doc);
+        inserter.insert("LOGO", "Logo placeholder");
+        doc.sync_from_physical_tree();
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        TemplateEngine engine(&doc);
+        engine["LOGO"] = TemplateValue::image(image_path, 200.0, 100.0);
+        auto result = engine.apply();
+
+        EXPECT_EQ(result.success, 1);
+        EXPECT_EQ(result.failed, 0);
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto bookmarks = doc.get_bookmarks();
+        auto bm = bookmarks.get("LOGO");
+        ASSERT_TRUE(bm.has_value());
+        // After image replacement, the bookmark text may be empty or contain image ref
+        // Just verify the bookmark still exists and document is valid
+        EXPECT_TRUE(bm->is_valid());
+    }
+}
+
+TEST(TemplateEngineTest, PlaceholderImageReplacement) {
+    std::string image_path = find_test_image();
+    if (image_path.empty()) {
+        GTEST_SKIP() << "Test image not found, skipping image test";
+    }
+
+    TempDoc temp_doc("test_te_img_placeholder.docx");
+    const std::string& test_file = temp_doc.path();
+
+    {
+        Document doc;
+        ASSERT_TRUE(doc.create_empty(test_file));
+        auto body = doc.get_first_section()->get_body();
+        // Legacy Template image replacement requires the placeholder to be
+        // the entire content of a single run (exact match)
+        body->append_paragraph("{{photo}}");
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        TemplateEngine engine(&doc);
+        engine["photo"] = TemplateValue::image(image_path).sized(150.0, 150.0);
+        auto result = engine.apply();
+
+        EXPECT_EQ(result.success, 1);
+        EXPECT_EQ(result.failed, 0);
+        doc.save();
+    }
+
+    {
+        Document doc(test_file);
+        doc.open();
+        ASSERT_TRUE(doc.is_open());
+
+        auto paras = doc.get_first_section()->get_body()->get_paragraphs();
+        ASSERT_FALSE(paras.empty());
+        // Placeholder should be replaced; text won't contain {{photo}}
+        EXPECT_EQ(paras[0]->get_text().find("{{photo}}"), std::string::npos);
+    }
+}
