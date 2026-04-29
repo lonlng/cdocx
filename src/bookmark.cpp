@@ -256,53 +256,66 @@ BookmarkFormat Bookmark::get_format() const {
     }
 
     // ========== Extract Character Format (w:rPr) ==========
-    pugi::xml_node run = para.child("w:r");
-
-    // Find first run that is between bookmark markers
-    while (run) {
-        const pugi::xml_node r_pr = run.child("w:rPr");
-        if (r_pr) {
-            // Extract fonts
-            const pugi::xml_node r_fonts = r_pr.child("w:rFonts");
-            if (r_fonts) {
-                fmt.font_ascii = r_fonts.attribute("w:ascii").value();
-                fmt.font_far_east = r_fonts.attribute("w:eastAsia").value();
-                fmt.font_hansi = r_fonts.attribute("w:hAnsi").value();
-                fmt.font_hint = r_fonts.attribute("w:hint").value();
-            }
-
-            // Extract font size
-            const pugi::xml_node sz = r_pr.child("w:sz");
-            if (sz) {
-                fmt.font_size = sz.attribute("w:val").as_int();
-            }
-
-            // Extract color
-            const pugi::xml_node color = r_pr.child("w:color");
-            if (color) {
-                fmt.color = color.attribute("w:val").value();
-            }
-
-            // Extract bold
-            const pugi::xml_node b = r_pr.child("w:b");
-            fmt.bold = b != nullptr;
-
-            // Extract italic
-            const pugi::xml_node i = r_pr.child("w:i");
-            fmt.italic = i != nullptr;
-
-            // Extract underline
-            const pugi::xml_node u = r_pr.child("w:u");
-            fmt.underline = u != nullptr;
-
-            // Extract strikethrough
-            const pugi::xml_node strike = r_pr.child("w:strike");
-            fmt.strikethrough = strike != nullptr;
-
-            // Format found, return it
-            return fmt;
+    // Only look at runs between bookmarkStart and bookmarkEnd markers
+    bool inside_bookmark = false;
+    for (pugi::xml_node child = para.first_child(); child; child = child.next_sibling()) {
+        if (child == start_node_) {
+            inside_bookmark = true;
+            continue;
         }
-        run = run.next_sibling("w:r");
+        if (child == end_node_) {
+            break;
+        }
+        if (!inside_bookmark) {
+            continue;
+        }
+        if (std::strcmp(child.name(), "w:r") != 0) {
+            continue;
+        }
+        const pugi::xml_node r_pr = child.child("w:rPr");
+        if (!r_pr) {
+            continue;
+        }
+
+        // Extract fonts
+        const pugi::xml_node r_fonts = r_pr.child("w:rFonts");
+        if (r_fonts) {
+            fmt.font_ascii = r_fonts.attribute("w:ascii").value();
+            fmt.font_far_east = r_fonts.attribute("w:eastAsia").value();
+            fmt.font_hansi = r_fonts.attribute("w:hAnsi").value();
+            fmt.font_hint = r_fonts.attribute("w:hint").value();
+        }
+
+        // Extract font size
+        const pugi::xml_node sz = r_pr.child("w:sz");
+        if (sz) {
+            fmt.font_size = sz.attribute("w:val").as_int();
+        }
+
+        // Extract color
+        const pugi::xml_node color = r_pr.child("w:color");
+        if (color) {
+            fmt.color = color.attribute("w:val").value();
+        }
+
+        // Extract bold
+        const pugi::xml_node b = r_pr.child("w:b");
+        fmt.bold = b != nullptr;
+
+        // Extract italic
+        const pugi::xml_node i = r_pr.child("w:i");
+        fmt.italic = i != nullptr;
+
+        // Extract underline
+        const pugi::xml_node u = r_pr.child("w:u");
+        fmt.underline = u != nullptr;
+
+        // Extract strikethrough
+        const pugi::xml_node strike = r_pr.child("w:strike");
+        fmt.strikethrough = strike != nullptr;
+
+        // Format found, return it
+        return fmt;
     }
 
     return fmt;

@@ -77,6 +77,9 @@ list(APPEND CDOCX_EXAMPLES 27_field_switches)
 # v0.8.0: Build-from-scratch and convenience APIs
 list(APPEND CDOCX_EXAMPLES 28_build_from_scratch)
 
+# v0.8.0: Geological report template placeholder example
+list(APPEND CDOCX_EXAMPLES 29_geological_report)
+
 # DOM sync validation
 list(APPEND CDOCX_EXAMPLES test_dom_sync)
 
@@ -95,6 +98,10 @@ foreach(example ${CDOCX_EXAMPLES})
     
     # Add the executable
     add_cdocx_executable(${example} SOURCES ${example_dir}/main.cpp)
+
+    # Pass source directory so examples can always locate their data/ files
+    target_compile_definitions(${example} PRIVATE
+        EXAMPLE_SOURCE_DIR="${example_dir}")
     
     # Set output directory
     set_target_properties(${example} PROPERTIES

@@ -152,6 +152,37 @@ bool Template::try_replace_placeholder(const PlaceholderContext& ctx, Paragraph&
         return false;
     }
 
+    // =========================================================================
+    // Format preservation: copy the format from the run(s) containing the
+    // actual key text (between prefix and suffix) to the first run.
+    // =========================================================================
+    const size_t key_start_in_collected = best_pos + pattern_prefix_.length();
+    const size_t key_end_in_collected =
+        best_pos + best_pattern.length() - pattern_suffix_.length();
+
+    if (key_start_in_collected < key_end_in_collected) {
+        const size_t first_portion_len =
+            ctx.first_run->get_text().length() - ctx.prefix_pos;
+
+        if (key_start_in_collected >= first_portion_len) {
+            // Key text starts in collected runs; find the first overlapping run
+            // and copy its formatting to the first run.
+            size_t offset = first_portion_len;
+            for (Run* run : ctx.runs_to_delete) {
+                const size_t run_len = run->get_text().length();
+                if (offset + run_len > key_start_in_collected &&
+                    offset < key_end_in_collected) {
+                    ctx.first_run->get_font() = run->get_font();
+                    if (run->has_preserved_r_pr()) {
+                        ctx.first_run->preserve_r_pr(run->get_preserved_r_pr());
+                    }
+                    break;
+                }
+                offset += run_len;
+            }
+        }
+    }
+
     const size_t pattern_end = best_pos + best_pattern.length();
     const std::string trailing = ctx.collected_text.substr(pattern_end);
 

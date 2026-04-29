@@ -603,6 +603,18 @@ TemplateEngine::Result TemplateEngine::apply_if(
             }
         }
         doc_->sync_from_physical_tree();
+
+        // In Auto mode, a key may exist both as a bookmark and as a placeholder.
+        // After bookmark replacement, also try placeholder replacement for any
+        // non-bookmarked instances.
+        if (default_target_ == TemplateTarget::Auto) {
+            for (const auto& [key, value] : bookmarks) {
+                auto r = apply_placeholder(key, value);
+                last_result_.success += r.success;
+                last_result_.failed += r.failed;
+            }
+            doc_->sync_to_physical_tree();
+        }
     }
 
     return last_result_;
