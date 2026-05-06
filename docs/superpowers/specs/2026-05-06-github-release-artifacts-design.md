@@ -50,10 +50,13 @@ cdocx-0.8.0-windows-msvc-x64-{config}.zip
   ├─ include/
   │   ├─ cdocx.h
   │   └─ cdocx/*.h
-  └─ lib/
-      ├─ cdocx_static.lib      # 静态库 (/MT)
-      ├─ cdocx.lib             # 动态库导入库 (/MD)
-      └─ cdocx.dll             # 动态库
+  ├─ lib/
+  │   ├─ cdocx_static.lib      # 静态库 (/MT)，构建后重命名避免与导入库冲突
+  │   ├─ cdocx.lib             # 动态库导入库 (/MD)
+  │   └─ cdocx.dll             # 动态库
+  └─ cmake/cdocx/
+      ├─ cdocx-config.cmake
+      └─ cdocx-config-version.cmake
 ```
 
 ### Linux 产物结构
@@ -63,9 +66,12 @@ cdocx-0.8.0-linux-gcc-x64-{config}.tar.gz
   ├─ include/
   │   ├─ cdocx.h
   │   └─ cdocx/*.h
-  └─ lib/
-      ├─ libcdocx.a            # 静态库
-      └─ libcdocx.so           # 动态库
+  ├─ lib/
+  │   ├─ libcdocx.a            # 静态库
+  ���─ libcdocx.so             # 动态库
+  └─ lib/cmake/cdocx/
+      ├─ cdocx-config.cmake
+      └─ cdocx-config-version.cmake
 ```
 
 ## 技术实现
@@ -79,13 +85,14 @@ cdocx-0.8.0-linux-gcc-x64-{config}.tar.gz
 1. **检出代码**: `actions/checkout@v4`
 2. **安装依赖**: CMake、Ninja（Linux）
 3. **构建静态库**: `cmake -B build_static -DBUILD_SHARED_LIBS=OFF`
-4. **安装静态库**: `cmake --install build_static --prefix staging/lib`
-5. **构建动态库**: `cmake -B build_shared -DBUILD_SHARED_LIBS=ON`
-6. **安装动态库**: `cmake --install build_shared --prefix staging/lib`
-7. **复制头文件**: 复制 `include/` 到 staging
-8. **打包**: `zip`（Windows）或 `tar czf`（Linux）
-9. **上传产物**: 使用 `actions/upload-artifact@v4` 暂存
-10. **创建 Release**: 使用 `softprops/action-gh-release@v1` 从所有作业收集产物并发布
+4. **安装静态库**: `cmake --install build_static --prefix staging`
+5. **重命名 Windows 静态库**: Windows 下将 `lib/cdocx.lib` 复制为 `lib/cdocx_static.lib`，避免与动态库导入库同名冲突
+6. **构建动态库**: `cmake -B build_shared -DBUILD_SHARED_LIBS=ON`
+7. **安装动态库**: `cmake --install build_shared --prefix staging`
+8. **复制头文件**: 复制 `include/` 到 staging（如果安装步骤未自动复制）
+9. **打包**: `zip`（Windows）或 `tar czf`（Linux）
+10. **上传产物**: 使用 `actions/upload-artifact@v4` 暂存
+11. **创建 Release**: 使用 `softprops/action-gh-release@v1` 从所有作业收集产物并发布
 
 ### 并行策略
 
@@ -108,7 +115,8 @@ cdocx-0.8.0-linux-gcc-x64-{config}.tar.gz
 
 - 项目已有 CMake 构建系统和安装目标
 - 已有 `BUILD_SHARED_LIBS` 选项控制动态/静态构建
-- 已有 `install(TARGETS cdocx...)` 和 `install(FILES ${CDOCX_PUBLIC_HEADERS}...)`
+- 已有 `install(TARGETS cdocx...)`、`install(FILES ${CDOCX_PUBLIC_HEADERS}...)` 和 `install(EXPORT cdocxConfig...)`
+- `cmake --install` 会自动生成 CMake config 文件（`cdocx-config.cmake` 和 `cdocx-config-version.cmake`）
 - 已有 `.github/workflows/cmake.yml` 作为参考
 
 ## 产物文件名格式
