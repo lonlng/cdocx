@@ -30,30 +30,33 @@ jobs:
       - name: Setup MSVC
         uses: microsoft/setup-msbuild@v2
 
-      - name: Build Release static library
+      - name: Build and install Release
         run: |
-          cmake -B build_rel_static `
+          $staging = "cdocx-${{ needs.extract-version.outputs.version }}-windows-msvc-x64"
+          if (Test-Path $staging) { Remove-Item -Recurse -Force $staging }
+
+          cmake -B build_static `
             -G "Visual Studio 17 2022" `
             -A x64 `
             -DBUILD_SHARED_LIBS=OFF `
             -DBUILD_TESTING=OFF `
             -DBUILD_EXAMPLES=OFF
-          cmake --build build_rel_static --config Release --parallel
-          cmake --install build_rel_static --config Release --prefix "temp/rel_static" --component cdocx
+          cmake --build build_static --config Release --parallel
+          cmake --install build_static --config Release --prefix "$staging"
 
-      - name: Build Release shared library
-        run: |
-          cmake -B build_rel_shared `
+          cmake -B build_shared `
             -G "Visual Studio 17 2022" `
             -A x64 `
             -DBUILD_SHARED_LIBS=ON `
             -DBUILD_TESTING=OFF `
             -DBUILD_EXAMPLES=OFF
-          cmake --build build_rel_shared --config Release --parallel
-          cmake --install build_rel_shared --config Release --prefix "temp/rel_shared" --component cdocx
+          cmake --build build_shared --config Release --parallel
+          cmake --install build_shared --config Release --prefix "$staging"
 
-      - name: Build Debug static library
+      - name: Build and install Debug
         run: |
+          $staging = "cdocx-${{ needs.extract-version.outputs.version }}-windows-msvc-x64"
+
           cmake -B build_dbg_static `
             -G "Visual Studio 17 2022" `
             -A x64 `
@@ -61,10 +64,8 @@ jobs:
             -DBUILD_TESTING=OFF `
             -DBUILD_EXAMPLES=OFF
           cmake --build build_dbg_static --config Debug --parallel
-          cmake --install build_dbg_static --config Debug --prefix "temp/dbg_static" --component cdocx
+          cmake --install build_dbg_static --config Debug --prefix "$staging/debug"
 
-      - name: Build Debug shared library
-        run: |
           cmake -B build_dbg_shared `
             -G "Visual Studio 17 2022" `
             -A x64 `
@@ -72,30 +73,18 @@ jobs:
             -DBUILD_TESTING=OFF `
             -DBUILD_EXAMPLES=OFF
           cmake --build build_dbg_shared --config Debug --parallel
-          cmake --install build_dbg_shared --config Debug --prefix "temp/dbg_shared" --component cdocx
+          cmake --install build_dbg_shared --config Debug --prefix "$staging/debug"
 
       - name: Package artifacts
         shell: pwsh
         run: |
-          $version = "${{ needs.extract-version.outputs.version }}"
-          $staging = "cdocx-$version-windows-msvc-x64"
-          New-Item -ItemType Directory -Path "$staging/include/cdocx", "$staging/lib", "$staging/debug/lib" -Force
+          $staging = "cdocx-${{ needs.extract-version.outputs.version }}-windows-msvc-x64"
 
-          # Headers (Release and Debug share the same headers)
-          Copy-Item -Path "temp/rel_static/include/cdocx.h" -Destination "$staging/include/"
-          Copy-Item -Path "temp/rel_static/include/cdocx/*.h" -Destination "$staging/include/cdocx/"
+          # Remove duplicate debug headers (shared with Release)
+          if (Test-Path "$staging/debug/include") {
+              Remove-Item -Recurse -Force "$staging/debug/include"
+          }
 
-          # Release libraries
-          Copy-Item -Path "temp/rel_static/lib/cdocx.lib" -Destination "$staging/lib/cdocx_static.lib"
-          Copy-Item -Path "temp/rel_shared/lib/cdocx.lib" -Destination "$staging/lib/cdocx.lib"
-          Copy-Item -Path "temp/rel_shared/bin/cdocx.dll" -Destination "$staging/lib/cdocx.dll"
-
-          # Debug libraries
-          Copy-Item -Path "temp/dbg_static/lib/cdocx.lib" -Destination "$staging/debug/lib/cdocx_static.lib"
-          Copy-Item -Path "temp/dbg_shared/lib/cdocx.lib" -Destination "$staging/debug/lib/cdocx.lib"
-          Copy-Item -Path "temp/dbg_shared/bin/cdocx.dll" -Destination "$staging/debug/lib/cdocx.dll"
-
-          # Create zip
           Compress-Archive -Path "$staging" -DestinationPath "$staging.zip"
 
       - name: Upload artifact
@@ -118,8 +107,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build
 
-      - name: Build Release static library
+      - name: Build and install Release
         run: |
+          staging="cdocx-${{ needs.extract-version.outputs.version }}-linux-gcc-x64"
+          rm -rf "$staging"
+
           cmake -B build_rel_static \
             -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
@@ -127,10 +119,8 @@ jobs:
             -DBUILD_TESTING=OFF \
             -DBUILD_EXAMPLES=OFF
           cmake --build build_rel_static --parallel
-          cmake --install build_rel_static --prefix "temp/rel_static" --component cdocx
+          cmake --install build_rel_static --prefix "$staging"
 
-      - name: Build Release shared library
-        run: |
           cmake -B build_rel_shared \
             -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
@@ -138,10 +128,12 @@ jobs:
             -DBUILD_TESTING=OFF \
             -DBUILD_EXAMPLES=OFF
           cmake --build build_rel_shared --parallel
-          cmake --install build_rel_shared --prefix "temp/rel_shared" --component cdocx
+          cmake --install build_rel_shared --prefix "$staging"
 
-      - name: Build Debug static library
+      - name: Build and install Debug
         run: |
+          staging="cdocx-${{ needs.extract-version.outputs.version }}-linux-gcc-x64"
+
           cmake -B build_dbg_static \
             -G Ninja \
             -DCMAKE_BUILD_TYPE=Debug \
@@ -149,10 +141,8 @@ jobs:
             -DBUILD_TESTING=OFF \
             -DBUILD_EXAMPLES=OFF
           cmake --build build_dbg_static --parallel
-          cmake --install build_dbg_static --prefix "temp/dbg_static" --component cdocx
+          cmake --install build_dbg_static --prefix "$staging/debug"
 
-      - name: Build Debug shared library
-        run: |
           cmake -B build_dbg_shared \
             -G Ninja \
             -DCMAKE_BUILD_TYPE=Debug \
@@ -160,28 +150,16 @@ jobs:
             -DBUILD_TESTING=OFF \
             -DBUILD_EXAMPLES=OFF
           cmake --build build_dbg_shared --parallel
-          cmake --install build_dbg_shared --prefix "temp/dbg_shared" --component cdocx
+          cmake --install build_dbg_shared --prefix "$staging/debug"
 
       - name: Package artifacts
         run: |
-          version="${{ needs.extract-version.outputs.version }}"
-          staging="cdocx-${version}-linux-gcc-x64"
-          mkdir -p "${staging}/include/cdocx" "${staging}/lib" "${staging}/debug/lib"
+          staging="cdocx-${{ needs.extract-version.outputs.version }}-linux-gcc-x64"
 
-          # Headers (Release and Debug share the same headers)
-          cp "temp/rel_static/include/cdocx.h" "${staging}/include/"
-          cp -r "temp/rel_static/include/cdocx/"* "${staging}/include/cdocx/"
+          # Remove duplicate debug headers (shared with Release)
+          rm -rf "$staging/debug/include"
 
-          # Release libraries
-          cp "temp/rel_static/lib/libcdocx.a" "${staging}/lib/"
-          cp "temp/rel_shared/lib/libcdocx.so" "${staging}/lib/"
-
-          # Debug libraries
-          cp "temp/dbg_static/lib/libcdocx.a" "${staging}/debug/lib/"
-          cp "temp/dbg_shared/lib/libcdocx.so" "${staging}/debug/lib/"
-
-          # Create tar.gz
-          tar czf "${staging}.tar.gz" "${staging}"
+          tar czf "${staging}.tar.gz" "$staging"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

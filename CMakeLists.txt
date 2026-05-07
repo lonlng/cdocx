@@ -182,6 +182,11 @@ endif()
 add_library(cdocx ${CDOCX_SOURCES})
 add_library(cdocx::cdocx ALIAS cdocx)
 
+# Rename static library output to avoid collision with shared import library
+if(NOT BUILD_SHARED_LIBS)
+    set_target_properties(cdocx PROPERTIES ARCHIVE_OUTPUT_NAME "cdocx_static")
+endif()
+
 target_include_directories(cdocx
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -350,7 +355,8 @@ install(TARGETS cdocx
     EXPORT cdocxConfig
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT cdocx
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT cdocx
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT cdocx
+    # Place DLL next to import lib on Windows (consistent with vcpkg layout)
+    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT cdocx
 )
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
