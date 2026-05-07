@@ -231,8 +231,9 @@ FetchContent_Declare(
 # Make dependencies available
 FetchContent_MakeAvailable(pugixml zip)
 
-# Suppress GCC 14 warnings in third-party C library (zip)
-if(CMAKE_C_COMPILER_ID STREQUAL "GNU" AND CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL "14")
+# Suppress GCC warnings in third-party C library (zip)
+# -Wstringop-truncation was introduced in GCC 8 and triggered by zip.c
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU" AND CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL "8")
     if(TARGET zip)
         target_compile_options(zip PRIVATE -Wno-stringop-truncation)
     endif()
