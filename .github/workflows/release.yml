@@ -53,6 +53,8 @@ jobs:
             -DBUILD_TESTING=OFF `
             -DBUILD_EXAMPLES=OFF
           cmake --build build_shared --config ${{ matrix.config }} --parallel
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Get-ChildItem -Recurse -Path build_shared -Filter "cdocx.dll","cdocx.lib"
           cmake --install build_shared --config ${{ matrix.config }} --prefix "temp/shared" --component cdocx
 
       - name: Package artifacts

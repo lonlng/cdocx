@@ -172,6 +172,11 @@ file(GLOB_RECURSE CDOCX_PUBLIC_HEADERS CONFIGURE_DEPENDS
 # ----------------------------------------------------------------------------
 # Library Target
 # ----------------------------------------------------------------------------
+# Windows: auto-export all symbols from DLL so import library (.lib) is generated
+if(WIN32)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+
 add_library(cdocx ${CDOCX_SOURCES})
 add_library(cdocx::cdocx ALIAS cdocx)
 
