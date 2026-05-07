@@ -81,3 +81,67 @@ jobs:
           with:
             name: windows-${{ matrix.config }}
             path: cdocx-*-windows-msvc-x64-*.zip
+
+  build-linux:
+    needs: extract-version
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: [Release, Debug]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build
+
+      - name: Build static library
+        run: |
+          cmake -B build_static \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.config }} \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DBUILD_TESTING=OFF \
+            -DBUILD_EXAMPLES=OFF
+          cmake --build build_static --parallel
+
+      - name: Build shared library
+        run: |
+          cmake -B build_shared \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.config }} \
+            -DBUILD_SHARED_LIBS=ON \
+            -DBUILD_TESTING=OFF \
+            -DBUILD_EXAMPLES=OFF
+          cmake --build build_shared --parallel
+
+      - name: Package artifacts
+        run: |
+          version="${{ needs.extract-version.outputs.version }}"
+          config=$(echo "${{ matrix.config }}" | tr '[:upper:]' '[:lower:]')
+          staging="cdocx-${version}-linux-gcc-x64-${config}"
+          mkdir -p "${staging}/include/cdocx"
+          mkdir -p "${staging}/lib"
+
+          # Copy headers from source
+          cp include/cdocx.h "${staging}/include/"
+          cp include/cdocx/*.h "${staging}/include/cdocx/"
+
+          # Copy static library
+          cp build_static/libcdocx.a "${staging}/lib/"
+
+          # Copy shared library
+          cp build_shared/libcdocx.so "${staging}/lib/"
+
+          # Create tar.gz
+          tar czf "${staging}.tar.gz" "${staging}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-${{ matrix.config }}
+          path: cdocx-*-linux-gcc-x64-*.tar.gz
