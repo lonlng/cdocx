@@ -42,6 +42,7 @@ jobs:
             -DBUILD_TESTING=OFF `
             -DBUILD_EXAMPLES=OFF
           cmake --build build_static --config ${{ matrix.config }} --parallel
+          Get-ChildItem -Reurse -Path build_static -Include *.lib,*.dll
 
       - name: Build shared library
         run: |
@@ -52,6 +53,7 @@ jobs:
             -DBUILD_TESTING=OFF `
             -DBUILD_EXAMPLES=OFF
           cmake --build build_shared --config ${{ matrix.config }} --parallel
+          Get-ChildItem -Reurse -Path build_shared -Include *.lib,*.dll
 
       - name: Package artifacts
         shell: pwsh
@@ -66,12 +68,27 @@ jobs:
           Copy-Item -Path "include/cdocx.h" -Destination "$staging/include/"
           Copy-Item -Path "include/cdocx/*.h" -Destination "$staging/include/cdocx/"
 
-          # Copy static library (rename to avoid conflict with import lib)
-          Copy-Item -Path "build_static/${{ matrix.config }}/cdocx.lib" -Destination "$staging/lib/cdocx_static.lib"
+          # Find static library
+          $staticLib = Get-ChildItem -Reurse -Path build_static -Filter "cdocx.lib" | Select-Object -First 1
+          if (-not $staticLib) {
+            Write-Error "Static library cdocx.lib not found in build_static"
+            exit 1
+          }
+          Copy-Item -Path $staticLib.FullName -Destination "$staging/lib/cdocx_static.lib"
 
-          # Copy shared library (import lib + DLL)
-          Copy-Item -Path "build_shared/${{ matrix.config }}/cdocx.lib" -Destination "$staging/lib/cdocx.lib"
-          Copy-Item -Path "build_shared/${{ matrix.config }}/cdocx.dll" -Destination "$staging/lib/cdocx.dll"
+          # Find shared library files
+          $sharedLib = Get-ChildItem -Reurse -Path build_shared -Filter "cdocx.lib" | Select-Object -First 1
+          $sharedDll = Get-ChildItem -Reurse -Path build_shared -Filter "cdocx.dll" | Select-Object -First 1
+          if (-not $sharedLib) {
+            Write-Error "Shared import library cdocx.lib not found in build_shared"
+            exit 1
+          }
+          if (-not $sharedDll) {
+            Write-Error "Shared DLL cdocx.dll not found in build_shared"
+            exit 1
+          }
+          Copy-Item -Path $sharedLib.FullName -Destination "$staging/lib/cdocx.lib"
+          Copy-Item -Path $sharedDll.FullName -Destination "$staging/lib/cdocx.dll"
 
           # Create zip
           Compress-Archive -Path "$staging/*" -DestinationPath "$staging.zip"
