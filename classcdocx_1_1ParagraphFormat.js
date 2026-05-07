@@ -1,0 +1,27 @@
+var classcdocx_1_1ParagraphFormat =
+[
+    [ "has_borders", "classcdocx_1_1ParagraphFormat.html#a9ece02db2bea73c53fb025ccc18e9f38", null ],
+    [ "has_shading", "classcdocx_1_1ParagraphFormat.html#ad579c116127387e33ad9a00d88c4456b", null ],
+    [ "set_first_line_indent_chars", "classcdocx_1_1ParagraphFormat.html#ab51b7c5601f34fb2d78f0c443e726afb", null ],
+    [ "set_indent", "classcdocx_1_1ParagraphFormat.html#a1fa3c08651b3f4b6b9b0840c9eb6d79c", null ],
+    [ "set_line_spacing", "classcdocx_1_1ParagraphFormat.html#a98f5b13be9aebb11e53c3c912312096a", null ],
+    [ "set_spacing", "classcdocx_1_1ParagraphFormat.html#a9c7c09143b0a6a9fbe363c3a7d22570a", null ],
+    [ "alignment", "classcdocx_1_1ParagraphFormat.html#a6079affd32176c64e1801b0881042231", null ],
+    [ "borders", "classcdocx_1_1ParagraphFormat.html#aeca77605052fd16931ddd116cf59bbcf", null ],
+    [ "drop_cap_position", "classcdocx_1_1ParagraphFormat.html#ab0166dd6c13f66d1e82933dcab81a7b8", null ],
+    [ "first_line_indent", "classcdocx_1_1ParagraphFormat.html#a097cfcc21a6fe823d80ac9995dcac641", null ],
+    [ "keep_together", "classcdocx_1_1ParagraphFormat.html#a8201da6e3f02764569318d76a7f79e1d", null ],
+    [ "keep_with_next", "classcdocx_1_1ParagraphFormat.html#a73b3f0ed914c40355151f482d3df3582", null ],
+    [ "left_indent", "classcdocx_1_1ParagraphFormat.html#a70a05910c21e1e765bb14f93d60f28b4", null ],
+    [ "line_spacing", "classcdocx_1_1ParagraphFormat.html#a79a37dee8b8662557adf3d5a4719722f", null ],
+    [ "line_spacing_rule", "classcdocx_1_1ParagraphFormat.html#ab440650373f0d53017ed556c3d014a76", null ],
+    [ "lines_to_drop", "classcdocx_1_1ParagraphFormat.html#a2d8b682f72c48cb7f4afd0413a4e1c6d", null ],
+    [ "outline_level", "classcdocx_1_1ParagraphFormat.html#afbd2b1535a0c91121d0e1efe6f01f989", null ],
+    [ "page_break_before", "classcdocx_1_1ParagraphFormat.html#af52f0ed10849233244ff3b40c21cd823", null ],
+    [ "right_indent", "classcdocx_1_1ParagraphFormat.html#a491053da8979d95e726f853f5bc8b556", null ],
+    [ "shading", "classcdocx_1_1ParagraphFormat.html#a90904a7723ee3efcf6019789cb05c67e", null ],
+    [ "space_after", "classcdocx_1_1ParagraphFormat.html#a02ac35504641c93e25941fad93f6e151", null ],
+    [ "space_before", "classcdocx_1_1ParagraphFormat.html#a0d79a53ff6266bca6b573252adc2005d", null ],
+    [ "style_name", "classcdocx_1_1ParagraphFormat.html#ac0d6a3ed5eb25172b0d07da3d54aeebc", null ],
+    [ "widow_control", "classcdocx_1_1ParagraphFormat.html#a392b81e2292065c335c71156c3ed2dc7", null ]
+];

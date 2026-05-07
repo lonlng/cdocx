@@ -1,0 +1,494 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: body.cpp 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('body_8cpp_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">body.cpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="body_8cpp.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;<a class="code" href="body_8h.html">cdocx/body.h</a>&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;<a class="code" href="document_8h.html">cdocx/document.h</a>&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="paragraph_8h.html">cdocx/paragraph.h</a>&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="section_8h.html">cdocx/section.h</a>&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="table_8h.html">cdocx/table.h</a>&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// Body Implementation</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><a class="code hl_function" href="classcdocx_1_1Body.html#a5ee30d6ff56c88e5ec6241f4112a6517">Body::Body</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="foldopen" id="foldopen00020" data-start="{" data-end="}">
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#add004cb0e0d024b9cf2ce5f2eb44ab5d">   20</a></span><a class="code hl_function" href="classcdocx_1_1Body.html#a5ee30d6ff56c88e5ec6241f4112a6517">Body::Body</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc) {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <a class="code hl_function" href="classcdocx_1_1Node.html#af15ae8f02dd2c4712dc49571225ab2b0">set_document</a>(doc);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>}</div>
+</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="}">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#a56be4c42f284b011f621f801faa90c73">   24</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Body.html#a56be4c42f284b011f621f801faa90c73">Body::accept</a>(<a class="code hl_class" href="classcdocx_1_1DocumentVisitor.html">DocumentVisitor</a>* visitor) {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keywordflow">if</span> (!visitor) {</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    }</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordflow">if</span> (visitor-&gt;<a class="code hl_function" href="classcdocx_1_1DocumentVisitor.html#a98828027ad540c05e3e6bfc786421206">visit_body_start</a>(*<span class="keyword">this</span>) == <a class="code hl_enumvalue" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">VisitorAction::Continue</a>) {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; child : <a class="code hl_variable" href="classcdocx_1_1CompositeNode.html#a2edf97d7ffce18ecc63284f416af795d">children_</a>) {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            child-&gt;accept(visitor);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        }</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        visitor-&gt;<a class="code hl_function" href="classcdocx_1_1DocumentVisitor.html#ac88a45b18d47b7985fd0acf75d929e88">visit_body_end</a>(*<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    }</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>}</div>
+</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="foldopen" id="foldopen00037" data-start="{" data-end="}">
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#ad1fd46ad39bd83674e3c5b537626cfa5">   37</a></span>std::shared_ptr&lt;Node&gt; <a class="code hl_function" href="classcdocx_1_1Body.html#ad1fd46ad39bd83674e3c5b537626cfa5">Body::clone</a>(<span class="keywordtype">bool</span> deep)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">auto</span> cloned = std::make_shared&lt;Body&gt;(<a class="code hl_function" href="classcdocx_1_1Node.html#a9802b2c5bade591efeec109c478a0456">get_document</a>());</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordflow">if</span> (deep) {</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; child : <a class="code hl_variable" href="classcdocx_1_1CompositeNode.html#a2edf97d7ffce18ecc63284f416af795d">children_</a>) {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            cloned-&gt;append_child(child-&gt;clone(<span class="keyword">true</span>));</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        }</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    }</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordflow">return</span> cloned;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
+</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="foldopen" id="foldopen00049" data-start="{" data-end="}">
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#a1bcf628cc5047a713e03ac7dc17990f9">   49</a></span>std::shared_ptr&lt;Section&gt; <a class="code hl_function" href="classcdocx_1_1Body.html#a1bcf628cc5047a713e03ac7dc17990f9">Body::get_parent_section</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">auto</span>* sect = get_ancestor&lt;Section&gt;();</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">if</span> (sect) {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keywordflow">return</span> std::static_pointer_cast&lt;Section&gt;(sect-&gt;shared_from_this());</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>}</div>
+</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="foldopen" id="foldopen00057" data-start="{" data-end="}">
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#a1b4f59d312b56d611cc85171b304fe62">   57</a></span>std::shared_ptr&lt;Paragraph&gt; <a class="code hl_function" href="classcdocx_1_1Body.html#a1b4f59d312b56d611cc85171b304fe62">Body::append_paragraph</a>(<span class="keyword">const</span> std::string&amp; text) {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">// Remove the placeholder empty paragraph created by create_empty()</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="comment">// when the body contains only that single unmodified placeholder.</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keyword">auto</span> children = <a class="code hl_function" href="classcdocx_1_1CompositeNode.html#a671a37d428e92ab0ed068a16e67fe1f2">get_children</a>();</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordflow">if</span> (children.size() == 1 &amp;&amp; children[0]-&gt;node_type() == <a class="code hl_enumvalue" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4afeaf0a320c3d678ad30dd179b7d21584">NodeType::Paragraph</a>) {</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keyword">auto</span> placeholder = std::static_pointer_cast&lt;Paragraph&gt;(children[0]);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keyword">auto</span> para_children = placeholder-&gt;get_children();</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordflow">if</span> (para_children.size() == 1 &amp;&amp; para_children[0]-&gt;node_type() == <a class="code hl_enumvalue" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4ac5301693c4e792bcd5a479ef38fb8f8d">NodeType::Run</a> &amp;&amp;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            placeholder-&gt;get_text().empty()) {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            <a class="code hl_function" href="classcdocx_1_1CompositeNode.html#af22a112982b8aa6715ad2a7e910b8b5f">remove_child</a>(placeholder);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        }</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    }</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keyword">auto</span> para = std::make_shared&lt;Paragraph&gt;(<a class="code hl_function" href="classcdocx_1_1Node.html#a9802b2c5bade591efeec109c478a0456">get_document</a>());</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordflow">if</span> (!text.empty()) {</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        para-&gt;append_run(text);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    }</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <a class="code hl_function" href="classcdocx_1_1CompositeNode.html#ae9fe57b7ffbcfe94aad46e944da29f89">append_child</a>(para);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">return</span> para;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>}</div>
+</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="foldopen" id="foldopen00078" data-start="{" data-end="}">
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#a1bc0cb49a953fab67e72cdddd72974e7">   78</a></span>std::shared_ptr&lt;Paragraph&gt; <a class="code hl_function" href="classcdocx_1_1Body.html#a1bc0cb49a953fab67e72cdddd72974e7">Body::insert_paragraph</a>(<span class="keywordtype">int</span> index, <span class="keyword">const</span> std::string&amp; text) {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keyword">auto</span> para = std::make_shared&lt;Paragraph&gt;(<a class="code hl_function" href="classcdocx_1_1Node.html#a9802b2c5bade591efeec109c478a0456">get_document</a>());</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">if</span> (!text.empty()) {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        para-&gt;append_run(text);</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    }</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <a class="code hl_function" href="classcdocx_1_1CompositeNode.html#a8a511c84cde10d17e6a0e535bb80e7e3">insert_child</a>(index, para);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordflow">return</span> para;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>}</div>
+</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="foldopen" id="foldopen00087" data-start="{" data-end="}">
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#a1fff9e12987fbcb29a239d9bf2f1321e">   87</a></span>std::shared_ptr&lt;Paragraph&gt; <a class="code hl_function" href="classcdocx_1_1Body.html#a1fff9e12987fbcb29a239d9bf2f1321e">Body::get_first_paragraph</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">return</span> get_first_child&lt;Paragraph&gt;();</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>}</div>
+</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="foldopen" id="foldopen00091" data-start="{" data-end="}">
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#a733fdaee160b0569113b87f677f1775d">   91</a></span>std::shared_ptr&lt;Paragraph&gt; <a class="code hl_function" href="classcdocx_1_1Body.html#a733fdaee160b0569113b87f677f1775d">Body::get_last_paragraph</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordflow">return</span> get_last_child&lt;Paragraph&gt;();</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>}</div>
+</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="foldopen" id="foldopen00095" data-start="{" data-end="}">
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#ac83af768a338a3cf6d998ab4dc1b52e3">   95</a></span>std::vector&lt;std::shared_ptr&lt;Paragraph&gt;&gt; <a class="code hl_function" href="classcdocx_1_1Body.html#ac83af768a338a3cf6d998ab4dc1b52e3">Body::get_paragraphs</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordflow">return</span> get_children_of_type&lt;Paragraph&gt;();</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>}</div>
+</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="foldopen" id="foldopen00099" data-start="{" data-end="}">
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#adc875d95b9273f24309241d0367647d0">   99</a></span>std::shared_ptr&lt;Table&gt; <a class="code hl_function" href="classcdocx_1_1Body.html#adc875d95b9273f24309241d0367647d0">Body::append_table</a>(<span class="keywordtype">int</span> rows, <span class="keywordtype">int</span> cols) {</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keyword">auto</span> table = std::make_shared&lt;Table&gt;(<a class="code hl_function" href="classcdocx_1_1Node.html#a9802b2c5bade591efeec109c478a0456">get_document</a>(), rows, cols);</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <a class="code hl_function" href="classcdocx_1_1CompositeNode.html#ae9fe57b7ffbcfe94aad46e944da29f89">append_child</a>(table);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keywordflow">return</span> table;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>}</div>
+</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="foldopen" id="foldopen00105" data-start="{" data-end="}">
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#ae3a1a8ca0578b1f87e2a9fb88967e125">  105</a></span>std::shared_ptr&lt;Table&gt; <a class="code hl_function" href="classcdocx_1_1Body.html#ae3a1a8ca0578b1f87e2a9fb88967e125">Body::insert_table</a>(<span class="keywordtype">int</span> index, <span class="keywordtype">int</span> rows, <span class="keywordtype">int</span> cols) {</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keyword">auto</span> table = std::make_shared&lt;Table&gt;(<a class="code hl_function" href="classcdocx_1_1Node.html#a9802b2c5bade591efeec109c478a0456">get_document</a>(), rows, cols);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <a class="code hl_function" href="classcdocx_1_1CompositeNode.html#a8a511c84cde10d17e6a0e535bb80e7e3">insert_child</a>(index, table);</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="keywordflow">return</span> table;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>}</div>
+</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="foldopen" id="foldopen00111" data-start="{" data-end="}">
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#a06158580599f731028e615cb3179f460">  111</a></span>std::shared_ptr&lt;Table&gt; <a class="code hl_function" href="classcdocx_1_1Body.html#a06158580599f731028e615cb3179f460">Body::get_first_table</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordflow">return</span> get_first_child&lt;Table&gt;();</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>}</div>
+</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
+<div class="foldopen" id="foldopen00115" data-start="{" data-end="}">
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#abe6dc04248089219dda36a06a7fb65dd">  115</a></span>std::shared_ptr&lt;Table&gt; <a class="code hl_function" href="classcdocx_1_1Body.html#abe6dc04248089219dda36a06a7fb65dd">Body::get_last_table</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordflow">return</span> get_last_child&lt;Table&gt;();</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>}</div>
+</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="foldopen" id="foldopen00119" data-start="{" data-end="}">
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#a5f380dbf30641b6fcc769a80e52658da">  119</a></span>std::vector&lt;std::shared_ptr&lt;Table&gt;&gt; <a class="code hl_function" href="classcdocx_1_1Body.html#a5f380dbf30641b6fcc769a80e52658da">Body::get_tables</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordflow">return</span> get_children_of_type&lt;Table&gt;();</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>}</div>
+</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="foldopen" id="foldopen00123" data-start="{" data-end="}">
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#a939506376fcc79ae0625055f0188397a">  123</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Body.html#a939506376fcc79ae0625055f0188397a">Body::ensure_minimum</a>() {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="comment">// Ensure at least one paragraph</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordtype">bool</span> has_content = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; child : <a class="code hl_variable" href="classcdocx_1_1CompositeNode.html#a2edf97d7ffce18ecc63284f416af795d">children_</a>) {</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="keywordflow">if</span> (child-&gt;node_type() == <a class="code hl_enumvalue" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4afeaf0a320c3d678ad30dd179b7d21584">NodeType::Paragraph</a> || child-&gt;node_type() == <a class="code hl_enumvalue" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4a51c45b795d5d18a3e4e0c37e8b20a141">NodeType::Table</a>) {</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            has_content = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        }</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    }</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordflow">if</span> (!has_content) {</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        <a class="code hl_function" href="classcdocx_1_1Body.html#a1b4f59d312b56d611cc85171b304fe62">append_paragraph</a>();</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    }</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>}</div>
+</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="foldopen" id="foldopen00138" data-start="{" data-end="}">
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno"><a class="line" href="classcdocx_1_1Body.html#a48b576d39433c9e49cd4fd18f7610fa7">  138</a></span>std::string <a class="code hl_function" href="classcdocx_1_1Body.html#a48b576d39433c9e49cd4fd18f7610fa7">Body::get_text</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    std::string <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a>;</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; child : <a class="code hl_variable" href="classcdocx_1_1CompositeNode.html#a2edf97d7ffce18ecc63284f416af795d">children_</a>) {</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a> += child-&gt;get_text();</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    }</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a>;</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>}</div>
+</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="comment">// Inline Implementation</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span><a class="code hl_function" href="classcdocx_1_1Inline.html#ae797b2d9846808272dfa1b80f3f44da7">Inline::Inline</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
+<div class="foldopen" id="foldopen00152" data-start="{" data-end="}">
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#ad12ae62285dc2ddad7e005d869e06429">  152</a></span><a class="code hl_function" href="classcdocx_1_1Inline.html#ae797b2d9846808272dfa1b80f3f44da7">Inline::Inline</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc) {</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <a class="code hl_function" href="classcdocx_1_1Node.html#af15ae8f02dd2c4712dc49571225ab2b0">set_document</a>(doc);</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>}</div>
+</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
+<div class="foldopen" id="foldopen00156" data-start="{" data-end="}">
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#a68c023f4198cb28cd1febda0806393fa">  156</a></span><a class="code hl_function" href="classcdocx_1_1Inline.html#ae797b2d9846808272dfa1b80f3f44da7">Inline::Inline</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1Inline.html">Inline</a>&amp; other) : <a class="code hl_class" href="classcdocx_1_1Node.html">Node</a>(other), font_(other.font_) {</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="keywordflow">if</span> (other.<a class="code hl_variable" href="classcdocx_1_1Inline.html#a4414a5b63a704d16b266fa81786f57a7">preserved_r_pr_</a>.first_child()) {</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        <a class="code hl_variable" href="classcdocx_1_1Inline.html#a4414a5b63a704d16b266fa81786f57a7">preserved_r_pr_</a>.append_copy(other.<a class="code hl_variable" href="classcdocx_1_1Inline.html#a4414a5b63a704d16b266fa81786f57a7">preserved_r_pr_</a>.first_child());</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    }</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>}</div>
+</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
+<div class="foldopen" id="foldopen00162" data-start="{" data-end="}">
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#adc985a5563cd1ad9692f2b82b0fae207">  162</a></span><a class="code hl_class" href="classcdocx_1_1Inline.html">Inline</a>&amp; <a class="code hl_function" href="classcdocx_1_1Inline.html#adc985a5563cd1ad9692f2b82b0fae207">Inline::operator=</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1Inline.html">Inline</a>&amp; other) {</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;other) {</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        Node::operator=(other);</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        <a class="code hl_variable" href="classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759">font_</a> = other.<a class="code hl_variable" href="classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759">font_</a>;</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        <a class="code hl_variable" href="classcdocx_1_1Inline.html#a4414a5b63a704d16b266fa81786f57a7">preserved_r_pr_</a>.reset();</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        <span class="keywordflow">if</span> (other.<a class="code hl_variable" href="classcdocx_1_1Inline.html#a4414a5b63a704d16b266fa81786f57a7">preserved_r_pr_</a>.first_child()) {</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            <a class="code hl_variable" href="classcdocx_1_1Inline.html#a4414a5b63a704d16b266fa81786f57a7">preserved_r_pr_</a>.append_copy(other.<a class="code hl_variable" href="classcdocx_1_1Inline.html#a4414a5b63a704d16b266fa81786f57a7">preserved_r_pr_</a>.first_child());</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        }</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    }</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>}</div>
+</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
+<div class="foldopen" id="foldopen00174" data-start="{" data-end="}">
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#ab66cfe6af567585fe98b193d3f344f12">  174</a></span>std::shared_ptr&lt;Paragraph&gt; <a class="code hl_function" href="classcdocx_1_1Inline.html#ab66cfe6af567585fe98b193d3f344f12">Inline::get_parent_paragraph</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="keyword">auto</span>* para = get_ancestor&lt;Paragraph&gt;();</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="keywordflow">if</span> (para) {</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        <span class="keywordflow">return</span> std::static_pointer_cast&lt;Paragraph&gt;(para-&gt;shared_from_this());</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    }</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>}</div>
+</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
+<div class="foldopen" id="foldopen00182" data-start="{" data-end="}">
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#ac57372a2aa2a53d6277fe19a21041f6c">  182</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Inline.html#ac57372a2aa2a53d6277fe19a21041f6c">Inline::preserve_r_pr</a>(pugi::xml_node r_pr) {</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keywordflow">if</span> (!r_pr) {</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    }</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <a class="code hl_variable" href="classcdocx_1_1Inline.html#a4414a5b63a704d16b266fa81786f57a7">preserved_r_pr_</a>.reset();</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <a class="code hl_variable" href="classcdocx_1_1Inline.html#a4414a5b63a704d16b266fa81786f57a7">preserved_r_pr_</a>.append_copy(r_pr);</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>}</div>
+</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span> </div>
+<div class="foldopen" id="foldopen00190" data-start="{" data-end="}">
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#abd5721cef83f461e46abf2d5b0bc4728">  190</a></span>pugi::xml_node <a class="code hl_function" href="classcdocx_1_1Inline.html#abd5721cef83f461e46abf2d5b0bc4728">Inline::get_preserved_r_pr</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classcdocx_1_1Inline.html#a4414a5b63a704d16b266fa81786f57a7">preserved_r_pr_</a>.first_child();</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>}</div>
+</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
+<div class="foldopen" id="foldopen00194" data-start="{" data-end="}">
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#ac116cea42894ad32c9d17f084a7d8cdf">  194</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1Inline.html#ac116cea42894ad32c9d17f084a7d8cdf">Inline::has_preserved_r_pr</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classcdocx_1_1Inline.html#a4414a5b63a704d16b266fa81786f57a7">preserved_r_pr_</a>.first_child() != <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>}</div>
+</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+<div class="foldopen" id="foldopen00198" data-start="{" data-end="}">
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#a44a26dea8e62297aa7dfc7af4fea6fc1">  198</a></span><a class="code hl_class" href="classcdocx_1_1Inline.html">Inline</a>&amp; <a class="code hl_function" href="classcdocx_1_1Inline.html#a44a26dea8e62297aa7dfc7af4fea6fc1">Inline::set_bold</a>(<span class="keywordtype">bool</span> value) {</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <a class="code hl_variable" href="classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759">font_</a>.<a class="code hl_variable" href="classcdocx_1_1Font.html#a7d4c67c29e668e20791be0231f67c372">bold</a> = value;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>}</div>
+</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
+<div class="foldopen" id="foldopen00203" data-start="{" data-end="}">
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#a5d80ebc150d1429d6d89a3559fb8b173">  203</a></span><a class="code hl_class" href="classcdocx_1_1Inline.html">Inline</a>&amp; <a class="code hl_function" href="classcdocx_1_1Inline.html#a5d80ebc150d1429d6d89a3559fb8b173">Inline::set_italic</a>(<span class="keywordtype">bool</span> value) {</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <a class="code hl_variable" href="classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759">font_</a>.<a class="code hl_variable" href="classcdocx_1_1Font.html#a6755978ce8709e831424f1a9d41541f1">italic</a> = value;</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>}</div>
+</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
+<div class="foldopen" id="foldopen00208" data-start="{" data-end="}">
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#ae26b649ab555c8a13e2310c3b69ec023">  208</a></span><a class="code hl_class" href="classcdocx_1_1Inline.html">Inline</a>&amp; <a class="code hl_function" href="classcdocx_1_1Inline.html#ae26b649ab555c8a13e2310c3b69ec023">Inline::set_underline</a>(<a class="code hl_enumeration" href="namespacecdocx.html#a9e3609cbb0fcf4485a2b7b0e806e11ed">UnderlineType</a> value) {</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <a class="code hl_variable" href="classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759">font_</a>.<a class="code hl_variable" href="classcdocx_1_1Font.html#a4a1e85f185f4c0447263209b089a4eb0">underline</a> = value;</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>}</div>
+</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
+<div class="foldopen" id="foldopen00213" data-start="{" data-end="}">
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#ac579a115a24f982b5855427dbee995bf">  213</a></span><a class="code hl_class" href="classcdocx_1_1Inline.html">Inline</a>&amp; <a class="code hl_function" href="classcdocx_1_1Inline.html#ac579a115a24f982b5855427dbee995bf">Inline::set_strikethrough</a>(<span class="keywordtype">bool</span> value) {</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    <a class="code hl_variable" href="classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759">font_</a>.<a class="code hl_variable" href="classcdocx_1_1Font.html#a7705fdd902675f1437093ac9fb264d58">strikethrough</a> = value;</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>}</div>
+</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
+<div class="foldopen" id="foldopen00218" data-start="{" data-end="}">
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#af9184e2280b6c51d6998466e1fa98e1c">  218</a></span><a class="code hl_class" href="classcdocx_1_1Inline.html">Inline</a>&amp; <a class="code hl_function" href="classcdocx_1_1Inline.html#af9184e2280b6c51d6998466e1fa98e1c">Inline::set_font_size</a>(<span class="keywordtype">double</span> size) {</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <a class="code hl_variable" href="classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759">font_</a>.<a class="code hl_variable" href="classcdocx_1_1Font.html#a44d62b9a7a9ce14e966681bb11ca7151">size</a> = size;</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>}</div>
+</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
+<div class="foldopen" id="foldopen00223" data-start="{" data-end="}">
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#a2a3a9b5c09cfac3d335f2029837c1758">  223</a></span><a class="code hl_class" href="classcdocx_1_1Inline.html">Inline</a>&amp; <a class="code hl_function" href="classcdocx_1_1Inline.html#a2a3a9b5c09cfac3d335f2029837c1758">Inline::set_font_name</a>(<span class="keyword">const</span> std::string&amp; name) {</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <a class="code hl_variable" href="classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759">font_</a>.<a class="code hl_variable" href="classcdocx_1_1Font.html#a5ad81263f372afda45e7ffc0e8efdb9c">name</a> = name;</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>}</div>
+</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
+<div class="foldopen" id="foldopen00228" data-start="{" data-end="}">
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#a11923b332a925fe80cfd8e5acaf3b4c9">  228</a></span><a class="code hl_class" href="classcdocx_1_1Inline.html">Inline</a>&amp; <a class="code hl_function" href="classcdocx_1_1Inline.html#a11923b332a925fe80cfd8e5acaf3b4c9">Inline::set_color</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1Color.html">Color</a>&amp; <a class="code hl_variable" href="base__content_8cpp.html#ac0248eee8c0373866ea133cac9e2d4c5">color</a>) {</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <a class="code hl_variable" href="classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759">font_</a>.<a class="code hl_variable" href="classcdocx_1_1Font.html#acf3b4adc31faacf2259a2b05aaf3459f">color</a> = <a class="code hl_variable" href="base__content_8cpp.html#ac0248eee8c0373866ea133cac9e2d4c5">color</a>;</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>}</div>
+</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
+<div class="foldopen" id="foldopen00233" data-start="{" data-end="}">
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#a31ffe0dd479009a7e298531cb8c48e5b">  233</a></span><a class="code hl_class" href="classcdocx_1_1Inline.html">Inline</a>&amp; <a class="code hl_function" href="classcdocx_1_1Inline.html#a31ffe0dd479009a7e298531cb8c48e5b">Inline::set_highlight</a>(<a class="code hl_enumeration" href="namespacecdocx.html#ab4d1b34f04daa2d5ec34afac1073d4f8">HighlightColor</a> <a class="code hl_variable" href="base__content_8cpp.html#ac0248eee8c0373866ea133cac9e2d4c5">color</a>) {</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    <a class="code hl_variable" href="classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759">font_</a>.<a class="code hl_variable" href="classcdocx_1_1Font.html#a7d15bb60421ceb7dd6d9dcfceb9b2e88">highlight</a> = <a class="code hl_variable" href="base__content_8cpp.html#ac0248eee8c0373866ea133cac9e2d4c5">color</a>;</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>}</div>
+</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="foldopen" id="foldopen00238" data-start="{" data-end="}">
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#a2f91da924f3ef9d3910fbb5af484debc">  238</a></span><a class="code hl_class" href="classcdocx_1_1Inline.html">Inline</a>&amp; <a class="code hl_function" href="classcdocx_1_1Inline.html#a2f91da924f3ef9d3910fbb5af484debc">Inline::set_superscript</a>() {</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    <a class="code hl_variable" href="classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759">font_</a>.<a class="code hl_variable" href="classcdocx_1_1Font.html#af7c9903f70f21676845d83f8fa58af44">script_type</a> = <a class="code hl_enumvalue" href="namespacecdocx.html#a1fb699a31e5a1c2ceed57b56b71f9bdda6316f99acec341fbdd5cc006dc5a7ba7">ScriptType::Superscript</a>;</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>}</div>
+</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
+<div class="foldopen" id="foldopen00243" data-start="{" data-end="}">
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno"><a class="line" href="classcdocx_1_1Inline.html#a08c307d130773707a54dc9ce43e53bf5">  243</a></span><a class="code hl_class" href="classcdocx_1_1Inline.html">Inline</a>&amp; <a class="code hl_function" href="classcdocx_1_1Inline.html#a08c307d130773707a54dc9ce43e53bf5">Inline::set_subscript</a>() {</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <a class="code hl_variable" href="classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759">font_</a>.<a class="code hl_variable" href="classcdocx_1_1Font.html#af7c9903f70f21676845d83f8fa58af44">script_type</a> = <a class="code hl_enumvalue" href="namespacecdocx.html#a1fb699a31e5a1c2ceed57b56b71f9bdda928558e2f9712e38d447d674f2672200">ScriptType::Subscript</a>;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>}</div>
+</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="abase__content_8cpp_html_ac0248eee8c0373866ea133cac9e2d4c5"><div class="ttname"><a href="base__content_8cpp.html#ac0248eee8c0373866ea133cac9e2d4c5">color</a></div><div class="ttdeci">HighlightColor color</div><div class="ttdef"><b>Definition</b> <a href="base__content_8cpp_source.html#l00023">base_content.cpp:23</a></div></div>
+<div class="ttc" id="abody_8h_html"><div class="ttname"><a href="body_8h.html">body.h</a></div><div class="ttdoc">Body class for CDocx</div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_a06158580599f731028e615cb3179f460"><div class="ttname"><a href="classcdocx_1_1Body.html#a06158580599f731028e615cb3179f460">cdocx::Body::get_first_table</a></div><div class="ttdeci">std::shared_ptr&lt; Table &gt; get_first_table() const</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00111">body.cpp:111</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_a1b4f59d312b56d611cc85171b304fe62"><div class="ttname"><a href="classcdocx_1_1Body.html#a1b4f59d312b56d611cc85171b304fe62">cdocx::Body::append_paragraph</a></div><div class="ttdeci">std::shared_ptr&lt; Paragraph &gt; append_paragraph(const std::string &amp;text=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00057">body.cpp:57</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_a1bc0cb49a953fab67e72cdddd72974e7"><div class="ttname"><a href="classcdocx_1_1Body.html#a1bc0cb49a953fab67e72cdddd72974e7">cdocx::Body::insert_paragraph</a></div><div class="ttdeci">std::shared_ptr&lt; Paragraph &gt; insert_paragraph(int index, const std::string &amp;text=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00078">body.cpp:78</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_a1bcf628cc5047a713e03ac7dc17990f9"><div class="ttname"><a href="classcdocx_1_1Body.html#a1bcf628cc5047a713e03ac7dc17990f9">cdocx::Body::get_parent_section</a></div><div class="ttdeci">std::shared_ptr&lt; Section &gt; get_parent_section() const</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00049">body.cpp:49</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_a1fff9e12987fbcb29a239d9bf2f1321e"><div class="ttname"><a href="classcdocx_1_1Body.html#a1fff9e12987fbcb29a239d9bf2f1321e">cdocx::Body::get_first_paragraph</a></div><div class="ttdeci">std::shared_ptr&lt; Paragraph &gt; get_first_paragraph() const</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00087">body.cpp:87</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_a48b576d39433c9e49cd4fd18f7610fa7"><div class="ttname"><a href="classcdocx_1_1Body.html#a48b576d39433c9e49cd4fd18f7610fa7">cdocx::Body::get_text</a></div><div class="ttdeci">std::string get_text() const override</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00138">body.cpp:138</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_a56be4c42f284b011f621f801faa90c73"><div class="ttname"><a href="classcdocx_1_1Body.html#a56be4c42f284b011f621f801faa90c73">cdocx::Body::accept</a></div><div class="ttdeci">void accept(DocumentVisitor *visitor) override</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00024">body.cpp:24</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_a5ee30d6ff56c88e5ec6241f4112a6517"><div class="ttname"><a href="classcdocx_1_1Body.html#a5ee30d6ff56c88e5ec6241f4112a6517">cdocx::Body::Body</a></div><div class="ttdeci">Body()</div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_a5f380dbf30641b6fcc769a80e52658da"><div class="ttname"><a href="classcdocx_1_1Body.html#a5f380dbf30641b6fcc769a80e52658da">cdocx::Body::get_tables</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; Table &gt; &gt; get_tables() const</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00119">body.cpp:119</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_a733fdaee160b0569113b87f677f1775d"><div class="ttname"><a href="classcdocx_1_1Body.html#a733fdaee160b0569113b87f677f1775d">cdocx::Body::get_last_paragraph</a></div><div class="ttdeci">std::shared_ptr&lt; Paragraph &gt; get_last_paragraph() const</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00091">body.cpp:91</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_a939506376fcc79ae0625055f0188397a"><div class="ttname"><a href="classcdocx_1_1Body.html#a939506376fcc79ae0625055f0188397a">cdocx::Body::ensure_minimum</a></div><div class="ttdeci">void ensure_minimum()</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00123">body.cpp:123</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_abe6dc04248089219dda36a06a7fb65dd"><div class="ttname"><a href="classcdocx_1_1Body.html#abe6dc04248089219dda36a06a7fb65dd">cdocx::Body::get_last_table</a></div><div class="ttdeci">std::shared_ptr&lt; Table &gt; get_last_table() const</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00115">body.cpp:115</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_ac83af768a338a3cf6d998ab4dc1b52e3"><div class="ttname"><a href="classcdocx_1_1Body.html#ac83af768a338a3cf6d998ab4dc1b52e3">cdocx::Body::get_paragraphs</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; Paragraph &gt; &gt; get_paragraphs() const</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00095">body.cpp:95</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_ad1fd46ad39bd83674e3c5b537626cfa5"><div class="ttname"><a href="classcdocx_1_1Body.html#ad1fd46ad39bd83674e3c5b537626cfa5">cdocx::Body::clone</a></div><div class="ttdeci">std::shared_ptr&lt; Node &gt; clone(bool deep) const override</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00037">body.cpp:37</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_adc875d95b9273f24309241d0367647d0"><div class="ttname"><a href="classcdocx_1_1Body.html#adc875d95b9273f24309241d0367647d0">cdocx::Body::append_table</a></div><div class="ttdeci">std::shared_ptr&lt; Table &gt; append_table(int rows=1, int cols=1)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00099">body.cpp:99</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Body_html_ae3a1a8ca0578b1f87e2a9fb88967e125"><div class="ttname"><a href="classcdocx_1_1Body.html#ae3a1a8ca0578b1f87e2a9fb88967e125">cdocx::Body::insert_table</a></div><div class="ttdeci">std::shared_ptr&lt; Table &gt; insert_table(int index, int rows=1, int cols=1)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00105">body.cpp:105</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Color_html"><div class="ttname"><a href="classcdocx_1_1Color.html">cdocx::Color</a></div><div class="ttdef"><b>Definition</b> <a href="format_8h_source.html#l00019">format.h:19</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CompositeNode_html_a2edf97d7ffce18ecc63284f416af795d"><div class="ttname"><a href="classcdocx_1_1CompositeNode.html#a2edf97d7ffce18ecc63284f416af795d">cdocx::CompositeNode::children_</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; Node &gt; &gt; children_</div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00125">node.h:125</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CompositeNode_html_a671a37d428e92ab0ed068a16e67fe1f2"><div class="ttname"><a href="classcdocx_1_1CompositeNode.html#a671a37d428e92ab0ed068a16e67fe1f2">cdocx::CompositeNode::get_children</a></div><div class="ttdeci">const std::vector&lt; std::shared_ptr&lt; Node &gt; &gt; &amp; get_children() const</div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00129">node.h:129</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CompositeNode_html_a8a511c84cde10d17e6a0e535bb80e7e3"><div class="ttname"><a href="classcdocx_1_1CompositeNode.html#a8a511c84cde10d17e6a0e535bb80e7e3">cdocx::CompositeNode::insert_child</a></div><div class="ttdeci">std::shared_ptr&lt; Node &gt; insert_child(int index, std::shared_ptr&lt; Node &gt; child)</div><div class="ttdef"><b>Definition</b> <a href="node_8cpp_source.html#l00169">node.cpp:169</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CompositeNode_html_ae9fe57b7ffbcfe94aad46e944da29f89"><div class="ttname"><a href="classcdocx_1_1CompositeNode.html#ae9fe57b7ffbcfe94aad46e944da29f89">cdocx::CompositeNode::append_child</a></div><div class="ttdeci">std::shared_ptr&lt; Node &gt; append_child(std::shared_ptr&lt; Node &gt; child)</div><div class="ttdef"><b>Definition</b> <a href="node_8cpp_source.html#l00135">node.cpp:135</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CompositeNode_html_af22a112982b8aa6715ad2a7e910b8b5f"><div class="ttname"><a href="classcdocx_1_1CompositeNode.html#af22a112982b8aa6715ad2a7e910b8b5f">cdocx::CompositeNode::remove_child</a></div><div class="ttdeci">void remove_child(const std::shared_ptr&lt; Node &gt; &amp;child)</div><div class="ttdef"><b>Definition</b> <a href="node_8cpp_source.html#l00223">node.cpp:223</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1DocumentVisitor_html"><div class="ttname"><a href="classcdocx_1_1DocumentVisitor.html">cdocx::DocumentVisitor</a></div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00298">node.h:298</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1DocumentVisitor_html_a98828027ad540c05e3e6bfc786421206"><div class="ttname"><a href="classcdocx_1_1DocumentVisitor.html#a98828027ad540c05e3e6bfc786421206">cdocx::DocumentVisitor::visit_body_start</a></div><div class="ttdeci">virtual VisitorAction visit_body_start(Body &amp;)</div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00317">node.h:317</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1DocumentVisitor_html_ac88a45b18d47b7985fd0acf75d929e88"><div class="ttname"><a href="classcdocx_1_1DocumentVisitor.html#ac88a45b18d47b7985fd0acf75d929e88">cdocx::DocumentVisitor::visit_body_end</a></div><div class="ttdeci">virtual VisitorAction visit_body_end(Body &amp;)</div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00318">node.h:318</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html"><div class="ttname"><a href="classcdocx_1_1Document.html">cdocx::Document</a></div><div class="ttdef"><b>Definition</b> <a href="document_8h_source.html#l00285">document.h:285</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Font_html_a44d62b9a7a9ce14e966681bb11ca7151"><div class="ttname"><a href="classcdocx_1_1Font.html#a44d62b9a7a9ce14e966681bb11ca7151">cdocx::Font::size</a></div><div class="ttdeci">double size</div><div class="ttdef"><b>Definition</b> <a href="format_8h_source.html#l00278">format.h:278</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Font_html_a4a1e85f185f4c0447263209b089a4eb0"><div class="ttname"><a href="classcdocx_1_1Font.html#a4a1e85f185f4c0447263209b089a4eb0">cdocx::Font::underline</a></div><div class="ttdeci">UnderlineType underline</div><div class="ttdef"><b>Definition</b> <a href="format_8h_source.html#l00289">format.h:289</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Font_html_a5ad81263f372afda45e7ffc0e8efdb9c"><div class="ttname"><a href="classcdocx_1_1Font.html#a5ad81263f372afda45e7ffc0e8efdb9c">cdocx::Font::name</a></div><div class="ttdeci">std::string name</div><div class="ttdef"><b>Definition</b> <a href="format_8h_source.html#l00272">format.h:272</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Font_html_a6755978ce8709e831424f1a9d41541f1"><div class="ttname"><a href="classcdocx_1_1Font.html#a6755978ce8709e831424f1a9d41541f1">cdocx::Font::italic</a></div><div class="ttdeci">bool italic</div><div class="ttdef"><b>Definition</b> <a href="format_8h_source.html#l00285">format.h:285</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Font_html_a7705fdd902675f1437093ac9fb264d58"><div class="ttname"><a href="classcdocx_1_1Font.html#a7705fdd902675f1437093ac9fb264d58">cdocx::Font::strikethrough</a></div><div class="ttdeci">bool strikethrough</div><div class="ttdef"><b>Definition</b> <a href="format_8h_source.html#l00295">format.h:295</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Font_html_a7d15bb60421ceb7dd6d9dcfceb9b2e88"><div class="ttname"><a href="classcdocx_1_1Font.html#a7d15bb60421ceb7dd6d9dcfceb9b2e88">cdocx::Font::highlight</a></div><div class="ttdeci">HighlightColor highlight</div><div class="ttdef"><b>Definition</b> <a href="format_8h_source.html#l00301">format.h:301</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Font_html_a7d4c67c29e668e20791be0231f67c372"><div class="ttname"><a href="classcdocx_1_1Font.html#a7d4c67c29e668e20791be0231f67c372">cdocx::Font::bold</a></div><div class="ttdeci">bool bold</div><div class="ttdef"><b>Definition</b> <a href="format_8h_source.html#l00284">format.h:284</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Font_html_acf3b4adc31faacf2259a2b05aaf3459f"><div class="ttname"><a href="classcdocx_1_1Font.html#acf3b4adc31faacf2259a2b05aaf3459f">cdocx::Font::color</a></div><div class="ttdeci">Color color</div><div class="ttdef"><b>Definition</b> <a href="format_8h_source.html#l00281">format.h:281</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Font_html_af7c9903f70f21676845d83f8fa58af44"><div class="ttname"><a href="classcdocx_1_1Font.html#af7c9903f70f21676845d83f8fa58af44">cdocx::Font::script_type</a></div><div class="ttdeci">ScriptType script_type</div><div class="ttdef"><b>Definition</b> <a href="format_8h_source.html#l00298">format.h:298</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html"><div class="ttname"><a href="classcdocx_1_1Inline.html">cdocx::Inline</a></div><div class="ttdef"><b>Definition</b> <a href="base_8h_source.html#l00054">base.h:54</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_a08c307d130773707a54dc9ce43e53bf5"><div class="ttname"><a href="classcdocx_1_1Inline.html#a08c307d130773707a54dc9ce43e53bf5">cdocx::Inline::set_subscript</a></div><div class="ttdeci">Inline &amp; set_subscript()</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00243">body.cpp:243</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_a11923b332a925fe80cfd8e5acaf3b4c9"><div class="ttname"><a href="classcdocx_1_1Inline.html#a11923b332a925fe80cfd8e5acaf3b4c9">cdocx::Inline::set_color</a></div><div class="ttdeci">Inline &amp; set_color(const Color &amp;color)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00228">body.cpp:228</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_a2a3a9b5c09cfac3d335f2029837c1758"><div class="ttname"><a href="classcdocx_1_1Inline.html#a2a3a9b5c09cfac3d335f2029837c1758">cdocx::Inline::set_font_name</a></div><div class="ttdeci">Inline &amp; set_font_name(const std::string &amp;name)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00223">body.cpp:223</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_a2f91da924f3ef9d3910fbb5af484debc"><div class="ttname"><a href="classcdocx_1_1Inline.html#a2f91da924f3ef9d3910fbb5af484debc">cdocx::Inline::set_superscript</a></div><div class="ttdeci">Inline &amp; set_superscript()</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00238">body.cpp:238</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_a31ffe0dd479009a7e298531cb8c48e5b"><div class="ttname"><a href="classcdocx_1_1Inline.html#a31ffe0dd479009a7e298531cb8c48e5b">cdocx::Inline::set_highlight</a></div><div class="ttdeci">Inline &amp; set_highlight(HighlightColor color)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00233">body.cpp:233</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_a430e1c6f5806b173c6c123dd39cd2759"><div class="ttname"><a href="classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759">cdocx::Inline::font_</a></div><div class="ttdeci">Font font_</div><div class="ttdef"><b>Definition</b> <a href="base_8h_source.html#l00090">base.h:90</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_a4414a5b63a704d16b266fa81786f57a7"><div class="ttname"><a href="classcdocx_1_1Inline.html#a4414a5b63a704d16b266fa81786f57a7">cdocx::Inline::preserved_r_pr_</a></div><div class="ttdeci">pugi::xml_document preserved_r_pr_</div><div class="ttdef"><b>Definition</b> <a href="base_8h_source.html#l00091">base.h:91</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_a44a26dea8e62297aa7dfc7af4fea6fc1"><div class="ttname"><a href="classcdocx_1_1Inline.html#a44a26dea8e62297aa7dfc7af4fea6fc1">cdocx::Inline::set_bold</a></div><div class="ttdeci">Inline &amp; set_bold(bool value)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00198">body.cpp:198</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_a5d80ebc150d1429d6d89a3559fb8b173"><div class="ttname"><a href="classcdocx_1_1Inline.html#a5d80ebc150d1429d6d89a3559fb8b173">cdocx::Inline::set_italic</a></div><div class="ttdeci">Inline &amp; set_italic(bool value)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00203">body.cpp:203</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_ab66cfe6af567585fe98b193d3f344f12"><div class="ttname"><a href="classcdocx_1_1Inline.html#ab66cfe6af567585fe98b193d3f344f12">cdocx::Inline::get_parent_paragraph</a></div><div class="ttdeci">std::shared_ptr&lt; Paragraph &gt; get_parent_paragraph() const</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00174">body.cpp:174</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_abd5721cef83f461e46abf2d5b0bc4728"><div class="ttname"><a href="classcdocx_1_1Inline.html#abd5721cef83f461e46abf2d5b0bc4728">cdocx::Inline::get_preserved_r_pr</a></div><div class="ttdeci">pugi::xml_node get_preserved_r_pr() const</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00190">body.cpp:190</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_ac116cea42894ad32c9d17f084a7d8cdf"><div class="ttname"><a href="classcdocx_1_1Inline.html#ac116cea42894ad32c9d17f084a7d8cdf">cdocx::Inline::has_preserved_r_pr</a></div><div class="ttdeci">bool has_preserved_r_pr() const</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00194">body.cpp:194</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_ac57372a2aa2a53d6277fe19a21041f6c"><div class="ttname"><a href="classcdocx_1_1Inline.html#ac57372a2aa2a53d6277fe19a21041f6c">cdocx::Inline::preserve_r_pr</a></div><div class="ttdeci">void preserve_r_pr(pugi::xml_node r_pr)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00182">body.cpp:182</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_ac579a115a24f982b5855427dbee995bf"><div class="ttname"><a href="classcdocx_1_1Inline.html#ac579a115a24f982b5855427dbee995bf">cdocx::Inline::set_strikethrough</a></div><div class="ttdeci">Inline &amp; set_strikethrough(bool value)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00213">body.cpp:213</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_adc985a5563cd1ad9692f2b82b0fae207"><div class="ttname"><a href="classcdocx_1_1Inline.html#adc985a5563cd1ad9692f2b82b0fae207">cdocx::Inline::operator=</a></div><div class="ttdeci">Inline &amp; operator=(const Inline &amp;other)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00162">body.cpp:162</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_ae26b649ab555c8a13e2310c3b69ec023"><div class="ttname"><a href="classcdocx_1_1Inline.html#ae26b649ab555c8a13e2310c3b69ec023">cdocx::Inline::set_underline</a></div><div class="ttdeci">Inline &amp; set_underline(UnderlineType value)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00208">body.cpp:208</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_ae797b2d9846808272dfa1b80f3f44da7"><div class="ttname"><a href="classcdocx_1_1Inline.html#ae797b2d9846808272dfa1b80f3f44da7">cdocx::Inline::Inline</a></div><div class="ttdeci">Inline()</div></div>
+<div class="ttc" id="aclasscdocx_1_1Inline_html_af9184e2280b6c51d6998466e1fa98e1c"><div class="ttname"><a href="classcdocx_1_1Inline.html#af9184e2280b6c51d6998466e1fa98e1c">cdocx::Inline::set_font_size</a></div><div class="ttdeci">Inline &amp; set_font_size(double size)</div><div class="ttdef"><b>Definition</b> <a href="body_8cpp_source.html#l00218">body.cpp:218</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Node_html"><div class="ttname"><a href="classcdocx_1_1Node.html">cdocx::Node</a></div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00053">node.h:53</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Node_html_a9802b2c5bade591efeec109c478a0456"><div class="ttname"><a href="classcdocx_1_1Node.html#a9802b2c5bade591efeec109c478a0456">cdocx::Node::get_document</a></div><div class="ttdeci">Document * get_document() const</div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00073">node.h:73</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Node_html_af15ae8f02dd2c4712dc49571225ab2b0"><div class="ttname"><a href="classcdocx_1_1Node.html#af15ae8f02dd2c4712dc49571225ab2b0">cdocx::Node::set_document</a></div><div class="ttdeci">void set_document(Document *doc)</div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00074">node.h:74</a></div></div>
+<div class="ttc" id="adocument_8h_html"><div class="ttname"><a href="document_8h.html">document.h</a></div><div class="ttdoc">Document class for working with DOCX files - DOM Style</div></div>
+<div class="ttc" id="adocument__builder_8cpp_html_a5558580ea8d3854253a721ee58cff12d"><div class="ttname"><a href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a></div><div class="ttdeci">const char * result</div><div class="ttdef"><b>Definition</b> <a href="document__builder_8cpp_source.html#l00693">document_builder.cpp:693</a></div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a1fb699a31e5a1c2ceed57b56b71f9bdda6316f99acec341fbdd5cc006dc5a7ba7"><div class="ttname"><a href="namespacecdocx.html#a1fb699a31e5a1c2ceed57b56b71f9bdda6316f99acec341fbdd5cc006dc5a7ba7">cdocx::ScriptType::Superscript</a></div><div class="ttdeci">@ Superscript</div></div>
+<div class="ttc" id="anamespacecdocx_html_a1fb699a31e5a1c2ceed57b56b71f9bdda928558e2f9712e38d447d674f2672200"><div class="ttname"><a href="namespacecdocx.html#a1fb699a31e5a1c2ceed57b56b71f9bdda928558e2f9712e38d447d674f2672200">cdocx::ScriptType::Subscript</a></div><div class="ttdeci">@ Subscript</div></div>
+<div class="ttc" id="anamespacecdocx_html_a94dc995fea51760307c32fde48a651e4a51c45b795d5d18a3e4e0c37e8b20a141"><div class="ttname"><a href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4a51c45b795d5d18a3e4e0c37e8b20a141">cdocx::NodeType::Table</a></div><div class="ttdeci">@ Table</div></div>
+<div class="ttc" id="anamespacecdocx_html_a94dc995fea51760307c32fde48a651e4ac5301693c4e792bcd5a479ef38fb8f8d"><div class="ttname"><a href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4ac5301693c4e792bcd5a479ef38fb8f8d">cdocx::NodeType::Run</a></div><div class="ttdeci">@ Run</div></div>
+<div class="ttc" id="anamespacecdocx_html_a94dc995fea51760307c32fde48a651e4afeaf0a320c3d678ad30dd179b7d21584"><div class="ttname"><a href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4afeaf0a320c3d678ad30dd179b7d21584">cdocx::NodeType::Paragraph</a></div><div class="ttdeci">@ Paragraph</div></div>
+<div class="ttc" id="anamespacecdocx_html_a9e3609cbb0fcf4485a2b7b0e806e11ed"><div class="ttname"><a href="namespacecdocx.html#a9e3609cbb0fcf4485a2b7b0e806e11ed">cdocx::UnderlineType</a></div><div class="ttdeci">UnderlineType</div><div class="ttdef"><b>Definition</b> <a href="enums_8h_source.html#l00091">enums.h:91</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_ab4d1b34f04daa2d5ec34afac1073d4f8"><div class="ttname"><a href="namespacecdocx.html#ab4d1b34f04daa2d5ec34afac1073d4f8">cdocx::HighlightColor</a></div><div class="ttdeci">HighlightColor</div><div class="ttdef"><b>Definition</b> <a href="enums_8h_source.html#l00121">enums.h:121</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe"><div class="ttname"><a href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::VisitorAction::Continue</a></div><div class="ttdeci">@ Continue</div></div>
+<div class="ttc" id="aparagraph_8h_html"><div class="ttname"><a href="paragraph_8h.html">paragraph.h</a></div><div class="ttdoc">Paragraph class for CDocx - DOM Style</div></div>
+<div class="ttc" id="asection_8h_html"><div class="ttname"><a href="section_8h.html">section.h</a></div><div class="ttdoc">Section support for CDocx - DOM Style</div></div>
+<div class="ttc" id="atable_8h_html"><div class="ttname"><a href="table_8h.html">table.h</a></div><div class="ttdoc">Table classes for CDocx - DOM Style</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="body_8cpp.html">body.cpp</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

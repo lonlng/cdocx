@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: sync_serialize.cpp 文件参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('sync__serialize_8cpp.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">类</a> &#124;
+<a href="#namespaces">命名空间</a> &#124;
+<a href="#func-members">函数</a> &#124;
+<a href="#var-members">变量</a>  </div>
+  <div class="headertitle"><div class="title">sync_serialize.cpp 文件参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>DOM to Physical XML serialization  
+<a href="#details">更多...</a></p>
+<div class="textblock"><code>#include &quot;<a class="el" href="sync__common_8h_source.html">sync_common.h</a>&quot;</code><br />
+<code>#include &lt;<a class="el" href="body_8h_source.html">cdocx/body.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="convert__util_8h_source.html">cdocx/convert_util.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="comment_8h_source.html">cdocx/comment.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="document_8h_source.html">cdocx/document.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="footnote_8h_source.html">cdocx/footnote.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="formfield_8h_source.html">cdocx/formfield.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="section_8h_source.html">cdocx/section.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="table_8h_source.html">cdocx/table.h</a>&gt;</code><br />
+<code>#include &lt;cctype&gt;</code><br />
+<code>#include &lt;cstring&gt;</code><br />
+</div>
+<p><a href="sync__serialize_8cpp_source.html">浏览源代码.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+类</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1SpecialCharMapping.html">cdocx::SpecialCharMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+命名空间</h2></td></tr>
+<tr class="memitem:namespacecdocx" id="r_namespacecdocx"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html">cdocx</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+函数</h2></td></tr>
+<tr class="memitem:a552f072cae5db38172e2a7ed984069b0" id="r_a552f072cae5db38172e2a7ed984069b0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a552f072cae5db38172e2a7ed984069b0">cdocx::serialize_section_to_xml</a> (pugi::xml_node body_xml, const <a class="el" href="classcdocx_1_1Section.html">Section</a> *section)</td></tr>
+<tr class="separator:a552f072cae5db38172e2a7ed984069b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bd0062f9dd73de5427d8b1fe3ac0eb2" id="r_a2bd0062f9dd73de5427d8b1fe3ac0eb2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a2bd0062f9dd73de5427d8b1fe3ac0eb2">cdocx::serialize_table_to_xml</a> (pugi::xml_node parent, const <a class="el" href="classcdocx_1_1Table.html">Table</a> *table)</td></tr>
+<tr class="separator:a2bd0062f9dd73de5427d8b1fe3ac0eb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff3f4b650f84ef40377b37fadacd09da" id="r_aff3f4b650f84ef40377b37fadacd09da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#aff3f4b650f84ef40377b37fadacd09da">cdocx::serialize_font_to_r_pr</a> (pugi::xml_node r_pr, const <a class="el" href="classcdocx_1_1Font.html">Font</a> &amp;font, bool add_sz_cs)</td></tr>
+<tr class="separator:aff3f4b650f84ef40377b37fadacd09da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a679c2ab8018e8ab16be281bb6ac62f7e" id="r_a679c2ab8018e8ab16be281bb6ac62f7e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a679c2ab8018e8ab16be281bb6ac62f7e">cdocx::serialize_run_formatting_to_xml</a> (pugi::xml_node run_xml, const <a class="el" href="classcdocx_1_1Font.html">Font</a> &amp;font, pugi::xml_node preserved_r_pr)</td></tr>
+<tr class="separator:a679c2ab8018e8ab16be281bb6ac62f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1751f458273404ec30e8497be6ef338b" id="r_a1751f458273404ec30e8497be6ef338b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a1751f458273404ec30e8497be6ef338b">cdocx::serialize_run_to_xml</a> (pugi::xml_node parent, const <a class="el" href="classcdocx_1_1Run.html">Run</a> *run)</td></tr>
+<tr class="separator:a1751f458273404ec30e8497be6ef338b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb5dc8941c2b71a8e4e29da45d0d0c14" id="r_afb5dc8941c2b71a8e4e29da45d0d0c14"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#afb5dc8941c2b71a8e4e29da45d0d0c14">cdocx::serialize_field_to_xml</a> (pugi::xml_node parent, <a class="el" href="classcdocx_1_1Field.html">Field</a> *field)</td></tr>
+<tr class="separator:afb5dc8941c2b71a8e4e29da45d0d0c14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9046147da41ccaac9da2c7d5b1fb2e3" id="r_aa9046147da41ccaac9da2c7d5b1fb2e3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#aa9046147da41ccaac9da2c7d5b1fb2e3">cdocx::serialize_form_field_to_xml</a> (pugi::xml_node parent, const <a class="el" href="classcdocx_1_1FormField.html">FormField</a> *field)</td></tr>
+<tr class="separator:aa9046147da41ccaac9da2c7d5b1fb2e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9695a85d99a7716a4d466c915b8db459" id="r_a9695a85d99a7716a4d466c915b8db459"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a9695a85d99a7716a4d466c915b8db459">cdocx::serialize_hyperlink_to_xml</a> (pugi::xml_node parent, <a class="el" href="classcdocx_1_1Hyperlink.html">Hyperlink</a> *link)</td></tr>
+<tr class="separator:a9695a85d99a7716a4d466c915b8db459"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a2bd25310bc83c40ce188205b45758d" id="r_a4a2bd25310bc83c40ce188205b45758d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a4a2bd25310bc83c40ce188205b45758d">cdocx::serialize_special_char_to_xml</a> (pugi::xml_node parent, <a class="el" href="classcdocx_1_1SpecialChar.html">SpecialChar</a> *sc)</td></tr>
+<tr class="separator:a4a2bd25310bc83c40ce188205b45758d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00dd8a7796a41a14c0830c769c0377ae" id="r_a00dd8a7796a41a14c0830c769c0377ae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a00dd8a7796a41a14c0830c769c0377ae">cdocx::serialize_paragraph_format_children_to_xml</a> (pugi::xml_node p_pr, const <a class="el" href="classcdocx_1_1ParagraphFormat.html">ParagraphFormat</a> &amp;format)</td></tr>
+<tr class="separator:a00dd8a7796a41a14c0830c769c0377ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c37654ba4ee4dda0b4967be79fc1862" id="r_a0c37654ba4ee4dda0b4967be79fc1862"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a0c37654ba4ee4dda0b4967be79fc1862">cdocx::serialize_paragraph_format_to_xml</a> (pugi::xml_node para_xml, const <a class="el" href="classcdocx_1_1ParagraphFormat.html">ParagraphFormat</a> &amp;format)</td></tr>
+<tr class="separator:a0c37654ba4ee4dda0b4967be79fc1862"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e60ae1fa532c929e7086b6b32f0978f" id="r_a4e60ae1fa532c929e7086b6b32f0978f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a4e60ae1fa532c929e7086b6b32f0978f">cdocx::serialize_list_format_to_xml</a> (pugi::xml_node para_xml, const <a class="el" href="structcdocx_1_1ListFormat.html">ListFormat</a> &amp;list_format)</td></tr>
+<tr class="separator:a4e60ae1fa532c929e7086b6b32f0978f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb20bd32b00079aaafd1121776b6403e" id="r_afb20bd32b00079aaafd1121776b6403e"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:afb20bd32b00079aaafd1121776b6403e"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#afb20bd32b00079aaafd1121776b6403e">cdocx::serialize_id_node_to_xml</a> (pugi::xml_node parent, const char *tag_name, T *node)</td></tr>
+<tr class="separator:afb20bd32b00079aaafd1121776b6403e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9ccf6c62cc63b0dba522ab837b125be" id="r_ae9ccf6c62cc63b0dba522ab837b125be"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#ae9ccf6c62cc63b0dba522ab837b125be">cdocx::serialize_bookmark_start_to_xml</a> (pugi::xml_node parent, <a class="el" href="classcdocx_1_1BookmarkStart.html">BookmarkStart</a> *bookmark)</td></tr>
+<tr class="separator:ae9ccf6c62cc63b0dba522ab837b125be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb49cb235d2fbbb5d1ffbd7689e46bc5" id="r_acb49cb235d2fbbb5d1ffbd7689e46bc5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#acb49cb235d2fbbb5d1ffbd7689e46bc5">cdocx::serialize_bookmark_end_to_xml</a> (pugi::xml_node parent, <a class="el" href="classcdocx_1_1BookmarkEnd.html">BookmarkEnd</a> *bookmark)</td></tr>
+<tr class="separator:acb49cb235d2fbbb5d1ffbd7689e46bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbc9258599b9c469d8eede6cb6282ee0" id="r_abbc9258599b9c469d8eede6cb6282ee0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#abbc9258599b9c469d8eede6cb6282ee0">cdocx::serialize_comment_range_start_to_xml</a> (pugi::xml_node parent, <a class="el" href="classcdocx_1_1CommentRangeStart.html">CommentRangeStart</a> *comment)</td></tr>
+<tr class="separator:abbc9258599b9c469d8eede6cb6282ee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73c6215d1cb477c8648c15677272610e" id="r_a73c6215d1cb477c8648c15677272610e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a73c6215d1cb477c8648c15677272610e">cdocx::serialize_comment_range_end_to_xml</a> (pugi::xml_node parent, <a class="el" href="classcdocx_1_1CommentRangeEnd.html">CommentRangeEnd</a> *comment)</td></tr>
+<tr class="separator:a73c6215d1cb477c8648c15677272610e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa47807e809d7c9f1a6e0b5cdeb3b9a2" id="r_aaa47807e809d7c9f1a6e0b5cdeb3b9a2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#aaa47807e809d7c9f1a6e0b5cdeb3b9a2">cdocx::serialize_comment_reference_to_xml</a> (pugi::xml_node parent, int id)</td></tr>
+<tr class="separator:aaa47807e809d7c9f1a6e0b5cdeb3b9a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ccc3eca0ed75978fe573a6cc5eaeda1" id="r_a7ccc3eca0ed75978fe573a6cc5eaeda1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a7ccc3eca0ed75978fe573a6cc5eaeda1">cdocx::serialize_footnote_reference_to_xml</a> (pugi::xml_node parent, <a class="el" href="classcdocx_1_1FootnoteReference.html">FootnoteReference</a> *ref)</td></tr>
+<tr class="separator:a7ccc3eca0ed75978fe573a6cc5eaeda1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9d37331051880c8de5c53d2103409bc" id="r_ab9d37331051880c8de5c53d2103409bc"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#ab9d37331051880c8de5c53d2103409bc">cdocx::serialize_endnote_reference_to_xml</a> (pugi::xml_node parent, <a class="el" href="classcdocx_1_1EndnoteReference.html">EndnoteReference</a> *ref)</td></tr>
+<tr class="separator:ab9d37331051880c8de5c53d2103409bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3595c1dc154f2794b0f00d8994dc1d9" id="r_aa3595c1dc154f2794b0f00d8994dc1d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#aa3595c1dc154f2794b0f00d8994dc1d9">cdocx::serialize_paragraph_to_xml</a> (pugi::xml_node parent, const <a class="el" href="classcdocx_1_1Paragraph.html">Paragraph</a> *para)</td></tr>
+<tr class="separator:aa3595c1dc154f2794b0f00d8994dc1d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed51af1e0ac6a33bebaf23e847919a73" id="r_aed51af1e0ac6a33bebaf23e847919a73"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#aed51af1e0ac6a33bebaf23e847919a73">cdocx::serialize_node_child_to_xml</a> (pugi::xml_node parent, const <a class="el" href="classcdocx_1_1Node.html">Node</a> *child)</td></tr>
+<tr class="separator:aed51af1e0ac6a33bebaf23e847919a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fda7a677164be7f5a9ef8a7babf8240" id="r_a3fda7a677164be7f5a9ef8a7babf8240"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a3fda7a677164be7f5a9ef8a7babf8240">cdocx::serialize_cell_to_xml</a> (pugi::xml_node parent, <a class="el" href="classcdocx_1_1Cell.html">Cell</a> *cell)</td></tr>
+<tr class="separator:a3fda7a677164be7f5a9ef8a7babf8240"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a150133b0012950cf55b50c00cfbf04b8" id="r_a150133b0012950cf55b50c00cfbf04b8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a150133b0012950cf55b50c00cfbf04b8">cdocx::serialize_row_to_xml</a> (pugi::xml_node parent, <a class="el" href="classcdocx_1_1Row.html">Row</a> *row)</td></tr>
+<tr class="separator:a150133b0012950cf55b50c00cfbf04b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c112a5e58b462a408203818d740a654" id="r_a9c112a5e58b462a408203818d740a654"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a9c112a5e58b462a408203818d740a654">cdocx::serialize_body_to_xml</a> (pugi::xml_node body_xml, <a class="el" href="classcdocx_1_1Body.html">Body</a> *body)</td></tr>
+<tr class="separator:a9c112a5e58b462a408203818d740a654"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a949eab35027bcc5c4a8c93f76ecdb163" id="r_a949eab35027bcc5c4a8c93f76ecdb163"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a949eab35027bcc5c4a8c93f76ecdb163">cdocx::serialize_header_footer_to_xml</a> (<a class="el" href="classcdocx_1_1HeaderFooter.html">HeaderFooter</a> *hf, <a class="el" href="classcdocx_1_1Document.html">Document</a> *doc)</td></tr>
+<tr class="separator:a949eab35027bcc5c4a8c93f76ecdb163"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+变量</h2></td></tr>
+<tr class="memitem:a1616780f0638bec0d740758d1e5afca4" id="r_a1616780f0638bec0d740758d1e5afca4"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1SpecialCharMapping.html">SpecialCharMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a1616780f0638bec0d740758d1e5afca4">cdocx::kSpecialCharMappings</a> []</td></tr>
+<tr class="separator:a1616780f0638bec0d740758d1e5afca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>DOM to Physical XML serialization </p>
+
+<p class="definition">在文件 <a class="el" href="sync__serialize_8cpp_source.html">sync_serialize.cpp</a> 中定义.</p>
+</div></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="sync__serialize_8cpp.html">sync_serialize.cpp</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['salutation_0',['Salutation',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1ac69a98e13eae87bc0ca8735329bf3a5d',1,'cdocx']]],
+  ['savedate_1',['SaveDate',['../namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65daccceaf0e311094b3ca1e60e08062def527aad',1,'cdocx']]],
+  ['section_2',['Section',['../namespacecdocx.html#a94dc995fea51760307c32fde48a651e4ad2c24d59e0baff4d0155fbdf62590867',1,'cdocx']]],
+  ['sectionbreakcontinuous_3',['SectionBreakContinuous',['../namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62a56cc9953f74fd357fdedaa380d9e7068',1,'cdocx']]],
+  ['sectionbreakevenpage_4',['SectionBreakEvenPage',['../namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62aed73dc1bc28ff770598bf4a0c94b4741',1,'cdocx']]],
+  ['sectionbreaknextpage_5',['SectionBreakNextPage',['../namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62a5ce91514ef7cea45f960d472dc28bd74',1,'cdocx']]],
+  ['sectionbreakoddpage_6',['SectionBreakOddPage',['../namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62ad56ccaeb9649d625a04709b39b92ba05',1,'cdocx']]],
+  ['shape_7',['Shape',['../namespacecdocx.html#a94dc995fea51760307c32fde48a651e4a880c1273b27d27cfc82004c3a4b205c9',1,'cdocx']]],
+  ['signature_8',['Signature',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a8c09001c99ecb6fdd8d6023fcf039054',1,'cdocx']]],
+  ['single_9',['single',['../structcdocx_1_1TextProperties.html#a106bb06c6d3d4e44bcbb2bfe27dec66ba66ba162102bbf6ae31b522aec561735e',1,'cdocx::TextProperties::Single'],['../namespacecdocx.html#a4aa2d676efcea2b05d606bc6dee6bb3ea66ba162102bbf6ae31b522aec561735e',1,'cdocx::Single'],['../namespacecdocx.html#ad43eb5ffe87a408159908dfbe553b29ca66ba162102bbf6ae31b522aec561735e',1,'cdocx::Single'],['../namespacecdocx.html#a9e3609cbb0fcf4485a2b7b0e806e11eda66ba162102bbf6ae31b522aec561735e',1,'cdocx::Single'],['../structcdocx_1_1ParagraphProperties_1_1Border.html#a04879228a28f0272bae8764fb84f0e34a66ba162102bbf6ae31b522aec561735e',1,'cdocx::ParagraphProperties::Border::Single'],['../structcdocx_1_1TextProperties.html#ace8dd081597b54ba3f5de41cbe0aefe8a66ba162102bbf6ae31b522aec561735e',1,'cdocx::TextProperties::Single']]],
+  ['singlelevel_10',['SingleLevel',['../namespacecdocx.html#ac2ce43d5bdefd6d959b7368cd01c9e86aa813abc23596cbdb7e9cbb0632d87ea7',1,'cdocx']]],
+  ['skip_11',['Skip',['../namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672ca72ef2b9b6965d078e3c7f95487a82d1c',1,'cdocx']]],
+  ['smarthyperlink_12',['SmartHyperlink',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1ac193e160f2da60c150357bb491d34f41',1,'cdocx']]],
+  ['specialchar_13',['SpecialChar',['../namespacecdocx.html#a94dc995fea51760307c32fde48a651e4a0fdda81c5cdb362727171702e8ca2f20',1,'cdocx']]],
+  ['stop_14',['Stop',['../namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672ca11a755d598c0c417f9a36758c3da7481',1,'cdocx']]],
+  ['strong_15',['Strong',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1ac43e0fd449c758dab8f891d8e19eb1a9',1,'cdocx']]],
+  ['subject_16',['Subject',['../namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65daccceac7892ebbb139886662c6f2fc8c450710',1,'cdocx']]],
+  ['subscript_17',['subscript',['../structcdocx_1_1TextProperties.html#a8de7ad44f9175582eac383ab0c6f504ea928558e2f9712e38d447d674f2672200',1,'cdocx::TextProperties::Subscript'],['../namespacecdocx.html#a1fb699a31e5a1c2ceed57b56b71f9bdda928558e2f9712e38d447d674f2672200',1,'cdocx::Subscript']]],
+  ['subtitle_18',['Subtitle',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a035f4e29da2d6d31303f7d7cfa1be13b',1,'cdocx']]],
+  ['subtleemphasis_19',['SubtleEmphasis',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a91a7b441598ca1a665cb4158e09cca0c',1,'cdocx']]],
+  ['subtlereference_20',['SubtleReference',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1ad0896bbc2f63be99b26abcc22cfb9638',1,'cdocx']]],
+  ['superscript_21',['superscript',['../structcdocx_1_1TextProperties.html#a8de7ad44f9175582eac383ab0c6f504ea6316f99acec341fbdd5cc006dc5a7ba7',1,'cdocx::TextProperties::Superscript'],['../namespacecdocx.html#a1fb699a31e5a1c2ceed57b56b71f9bdda6316f99acec341fbdd5cc006dc5a7ba7',1,'cdocx::Superscript']]]
+];

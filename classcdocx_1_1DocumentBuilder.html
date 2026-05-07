@@ -1,0 +1,1875 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: cdocx::DocumentBuilder类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classcdocx_1_1DocumentBuilder.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">类</a> &#124;
+<a href="#pub-methods">Public 成员函数</a> &#124;
+<a href="classcdocx_1_1DocumentBuilder-members.html">所有成员列表</a>  </div>
+  <div class="headertitle"><div class="title">cdocx::DocumentBuilder类 参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Fluent API for building documents programmatically  
+ <a href="classcdocx_1_1DocumentBuilder.html#details">更多...</a></p>
+
+<p><code>#include &lt;<a class="el" href="document__builder_8h_source.html">document_builder.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public 成员函数</h2></td></tr>
+<tr class="memitem:a9228a25f596c165d367b69b5b10126b6" id="r_a9228a25f596c165d367b69b5b10126b6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a9228a25f596c165d367b69b5b10126b6">DocumentBuilder</a> ()</td></tr>
+<tr class="separator:a9228a25f596c165d367b69b5b10126b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d92d67a0dd795227819f32e410e27f3" id="r_a1d92d67a0dd795227819f32e410e27f3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a1d92d67a0dd795227819f32e410e27f3">~DocumentBuilder</a> ()</td></tr>
+<tr class="separator:a1d92d67a0dd795227819f32e410e27f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50c6106726c067f0bc4d3f4e014bfe20" id="r_a50c6106726c067f0bc4d3f4e014bfe20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a50c6106726c067f0bc4d3f4e014bfe20">with_title</a> (const std::string &amp;title)</td></tr>
+<tr class="separator:a50c6106726c067f0bc4d3f4e014bfe20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc5ddaa15ca0feda06bfd09d1922a8c9" id="r_acc5ddaa15ca0feda06bfd09d1922a8c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#acc5ddaa15ca0feda06bfd09d1922a8c9">with_author</a> (const std::string &amp;author)</td></tr>
+<tr class="separator:acc5ddaa15ca0feda06bfd09d1922a8c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2bb30aa04ff2063e61bcd9cde8416ba" id="r_aa2bb30aa04ff2063e61bcd9cde8416ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#aa2bb30aa04ff2063e61bcd9cde8416ba">with_subject</a> (const std::string &amp;subject)</td></tr>
+<tr class="separator:aa2bb30aa04ff2063e61bcd9cde8416ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88467c4d2f6f676fd8110d80963d266f" id="r_a88467c4d2f6f676fd8110d80963d266f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a88467c4d2f6f676fd8110d80963d266f">with_keywords</a> (const std::string &amp;keywords)</td></tr>
+<tr class="separator:a88467c4d2f6f676fd8110d80963d266f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dc0957dee4f018b11036bd567251457" id="r_a5dc0957dee4f018b11036bd567251457"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a5dc0957dee4f018b11036bd567251457">with_page_size</a> (double width, double height)</td></tr>
+<tr class="separator:a5dc0957dee4f018b11036bd567251457"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e645c9b66dd6c8618d3c56d8d2ba571" id="r_a5e645c9b66dd6c8618d3c56d8d2ba571"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a5e645c9b66dd6c8618d3c56d8d2ba571">with_margins</a> (double top, double bottom, double left, double right)</td></tr>
+<tr class="separator:a5e645c9b66dd6c8618d3c56d8d2ba571"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8cd0f857fccbc26178fc84ca5f23859" id="r_ac8cd0f857fccbc26178fc84ca5f23859"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ac8cd0f857fccbc26178fc84ca5f23859">with_orientation</a> (<a class="el" href="namespacecdocx.html#aa0c95030ff0574f2dddc5052c7a7b0e6">PageOrientation</a> orientation)</td></tr>
+<tr class="separator:ac8cd0f857fccbc26178fc84ca5f23859"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae29a5f5f25e25b445b1241d954369194" id="r_ae29a5f5f25e25b445b1241d954369194"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ae29a5f5f25e25b445b1241d954369194">add_paragraph</a> (std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Paragraph.html">Paragraph</a> &gt; paragraph)</td></tr>
+<tr class="separator:ae29a5f5f25e25b445b1241d954369194"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8200491ef599e39472cd18b20676f853" id="r_a8200491ef599e39472cd18b20676f853"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a8200491ef599e39472cd18b20676f853">add_paragraph</a> (const std::string &amp;text)</td></tr>
+<tr class="separator:a8200491ef599e39472cd18b20676f853"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3f15148f2fc9719e88d9580c4a1e6f7" id="r_af3f15148f2fc9719e88d9580c4a1e6f7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#af3f15148f2fc9719e88d9580c4a1e6f7">add_table</a> (std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Table.html">Table</a> &gt; table)</td></tr>
+<tr class="separator:af3f15148f2fc9719e88d9580c4a1e6f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a985c834a6a80411e74d49741cd9aaf49" id="r_a985c834a6a80411e74d49741cd9aaf49"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a985c834a6a80411e74d49741cd9aaf49">add_table</a> (size_t rows, size_t columns)</td></tr>
+<tr class="separator:a985c834a6a80411e74d49741cd9aaf49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c9632890b95e5115ec51af490ddc288" id="r_a8c9632890b95e5115ec51af490ddc288"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Document.html">Document</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a8c9632890b95e5115ec51af490ddc288">build</a> ()</td></tr>
+<tr class="separator:a8c9632890b95e5115ec51af490ddc288"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20fa1505e8a5f3f8e5ac9905a57464d4" id="r_a20fa1505e8a5f3f8e5ac9905a57464d4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a20fa1505e8a5f3f8e5ac9905a57464d4">DocumentBuilder</a> (<a class="el" href="classcdocx_1_1Document.html">Document</a> *doc)</td></tr>
+<tr class="separator:a20fa1505e8a5f3f8e5ac9905a57464d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f7a9de5b42670f3108fcd31d9133e7d" id="r_a1f7a9de5b42670f3108fcd31d9133e7d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a1f7a9de5b42670f3108fcd31d9133e7d">DocumentBuilder</a> (const std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Document.html">Document</a> &gt; &amp;doc)</td></tr>
+<tr class="separator:a1f7a9de5b42670f3108fcd31d9133e7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26c0ef791c38e152fa10ebd5ea197e33" id="r_a26c0ef791c38e152fa10ebd5ea197e33"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a26c0ef791c38e152fa10ebd5ea197e33">move_to_document_start</a> ()</td></tr>
+<tr class="separator:a26c0ef791c38e152fa10ebd5ea197e33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a599e6cbf430dd39bbfafff607af697" id="r_a0a599e6cbf430dd39bbfafff607af697"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a0a599e6cbf430dd39bbfafff607af697">move_to_document_end</a> ()</td></tr>
+<tr class="separator:a0a599e6cbf430dd39bbfafff607af697"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a948693671fa13b5b1ce08d3991d93492" id="r_a948693671fa13b5b1ce08d3991d93492"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a948693671fa13b5b1ce08d3991d93492">move_to_section</a> (size_t index)</td></tr>
+<tr class="separator:a948693671fa13b5b1ce08d3991d93492"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21477e542e8d12ee0d38666a95f0fb04" id="r_a21477e542e8d12ee0d38666a95f0fb04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a21477e542e8d12ee0d38666a95f0fb04">move_to_paragraph</a> (size_t index)</td></tr>
+<tr class="separator:a21477e542e8d12ee0d38666a95f0fb04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a280626b034ce3f362bec780145cac6f2" id="r_a280626b034ce3f362bec780145cac6f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a280626b034ce3f362bec780145cac6f2">move_to_paragraph</a> (size_t paragraph_index, size_t character_index)</td></tr>
+<tr class="separator:a280626b034ce3f362bec780145cac6f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b3de62ebb25a960dc89578bc1a284d0" id="r_a0b3de62ebb25a960dc89578bc1a284d0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a0b3de62ebb25a960dc89578bc1a284d0">move_to_bookmark</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a0b3de62ebb25a960dc89578bc1a284d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ebd595741305b490f4ebc3cb454ea32" id="r_a4ebd595741305b490f4ebc3cb454ea32"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a4ebd595741305b490f4ebc3cb454ea32">move_to_merge_field</a> (const std::string &amp;field_name)</td></tr>
+<tr class="separator:a4ebd595741305b490f4ebc3cb454ea32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a923e6a57a4621f27cb075bdc22226509" id="r_a923e6a57a4621f27cb075bdc22226509"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a923e6a57a4621f27cb075bdc22226509">move_to_cell</a> (size_t table_index, size_t row_index, size_t cell_index)</td></tr>
+<tr class="separator:a923e6a57a4621f27cb075bdc22226509"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad80bfbc57d7556fad09dcb2ff98135b1" id="r_ad80bfbc57d7556fad09dcb2ff98135b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ad80bfbc57d7556fad09dcb2ff98135b1">write</a> (const std::string &amp;text)</td></tr>
+<tr class="separator:ad80bfbc57d7556fad09dcb2ff98135b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49af789d6c3d91acecf05c0bfa3c2965" id="r_a49af789d6c3d91acecf05c0bfa3c2965"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a49af789d6c3d91acecf05c0bfa3c2965">writeln</a> (const std::string &amp;text)</td></tr>
+<tr class="separator:a49af789d6c3d91acecf05c0bfa3c2965"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7e5e9444a47a1b0ca4a8c498d5d4598" id="r_ad7e5e9444a47a1b0ca4a8c498d5d4598"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ad7e5e9444a47a1b0ca4a8c498d5d4598">writeln</a> ()</td></tr>
+<tr class="separator:ad7e5e9444a47a1b0ca4a8c498d5d4598"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71aa22582ae8a3c96f4cd18f305fc08a" id="r_a71aa22582ae8a3c96f4cd18f305fc08a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1Paragraph.html">Paragraph</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a71aa22582ae8a3c96f4cd18f305fc08a">insert_paragraph</a> ()</td></tr>
+<tr class="separator:a71aa22582ae8a3c96f4cd18f305fc08a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac288d39b89fa407a42ddde09dc5864ed" id="r_ac288d39b89fa407a42ddde09dc5864ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ac288d39b89fa407a42ddde09dc5864ed">insert_break</a> ()</td></tr>
+<tr class="separator:ac288d39b89fa407a42ddde09dc5864ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27ac5f4e3cb9e598c2093a44f4121d59" id="r_a27ac5f4e3cb9e598c2093a44f4121d59"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a27ac5f4e3cb9e598c2093a44f4121d59">insert_break</a> (<a class="el" href="namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62">BreakType</a> break_type)</td></tr>
+<tr class="separator:a27ac5f4e3cb9e598c2093a44f4121d59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8415ddabd7f902f3d0c8cb050fa744f5" id="r_a8415ddabd7f902f3d0c8cb050fa744f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a8415ddabd7f902f3d0c8cb050fa744f5">move_to_header_footer</a> (<a class="el" href="namespacecdocx.html#ac582d253e338602be7cba859382c5864">HeaderFooterType</a> <a class="el" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>)</td></tr>
+<tr class="separator:a8415ddabd7f902f3d0c8cb050fa744f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad471c561a4f97514b3a8ef7fb5281550" id="r_ad471c561a4f97514b3a8ef7fb5281550"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Footnote.html">Footnote</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ad471c561a4f97514b3a8ef7fb5281550">insert_footnote</a> (<a class="el" href="namespacecdocx.html#aec94d84bd427448ec2b94b5af0e9c32a">FootnoteType</a> <a class="el" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>, const std::string &amp;text)</td></tr>
+<tr class="separator:ad471c561a4f97514b3a8ef7fb5281550"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59c6ca424e98c74aa2150e4bb8152d01" id="r_a59c6ca424e98c74aa2150e4bb8152d01"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Footnote.html">Footnote</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a59c6ca424e98c74aa2150e4bb8152d01">insert_footnote</a> (<a class="el" href="namespacecdocx.html#aec94d84bd427448ec2b94b5af0e9c32a">FootnoteType</a> <a class="el" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>, const std::string &amp;text, const std::string &amp;reference_mark)</td></tr>
+<tr class="separator:a59c6ca424e98c74aa2150e4bb8152d01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4380e989e6c014217d3453e79be5ce2a" id="r_a4380e989e6c014217d3453e79be5ce2a"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a4380e989e6c014217d3453e79be5ce2a">insert_field</a> (<a class="el" href="namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65daccce">FieldType</a> field_type, bool update_field=false)</td></tr>
+<tr class="separator:a4380e989e6c014217d3453e79be5ce2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd6e7bdd67a68bb78781872f3d46ca7c" id="r_afd6e7bdd67a68bb78781872f3d46ca7c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#afd6e7bdd67a68bb78781872f3d46ca7c">insert_field</a> (const std::string &amp;field_code)</td></tr>
+<tr class="separator:afd6e7bdd67a68bb78781872f3d46ca7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a053d7f87aa734c61e9bc2ecfa7fcc39a" id="r_a053d7f87aa734c61e9bc2ecfa7fcc39a"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a053d7f87aa734c61e9bc2ecfa7fcc39a">insert_field</a> (const std::string &amp;field_code, const std::string &amp;field_value)</td></tr>
+<tr class="separator:a053d7f87aa734c61e9bc2ecfa7fcc39a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70b2a32e91b9073700054e043ef7f08c" id="r_a70b2a32e91b9073700054e043ef7f08c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a70b2a32e91b9073700054e043ef7f08c">insert_page_number</a> (const std::string &amp;switches=&quot;&quot;)</td></tr>
+<tr class="separator:a70b2a32e91b9073700054e043ef7f08c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4eff804d4592eb887526b16b6b70689" id="r_ad4eff804d4592eb887526b16b6b70689"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ad4eff804d4592eb887526b16b6b70689">insert_num_pages</a> ()</td></tr>
+<tr class="separator:ad4eff804d4592eb887526b16b6b70689"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e4b717fb6885a0793b6147f24971095" id="r_a8e4b717fb6885a0793b6147f24971095"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a8e4b717fb6885a0793b6147f24971095">insert_date</a> (const std::string &amp;switches=&quot;&quot;)</td></tr>
+<tr class="separator:a8e4b717fb6885a0793b6147f24971095"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac61a39c795feaf4993e40951404aac9e" id="r_ac61a39c795feaf4993e40951404aac9e"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ac61a39c795feaf4993e40951404aac9e">insert_time</a> (const std::string &amp;switches=&quot;&quot;)</td></tr>
+<tr class="separator:ac61a39c795feaf4993e40951404aac9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58498222ce0f9f1d25d8cfc506439e3c" id="r_a58498222ce0f9f1d25d8cfc506439e3c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a58498222ce0f9f1d25d8cfc506439e3c">insert_merge_field</a> (const std::string &amp;field_name, const std::string &amp;switches=&quot;&quot;)</td></tr>
+<tr class="separator:a58498222ce0f9f1d25d8cfc506439e3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab762a9ed867508f48065dd64e2a699c6" id="r_ab762a9ed867508f48065dd64e2a699c6"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ab762a9ed867508f48065dd64e2a699c6">insert_table_of_contents</a> (const std::string &amp;switches)</td></tr>
+<tr class="separator:ab762a9ed867508f48065dd64e2a699c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a48e255cc412a0882deb6b58022fe4f" id="r_a9a48e255cc412a0882deb6b58022fe4f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a9a48e255cc412a0882deb6b58022fe4f">set_bold</a> (bool value)</td></tr>
+<tr class="separator:a9a48e255cc412a0882deb6b58022fe4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae906e23541e64abdd72d9bdf383fdba0" id="r_ae906e23541e64abdd72d9bdf383fdba0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ae906e23541e64abdd72d9bdf383fdba0">set_italic</a> (bool value)</td></tr>
+<tr class="separator:ae906e23541e64abdd72d9bdf383fdba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fc3ac3d7059cfdaceaeb2ef987e0459" id="r_a2fc3ac3d7059cfdaceaeb2ef987e0459"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a2fc3ac3d7059cfdaceaeb2ef987e0459">set_underline</a> (bool value)</td></tr>
+<tr class="separator:a2fc3ac3d7059cfdaceaeb2ef987e0459"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd893b140b1fc03d8985fc69b86919ae" id="r_abd893b140b1fc03d8985fc69b86919ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#abd893b140b1fc03d8985fc69b86919ae">set_strikethrough</a> (bool value)</td></tr>
+<tr class="separator:abd893b140b1fc03d8985fc69b86919ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90bac965b5af630f42a4d7aa6bf78384" id="r_a90bac965b5af630f42a4d7aa6bf78384"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a90bac965b5af630f42a4d7aa6bf78384">set_font_name</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a90bac965b5af630f42a4d7aa6bf78384"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd6e83cff716e468d431301617f17bac" id="r_afd6e83cff716e468d431301617f17bac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#afd6e83cff716e468d431301617f17bac">set_font_size</a> (int size)</td></tr>
+<tr class="separator:afd6e83cff716e468d431301617f17bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4dd964c3b8c1db7679c4ce73b2a3d6f" id="r_ac4dd964c3b8c1db7679c4ce73b2a3d6f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ac4dd964c3b8c1db7679c4ce73b2a3d6f">set_color</a> (const std::string &amp;color_hex)</td></tr>
+<tr class="separator:ac4dd964c3b8c1db7679c4ce73b2a3d6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31e91901aa26df75255fac5c3411bb0b" id="r_a31e91901aa26df75255fac5c3411bb0b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a31e91901aa26df75255fac5c3411bb0b">set_alignment</a> (const std::string &amp;<a class="el" href="properties_8cpp.html#a6ab4eaed1811a844d72c929650422dc4">alignment</a>)</td></tr>
+<tr class="separator:a31e91901aa26df75255fac5c3411bb0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a272853c451121f2e5e5fec7bf595bf7e" id="r_a272853c451121f2e5e5fec7bf595bf7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a272853c451121f2e5e5fec7bf595bf7e">clear_formatting</a> ()</td></tr>
+<tr class="separator:a272853c451121f2e5e5fec7bf595bf7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9effefb8fb397f88c57d4e8d65ebdd37" id="r_a9effefb8fb397f88c57d4e8d65ebdd37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a9effefb8fb397f88c57d4e8d65ebdd37">start_table</a> ()</td></tr>
+<tr class="separator:a9effefb8fb397f88c57d4e8d65ebdd37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6496e6ec66df278287db99f47b28ab4" id="r_ad6496e6ec66df278287db99f47b28ab4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ad6496e6ec66df278287db99f47b28ab4">end_table</a> ()</td></tr>
+<tr class="separator:ad6496e6ec66df278287db99f47b28ab4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a368ee4aee709147392e3d52580bf3f7c" id="r_a368ee4aee709147392e3d52580bf3f7c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a368ee4aee709147392e3d52580bf3f7c">insert_row</a> ()</td></tr>
+<tr class="separator:a368ee4aee709147392e3d52580bf3f7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbefec93d62fe1cf05eb87def2528eba" id="r_acbefec93d62fe1cf05eb87def2528eba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#acbefec93d62fe1cf05eb87def2528eba">insert_cell</a> ()</td></tr>
+<tr class="separator:acbefec93d62fe1cf05eb87def2528eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27278df387f3b7c7521245dea53ad836" id="r_a27278df387f3b7c7521245dea53ad836"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a27278df387f3b7c7521245dea53ad836">end_row</a> ()</td></tr>
+<tr class="separator:a27278df387f3b7c7521245dea53ad836"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af60dd2cf27b745b41df0ae384a70b722" id="r_af60dd2cf27b745b41df0ae384a70b722"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#af60dd2cf27b745b41df0ae384a70b722">insert_hyperlink</a> (const std::string &amp;text, const std::string &amp;url)</td></tr>
+<tr class="separator:af60dd2cf27b745b41df0ae384a70b722"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bf4711d931b5971cc12361e112d5529" id="r_a5bf4711d931b5971cc12361e112d5529"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a5bf4711d931b5971cc12361e112d5529">start_bookmark</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a5bf4711d931b5971cc12361e112d5529"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab30ea78d9cffcae4b7da7abc81657430" id="r_ab30ea78d9cffcae4b7da7abc81657430"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ab30ea78d9cffcae4b7da7abc81657430">end_bookmark</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:ab30ea78d9cffcae4b7da7abc81657430"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acac1e710e6ff627be4fad0bf1f6a71c9" id="r_acac1e710e6ff627be4fad0bf1f6a71c9"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1FormField.html">FormField</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#acac1e710e6ff627be4fad0bf1f6a71c9">insert_text_input</a> (const std::string &amp;name, <a class="el" href="namespacecdocx.html#acad538ede526cf3c75c9ea4bce592807">TextFormFieldType</a> <a class="el" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>=<a class="el" href="namespacecdocx.html#acad538ede526cf3c75c9ea4bce592807ad2203cb1237cb6460cbad94564e39345">TextFormFieldType::Regular</a>, const std::string &amp;format=&quot;&quot;, const std::string &amp;field_value=&quot;&quot;, int max_length=0)</td></tr>
+<tr class="separator:acac1e710e6ff627be4fad0bf1f6a71c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9ad427db3988666c7d2f95ec60ba55a" id="r_ab9ad427db3988666c7d2f95ec60ba55a"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1FormField.html">FormField</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#ab9ad427db3988666c7d2f95ec60ba55a">insert_check_box</a> (const std::string &amp;name, bool checked_value, int size=0)</td></tr>
+<tr class="separator:ab9ad427db3988666c7d2f95ec60ba55a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a170eefc4d49d3244f506322600de81d7" id="r_a170eefc4d49d3244f506322600de81d7"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1FormField.html">FormField</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a170eefc4d49d3244f506322600de81d7">insert_check_box</a> (const std::string &amp;name, bool default_value, bool checked_value, int size)</td></tr>
+<tr class="separator:a170eefc4d49d3244f506322600de81d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f2cab8852d6fed5bc67f85eedc08268" id="r_a3f2cab8852d6fed5bc67f85eedc08268"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1FormField.html">FormField</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a3f2cab8852d6fed5bc67f85eedc08268">insert_combo_box</a> (const std::string &amp;name, const std::vector&lt; std::string &gt; &amp;items, int selected_index=0)</td></tr>
+<tr class="separator:a3f2cab8852d6fed5bc67f85eedc08268"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fd3bd3f1b92dc247d1439de476c2648" id="r_a3fd3bd3f1b92dc247d1439de476c2648"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentBuilder.html#a3fd3bd3f1b92dc247d1439de476c2648">insert_image</a> (const std::string &amp;image_path, double width=0, double height=0)</td></tr>
+<tr class="separator:a3fd3bd3f1b92dc247d1439de476c2648"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>Fluent API for building documents programmatically </p>
+<dl class="section since"><dt>自从</dt><dd>0.2.0 </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="document__builder_8h_source.html">document_builder.h</a> 第 <a class="el" href="document__builder_8h_source.html#l00070">70</a> 行定义.</p>
+</div><h2 class="groupheader">构造及析构函数说明</h2>
+<a id="a9228a25f596c165d367b69b5b10126b6" name="a9228a25f596c165d367b69b5b10126b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9228a25f596c165d367b69b5b10126b6">&#9670;&#160;</a></span>DocumentBuilder() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::DocumentBuilder::DocumentBuilder </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00061">61</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l01107">cdocx::Document::get_document_xml()</a>.</p>
+
+</div>
+</div>
+<a id="a1d92d67a0dd795227819f32e410e27f3" name="a1d92d67a0dd795227819f32e410e27f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d92d67a0dd795227819f32e410e27f3">&#9670;&#160;</a></span>~DocumentBuilder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::DocumentBuilder::~DocumentBuilder </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">引用了 <a class="el" href="properties_8cpp_source.html#l00532">alignment</a> , 以及 <a class="el" href="base__content_8cpp_source.html#l00023">color</a>.</p>
+
+</div>
+</div>
+<a id="a20fa1505e8a5f3f8e5ac9905a57464d4" name="a20fa1505e8a5f3f8e5ac9905a57464d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20fa1505e8a5f3f8e5ac9905a57464d4">&#9670;&#160;</a></span>DocumentBuilder() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::DocumentBuilder::DocumentBuilder </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Document.html">Document</a> *&#160;</td>
+          <td class="paramname"><em>doc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00053">53</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a1f7a9de5b42670f3108fcd31d9133e7d" name="a1f7a9de5b42670f3108fcd31d9133e7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f7a9de5b42670f3108fcd31d9133e7d">&#9670;&#160;</a></span>DocumentBuilder() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::DocumentBuilder::DocumentBuilder </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Document.html">Document</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>doc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00056">56</a> 行定义.</p>
+
+</div>
+</div>
+<h2 class="groupheader">成员函数说明</h2>
+<a id="a8200491ef599e39472cd18b20676f853" name="a8200491ef599e39472cd18b20676f853"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8200491ef599e39472cd18b20676f853">&#9670;&#160;</a></span>add_paragraph() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::add_paragraph </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00190">190</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l00826">cdocx::Document::get_first_section()</a>.</p>
+
+</div>
+</div>
+<a id="ae29a5f5f25e25b445b1241d954369194" name="ae29a5f5f25e25b445b1241d954369194"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae29a5f5f25e25b445b1241d954369194">&#9670;&#160;</a></span>add_paragraph() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::add_paragraph </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Paragraph.html">Paragraph</a> &gt;&#160;</td>
+          <td class="paramname"><em>paragraph</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00180">180</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l00826">cdocx::Document::get_first_section()</a>.</p>
+
+</div>
+</div>
+<a id="a985c834a6a80411e74d49741cd9aaf49" name="a985c834a6a80411e74d49741cd9aaf49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a985c834a6a80411e74d49741cd9aaf49">&#9670;&#160;</a></span>add_table() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::add_table </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>rows</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>columns</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00213">213</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l00826">cdocx::Document::get_first_section()</a>.</p>
+
+</div>
+</div>
+<a id="af3f15148f2fc9719e88d9580c4a1e6f7" name="af3f15148f2fc9719e88d9580c4a1e6f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3f15148f2fc9719e88d9580c4a1e6f7">&#9670;&#160;</a></span>add_table() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::add_table </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Table.html">Table</a> &gt;&#160;</td>
+          <td class="paramname"><em>table</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00203">203</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l00826">cdocx::Document::get_first_section()</a>.</p>
+
+</div>
+</div>
+<a id="a8c9632890b95e5115ec51af490ddc288" name="a8c9632890b95e5115ec51af490ddc288"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c9632890b95e5115ec51af490ddc288">&#9670;&#160;</a></span>build()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Document.html">Document</a> &gt; cdocx::DocumentBuilder::build </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00068">68</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a272853c451121f2e5e5fec7bf595bf7e" name="a272853c451121f2e5e5fec7bf595bf7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a272853c451121f2e5e5fec7bf595bf7e">&#9670;&#160;</a></span>clear_formatting()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::clear_formatting </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00890">890</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ab30ea78d9cffcae4b7da7abc81657430" name="ab30ea78d9cffcae4b7da7abc81657430"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab30ea78d9cffcae4b7da7abc81657430">&#9670;&#160;</a></span>end_bookmark()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::end_bookmark </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l01010">1010</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a27278df387f3b7c7521245dea53ad836" name="a27278df387f3b7c7521245dea53ad836"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27278df387f3b7c7521245dea53ad836">&#9670;&#160;</a></span>end_row()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::end_row </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00947">947</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ad6496e6ec66df278287db99f47b28ab4" name="ad6496e6ec66df278287db99f47b28ab4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6496e6ec66df278287db99f47b28ab4">&#9670;&#160;</a></span>end_table()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::end_table </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00914">914</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ac288d39b89fa407a42ddde09dc5864ed" name="ac288d39b89fa407a42ddde09dc5864ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac288d39b89fa407a42ddde09dc5864ed">&#9670;&#160;</a></span>insert_break() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::insert_break </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00602">602</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document__builder_8cpp_source.html#l00602">insert_break()</a> , 以及 <a class="el" href="namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62a63be6634e47079da3b4bf81bb9f8cf37">cdocx::PageBreak</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="document__builder_8cpp_source.html#l00602">insert_break()</a>, <a class="el" href="document__builder_8cpp_source.html#l00578">writeln()</a> , 以及 <a class="el" href="document__builder_8cpp_source.html#l00572">writeln()</a>.</p>
+
+</div>
+</div>
+<a id="a27ac5f4e3cb9e598c2093a44f4121d59" name="a27ac5f4e3cb9e598c2093a44f4121d59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27ac5f4e3cb9e598c2093a44f4121d59">&#9670;&#160;</a></span>insert_break() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::insert_break </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62">BreakType</a>&#160;</td>
+          <td class="paramname"><em>break_type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00607">607</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62aa25e2f84973d0cc3ec4560e03e85cb2e">cdocx::ColumnBreak</a>, <a class="el" href="namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62afced549b9e8e487f42d2bcb5bb63616c">cdocx::LineBreak</a>, <a class="el" href="document_8h_source.html#l00375">cdocx::Document::mark_xml_paragraph_dirty()</a>, <a class="el" href="namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62a63be6634e47079da3b4bf81bb9f8cf37">cdocx::PageBreak</a>, <a class="el" href="namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62ac3316c9c335ce5fa8638df2fc5d518d4">cdocx::ParagraphBreak</a>, <a class="el" href="namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62a56cc9953f74fd357fdedaa380d9e7068">cdocx::SectionBreakContinuous</a>, <a class="el" href="namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62aed73dc1bc28ff770598bf4a0c94b4741">cdocx::SectionBreakEvenPage</a>, <a class="el" href="namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62a5ce91514ef7cea45f960d472dc28bd74">cdocx::SectionBreakNextPage</a> , 以及 <a class="el" href="namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62ad56ccaeb9649d625a04709b39b92ba05">cdocx::SectionBreakOddPage</a>.</p>
+
+</div>
+</div>
+<a id="acbefec93d62fe1cf05eb87def2528eba" name="acbefec93d62fe1cf05eb87def2528eba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbefec93d62fe1cf05eb87def2528eba">&#9670;&#160;</a></span>insert_cell()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::insert_cell </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00930">930</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ab9ad427db3988666c7d2f95ec60ba55a" name="ab9ad427db3988666c7d2f95ec60ba55a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9ad427db3988666c7d2f95ec60ba55a">&#9670;&#160;</a></span>insert_check_box() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1FormField.html">FormField</a> &gt; cdocx::DocumentBuilder::insert_check_box </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>checked_value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l01123">1123</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document__builder_8cpp_source.html#l01123">insert_check_box()</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="document__builder_8cpp_source.html#l01123">insert_check_box()</a>.</p>
+
+</div>
+</div>
+<a id="a170eefc4d49d3244f506322600de81d7" name="a170eefc4d49d3244f506322600de81d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a170eefc4d49d3244f506322600de81d7">&#9670;&#160;</a></span>insert_check_box() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1FormField.html">FormField</a> &gt; cdocx::DocumentBuilder::insert_check_box </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>default_value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>checked_value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l01129">1129</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ab95540b150f2ca6e1967f0b2d5dc4970a7ea0f1332ade5b23b34502a3bfe715a2">cdocx::CheckBox</a>.</p>
+
+</div>
+</div>
+<a id="a3f2cab8852d6fed5bc67f85eedc08268" name="a3f2cab8852d6fed5bc67f85eedc08268"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f2cab8852d6fed5bc67f85eedc08268">&#9670;&#160;</a></span>insert_combo_box()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1FormField.html">FormField</a> &gt; cdocx::DocumentBuilder::insert_combo_box </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>selected_index</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l01145">1145</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ab95540b150f2ca6e1967f0b2d5dc4970afd249a0c28275ebf9d4c8464ca2225cf">cdocx::ComboBox</a>.</p>
+
+</div>
+</div>
+<a id="a8e4b717fb6885a0793b6147f24971095" name="a8e4b717fb6885a0793b6147f24971095"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e4b717fb6885a0793b6147f24971095">&#9670;&#160;</a></span>insert_date()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt; cdocx::DocumentBuilder::insert_date </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>switches</em> = <code>&quot;&quot;</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00808">808</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65dacccea44749712dbec183e983dcd78a7736c41">cdocx::Date</a>.</p>
+
+</div>
+</div>
+<a id="afd6e7bdd67a68bb78781872f3d46ca7c" name="afd6e7bdd67a68bb78781872f3d46ca7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd6e7bdd67a68bb78781872f3d46ca7c">&#9670;&#160;</a></span>insert_field() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt; cdocx::DocumentBuilder::insert_field </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>field_code</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00766">766</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document__builder_8cpp_source.html#l00754">insert_field()</a>.</p>
+
+</div>
+</div>
+<a id="a053d7f87aa734c61e9bc2ecfa7fcc39a" name="a053d7f87aa734c61e9bc2ecfa7fcc39a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a053d7f87aa734c61e9bc2ecfa7fcc39a">&#9670;&#160;</a></span>insert_field() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt; cdocx::DocumentBuilder::insert_field </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>field_code</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>field_value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00770">770</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65dacccea88183b946cc5f0e8c96b2e66e1c74a7e">cdocx::Unknown</a>.</p>
+
+</div>
+</div>
+<a id="a4380e989e6c014217d3453e79be5ce2a" name="a4380e989e6c014217d3453e79be5ce2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4380e989e6c014217d3453e79be5ce2a">&#9670;&#160;</a></span>insert_field() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt; cdocx::DocumentBuilder::insert_field </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65daccce">FieldType</a>&#160;</td>
+          <td class="paramname"><em>field_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>update_field</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00754">754</a> 行定义.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="document__builder_8cpp_source.html#l00766">insert_field()</a> , 以及 <a class="el" href="document__builder_8cpp_source.html#l00804">insert_num_pages()</a>.</p>
+
+</div>
+</div>
+<a id="ad471c561a4f97514b3a8ef7fb5281550" name="ad471c561a4f97514b3a8ef7fb5281550"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad471c561a4f97514b3a8ef7fb5281550">&#9670;&#160;</a></span>insert_footnote() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Footnote.html">Footnote</a> &gt; cdocx::DocumentBuilder::insert_footnote </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecdocx.html#aec94d84bd427448ec2b94b5af0e9c32a">FootnoteType</a>&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00647">647</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document__builder_8cpp_source.html#l00647">insert_footnote()</a> , 以及 <a class="el" href="base__content_8cpp_source.html#l00099">type</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="document__builder_8cpp_source.html#l00647">insert_footnote()</a>.</p>
+
+</div>
+</div>
+<a id="a59c6ca424e98c74aa2150e4bb8152d01" name="a59c6ca424e98c74aa2150e4bb8152d01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59c6ca424e98c74aa2150e4bb8152d01">&#9670;&#160;</a></span>insert_footnote() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Footnote.html">Footnote</a> &gt; cdocx::DocumentBuilder::insert_footnote </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecdocx.html#aec94d84bd427448ec2b94b5af0e9c32a">FootnoteType</a>&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>reference_mark</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00652">652</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l01336">cdocx::Document::add_endnote()</a>, <a class="el" href="document_8cpp_source.html#l01299">cdocx::Document::add_footnote()</a>, <a class="el" href="namespacecdocx.html#aec94d84bd427448ec2b94b5af0e9c32aa9129fa7956bf827701cebbe3bd0d6e75">cdocx::Endnote</a>, <a class="el" href="document_8h_source.html#l00375">cdocx::Document::mark_xml_paragraph_dirty()</a> , 以及 <a class="el" href="base__content_8cpp_source.html#l00099">type</a>.</p>
+
+</div>
+</div>
+<a id="af60dd2cf27b745b41df0ae384a70b722" name="af60dd2cf27b745b41df0ae384a70b722"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af60dd2cf27b745b41df0ae384a70b722">&#9670;&#160;</a></span>insert_hyperlink()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::insert_hyperlink </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>url</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00954">954</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document__relationships_8cpp_source.html#l00098">cdocx::Document::add_relationship()</a>, <a class="el" href="document__relationships_8cpp_source.html#l00134">cdocx::Document::find_relationship_id()</a>, <a class="el" href="document_8h_source.html#l00375">cdocx::Document::mark_xml_paragraph_dirty()</a> , 以及 <a class="el" href="document__builder_8cpp_source.html#l00557">write()</a>.</p>
+
+</div>
+</div>
+<a id="a3fd3bd3f1b92dc247d1439de476c2648" name="a3fd3bd3f1b92dc247d1439de476c2648"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fd3bd3f1b92dc247d1439de476c2648">&#9670;&#160;</a></span>insert_image()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cdocx::DocumentBuilder::insert_image </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>image_path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>width</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>height</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l01034">1034</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document__media_8cpp_source.html#l00235">cdocx::Document::add_media_with_rel()</a>, <a class="el" href="sync__common_8cpp_source.html#l00779">cdocx::append_image_drawing()</a>, <a class="el" href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2a4f1f6016fc9f3f2353c0cc7c67b292bd">cdocx::Center</a>, <a class="el" href="document__builder_8cpp_source.html#l01295">cdocx::detect_image_size()</a> , 以及 <a class="el" href="document_8h_source.html#l00375">cdocx::Document::mark_xml_paragraph_dirty()</a>.</p>
+
+</div>
+</div>
+<a id="a58498222ce0f9f1d25d8cfc506439e3c" name="a58498222ce0f9f1d25d8cfc506439e3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58498222ce0f9f1d25d8cfc506439e3c">&#9670;&#160;</a></span>insert_merge_field()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt; cdocx::DocumentBuilder::insert_merge_field </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>field_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>switches</em> = <code>&quot;&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00826">826</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65dacccea88183b946cc5f0e8c96b2e66e1c74a7e">cdocx::Unknown</a>.</p>
+
+</div>
+</div>
+<a id="ad4eff804d4592eb887526b16b6b70689" name="ad4eff804d4592eb887526b16b6b70689"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4eff804d4592eb887526b16b6b70689">&#9670;&#160;</a></span>insert_num_pages()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt; cdocx::DocumentBuilder::insert_num_pages </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00804">804</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document__builder_8cpp_source.html#l00754">insert_field()</a> , 以及 <a class="el" href="namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65dacccea3f348ae2eb8f3aa76f67cd69820dbe1b">cdocx::NumPages</a>.</p>
+
+</div>
+</div>
+<a id="a70b2a32e91b9073700054e043ef7f08c" name="a70b2a32e91b9073700054e043ef7f08c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70b2a32e91b9073700054e043ef7f08c">&#9670;&#160;</a></span>insert_page_number()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt; cdocx::DocumentBuilder::insert_page_number </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>switches</em> = <code>&quot;&quot;</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00794">794</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65dacccea193cfc9be3b995831c6af2fea6650e60">cdocx::Page</a>.</p>
+
+</div>
+</div>
+<a id="a71aa22582ae8a3c96f4cd18f305fc08a" name="a71aa22582ae8a3c96f4cd18f305fc08a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71aa22582ae8a3c96f4cd18f305fc08a">&#9670;&#160;</a></span>insert_paragraph()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1Paragraph.html">Paragraph</a> * cdocx::DocumentBuilder::insert_paragraph </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00583">583</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="paragraph_8cpp_source.html#l00404">cdocx::Paragraph::set_current()</a>.</p>
+
+</div>
+</div>
+<a id="a368ee4aee709147392e3d52580bf3f7c" name="a368ee4aee709147392e3d52580bf3f7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a368ee4aee709147392e3d52580bf3f7c">&#9670;&#160;</a></span>insert_row()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::insert_row </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00922">922</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ab762a9ed867508f48065dd64e2a699c6" name="ab762a9ed867508f48065dd64e2a699c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab762a9ed867508f48065dd64e2a699c6">&#9670;&#160;</a></span>insert_table_of_contents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt; cdocx::DocumentBuilder::insert_table_of_contents </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>switches</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00836">836</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8h_source.html#l00375">cdocx::Document::mark_xml_paragraph_dirty()</a> , 以及 <a class="el" href="namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65dacccea88183b946cc5f0e8c96b2e66e1c74a7e">cdocx::Unknown</a>.</p>
+
+</div>
+</div>
+<a id="acac1e710e6ff627be4fad0bf1f6a71c9" name="acac1e710e6ff627be4fad0bf1f6a71c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acac1e710e6ff627be4fad0bf1f6a71c9">&#9670;&#160;</a></span>insert_text_input()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1FormField.html">FormField</a> &gt; cdocx::DocumentBuilder::insert_text_input </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacecdocx.html#acad538ede526cf3c75c9ea4bce592807">TextFormFieldType</a>&#160;</td>
+          <td class="paramname"><em>type</em> = <code><a class="el" href="namespacecdocx.html#acad538ede526cf3c75c9ea4bce592807ad2203cb1237cb6460cbad94564e39345">TextFormFieldType::Regular</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>format</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>field_value</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>max_length</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l01108">1108</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ab95540b150f2ca6e1967f0b2d5dc4970ac852755f85e80bfa21ab754f8dde93dc">cdocx::TextInput</a> , 以及 <a class="el" href="base__content_8cpp_source.html#l00099">type</a>.</p>
+
+</div>
+</div>
+<a id="ac61a39c795feaf4993e40951404aac9e" name="ac61a39c795feaf4993e40951404aac9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac61a39c795feaf4993e40951404aac9e">&#9670;&#160;</a></span>insert_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Field.html">Field</a> &gt; cdocx::DocumentBuilder::insert_time </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>switches</em> = <code>&quot;&quot;</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00817">817</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65daccceaa76d4ef5f3f6a672bbfab2865563e530">cdocx::Time</a>.</p>
+
+</div>
+</div>
+<a id="a0b3de62ebb25a960dc89578bc1a284d0" name="a0b3de62ebb25a960dc89578bc1a284d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b3de62ebb25a960dc89578bc1a284d0">&#9670;&#160;</a></span>move_to_bookmark()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::move_to_bookmark </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00411">411</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l01107">cdocx::Document::get_document_xml()</a>.</p>
+
+</div>
+</div>
+<a id="a923e6a57a4621f27cb075bdc22226509" name="a923e6a57a4621f27cb075bdc22226509"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a923e6a57a4621f27cb075bdc22226509">&#9670;&#160;</a></span>move_to_cell()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::move_to_cell </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>table_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>row_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>cell_index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00476">476</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l01107">cdocx::Document::get_document_xml()</a>.</p>
+
+</div>
+</div>
+<a id="a0a599e6cbf430dd39bbfafff607af697" name="a0a599e6cbf430dd39bbfafff607af697"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a599e6cbf430dd39bbfafff607af697">&#9670;&#160;</a></span>move_to_document_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::move_to_document_end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00314">314</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a26c0ef791c38e152fa10ebd5ea197e33" name="a26c0ef791c38e152fa10ebd5ea197e33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26c0ef791c38e152fa10ebd5ea197e33">&#9670;&#160;</a></span>move_to_document_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::move_to_document_start </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00307">307</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a8415ddabd7f902f3d0c8cb050fa744f5" name="a8415ddabd7f902f3d0c8cb050fa744f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8415ddabd7f902f3d0c8cb050fa744f5">&#9670;&#160;</a></span>move_to_header_footer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::move_to_header_footer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecdocx.html#ac582d253e338602be7cba859382c5864">HeaderFooterType</a>&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00517">517</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l00826">cdocx::Document::get_first_section()</a>, <a class="el" href="document_8cpp_source.html#l01174">cdocx::Document::get_header()</a>, <a class="el" href="document_8cpp_source.html#l01195">cdocx::Document::get_header_names()</a> , 以及 <a class="el" href="base__content_8cpp_source.html#l00099">type</a>.</p>
+
+</div>
+</div>
+<a id="a4ebd595741305b490f4ebc3cb454ea32" name="a4ebd595741305b490f4ebc3cb454ea32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ebd595741305b490f4ebc3cb454ea32">&#9670;&#160;</a></span>move_to_merge_field()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cdocx::DocumentBuilder::move_to_merge_field </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>field_name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00446">446</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l01107">cdocx::Document::get_document_xml()</a>, <a class="el" href="sync__common_8cpp_source.html#l00032">cdocx::trim_whitespace()</a> , 以及 <a class="el" href="sync__deserialize_8cpp_source.html#l00340">cdocx::walk_field_sequence()</a>.</p>
+
+</div>
+</div>
+<a id="a21477e542e8d12ee0d38666a95f0fb04" name="a21477e542e8d12ee0d38666a95f0fb04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21477e542e8d12ee0d38666a95f0fb04">&#9670;&#160;</a></span>move_to_paragraph() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::move_to_paragraph </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00326">326</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document__builder_8cpp_source.html#l00326">move_to_paragraph()</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="document__builder_8cpp_source.html#l00326">move_to_paragraph()</a>.</p>
+
+</div>
+</div>
+<a id="a280626b034ce3f362bec780145cac6f2" name="a280626b034ce3f362bec780145cac6f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a280626b034ce3f362bec780145cac6f2">&#9670;&#160;</a></span>move_to_paragraph() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::move_to_paragraph </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>paragraph_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>character_index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00331">331</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a948693671fa13b5b1ce08d3991d93492" name="a948693671fa13b5b1ce08d3991d93492"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a948693671fa13b5b1ce08d3991d93492">&#9670;&#160;</a></span>move_to_section()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::move_to_section </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00360">360</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l01107">cdocx::Document::get_document_xml()</a>, <a class="el" href="document_8cpp_source.html#l00811">cdocx::Document::get_sections()</a> , 以及 <a class="el" href="sync__common_8cpp_source.html#l00075">cdocx::is_para_node()</a>.</p>
+
+</div>
+</div>
+<a id="a31e91901aa26df75255fac5c3411bb0b" name="a31e91901aa26df75255fac5c3411bb0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31e91901aa26df75255fac5c3411bb0b">&#9670;&#160;</a></span>set_alignment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::set_alignment </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>alignment</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00885">885</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="properties_8cpp_source.html#l00532">alignment</a>.</p>
+
+</div>
+</div>
+<a id="a9a48e255cc412a0882deb6b58022fe4f" name="a9a48e255cc412a0882deb6b58022fe4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a48e255cc412a0882deb6b58022fe4f">&#9670;&#160;</a></span>set_bold()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::set_bold </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00857">857</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ac4dd964c3b8c1db7679c4ce73b2a3d6f" name="ac4dd964c3b8c1db7679c4ce73b2a3d6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4dd964c3b8c1db7679c4ce73b2a3d6f">&#9670;&#160;</a></span>set_color()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::set_color </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>color_hex</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00881">881</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a90bac965b5af630f42a4d7aa6bf78384" name="a90bac965b5af630f42a4d7aa6bf78384"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90bac965b5af630f42a4d7aa6bf78384">&#9670;&#160;</a></span>set_font_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::set_font_name </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00873">873</a> 行定义.</p>
+
+</div>
+</div>
+<a id="afd6e83cff716e468d431301617f17bac" name="afd6e83cff716e468d431301617f17bac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd6e83cff716e468d431301617f17bac">&#9670;&#160;</a></span>set_font_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::set_font_size </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00877">877</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ae906e23541e64abdd72d9bdf383fdba0" name="ae906e23541e64abdd72d9bdf383fdba0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae906e23541e64abdd72d9bdf383fdba0">&#9670;&#160;</a></span>set_italic()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::set_italic </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00861">861</a> 行定义.</p>
+
+</div>
+</div>
+<a id="abd893b140b1fc03d8985fc69b86919ae" name="abd893b140b1fc03d8985fc69b86919ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd893b140b1fc03d8985fc69b86919ae">&#9670;&#160;</a></span>set_strikethrough()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::set_strikethrough </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00869">869</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a2fc3ac3d7059cfdaceaeb2ef987e0459" name="a2fc3ac3d7059cfdaceaeb2ef987e0459"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fc3ac3d7059cfdaceaeb2ef987e0459">&#9670;&#160;</a></span>set_underline()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::set_underline </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00865">865</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a5bf4711d931b5971cc12361e112d5529" name="a5bf4711d931b5971cc12361e112d5529"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5bf4711d931b5971cc12361e112d5529">&#9670;&#160;</a></span>start_bookmark()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::start_bookmark </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00990">990</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l01219">cdocx::Document::generate_unique_bookmark_id()</a>.</p>
+
+</div>
+</div>
+<a id="a9effefb8fb397f88c57d4e8d65ebdd37" name="a9effefb8fb397f88c57d4e8d65ebdd37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9effefb8fb397f88c57d4e8d65ebdd37">&#9670;&#160;</a></span>start_table()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::start_table </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00896">896</a> 行定义.</p>
+
+</div>
+</div>
+<a id="acc5ddaa15ca0feda06bfd09d1922a8c9" name="acc5ddaa15ca0feda06bfd09d1922a8c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc5ddaa15ca0feda06bfd09d1922a8c9">&#9670;&#160;</a></span>with_author()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::with_author </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>author</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00089">89</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l01111">cdocx::Document::get_core_properties()</a>.</p>
+
+</div>
+</div>
+<a id="a88467c4d2f6f676fd8110d80963d266f" name="a88467c4d2f6f676fd8110d80963d266f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88467c4d2f6f676fd8110d80963d266f">&#9670;&#160;</a></span>with_keywords()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::with_keywords </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>keywords</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00123">123</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l01111">cdocx::Document::get_core_properties()</a>.</p>
+
+</div>
+</div>
+<a id="a5e645c9b66dd6c8618d3c56d8d2ba571" name="a5e645c9b66dd6c8618d3c56d8d2ba571"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e645c9b66dd6c8618d3c56d8d2ba571">&#9670;&#160;</a></span>with_margins()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::with_margins </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>top</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>bottom</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>left</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>right</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00152">152</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l00826">cdocx::Document::get_first_section()</a>.</p>
+
+</div>
+</div>
+<a id="ac8cd0f857fccbc26178fc84ca5f23859" name="ac8cd0f857fccbc26178fc84ca5f23859"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8cd0f857fccbc26178fc84ca5f23859">&#9670;&#160;</a></span>with_orientation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::with_orientation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecdocx.html#aa0c95030ff0574f2dddc5052c7a7b0e6">PageOrientation</a>&#160;</td>
+          <td class="paramname"><em>orientation</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00169">169</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l00826">cdocx::Document::get_first_section()</a>.</p>
+
+</div>
+</div>
+<a id="a5dc0957dee4f018b11036bd567251457" name="a5dc0957dee4f018b11036bd567251457"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5dc0957dee4f018b11036bd567251457">&#9670;&#160;</a></span>with_page_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::with_page_size </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>height</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00140">140</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l00826">cdocx::Document::get_first_section()</a>.</p>
+
+</div>
+</div>
+<a id="aa2bb30aa04ff2063e61bcd9cde8416ba" name="aa2bb30aa04ff2063e61bcd9cde8416ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2bb30aa04ff2063e61bcd9cde8416ba">&#9670;&#160;</a></span>with_subject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::with_subject </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>subject</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00106">106</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l01111">cdocx::Document::get_core_properties()</a>.</p>
+
+</div>
+</div>
+<a id="a50c6106726c067f0bc4d3f4e014bfe20" name="a50c6106726c067f0bc4d3f4e014bfe20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50c6106726c067f0bc4d3f4e014bfe20">&#9670;&#160;</a></span>with_title()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::with_title </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>title</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00072">72</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8cpp_source.html#l01111">cdocx::Document::get_core_properties()</a>.</p>
+
+</div>
+</div>
+<a id="ad80bfbc57d7556fad09dcb2ff98135b1" name="ad80bfbc57d7556fad09dcb2ff98135b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad80bfbc57d7556fad09dcb2ff98135b1">&#9670;&#160;</a></span>write()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::write </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00557">557</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8h_source.html#l00375">cdocx::Document::mark_xml_paragraph_dirty()</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="document__builder_8cpp_source.html#l00954">insert_hyperlink()</a> , 以及 <a class="el" href="document__builder_8cpp_source.html#l00572">writeln()</a>.</p>
+
+</div>
+</div>
+<a id="ad7e5e9444a47a1b0ca4a8c498d5d4598" name="ad7e5e9444a47a1b0ca4a8c498d5d4598"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7e5e9444a47a1b0ca4a8c498d5d4598">&#9670;&#160;</a></span>writeln() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::writeln </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00578">578</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document__builder_8cpp_source.html#l00602">insert_break()</a> , 以及 <a class="el" href="namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62ac3316c9c335ce5fa8638df2fc5d518d4">cdocx::ParagraphBreak</a>.</p>
+
+</div>
+</div>
+<a id="a49af789d6c3d91acecf05c0bfa3c2965" name="a49af789d6c3d91acecf05c0bfa3c2965"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49af789d6c3d91acecf05c0bfa3c2965">&#9670;&#160;</a></span>writeln() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a> &amp; cdocx::DocumentBuilder::writeln </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a> 第 <a class="el" href="document__builder_8cpp_source.html#l00572">572</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document__builder_8cpp_source.html#l00602">insert_break()</a>, <a class="el" href="namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62ac3316c9c335ce5fa8638df2fc5d518d4">cdocx::ParagraphBreak</a> , 以及 <a class="el" href="document__builder_8cpp_source.html#l00557">write()</a>.</p>
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li><a class="el" href="document__builder_8h_source.html">document_builder.h</a></li>
+<li><a class="el" href="document__builder_8cpp_source.html">document_builder.cpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespacecdocx.html">cdocx</a></li><li class="navelem"><a class="el" href="classcdocx_1_1DocumentBuilder.html">DocumentBuilder</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

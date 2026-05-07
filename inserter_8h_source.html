@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: inserter.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('inserter_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">inserter.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="inserter_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#include &lt;<a class="code" href="base_8h.html">cdocx/base.h</a>&gt;</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#include &lt;<a class="code" href="fwd_8h.html">cdocx/fwd.h</a>&gt;</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#include &lt;pugixml.hpp&gt;</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="foldopen" id="foldopen00073" data-start="{" data-end="};">
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="classcdocx_1_1DocumentInserter.html">   73</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1DocumentInserter.html">DocumentInserter</a> {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* target_doc_;  </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    pugi::xml_node clone_paragraph(<span class="keyword">const</span> pugi::xml_node&amp; source_para, pugi::xml_node target_parent);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    pugi::xml_node clone_table(<span class="keyword">const</span> pugi::xml_node&amp; source_table, pugi::xml_node target_parent);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classcdocx_1_1DocumentInserter.html">DocumentInserter</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* target);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1DocumentInserter.html#a1400edfcbc323e708e54b70257f8dfc0">insert_document</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* source);</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1DocumentInserter.html#a99b4221f7bbd1dcf2f0d957d4477d31a">insert_document_after</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* source, <a class="code hl_class" href="classcdocx_1_1Paragraph.html">Paragraph</a>&amp; after_para);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1DocumentInserter.html#a987367ca9632b8591cb9c378e90516b2">insert_document_at</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* source, <span class="keywordtype">int</span> <a class="code hl_variable" href="base__content_8cpp.html#ade8140d8414598e976f4e89e4dfc68ad">position</a>);</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1DocumentInserter.html#a4fb2c41f3eb5efeba898b81fd97e55bd">insert_paragraphs</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* source, <span class="keywordtype">int</span> <a class="code hl_variable" href="base__content_8cpp.html#ade8140d8414598e976f4e89e4dfc68ad">position</a> = -1);</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1DocumentInserter.html#af80c0cd05a955d0e4897680d98025dd5">insert_tables</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* source, <span class="keywordtype">int</span> <a class="code hl_variable" href="base__content_8cpp.html#ade8140d8414598e976f4e89e4dfc68ad">position</a> = -1);</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>};</div>
+</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="abase_8h_html"><div class="ttname"><a href="base_8h.html">base.h</a></div><div class="ttdoc">Base content classes for CDocx document model - DOM Style</div></div>
+<div class="ttc" id="abase__content_8cpp_html_ade8140d8414598e976f4e89e4dfc68ad"><div class="ttname"><a href="base__content_8cpp.html#ade8140d8414598e976f4e89e4dfc68ad">position</a></div><div class="ttdeci">TextProperties::PositionType position</div><div class="ttdef"><b>Definition</b> <a href="base__content_8cpp_source.html#l00172">base_content.cpp:172</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1DocumentInserter_html"><div class="ttname"><a href="classcdocx_1_1DocumentInserter.html">cdocx::DocumentInserter</a></div><div class="ttdoc">Inserts content from one document into another</div><div class="ttdef"><b>Definition</b> <a href="inserter_8h_source.html#l00073">inserter.h:73</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1DocumentInserter_html_a1400edfcbc323e708e54b70257f8dfc0"><div class="ttname"><a href="classcdocx_1_1DocumentInserter.html#a1400edfcbc323e708e54b70257f8dfc0">cdocx::DocumentInserter::insert_document</a></div><div class="ttdeci">void insert_document(Document *source)</div><div class="ttdoc">Insert entire document at the end</div><div class="ttdef"><b>Definition</b> <a href="inserter_8cpp_source.html#l00115">inserter.cpp:115</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1DocumentInserter_html_a4fb2c41f3eb5efeba898b81fd97e55bd"><div class="ttname"><a href="classcdocx_1_1DocumentInserter.html#a4fb2c41f3eb5efeba898b81fd97e55bd">cdocx::DocumentInserter::insert_paragraphs</a></div><div class="ttdeci">void insert_paragraphs(Document *source, int position=-1)</div><div class="ttdoc">Insert only paragraphs from source document</div><div class="ttdef"><b>Definition</b> <a href="inserter_8cpp_source.html#l00263">inserter.cpp:263</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1DocumentInserter_html_a987367ca9632b8591cb9c378e90516b2"><div class="ttname"><a href="classcdocx_1_1DocumentInserter.html#a987367ca9632b8591cb9c378e90516b2">cdocx::DocumentInserter::insert_document_at</a></div><div class="ttdeci">void insert_document_at(Document *source, int position)</div><div class="ttdoc">Insert document at specific position</div><div class="ttdef"><b>Definition</b> <a href="inserter_8cpp_source.html#l00195">inserter.cpp:195</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1DocumentInserter_html_a99b4221f7bbd1dcf2f0d957d4477d31a"><div class="ttname"><a href="classcdocx_1_1DocumentInserter.html#a99b4221f7bbd1dcf2f0d957d4477d31a">cdocx::DocumentInserter::insert_document_after</a></div><div class="ttdeci">void insert_document_after(Document *source, Paragraph &amp;after_para)</div><div class="ttdoc">Insert document after a specific paragraph</div><div class="ttdef"><b>Definition</b> <a href="inserter_8cpp_source.html#l00146">inserter.cpp:146</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1DocumentInserter_html_af80c0cd05a955d0e4897680d98025dd5"><div class="ttname"><a href="classcdocx_1_1DocumentInserter.html#af80c0cd05a955d0e4897680d98025dd5">cdocx::DocumentInserter::insert_tables</a></div><div class="ttdeci">void insert_tables(Document *source, int position=-1)</div><div class="ttdoc">Insert only tables from source document</div><div class="ttdef"><b>Definition</b> <a href="inserter_8cpp_source.html#l00324">inserter.cpp:324</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html"><div class="ttname"><a href="classcdocx_1_1Document.html">cdocx::Document</a></div><div class="ttdef"><b>Definition</b> <a href="document_8h_source.html#l00285">document.h:285</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Paragraph_html"><div class="ttname"><a href="classcdocx_1_1Paragraph.html">cdocx::Paragraph</a></div><div class="ttdef"><b>Definition</b> <a href="paragraph_8h_source.html#l00043">paragraph.h:43</a></div></div>
+<div class="ttc" id="afwd_8h_html"><div class="ttname"><a href="fwd_8h.html">fwd.h</a></div><div class="ttdoc">Forward declarations for CDocx library</div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_45cf22061f640deb443c5da4ff0b00bd.html">cdocx</a></li><li class="navelem"><a class="el" href="inserter_8h.html">inserter.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

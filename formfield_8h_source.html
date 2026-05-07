@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: formfield.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('formfield_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">formfield.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="formfield_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;<a class="code" href="enums_8h.html">cdocx/enums.h</a>&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;<a class="code" href="node_8h.html">cdocx/node.h</a>&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">// FormField - Legacy form field (text input, checkbox, dropdown)</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="};">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html">   24</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1FormField.html">FormField</a> : <span class="keyword">public</span> <a class="code hl_class" href="classcdocx_1_1Node.html">Node</a> {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a70b27548495241e1f69cb0b88e3a5e7c">   26</a></span>    <a class="code hl_function" href="classcdocx_1_1FormField.html#a70b27548495241e1f69cb0b88e3a5e7c">FormField</a>();</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a70b27548495241e1f69cb0b88e3a5e7c">FormField</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <a class="code hl_function" href="classcdocx_1_1FormField.html#a70b27548495241e1f69cb0b88e3a5e7c">FormField</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc, <a class="code hl_enumeration" href="namespacecdocx.html#ab95540b150f2ca6e1967f0b2d5dc4970">FormFieldType</a> <a class="code hl_variable" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#ad00f20dfee0b4f01e4b3b381bcb435cc">   30</a></span>    std::string <a class="code hl_function" href="classcdocx_1_1FormField.html#ad00f20dfee0b4f01e4b3b381bcb435cc">get_name</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> name_; }</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a8f5a5fe638a861cc791e03c77248031e">   31</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a8f5a5fe638a861cc791e03c77248031e">set_name</a>(<span class="keyword">const</span> std::string&amp; name) { name_ = name; }</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#ad24f6ae1df2bc46d51ff0cde7a1ed907">   33</a></span>    <a class="code hl_enumeration" href="namespacecdocx.html#ab95540b150f2ca6e1967f0b2d5dc4970">FormFieldType</a> <a class="code hl_function" href="classcdocx_1_1FormField.html#ad24f6ae1df2bc46d51ff0cde7a1ed907">get_form_field_type</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> type_; }</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a0e9d583aaf9a25424e9d09a6b2c936ce">   34</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a0e9d583aaf9a25424e9d09a6b2c936ce">set_form_field_type</a>(<a class="code hl_enumeration" href="namespacecdocx.html#ab95540b150f2ca6e1967f0b2d5dc4970">FormFieldType</a> <a class="code hl_variable" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>) { type_ = <a class="code hl_variable" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>; }</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a69cafce6f6384ce7f558dfbe14018506">   36</a></span>    std::string <a class="code hl_function" href="classcdocx_1_1FormField.html#a69cafce6f6384ce7f558dfbe14018506">get_result</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> result_; }</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#ad9cdd877bd935c0cf59a302af176b910">   37</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#ad9cdd877bd935c0cf59a302af176b910">set_result</a>(<span class="keyword">const</span> std::string&amp; <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a>) { result_ = <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a>; }</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#ac810ed91f3123e7c99bff2b7c88528b4">   39</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#ac810ed91f3123e7c99bff2b7c88528b4">get_enabled</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> enabled_; }</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a2b6ea258d7fbf1498474c5841cc3d41b">   40</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a2b6ea258d7fbf1498474c5841cc3d41b">set_enabled</a>(<span class="keywordtype">bool</span> enabled) { enabled_ = enabled; }</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#aa03c9ee929e311f7e11e85e7874a90c1">   42</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#aa03c9ee929e311f7e11e85e7874a90c1">get_calculate_on_exit</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> calculate_on_exit_; }</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#afbf19d253e1a82a3a72674d378da6133">   43</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#afbf19d253e1a82a3a72674d378da6133">set_calculate_on_exit</a>(<span class="keywordtype">bool</span> value) { calculate_on_exit_ = value; }</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a81eacd9de142794af4752492132207e6">   45</a></span>    std::string <a class="code hl_function" href="classcdocx_1_1FormField.html#a81eacd9de142794af4752492132207e6">get_status_text</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> status_text_; }</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a23890b2ba39092d4fb02ad3f6f808185">   46</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a23890b2ba39092d4fb02ad3f6f808185">set_status_text</a>(<span class="keyword">const</span> std::string&amp; text) { status_text_ = text; }</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a545310f109e231451a8b4036c613c65b">   48</a></span>    std::string <a class="code hl_function" href="classcdocx_1_1FormField.html#a545310f109e231451a8b4036c613c65b">get_help_text</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> help_text_; }</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#adb8e7fd12bcc9613c696c6ec45bd4e5e">   49</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#adb8e7fd12bcc9613c696c6ec45bd4e5e">set_help_text</a>(<span class="keyword">const</span> std::string&amp; text) { help_text_ = text; }</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a63f17fa7c6fcfd9037a92043ddc51c91">   51</a></span>    std::string <a class="code hl_function" href="classcdocx_1_1FormField.html#a63f17fa7c6fcfd9037a92043ddc51c91">get_entry_macro</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> entry_macro_; }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a8f2b774e1573f89d5d30dc3cae555c52">   52</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a8f2b774e1573f89d5d30dc3cae555c52">set_entry_macro</a>(<span class="keyword">const</span> std::string&amp; macro) { entry_macro_ = macro; }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#aa7cc3d4c01d49310e9505bffc361ba12">   54</a></span>    std::string <a class="code hl_function" href="classcdocx_1_1FormField.html#aa7cc3d4c01d49310e9505bffc361ba12">get_exit_macro</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> exit_macro_; }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a4fc64db039bef6e3550f84edfd643297">   55</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a4fc64db039bef6e3550f84edfd643297">set_exit_macro</a>(<span class="keyword">const</span> std::string&amp; macro) { exit_macro_ = macro; }</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// Text input specific</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a8f5932c56aa0986a2d3d846329419742">   58</a></span>    <a class="code hl_enumeration" href="namespacecdocx.html#acad538ede526cf3c75c9ea4bce592807">TextFormFieldType</a> <a class="code hl_function" href="classcdocx_1_1FormField.html#a8f5932c56aa0986a2d3d846329419742">get_text_input_type</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> text_input_type_; }</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a7039a028956f5c7a1321a3ffbceb029e">   59</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a7039a028956f5c7a1321a3ffbceb029e">set_text_input_type</a>(<a class="code hl_enumeration" href="namespacecdocx.html#acad538ede526cf3c75c9ea4bce592807">TextFormFieldType</a> <a class="code hl_variable" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>) { text_input_type_ = <a class="code hl_variable" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>; }</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#aebfd62ba21549f1cd382e0e68ed821fb">   61</a></span>    std::string <a class="code hl_function" href="classcdocx_1_1FormField.html#aebfd62ba21549f1cd382e0e68ed821fb">get_text_input_format</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> text_input_format_; }</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a15aaf28243347608655f7606d14573d6">   62</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a15aaf28243347608655f7606d14573d6">set_text_input_format</a>(<span class="keyword">const</span> std::string&amp; format) { text_input_format_ = format; }</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a1820314876572a312c6ea68be10aaede">   64</a></span>    std::string <a class="code hl_function" href="classcdocx_1_1FormField.html#a1820314876572a312c6ea68be10aaede">get_text_input_default</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> text_input_default_; }</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#aa2a7a51d1c61acf0c8a4f89b28720abe">   65</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#aa2a7a51d1c61acf0c8a4f89b28720abe">set_text_input_default</a>(<span class="keyword">const</span> std::string&amp; value) { text_input_default_ = value; }</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a9f53399a400745d5d75262f8597fa993">   67</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a9f53399a400745d5d75262f8597fa993">get_max_length</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> max_length_; }</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a8ed434254155a7fe4bd07ea04004a96b">   68</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a8ed434254155a7fe4bd07ea04004a96b">set_max_length</a>(<span class="keywordtype">int</span> length) { max_length_ = length; }</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// Check box specific</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#af47b1d167b21d8bad57bbfe77c66df7c">   71</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#af47b1d167b21d8bad57bbfe77c66df7c">get_checked</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> checked_; }</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a678d74e60a939709bee143975bff7c18">   72</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a678d74e60a939709bee143975bff7c18">set_checked</a>(<span class="keywordtype">bool</span> checked) { checked_ = checked; }</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a0be4742f98c551b9833c849f974884c5">   74</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a0be4742f98c551b9833c849f974884c5">get_default_value</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> default_value_; }</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a2cfd28c64ec72e6f27b851f2d70384fa">   75</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a2cfd28c64ec72e6f27b851f2d70384fa">set_default_value</a>(<span class="keywordtype">bool</span> value) { default_value_ = value; }</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#ac6ef271512a51a2ab59e31b2743ce72d">   77</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#ac6ef271512a51a2ab59e31b2743ce72d">get_is_check_box_exact_size</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> is_exact_size_; }</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#aed8224ba68f5b31eac8a301824fbd9fa">   78</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#aed8224ba68f5b31eac8a301824fbd9fa">set_is_check_box_exact_size</a>(<span class="keywordtype">bool</span> value) { is_exact_size_ = value; }</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a2d831df44fba4cfbdd3f72f39d4e181a">   80</a></span>    <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a2d831df44fba4cfbdd3f72f39d4e181a">get_check_box_size</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> check_box_size_; }</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a65cd842a69524a13e963445d7ed18df7">   81</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a65cd842a69524a13e963445d7ed18df7">set_check_box_size</a>(<span class="keywordtype">double</span> size) { check_box_size_ = size; }</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="comment">// Combo box specific</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a84c8e3653f78c8cbd3bb51c45719b930">   84</a></span>    <span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; <a class="code hl_function" href="classcdocx_1_1FormField.html#a84c8e3653f78c8cbd3bb51c45719b930">get_drop_down_items</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> drop_down_items_; }</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#abeb1db98135b99be8246f32a34b48b8e">   85</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#abeb1db98135b99be8246f32a34b48b8e">set_drop_down_items</a>(<span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; items) { drop_down_items_ = items; }</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#ada53e0e9ce19ebd68d7825f14087b5b8">   87</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#ada53e0e9ce19ebd68d7825f14087b5b8">get_drop_down_selected_index</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> selected_index_; }</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#ac3a7b1f71a25b1df7ff26a38b39865d3">   88</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#ac3a7b1f71a25b1df7ff26a38b39865d3">set_drop_down_selected_index</a>(<span class="keywordtype">int</span> index) { selected_index_ = index; }</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="comment">// Node overrides</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a012da7fb1e326112f895b13a3d369255">   91</a></span>    <a class="code hl_enumeration" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4">NodeType</a> <a class="code hl_function" href="classcdocx_1_1FormField.html#a012da7fb1e326112f895b13a3d369255">node_type</a>()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4abc3ee36619f878ca7fb3724874fcec7d">NodeType::FormField</a>; }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="classcdocx_1_1FormField.html#a2475827e020b8c5098180fe4502acb42">   92</a></span>    std::string <a class="code hl_function" href="classcdocx_1_1FormField.html#a2475827e020b8c5098180fe4502acb42">get_text</a>()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> result_; }</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FormField.html#a998c575f09e2c127021686e78f90562d">accept</a>(<a class="code hl_class" href="classcdocx_1_1DocumentVisitor.html">DocumentVisitor</a>* visitor) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    std::shared_ptr&lt;Node&gt; <a class="code hl_function" href="classcdocx_1_1FormField.html#aad65681a96cc639203dbdeb241dd68ab">clone</a>(<span class="keywordtype">bool</span> deep) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <a class="code hl_enumeration" href="namespacecdocx.html#ab95540b150f2ca6e1967f0b2d5dc4970">FormFieldType</a> type_ = <a class="code hl_enumvalue" href="namespacecdocx.html#ab95540b150f2ca6e1967f0b2d5dc4970ac852755f85e80bfa21ab754f8dde93dc">FormFieldType::TextInput</a>;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    std::string name_;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    std::string result_;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordtype">bool</span> enabled_ = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keywordtype">bool</span> calculate_on_exit_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    std::string status_text_;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    std::string help_text_;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    std::string entry_macro_;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    std::string exit_macro_;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="comment">// Text input</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <a class="code hl_enumeration" href="namespacecdocx.html#acad538ede526cf3c75c9ea4bce592807">TextFormFieldType</a> text_input_type_ = <a class="code hl_enumvalue" href="namespacecdocx.html#acad538ede526cf3c75c9ea4bce592807ad2203cb1237cb6460cbad94564e39345">TextFormFieldType::Regular</a>;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    std::string text_input_format_;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    std::string text_input_default_;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keywordtype">int</span> max_length_ = 0;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="comment">// Check box</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keywordtype">bool</span> checked_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordtype">bool</span> default_value_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordtype">bool</span> is_exact_size_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keywordtype">double</span> check_box_size_ = 0;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="comment">// Drop down</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    std::vector&lt;std::string&gt; drop_down_items_;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keywordtype">int</span> selected_index_ = 0;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>};</div>
+</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="abase__content_8cpp_html_a6bd37bc7b340338d4765e62079730289"><div class="ttname"><a href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a></div><div class="ttdeci">UnderlineType type</div><div class="ttdef"><b>Definition</b> <a href="base__content_8cpp_source.html#l00099">base_content.cpp:99</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1DocumentVisitor_html"><div class="ttname"><a href="classcdocx_1_1DocumentVisitor.html">cdocx::DocumentVisitor</a></div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00298">node.h:298</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html"><div class="ttname"><a href="classcdocx_1_1Document.html">cdocx::Document</a></div><div class="ttdef"><b>Definition</b> <a href="document_8h_source.html#l00285">document.h:285</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html"><div class="ttname"><a href="classcdocx_1_1FormField.html">cdocx::FormField</a></div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00024">formfield.h:24</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a012da7fb1e326112f895b13a3d369255"><div class="ttname"><a href="classcdocx_1_1FormField.html#a012da7fb1e326112f895b13a3d369255">cdocx::FormField::node_type</a></div><div class="ttdeci">NodeType node_type() const override</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00091">formfield.h:91</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a0be4742f98c551b9833c849f974884c5"><div class="ttname"><a href="classcdocx_1_1FormField.html#a0be4742f98c551b9833c849f974884c5">cdocx::FormField::get_default_value</a></div><div class="ttdeci">bool get_default_value() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00074">formfield.h:74</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a0e9d583aaf9a25424e9d09a6b2c936ce"><div class="ttname"><a href="classcdocx_1_1FormField.html#a0e9d583aaf9a25424e9d09a6b2c936ce">cdocx::FormField::set_form_field_type</a></div><div class="ttdeci">void set_form_field_type(FormFieldType type)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00034">formfield.h:34</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a15aaf28243347608655f7606d14573d6"><div class="ttname"><a href="classcdocx_1_1FormField.html#a15aaf28243347608655f7606d14573d6">cdocx::FormField::set_text_input_format</a></div><div class="ttdeci">void set_text_input_format(const std::string &amp;format)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00062">formfield.h:62</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a1820314876572a312c6ea68be10aaede"><div class="ttname"><a href="classcdocx_1_1FormField.html#a1820314876572a312c6ea68be10aaede">cdocx::FormField::get_text_input_default</a></div><div class="ttdeci">std::string get_text_input_default() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00064">formfield.h:64</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a23890b2ba39092d4fb02ad3f6f808185"><div class="ttname"><a href="classcdocx_1_1FormField.html#a23890b2ba39092d4fb02ad3f6f808185">cdocx::FormField::set_status_text</a></div><div class="ttdeci">void set_status_text(const std::string &amp;text)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00046">formfield.h:46</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a2475827e020b8c5098180fe4502acb42"><div class="ttname"><a href="classcdocx_1_1FormField.html#a2475827e020b8c5098180fe4502acb42">cdocx::FormField::get_text</a></div><div class="ttdeci">std::string get_text() const override</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00092">formfield.h:92</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a2b6ea258d7fbf1498474c5841cc3d41b"><div class="ttname"><a href="classcdocx_1_1FormField.html#a2b6ea258d7fbf1498474c5841cc3d41b">cdocx::FormField::set_enabled</a></div><div class="ttdeci">void set_enabled(bool enabled)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00040">formfield.h:40</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a2cfd28c64ec72e6f27b851f2d70384fa"><div class="ttname"><a href="classcdocx_1_1FormField.html#a2cfd28c64ec72e6f27b851f2d70384fa">cdocx::FormField::set_default_value</a></div><div class="ttdeci">void set_default_value(bool value)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00075">formfield.h:75</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a2d831df44fba4cfbdd3f72f39d4e181a"><div class="ttname"><a href="classcdocx_1_1FormField.html#a2d831df44fba4cfbdd3f72f39d4e181a">cdocx::FormField::get_check_box_size</a></div><div class="ttdeci">double get_check_box_size() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00080">formfield.h:80</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a4fc64db039bef6e3550f84edfd643297"><div class="ttname"><a href="classcdocx_1_1FormField.html#a4fc64db039bef6e3550f84edfd643297">cdocx::FormField::set_exit_macro</a></div><div class="ttdeci">void set_exit_macro(const std::string &amp;macro)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00055">formfield.h:55</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a545310f109e231451a8b4036c613c65b"><div class="ttname"><a href="classcdocx_1_1FormField.html#a545310f109e231451a8b4036c613c65b">cdocx::FormField::get_help_text</a></div><div class="ttdeci">std::string get_help_text() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00048">formfield.h:48</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a63f17fa7c6fcfd9037a92043ddc51c91"><div class="ttname"><a href="classcdocx_1_1FormField.html#a63f17fa7c6fcfd9037a92043ddc51c91">cdocx::FormField::get_entry_macro</a></div><div class="ttdeci">std::string get_entry_macro() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00051">formfield.h:51</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a65cd842a69524a13e963445d7ed18df7"><div class="ttname"><a href="classcdocx_1_1FormField.html#a65cd842a69524a13e963445d7ed18df7">cdocx::FormField::set_check_box_size</a></div><div class="ttdeci">void set_check_box_size(double size)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00081">formfield.h:81</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a678d74e60a939709bee143975bff7c18"><div class="ttname"><a href="classcdocx_1_1FormField.html#a678d74e60a939709bee143975bff7c18">cdocx::FormField::set_checked</a></div><div class="ttdeci">void set_checked(bool checked)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00072">formfield.h:72</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a69cafce6f6384ce7f558dfbe14018506"><div class="ttname"><a href="classcdocx_1_1FormField.html#a69cafce6f6384ce7f558dfbe14018506">cdocx::FormField::get_result</a></div><div class="ttdeci">std::string get_result() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00036">formfield.h:36</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a7039a028956f5c7a1321a3ffbceb029e"><div class="ttname"><a href="classcdocx_1_1FormField.html#a7039a028956f5c7a1321a3ffbceb029e">cdocx::FormField::set_text_input_type</a></div><div class="ttdeci">void set_text_input_type(TextFormFieldType type)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00059">formfield.h:59</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a70b27548495241e1f69cb0b88e3a5e7c"><div class="ttname"><a href="classcdocx_1_1FormField.html#a70b27548495241e1f69cb0b88e3a5e7c">cdocx::FormField::FormField</a></div><div class="ttdeci">FormField()</div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a81eacd9de142794af4752492132207e6"><div class="ttname"><a href="classcdocx_1_1FormField.html#a81eacd9de142794af4752492132207e6">cdocx::FormField::get_status_text</a></div><div class="ttdeci">std::string get_status_text() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00045">formfield.h:45</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a84c8e3653f78c8cbd3bb51c45719b930"><div class="ttname"><a href="classcdocx_1_1FormField.html#a84c8e3653f78c8cbd3bb51c45719b930">cdocx::FormField::get_drop_down_items</a></div><div class="ttdeci">const std::vector&lt; std::string &gt; &amp; get_drop_down_items() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00084">formfield.h:84</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a8ed434254155a7fe4bd07ea04004a96b"><div class="ttname"><a href="classcdocx_1_1FormField.html#a8ed434254155a7fe4bd07ea04004a96b">cdocx::FormField::set_max_length</a></div><div class="ttdeci">void set_max_length(int length)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00068">formfield.h:68</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a8f2b774e1573f89d5d30dc3cae555c52"><div class="ttname"><a href="classcdocx_1_1FormField.html#a8f2b774e1573f89d5d30dc3cae555c52">cdocx::FormField::set_entry_macro</a></div><div class="ttdeci">void set_entry_macro(const std::string &amp;macro)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00052">formfield.h:52</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a8f5932c56aa0986a2d3d846329419742"><div class="ttname"><a href="classcdocx_1_1FormField.html#a8f5932c56aa0986a2d3d846329419742">cdocx::FormField::get_text_input_type</a></div><div class="ttdeci">TextFormFieldType get_text_input_type() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00058">formfield.h:58</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a8f5a5fe638a861cc791e03c77248031e"><div class="ttname"><a href="classcdocx_1_1FormField.html#a8f5a5fe638a861cc791e03c77248031e">cdocx::FormField::set_name</a></div><div class="ttdeci">void set_name(const std::string &amp;name)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00031">formfield.h:31</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a998c575f09e2c127021686e78f90562d"><div class="ttname"><a href="classcdocx_1_1FormField.html#a998c575f09e2c127021686e78f90562d">cdocx::FormField::accept</a></div><div class="ttdeci">void accept(DocumentVisitor *visitor) override</div><div class="ttdef"><b>Definition</b> <a href="formfield_8cpp_source.html#l00021">formfield.cpp:21</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_a9f53399a400745d5d75262f8597fa993"><div class="ttname"><a href="classcdocx_1_1FormField.html#a9f53399a400745d5d75262f8597fa993">cdocx::FormField::get_max_length</a></div><div class="ttdeci">int get_max_length() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00067">formfield.h:67</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_aa03c9ee929e311f7e11e85e7874a90c1"><div class="ttname"><a href="classcdocx_1_1FormField.html#aa03c9ee929e311f7e11e85e7874a90c1">cdocx::FormField::get_calculate_on_exit</a></div><div class="ttdeci">bool get_calculate_on_exit() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00042">formfield.h:42</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_aa2a7a51d1c61acf0c8a4f89b28720abe"><div class="ttname"><a href="classcdocx_1_1FormField.html#aa2a7a51d1c61acf0c8a4f89b28720abe">cdocx::FormField::set_text_input_default</a></div><div class="ttdeci">void set_text_input_default(const std::string &amp;value)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00065">formfield.h:65</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_aa7cc3d4c01d49310e9505bffc361ba12"><div class="ttname"><a href="classcdocx_1_1FormField.html#aa7cc3d4c01d49310e9505bffc361ba12">cdocx::FormField::get_exit_macro</a></div><div class="ttdeci">std::string get_exit_macro() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00054">formfield.h:54</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_aad65681a96cc639203dbdeb241dd68ab"><div class="ttname"><a href="classcdocx_1_1FormField.html#aad65681a96cc639203dbdeb241dd68ab">cdocx::FormField::clone</a></div><div class="ttdeci">std::shared_ptr&lt; Node &gt; clone(bool deep) const override</div><div class="ttdef"><b>Definition</b> <a href="formfield_8cpp_source.html#l00028">formfield.cpp:28</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_abeb1db98135b99be8246f32a34b48b8e"><div class="ttname"><a href="classcdocx_1_1FormField.html#abeb1db98135b99be8246f32a34b48b8e">cdocx::FormField::set_drop_down_items</a></div><div class="ttdeci">void set_drop_down_items(const std::vector&lt; std::string &gt; &amp;items)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00085">formfield.h:85</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_ac3a7b1f71a25b1df7ff26a38b39865d3"><div class="ttname"><a href="classcdocx_1_1FormField.html#ac3a7b1f71a25b1df7ff26a38b39865d3">cdocx::FormField::set_drop_down_selected_index</a></div><div class="ttdeci">void set_drop_down_selected_index(int index)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00088">formfield.h:88</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_ac6ef271512a51a2ab59e31b2743ce72d"><div class="ttname"><a href="classcdocx_1_1FormField.html#ac6ef271512a51a2ab59e31b2743ce72d">cdocx::FormField::get_is_check_box_exact_size</a></div><div class="ttdeci">bool get_is_check_box_exact_size() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00077">formfield.h:77</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_ac810ed91f3123e7c99bff2b7c88528b4"><div class="ttname"><a href="classcdocx_1_1FormField.html#ac810ed91f3123e7c99bff2b7c88528b4">cdocx::FormField::get_enabled</a></div><div class="ttdeci">bool get_enabled() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00039">formfield.h:39</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_ad00f20dfee0b4f01e4b3b381bcb435cc"><div class="ttname"><a href="classcdocx_1_1FormField.html#ad00f20dfee0b4f01e4b3b381bcb435cc">cdocx::FormField::get_name</a></div><div class="ttdeci">std::string get_name() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00030">formfield.h:30</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_ad24f6ae1df2bc46d51ff0cde7a1ed907"><div class="ttname"><a href="classcdocx_1_1FormField.html#ad24f6ae1df2bc46d51ff0cde7a1ed907">cdocx::FormField::get_form_field_type</a></div><div class="ttdeci">FormFieldType get_form_field_type() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00033">formfield.h:33</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_ad9cdd877bd935c0cf59a302af176b910"><div class="ttname"><a href="classcdocx_1_1FormField.html#ad9cdd877bd935c0cf59a302af176b910">cdocx::FormField::set_result</a></div><div class="ttdeci">void set_result(const std::string &amp;result)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00037">formfield.h:37</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_ada53e0e9ce19ebd68d7825f14087b5b8"><div class="ttname"><a href="classcdocx_1_1FormField.html#ada53e0e9ce19ebd68d7825f14087b5b8">cdocx::FormField::get_drop_down_selected_index</a></div><div class="ttdeci">int get_drop_down_selected_index() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00087">formfield.h:87</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_adb8e7fd12bcc9613c696c6ec45bd4e5e"><div class="ttname"><a href="classcdocx_1_1FormField.html#adb8e7fd12bcc9613c696c6ec45bd4e5e">cdocx::FormField::set_help_text</a></div><div class="ttdeci">void set_help_text(const std::string &amp;text)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00049">formfield.h:49</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_aebfd62ba21549f1cd382e0e68ed821fb"><div class="ttname"><a href="classcdocx_1_1FormField.html#aebfd62ba21549f1cd382e0e68ed821fb">cdocx::FormField::get_text_input_format</a></div><div class="ttdeci">std::string get_text_input_format() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00061">formfield.h:61</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_aed8224ba68f5b31eac8a301824fbd9fa"><div class="ttname"><a href="classcdocx_1_1FormField.html#aed8224ba68f5b31eac8a301824fbd9fa">cdocx::FormField::set_is_check_box_exact_size</a></div><div class="ttdeci">void set_is_check_box_exact_size(bool value)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00078">formfield.h:78</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_af47b1d167b21d8bad57bbfe77c66df7c"><div class="ttname"><a href="classcdocx_1_1FormField.html#af47b1d167b21d8bad57bbfe77c66df7c">cdocx::FormField::get_checked</a></div><div class="ttdeci">bool get_checked() const</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00071">formfield.h:71</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FormField_html_afbf19d253e1a82a3a72674d378da6133"><div class="ttname"><a href="classcdocx_1_1FormField.html#afbf19d253e1a82a3a72674d378da6133">cdocx::FormField::set_calculate_on_exit</a></div><div class="ttdeci">void set_calculate_on_exit(bool value)</div><div class="ttdef"><b>Definition</b> <a href="formfield_8h_source.html#l00043">formfield.h:43</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Node_html"><div class="ttname"><a href="classcdocx_1_1Node.html">cdocx::Node</a></div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00053">node.h:53</a></div></div>
+<div class="ttc" id="adocument__builder_8cpp_html_a5558580ea8d3854253a721ee58cff12d"><div class="ttname"><a href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a></div><div class="ttdeci">const char * result</div><div class="ttdef"><b>Definition</b> <a href="document__builder_8cpp_source.html#l00693">document_builder.cpp:693</a></div></div>
+<div class="ttc" id="aenums_8h_html"><div class="ttname"><a href="enums_8h.html">enums.h</a></div><div class="ttdoc">Enumerations for CDocx library</div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a94dc995fea51760307c32fde48a651e4"><div class="ttname"><a href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4">cdocx::NodeType</a></div><div class="ttdeci">NodeType</div><div class="ttdef"><b>Definition</b> <a href="enums_8h_source.html#l00017">enums.h:17</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a94dc995fea51760307c32fde48a651e4abc3ee36619f878ca7fb3724874fcec7d"><div class="ttname"><a href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4abc3ee36619f878ca7fb3724874fcec7d">cdocx::NodeType::FormField</a></div><div class="ttdeci">@ FormField</div></div>
+<div class="ttc" id="anamespacecdocx_html_ab95540b150f2ca6e1967f0b2d5dc4970"><div class="ttname"><a href="namespacecdocx.html#ab95540b150f2ca6e1967f0b2d5dc4970">cdocx::FormFieldType</a></div><div class="ttdeci">FormFieldType</div><div class="ttdef"><b>Definition</b> <a href="enums_8h_source.html#l00285">enums.h:285</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_ab95540b150f2ca6e1967f0b2d5dc4970ac852755f85e80bfa21ab754f8dde93dc"><div class="ttname"><a href="namespacecdocx.html#ab95540b150f2ca6e1967f0b2d5dc4970ac852755f85e80bfa21ab754f8dde93dc">cdocx::FormFieldType::TextInput</a></div><div class="ttdeci">@ TextInput</div></div>
+<div class="ttc" id="anamespacecdocx_html_acad538ede526cf3c75c9ea4bce592807"><div class="ttname"><a href="namespacecdocx.html#acad538ede526cf3c75c9ea4bce592807">cdocx::TextFormFieldType</a></div><div class="ttdeci">TextFormFieldType</div><div class="ttdef"><b>Definition</b> <a href="enums_8h_source.html#l00291">enums.h:291</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_acad538ede526cf3c75c9ea4bce592807ad2203cb1237cb6460cbad94564e39345"><div class="ttname"><a href="namespacecdocx.html#acad538ede526cf3c75c9ea4bce592807ad2203cb1237cb6460cbad94564e39345">cdocx::TextFormFieldType::Regular</a></div><div class="ttdeci">@ Regular</div></div>
+<div class="ttc" id="anode_8h_html"><div class="ttname"><a href="node_8h.html">node.h</a></div><div class="ttdoc">Node base classes for CDocx document model - DOM Style</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_45cf22061f640deb443c5da4ff0b00bd.html">cdocx</a></li><li class="navelem"><a class="el" href="formfield_8h.html">formfield.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

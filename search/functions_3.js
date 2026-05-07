@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['dark_5fgray_0',['dark_gray',['../classcdocx_1_1Color.html#ac1a232ff86b1c0bf7d8ae9d9fce41226',1,'cdocx::Color']]],
+  ['dashed_1',['dashed',['../classcdocx_1_1Border.html#ad0208c142a28a6acbb1aaf2f2f2e74f4',1,'cdocx::Border']]],
+  ['decrease_5flist_5flevel_2',['decrease_list_level',['../classcdocx_1_1Paragraph.html#ae4248da4b9985536eb5bf50e0190ea60',1,'cdocx::Paragraph']]],
+  ['delete_5fcell_3',['delete_cell',['../classcdocx_1_1TableOperations.html#a5fdb81de510bcbb15f4596cf1bb40fba',1,'cdocx::TableOperations']]],
+  ['delete_5fcolumn_4',['delete_column',['../classcdocx_1_1Table.html#a62a56b2a28c4e8d94efa502b06e296cb',1,'cdocx::Table']]],
+  ['delete_5fcontent_5',['delete_content',['../classcdocx_1_1Range.html#a1b0daeee9f7b8e52a1bc00ffced6c600',1,'cdocx::Range']]],
+  ['delete_5ffields_6',['delete_fields',['../classcdocx_1_1MailMerge.html#a1cc37731a2fb46d5c3d0213b85d5073c',1,'cdocx::MailMerge']]],
+  ['delete_5fmedia_7',['delete_media',['../classcdocx_1_1Document.html#af6d99fe7469fdf7cf8784ac336b88bb0',1,'cdocx::Document']]],
+  ['delete_5frow_8',['delete_row',['../classcdocx_1_1TableOperations.html#a27d0c2999617ed5a6abf9463c3553c41',1,'cdocx::TableOperations']]],
+  ['detect_5ffile_5fformat_9',['detect_file_format',['../classcdocx_1_1FileFormatUtil.html#af9a97a1b32c31a3917aa6a84d45f8500',1,'cdocx::FileFormatUtil::detect_file_format(const std::string &amp;file_name)'],['../classcdocx_1_1FileFormatUtil.html#a49273e4fb743d88ca7d238559cf87d0e',1,'cdocx::FileFormatUtil::detect_file_format(std::istream &amp;stream)'],['../classcdocx_1_1FileFormatUtil.html#a78d48fbdc42319538b89b3b76eda6069',1,'cdocx::FileFormatUtil::detect_file_format(const std::vector&lt; uint8_t &gt; &amp;data)']]],
+  ['detect_5ffrom_5fzip_10',['detect_from_zip',['../namespacecdocx.html#a14d1595f269e8f00246b599cbe59373a',1,'cdocx']]],
+  ['detect_5fimage_5fsize_11',['detect_image_size',['../namespacecdocx.html#a8111f9b226d6ca9221110c18b5746cf8',1,'cdocx']]],
+  ['detect_5fimage_5fsize_5ffrom_5fmemory_12',['detect_image_size_from_memory',['../namespacecdocx.html#a8dfe8c7f8fb9b7e915a52f343d8e31f4',1,'cdocx']]],
+  ['did_5fsucceed_13',['did_succeed',['../structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a828518f8b40ce789abc3052b64718a7f',1,'cdocx::BookmarkReplacer::BatchResult']]],
+  ['document_14',['document',['../classcdocx_1_1Document.html#a0f9ace33963608fb483c2e7f54406cbb',1,'cdocx::Document::Document()'],['../classcdocx_1_1CDocx.html#a08a2a6a719cb958ece6008b87c31004a',1,'cdocx::CDocx::document()'],['../classcdocx_1_1Document.html#ac75f1264befb2e1a0acb7e02fa45d9d9',1,'cdocx::Document::Document()'],['../classcdocx_1_1Document.html#a7f5cb854bde7df8bf4f3c8fe55137c1f',1,'cdocx::Document::Document(const Document &amp;)=delete'],['../classcdocx_1_1Document.html#abd6a3ba926cd3b0560afab2452ce5f3b',1,'cdocx::Document::Document(std::string filepath)']]],
+  ['documentbuilder_15',['documentbuilder',['../classcdocx_1_1DocumentBuilder.html#a9228a25f596c165d367b69b5b10126b6',1,'cdocx::DocumentBuilder::DocumentBuilder()'],['../classcdocx_1_1DocumentBuilder.html#a20fa1505e8a5f3f8e5ac9905a57464d4',1,'cdocx::DocumentBuilder::DocumentBuilder(Document *doc)'],['../classcdocx_1_1DocumentBuilder.html#a1f7a9de5b42670f3108fcd31d9133e7d',1,'cdocx::DocumentBuilder::DocumentBuilder(const std::shared_ptr&lt; Document &gt; &amp;doc)']]],
+  ['documentinserter_16',['DocumentInserter',['../classcdocx_1_1DocumentInserter.html#aabeda72177c48cbe7d9cf237e96d938e',1,'cdocx::DocumentInserter']]],
+  ['documentproperties_17',['DocumentProperties',['../classcdocx_1_1DocumentProperties.html#a33d84d6278d4ac54ddf4e62c0cce8db5',1,'cdocx::DocumentProperties']]],
+  ['docxtree_18',['docxtree',['../classcdocx_1_1DocxTree.html#a0afb2f33867536de396decfb57761e31',1,'cdocx::DocxTree::DocxTree(const DocxTree &amp;)=delete'],['../classcdocx_1_1DocxTree.html#ae737c91955598af2de77fa53c4e0b0a2',1,'cdocx::DocxTree::DocxTree(DocxTree &amp;&amp;other) noexcept'],['../classcdocx_1_1DocxTree.html#a8198018a71b5a60e3aa55f2ea9eb34b8',1,'cdocx::DocxTree::DocxTree()']]],
+  ['docxtreenode_19',['DocxTreeNode',['../structcdocx_1_1DocxTreeNode.html#a2034f4417e958bb534c83ff298323a18',1,'cdocx::DocxTreeNode']]],
+  ['dotted_20',['dotted',['../classcdocx_1_1Border.html#a9d58be297ca8d351af53538235a543df',1,'cdocx::Border']]],
+  ['double_5fborder_21',['double_border',['../classcdocx_1_1Border.html#a8a67f19745de6d57d4f081f8d0b45c58',1,'cdocx::Border']]],
+  ['drop_5fcap_5fposition_5fto_5fstring_22',['drop_cap_position_to_string',['../namespacecdocx.html#a223a82588378b4edb64c094e02f9eb9d',1,'cdocx']]],
+  ['dump_5fstructure_23',['dump_structure',['../classcdocx_1_1Table.html#a2086c23ec23121215e66d4e4258afeba',1,'cdocx::Table']]]
+];

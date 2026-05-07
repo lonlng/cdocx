@@ -1,0 +1,492 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: range.cpp 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('range_8cpp_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">range.cpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="range_8cpp.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="sync__common_8h.html">sync_common.h</a>&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="advanced_8h.html">cdocx/advanced.h</a>&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="range_8h.html">cdocx/range.h</a>&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="document_8h.html">cdocx/document.h</a>&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;<a class="code" href="paragraph_8h.html">cdocx/paragraph.h</a>&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;<a class="code" href="table_8h.html">cdocx/table.h</a>&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">// Range Implementation</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><a class="code hl_function" href="classcdocx_1_1Range.html#ac6e7535dbcd78a4a5a5d61c2d35a3688">Range::Range</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="foldopen" id="foldopen00025" data-start="{" data-end="}">
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="classcdocx_1_1Range.html#ad0020172bf836510045e3932f9fda497">   25</a></span><a class="code hl_function" href="classcdocx_1_1Range.html#ac6e7535dbcd78a4a5a5d61c2d35a3688">Range::Range</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc, pugi::xml_node start, pugi::xml_node <a class="code hl_function" href="namespacecdocx.html#a95f97defe39c638500f14b9d46505b43">end</a>)</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    : doc_(doc), start_para_(start), end_para_(<a class="code hl_function" href="namespacecdocx.html#a95f97defe39c638500f14b9d46505b43">end</a>) {</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>}</div>
+</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="foldopen" id="foldopen00029" data-start="{" data-end="}">
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classcdocx_1_1Range.html#a58e3e0756831b369a3412f7f6aa69deb">   29</a></span>std::string <a class="code hl_function" href="classcdocx_1_1Range.html#a58e3e0756831b369a3412f7f6aa69deb">Range::get_text</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    std::string <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a>;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    pugi::xml_node current = start_para_;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordflow">while</span> (current) {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a> += <a class="code hl_function" href="namespacecdocx.html#afb95aa1e830002f702c43389d79b88f3">collect_text_from_runs</a>(current);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keywordflow">if</span> (current == end_para_) {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        }</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        current = current.next_sibling();</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    }</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}</div>
+</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classcdocx_1_1Range.html#a6868fd82e196aed1b72b0016cdc77c31">   44</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1Range.html#a6868fd82e196aed1b72b0016cdc77c31">Range::replace</a>(<span class="keyword">const</span> std::string&amp; old_text, <span class="keyword">const</span> std::string&amp; new_text) {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordflow">if</span> (old_text.empty()) {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    }</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// Fallback for DOM paragraphs without XML node binding</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">if</span> (!<a class="code hl_function" href="classcdocx_1_1Range.html#ae8e947da29f95acc535639bb14c0127d">is_valid</a>() &amp;&amp; doc_) {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keyword">auto</span> paragraphs = doc_-&gt;<a class="code hl_function" href="classcdocx_1_1Document.html#a5f984423a0ee5f407ed5d025242cfdbe">get_paragraphs</a>();</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; para : paragraphs) {</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            <span class="keywordflow">if</span> (!para) {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            }</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            std::string para_text = para-&gt;<a class="code hl_function" href="classcdocx_1_1ParagraphCollection.html#aab02cabf021f5d237a0d64c2fccd2081">get_text</a>();</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            <span class="keyword">const</span> <span class="keywordtype">size_t</span> pos = para_text.find(old_text);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            <span class="keywordflow">if</span> (pos != std::string::npos) {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                para_text.replace(pos, old_text.size(), new_text);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                para-&gt;set_text(para_text);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            }</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        }</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    }</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    pugi::xml_node current = start_para_;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordflow">while</span> (current) {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        std::string para_text = <a class="code hl_function" href="namespacecdocx.html#afb95aa1e830002f702c43389d79b88f3">collect_text_from_runs</a>(current);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keyword">const</span> <span class="keywordtype">size_t</span> pos = para_text.find(old_text);</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="keywordflow">if</span> (pos != std::string::npos) {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            para_text.replace(pos, old_text.size(), new_text);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>            <span class="comment">// Clear all runs and set first run to new text</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            pugi::xml_node first_run;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            pugi::xml_node run = current.child(<span class="stringliteral">&quot;w:r&quot;</span>);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            <span class="keywordflow">while</span> (run) {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                <span class="keyword">const</span> pugi::xml_node next = run.next_sibling(<span class="stringliteral">&quot;w:r&quot;</span>);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                <span class="keywordflow">if</span> (!first_run) {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                    first_run = run;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                    <span class="comment">// Clear existing text nodes</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                    <span class="keywordflow">for</span> (pugi::xml_node t = run.child(<span class="stringliteral">&quot;w:t&quot;</span>); t; t = t.next_sibling(<span class="stringliteral">&quot;w:t&quot;</span>)) {</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                        run.remove_child(t);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                    }</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                    pugi::xml_node new_t = run.append_child(<span class="stringliteral">&quot;w:t&quot;</span>);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                    <span class="keywordflow">if</span> (!para_text.empty() &amp;&amp;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                        (std::isspace(<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(para_text.front())) ||</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                         std::isspace(<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(para_text.back())))) {</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                        new_t.append_attribute(<span class="stringliteral">&quot;xml:space&quot;</span>).set_value(<span class="stringliteral">&quot;preserve&quot;</span>);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                    }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                    new_t.text().set(para_text.c_str());</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                    current.remove_child(run);</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                }</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                run = next;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            }</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            <span class="comment">// If no run existed, create one</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            <span class="keywordflow">if</span> (!first_run) {</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                pugi::xml_node new_run = current.append_child(<span class="stringliteral">&quot;w:r&quot;</span>);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                pugi::xml_node new_t = new_run.append_child(<span class="stringliteral">&quot;w:t&quot;</span>);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                <span class="keywordflow">if</span> (!para_text.empty() &amp;&amp;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                    (std::isspace(<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(para_text.front())) ||</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                     std::isspace(<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(para_text.back())))) {</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                    new_t.append_attribute(<span class="stringliteral">&quot;xml:space&quot;</span>).set_value(<span class="stringliteral">&quot;preserve&quot;</span>);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                }</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                new_t.text().set(para_text.c_str());</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            }</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        }</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="keywordflow">if</span> (current == end_para_) {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        }</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        current = current.next_sibling();</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    }</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>}</div>
+</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="foldopen" id="foldopen00122" data-start="{" data-end="}">
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="classcdocx_1_1Range.html#acc81d31c3da2742b813e913cb1f4a1bf">  122</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="classcdocx_1_1Range.html#acc81d31c3da2742b813e913cb1f4a1bf">Range::replace_all</a>(<span class="keyword">const</span> std::string&amp; old_text, <span class="keyword">const</span> std::string&amp; new_text) {</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keywordflow">if</span> (old_text.empty()) {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    }</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="comment">// Fallback for DOM paragraphs without XML node binding</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keywordflow">if</span> (!<a class="code hl_function" href="classcdocx_1_1Range.html#ae8e947da29f95acc535639bb14c0127d">is_valid</a>() &amp;&amp; doc_) {</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keywordtype">int</span> total = 0;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keyword">auto</span> paragraphs = doc_-&gt;<a class="code hl_function" href="classcdocx_1_1Document.html#a5f984423a0ee5f407ed5d025242cfdbe">get_paragraphs</a>();</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; para : paragraphs) {</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            <span class="keywordflow">if</span> (!para) {</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            }</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            std::string para_text = para-&gt;<a class="code hl_function" href="classcdocx_1_1ParagraphCollection.html#aab02cabf021f5d237a0d64c2fccd2081">get_text</a>();</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            <span class="keywordtype">int</span> count = 0;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            <span class="keywordtype">size_t</span> pos = 0;</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            <span class="keywordflow">while</span> ((pos = para_text.find(old_text, pos)) != std::string::npos) {</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                para_text.replace(pos, old_text.size(), new_text);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                pos += new_text.size();</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                ++count;</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>            }</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>            <span class="keywordflow">if</span> (count &gt; 0) {</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                para-&gt;set_text(para_text);</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                total += count;</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>            }</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        }</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        <span class="keywordflow">return</span> total;</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    }</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="keywordtype">int</span> total = 0;</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    pugi::xml_node current = start_para_;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="keywordflow">while</span> (current) {</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        std::string para_text = <a class="code hl_function" href="namespacecdocx.html#afb95aa1e830002f702c43389d79b88f3">collect_text_from_runs</a>(current);</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        <span class="keywordtype">int</span> count = 0;</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        <span class="keywordtype">size_t</span> pos = 0;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        <span class="keywordflow">while</span> ((pos = para_text.find(old_text, pos)) != std::string::npos) {</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            para_text.replace(pos, old_text.size(), new_text);</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            pos += new_text.size();</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            ++count;</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        }</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <span class="keywordflow">if</span> (count &gt; 0) {</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            ++total;</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <span class="comment">// Clear all runs and set first run to new text</span></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            pugi::xml_node first_run;</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            pugi::xml_node run = current.child(<span class="stringliteral">&quot;w:r&quot;</span>);</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            <span class="keywordflow">while</span> (run) {</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                <span class="keyword">const</span> pugi::xml_node next = run.next_sibling(<span class="stringliteral">&quot;w:r&quot;</span>);</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                <span class="keywordflow">if</span> (!first_run) {</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                    first_run = run;</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                    <span class="keywordflow">for</span> (pugi::xml_node t = run.child(<span class="stringliteral">&quot;w:t&quot;</span>); t; t = t.next_sibling(<span class="stringliteral">&quot;w:t&quot;</span>)) {</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                        run.remove_child(t);</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                    }</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                    pugi::xml_node new_t = run.append_child(<span class="stringliteral">&quot;w:t&quot;</span>);</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                    <span class="keywordflow">if</span> (!para_text.empty() &amp;&amp;</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                        (std::isspace(<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(para_text.front())) ||</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                         std::isspace(<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(para_text.back())))) {</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                        new_t.append_attribute(<span class="stringliteral">&quot;xml:space&quot;</span>).set_value(<span class="stringliteral">&quot;preserve&quot;</span>);</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                    }</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                    new_t.text().set(para_text.c_str());</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                    current.remove_child(run);</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                }</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                run = next;</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>            }</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>            <span class="keywordflow">if</span> (!first_run) {</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                pugi::xml_node new_run = current.append_child(<span class="stringliteral">&quot;w:r&quot;</span>);</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                pugi::xml_node new_t = new_run.append_child(<span class="stringliteral">&quot;w:t&quot;</span>);</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                <span class="keywordflow">if</span> (!para_text.empty() &amp;&amp;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                    (std::isspace(<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(para_text.front())) ||</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                     std::isspace(<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(para_text.back())))) {</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                    new_t.append_attribute(<span class="stringliteral">&quot;xml:space&quot;</span>).set_value(<span class="stringliteral">&quot;preserve&quot;</span>);</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                }</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>                new_t.text().set(para_text.c_str());</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            }</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        }</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        <span class="keywordflow">if</span> (current == end_para_) {</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        }</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        current = current.next_sibling();</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    }</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keywordflow">return</span> total;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>}</div>
+</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
+<div class="foldopen" id="foldopen00209" data-start="{" data-end="}">
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno"><a class="line" href="classcdocx_1_1Range.html#a1b0daeee9f7b8e52a1bc00ffced6c600">  209</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1Range.html#a1b0daeee9f7b8e52a1bc00ffced6c600">Range::delete_content</a>() {</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keywordflow">if</span> (!<a class="code hl_function" href="classcdocx_1_1Range.html#ae8e947da29f95acc535639bb14c0127d">is_valid</a>()) {</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    }</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    pugi::xml_node current = start_para_;</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    <span class="keywordflow">while</span> (current) {</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        <span class="comment">// Remove all run elements</span></div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        pugi::xml_node run = current.child(<span class="stringliteral">&quot;w:r&quot;</span>);</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        <span class="keywordflow">while</span> (run) {</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>            <span class="keyword">const</span> pugi::xml_node next = run.next_sibling(<span class="stringliteral">&quot;w:r&quot;</span>);</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>            current.remove_child(run);</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>            run = next;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        }</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        <span class="keywordflow">if</span> (current == end_para_) {</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        }</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        current = current.next_sibling();</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    }</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>}</div>
+</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
+<div class="foldopen" id="foldopen00232" data-start="{" data-end="}">
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno"><a class="line" href="classcdocx_1_1Range.html#ae8e947da29f95acc535639bb14c0127d">  232</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1Range.html#ae8e947da29f95acc535639bb14c0127d">Range::is_valid</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordflow">return</span> start_para_ &amp;&amp; end_para_;</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>}</div>
+</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
+<div class="foldopen" id="foldopen00236" data-start="{" data-end="}">
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno"><a class="line" href="classcdocx_1_1Range.html#a91bff2e41a11fe0f6950c5ab87a0d51d">  236</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Range.html#a91bff2e41a11fe0f6950c5ab87a0d51d">Range::collapse</a>(<span class="keywordtype">bool</span> to_start) {</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="keywordflow">if</span> (to_start) {</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        end_para_ = start_para_;</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        start_para_ = end_para_;</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    }</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>}</div>
+</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span><span class="comment">// TableOperations Implementation</span></div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="foldopen" id="foldopen00248" data-start="{" data-end="}">
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableOperations.html#a4a4b4d5a9bfa586a7e3e1b071225c01b">  248</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a4a4b4d5a9bfa586a7e3e1b071225c01b">TableOperations::insert_row</a>(<a class="code hl_class" href="classcdocx_1_1Table.html">Table</a>&amp; table, <span class="keywordtype">size_t</span> index) {</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keywordflow">return</span> table.<a class="code hl_function" href="classcdocx_1_1Table.html#aad5af676d9685a211ecfebe30cdb19d8">insert_row</a>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(index)) != <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>}</div>
+</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
+<div class="foldopen" id="foldopen00252" data-start="{" data-end="}">
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableOperations.html#aee27ce3c9ed352049b02f1af0d6cf724">  252</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#aee27ce3c9ed352049b02f1af0d6cf724">TableOperations::append_row</a>(<a class="code hl_class" href="classcdocx_1_1Table.html">Table</a>&amp; table) {</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    <span class="keywordflow">return</span> table.<a class="code hl_function" href="classcdocx_1_1Table.html#ae0d4d7e0c9ef5769bc1cc2abff7c72ac">append_row</a>() != <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>}</div>
+</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
+<div class="foldopen" id="foldopen00256" data-start="{" data-end="}">
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableOperations.html#a27d0c2999617ed5a6abf9463c3553c41">  256</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a27d0c2999617ed5a6abf9463c3553c41">TableOperations::delete_row</a>(<a class="code hl_class" href="classcdocx_1_1Table.html">Table</a>&amp; table, <span class="keywordtype">size_t</span> index) {</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    table.<a class="code hl_function" href="classcdocx_1_1Table.html#a45a900c46cd71165e9ec4f534486a12b">remove_row</a>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(index));</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>}</div>
+</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
+<div class="foldopen" id="foldopen00261" data-start="{" data-end="}">
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableOperations.html#af9a3bbb87a2f150e5c41b7b0942f1376">  261</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#af9a3bbb87a2f150e5c41b7b0942f1376">TableOperations::insert_cell</a>(<a class="code hl_class" href="classcdocx_1_1Row.html">Row</a>&amp; row, <span class="keywordtype">size_t</span> index) {</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <span class="keywordflow">return</span> row.<a class="code hl_function" href="classcdocx_1_1Row.html#a397c46e9f4a8ff31ec1ade078f1f7948">insert_cell</a>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(index)) != <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>}</div>
+</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
+<div class="foldopen" id="foldopen00265" data-start="{" data-end="}">
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableOperations.html#a5fdb81de510bcbb15f4596cf1bb40fba">  265</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a5fdb81de510bcbb15f4596cf1bb40fba">TableOperations::delete_cell</a>(<a class="code hl_class" href="classcdocx_1_1Row.html">Row</a>&amp; row, <span class="keywordtype">size_t</span> index) {</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    <span class="keyword">auto</span> cell = row.<a class="code hl_function" href="classcdocx_1_1Row.html#a6557b08c633f2e809c7e6a8b822ba8c6">get_cell</a>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(index));</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    <span class="keywordflow">if</span> (cell) {</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        row.<a class="code hl_function" href="classcdocx_1_1CompositeNode.html#af22a112982b8aa6715ad2a7e910b8b5f">remove_child</a>(cell);</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    }</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>}</div>
+</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
+<div class="foldopen" id="foldopen00274" data-start="{" data-end="}">
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableOperations.html#a56162462c8fdd4b0cecee60eab185ee4">  274</a></span><span class="keywordtype">size_t</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a56162462c8fdd4b0cecee60eab185ee4">TableOperations::get_row_count</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1Table.html">Table</a>&amp; table) {</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(table.<a class="code hl_function" href="classcdocx_1_1Table.html#aa5960dde5db4ec77466adcd574f6a103">get_row_count</a>());</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>}</div>
+</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span> </div>
+<div class="foldopen" id="foldopen00278" data-start="{" data-end="}">
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableOperations.html#a18db25f33624492b6dd3f5de4bd54ed1">  278</a></span><span class="keywordtype">size_t</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a18db25f33624492b6dd3f5de4bd54ed1">TableOperations::get_column_count</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1Table.html">Table</a>&amp; table) {</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(table.<a class="code hl_function" href="classcdocx_1_1Table.html#a56b0c78aa130a9b07555a4caed1fbee6">get_column_count</a>());</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>}</div>
+</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
+<div class="foldopen" id="foldopen00282" data-start="{" data-end="}">
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableOperations.html#a21153134773488225d6746482411cf7c">  282</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a21153134773488225d6746482411cf7c">TableOperations::merge_cells_horizontal</a>(<a class="code hl_class" href="classcdocx_1_1Row.html">Row</a>&amp; row, <span class="keywordtype">size_t</span> start, <span class="keywordtype">size_t</span> <a class="code hl_function" href="namespacecdocx.html#a95f97defe39c638500f14b9d46505b43">end</a>) {</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    <span class="keyword">auto</span> table = row.<a class="code hl_function" href="classcdocx_1_1Row.html#afbb68fe19b9950e8f247260aec7ac88e">get_parent_table</a>();</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    <span class="keywordflow">if</span> (!table) {</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    }</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> row_index = row.<a class="code hl_function" href="classcdocx_1_1Row.html#af10fe9dfbd81ce86aecc218965dec463">get_row_index</a>();</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    <span class="keywordflow">if</span> (row_index &lt; 0) {</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    }</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    <span class="keyword">auto</span> <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a> =</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>        table-&gt;merge_cells(row_index, <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(start), row_index, <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code hl_function" href="namespacecdocx.html#a95f97defe39c638500f14b9d46505b43">end</a>));</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a> != <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>}</div>
+</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
+<div class="foldopen" id="foldopen00296" data-start="{" data-end="}">
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableOperations.html#a33682d81d440407820ccf9125d845613">  296</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a33682d81d440407820ccf9125d845613">TableOperations::set_cell_text</a>(<a class="code hl_class" href="classcdocx_1_1Cell.html">Cell</a>&amp; cell, <span class="keyword">const</span> std::string&amp; text) {</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    cell.<a class="code hl_function" href="classcdocx_1_1Cell.html#afd2daa339af909e648dad971d58f6982">set_text</a>(text);</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>}</div>
+</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span> </div>
+<div class="foldopen" id="foldopen00301" data-start="{" data-end="}">
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableOperations.html#ab38fff69abaa3c5362be170ba4441389">  301</a></span>std::string <a class="code hl_function" href="classcdocx_1_1TableOperations.html#ab38fff69abaa3c5362be170ba4441389">TableOperations::get_cell_text</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1Cell.html">Cell</a>&amp; cell) {</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    <span class="keywordflow">return</span> cell.<a class="code hl_function" href="classcdocx_1_1Cell.html#aa106a2b854f8b64455ba5b7df2b8f158">get_text</a>();</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>}</div>
+</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span> </div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="aadvanced_8h_html"><div class="ttname"><a href="advanced_8h.html">advanced.h</a></div><div class="ttdoc">Advanced features for CDocx (aggregate header)</div></div>
+<div class="ttc" id="aclasscdocx_1_1Cell_html"><div class="ttname"><a href="classcdocx_1_1Cell.html">cdocx::Cell</a></div><div class="ttdef"><b>Definition</b> <a href="table_8h_source.html#l00041">table.h:41</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Cell_html_aa106a2b854f8b64455ba5b7df2b8f158"><div class="ttname"><a href="classcdocx_1_1Cell.html#aa106a2b854f8b64455ba5b7df2b8f158">cdocx::Cell::get_text</a></div><div class="ttdeci">std::string get_text() const override</div><div class="ttdef"><b>Definition</b> <a href="table_8cpp_source.html#l00023">table.cpp:23</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Cell_html_afd2daa339af909e648dad971d58f6982"><div class="ttname"><a href="classcdocx_1_1Cell.html#afd2daa339af909e648dad971d58f6982">cdocx::Cell::set_text</a></div><div class="ttdeci">void set_text(const std::string &amp;text)</div><div class="ttdef"><b>Definition</b> <a href="table_8cpp_source.html#l00100">table.cpp:100</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CompositeNode_html_af22a112982b8aa6715ad2a7e910b8b5f"><div class="ttname"><a href="classcdocx_1_1CompositeNode.html#af22a112982b8aa6715ad2a7e910b8b5f">cdocx::CompositeNode::remove_child</a></div><div class="ttdeci">void remove_child(const std::shared_ptr&lt; Node &gt; &amp;child)</div><div class="ttdef"><b>Definition</b> <a href="node_8cpp_source.html#l00223">node.cpp:223</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html"><div class="ttname"><a href="classcdocx_1_1Document.html">cdocx::Document</a></div><div class="ttdef"><b>Definition</b> <a href="document_8h_source.html#l00285">document.h:285</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html_a5f984423a0ee5f407ed5d025242cfdbe"><div class="ttname"><a href="classcdocx_1_1Document.html#a5f984423a0ee5f407ed5d025242cfdbe">cdocx::Document::get_paragraphs</a></div><div class="ttdeci">ParagraphCollection get_paragraphs() const</div><div class="ttdef"><b>Definition</b> <a href="document_8cpp_source.html#l00898">document.cpp:898</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphCollection_html_aab02cabf021f5d237a0d64c2fccd2081"><div class="ttname"><a href="classcdocx_1_1ParagraphCollection.html#aab02cabf021f5d237a0d64c2fccd2081">cdocx::ParagraphCollection::get_text</a></div><div class="ttdeci">std::string get_text() const</div><div class="ttdef"><b>Definition</b> <a href="paragraph_8cpp_source.html#l00981">paragraph.cpp:981</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Range_html_a1b0daeee9f7b8e52a1bc00ffced6c600"><div class="ttname"><a href="classcdocx_1_1Range.html#a1b0daeee9f7b8e52a1bc00ffced6c600">cdocx::Range::delete_content</a></div><div class="ttdeci">bool delete_content()</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00209">range.cpp:209</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Range_html_a58e3e0756831b369a3412f7f6aa69deb"><div class="ttname"><a href="classcdocx_1_1Range.html#a58e3e0756831b369a3412f7f6aa69deb">cdocx::Range::get_text</a></div><div class="ttdeci">std::string get_text() const</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00029">range.cpp:29</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Range_html_a6868fd82e196aed1b72b0016cdc77c31"><div class="ttname"><a href="classcdocx_1_1Range.html#a6868fd82e196aed1b72b0016cdc77c31">cdocx::Range::replace</a></div><div class="ttdeci">bool replace(const std::string &amp;old_text, const std::string &amp;new_text)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00044">range.cpp:44</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Range_html_a91bff2e41a11fe0f6950c5ab87a0d51d"><div class="ttname"><a href="classcdocx_1_1Range.html#a91bff2e41a11fe0f6950c5ab87a0d51d">cdocx::Range::collapse</a></div><div class="ttdeci">void collapse(bool to_start=true)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00236">range.cpp:236</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Range_html_ac6e7535dbcd78a4a5a5d61c2d35a3688"><div class="ttname"><a href="classcdocx_1_1Range.html#ac6e7535dbcd78a4a5a5d61c2d35a3688">cdocx::Range::Range</a></div><div class="ttdeci">Range()</div></div>
+<div class="ttc" id="aclasscdocx_1_1Range_html_acc81d31c3da2742b813e913cb1f4a1bf"><div class="ttname"><a href="classcdocx_1_1Range.html#acc81d31c3da2742b813e913cb1f4a1bf">cdocx::Range::replace_all</a></div><div class="ttdeci">int replace_all(const std::string &amp;old_text, const std::string &amp;new_text)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00122">range.cpp:122</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Range_html_ae8e947da29f95acc535639bb14c0127d"><div class="ttname"><a href="classcdocx_1_1Range.html#ae8e947da29f95acc535639bb14c0127d">cdocx::Range::is_valid</a></div><div class="ttdeci">bool is_valid() const</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00232">range.cpp:232</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Row_html"><div class="ttname"><a href="classcdocx_1_1Row.html">cdocx::Row</a></div><div class="ttdef"><b>Definition</b> <a href="table_8h_source.html#l00146">table.h:146</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Row_html_a397c46e9f4a8ff31ec1ade078f1f7948"><div class="ttname"><a href="classcdocx_1_1Row.html#a397c46e9f4a8ff31ec1ade078f1f7948">cdocx::Row::insert_cell</a></div><div class="ttdeci">std::shared_ptr&lt; Cell &gt; insert_cell(int index)</div><div class="ttdef"><b>Definition</b> <a href="table_8cpp_source.html#l00264">table.cpp:264</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Row_html_a6557b08c633f2e809c7e6a8b822ba8c6"><div class="ttname"><a href="classcdocx_1_1Row.html#a6557b08c633f2e809c7e6a8b822ba8c6">cdocx::Row::get_cell</a></div><div class="ttdeci">std::shared_ptr&lt; Cell &gt; get_cell(int index) const</div><div class="ttdef"><b>Definition</b> <a href="table_8cpp_source.html#l00245">table.cpp:245</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Row_html_af10fe9dfbd81ce86aecc218965dec463"><div class="ttname"><a href="classcdocx_1_1Row.html#af10fe9dfbd81ce86aecc218965dec463">cdocx::Row::get_row_index</a></div><div class="ttdeci">int get_row_index() const</div><div class="ttdef"><b>Definition</b> <a href="table_8cpp_source.html#l00286">table.cpp:286</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Row_html_afbb68fe19b9950e8f247260aec7ac88e"><div class="ttname"><a href="classcdocx_1_1Row.html#afbb68fe19b9950e8f247260aec7ac88e">cdocx::Row::get_parent_table</a></div><div class="ttdeci">std::shared_ptr&lt; class Table &gt; get_parent_table() const</div><div class="ttdef"><b>Definition</b> <a href="table_8cpp_source.html#l00312">table.cpp:312</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a18db25f33624492b6dd3f5de4bd54ed1"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a18db25f33624492b6dd3f5de4bd54ed1">cdocx::TableOperations::get_column_count</a></div><div class="ttdeci">static size_t get_column_count(const Table &amp;table)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00278">range.cpp:278</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a21153134773488225d6746482411cf7c"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a21153134773488225d6746482411cf7c">cdocx::TableOperations::merge_cells_horizontal</a></div><div class="ttdeci">static bool merge_cells_horizontal(Row &amp;row, size_t start, size_t end)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00282">range.cpp:282</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a27d0c2999617ed5a6abf9463c3553c41"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a27d0c2999617ed5a6abf9463c3553c41">cdocx::TableOperations::delete_row</a></div><div class="ttdeci">static bool delete_row(Table &amp;table, size_t index)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00256">range.cpp:256</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a33682d81d440407820ccf9125d845613"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a33682d81d440407820ccf9125d845613">cdocx::TableOperations::set_cell_text</a></div><div class="ttdeci">static bool set_cell_text(Cell &amp;cell, const std::string &amp;text)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00296">range.cpp:296</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a4a4b4d5a9bfa586a7e3e1b071225c01b"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a4a4b4d5a9bfa586a7e3e1b071225c01b">cdocx::TableOperations::insert_row</a></div><div class="ttdeci">static bool insert_row(Table &amp;table, size_t index)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00248">range.cpp:248</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a56162462c8fdd4b0cecee60eab185ee4"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a56162462c8fdd4b0cecee60eab185ee4">cdocx::TableOperations::get_row_count</a></div><div class="ttdeci">static size_t get_row_count(const Table &amp;table)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00274">range.cpp:274</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a5fdb81de510bcbb15f4596cf1bb40fba"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a5fdb81de510bcbb15f4596cf1bb40fba">cdocx::TableOperations::delete_cell</a></div><div class="ttdeci">static bool delete_cell(Row &amp;row, size_t index)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00265">range.cpp:265</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_ab38fff69abaa3c5362be170ba4441389"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#ab38fff69abaa3c5362be170ba4441389">cdocx::TableOperations::get_cell_text</a></div><div class="ttdeci">static std::string get_cell_text(const Cell &amp;cell)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00301">range.cpp:301</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_aee27ce3c9ed352049b02f1af0d6cf724"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#aee27ce3c9ed352049b02f1af0d6cf724">cdocx::TableOperations::append_row</a></div><div class="ttdeci">static bool append_row(Table &amp;table)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00252">range.cpp:252</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_af9a3bbb87a2f150e5c41b7b0942f1376"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#af9a3bbb87a2f150e5c41b7b0942f1376">cdocx::TableOperations::insert_cell</a></div><div class="ttdeci">static bool insert_cell(Row &amp;row, size_t index)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00261">range.cpp:261</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Table_html"><div class="ttname"><a href="classcdocx_1_1Table.html">cdocx::Table</a></div><div class="ttdef"><b>Definition</b> <a href="table_8h_source.html#l00282">table.h:282</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Table_html_a45a900c46cd71165e9ec4f534486a12b"><div class="ttname"><a href="classcdocx_1_1Table.html#a45a900c46cd71165e9ec4f534486a12b">cdocx::Table::remove_row</a></div><div class="ttdeci">void remove_row(const std::shared_ptr&lt; Row &gt; &amp;row)</div><div class="ttdef"><b>Definition</b> <a href="table_8cpp_source.html#l00465">table.cpp:465</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Table_html_a56b0c78aa130a9b07555a4caed1fbee6"><div class="ttname"><a href="classcdocx_1_1Table.html#a56b0c78aa130a9b07555a4caed1fbee6">cdocx::Table::get_column_count</a></div><div class="ttdeci">int get_column_count() const</div><div class="ttdef"><b>Definition</b> <a href="table_8cpp_source.html#l00492">table.cpp:492</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Table_html_aa5960dde5db4ec77466adcd574f6a103"><div class="ttname"><a href="classcdocx_1_1Table.html#aa5960dde5db4ec77466adcd574f6a103">cdocx::Table::get_row_count</a></div><div class="ttdeci">int get_row_count() const</div><div class="ttdef"><b>Definition</b> <a href="table_8cpp_source.html#l00488">table.cpp:488</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Table_html_aad5af676d9685a211ecfebe30cdb19d8"><div class="ttname"><a href="classcdocx_1_1Table.html#aad5af676d9685a211ecfebe30cdb19d8">cdocx::Table::insert_row</a></div><div class="ttdeci">std::shared_ptr&lt; Row &gt; insert_row(int index)</div><div class="ttdef"><b>Definition</b> <a href="table_8cpp_source.html#l00440">table.cpp:440</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Table_html_ae0d4d7e0c9ef5769bc1cc2abff7c72ac"><div class="ttname"><a href="classcdocx_1_1Table.html#ae0d4d7e0c9ef5769bc1cc2abff7c72ac">cdocx::Table::append_row</a></div><div class="ttdeci">std::shared_ptr&lt; Row &gt; append_row()</div><div class="ttdef"><b>Definition</b> <a href="table_8cpp_source.html#l00434">table.cpp:434</a></div></div>
+<div class="ttc" id="adocument_8h_html"><div class="ttname"><a href="document_8h.html">document.h</a></div><div class="ttdoc">Document class for working with DOCX files - DOM Style</div></div>
+<div class="ttc" id="adocument__builder_8cpp_html_a5558580ea8d3854253a721ee58cff12d"><div class="ttname"><a href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a></div><div class="ttdeci">const char * result</div><div class="ttdef"><b>Definition</b> <a href="document__builder_8cpp_source.html#l00693">document_builder.cpp:693</a></div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a95f97defe39c638500f14b9d46505b43"><div class="ttname"><a href="namespacecdocx.html#a95f97defe39c638500f14b9d46505b43">cdocx::end</a></div><div class="ttdeci">auto end(const T &amp;obj) -&gt; Iterator&lt; T, pugi::xml_node &gt;</div><div class="ttdoc">Get end iterator for range-based for loop</div><div class="ttdef"><b>Definition</b> <a href="iterator_8h_source.html#l00221">iterator.h:221</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_afb95aa1e830002f702c43389d79b88f3"><div class="ttname"><a href="namespacecdocx.html#afb95aa1e830002f702c43389d79b88f3">cdocx::collect_text_from_runs</a></div><div class="ttdeci">std::string collect_text_from_runs(pugi::xml_node para)</div><div class="ttdef"><b>Definition</b> <a href="sync__common_8cpp_source.html#l00064">sync_common.cpp:64</a></div></div>
+<div class="ttc" id="aparagraph_8h_html"><div class="ttname"><a href="paragraph_8h.html">paragraph.h</a></div><div class="ttdoc">Paragraph class for CDocx - DOM Style</div></div>
+<div class="ttc" id="arange_8h_html"><div class="ttname"><a href="range_8h.html">range.h</a></div><div class="ttdoc">Document range operations for CDocx</div></div>
+<div class="ttc" id="async__common_8h_html"><div class="ttname"><a href="sync__common_8h.html">sync_common.h</a></div><div class="ttdoc">Internal shared declarations for DOM-Physical sync modules</div></div>
+<div class="ttc" id="atable_8h_html"><div class="ttname"><a href="table_8h.html">table.h</a></div><div class="ttdoc">Table classes for CDocx - DOM Style</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="range_8cpp.html">range.cpp</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

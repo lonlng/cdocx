@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['id_0',['id',['../structcdocx_1_1AbstractNumberingDefinition.html#ad6bc85b04a20f558f000d8478fb09827',1,'cdocx::AbstractNumberingDefinition::id'],['../structcdocx_1_1NumberingDefinition.html#aa971f1b7f2bd8869aaa4285afa053e7f',1,'cdocx::NumberingDefinition::id'],['../structcdocx_1_1Relationship.html#aca24ea2671b6cfc3c4ea60373a5d709b',1,'cdocx::Relationship::id']]],
+  ['indent_1',['indent',['../structcdocx_1_1ParagraphProperties.html#ad16f26cc4e6e3e3e5f8a9b4b5ae5ba77',1,'cdocx::ParagraphProperties']]],
+  ['inside_5fh_2',['inside_h',['../structcdocx_1_1TableBorders.html#a73dc0ae085674cd0b43abdaef685c208',1,'cdocx::TableBorders']]],
+  ['inside_5fh_5fdefined_3',['inside_h_defined',['../classcdocx_1_1Borders.html#a6d6fd94b9705b45be1210debafa6cb3a',1,'cdocx::Borders']]],
+  ['inside_5fhorizontal_4',['inside_horizontal',['../classcdocx_1_1Borders.html#a2b5b63ab501ca8123e67d077c9961f29',1,'cdocx::Borders']]],
+  ['inside_5fv_5',['inside_v',['../structcdocx_1_1TableBorders.html#a655569d8e87ca9bbdebf33fe598fc2aa',1,'cdocx::TableBorders']]],
+  ['inside_5fv_5fdefined_6',['inside_v_defined',['../classcdocx_1_1Borders.html#a3a34cd35dee0e66227b1713922a28d91',1,'cdocx::Borders']]],
+  ['inside_5fvertical_7',['inside_vertical',['../classcdocx_1_1Borders.html#af0c3596e20bfcf89c7588ad1ca1b23a2',1,'cdocx::Borders']]],
+  ['integrity_8',['integrity',['../structcdocx_1_1LoadResult.html#a7dcd298f3749464cbb0ed8dc6ce6d576',1,'cdocx::LoadResult']]],
+  ['is_5fcritical_9',['is_critical',['../structcdocx_1_1DocxTreeNode.html#a7160027e167b6c663d87d7201279a3ea',1,'cdocx::DocxTreeNode']]],
+  ['is_5fdefault_10',['is_default',['../structcdocx_1_1ContentType.html#a9b4a86b55678b17adafa7cbaf5ed25da',1,'cdocx::ContentType']]],
+  ['is_5fdeleted_11',['is_deleted',['../structcdocx_1_1DocxTreeNode.html#aa1372c59c54f119194bdf0cbe5f21248',1,'cdocx::DocxTreeNode']]],
+  ['is_5fdeleted_5f_12',['is_deleted_',['../classcdocx_1_1Node.html#a38d87c3e6404eddb5dd9e90597595229',1,'cdocx::Node']]],
+  ['is_5fmodified_13',['is_modified',['../structcdocx_1_1DocxTreeNode.html#aa547e557d16b7a95c8f62a9d994015a0',1,'cdocx::DocxTreeNode']]],
+  ['is_5fnew_14',['is_new',['../structcdocx_1_1DocxTreeNode.html#a10e594bac95a5137e971e58925d4c0ad',1,'cdocx::DocxTreeNode']]],
+  ['is_5fopen_5f_15',['is_open_',['../classcdocx_1_1Document.html#a230d91af37d574bc7859d2d01803e13e',1,'cdocx::Document']]],
+  ['is_5frestart_16',['is_restart',['../structcdocx_1_1CellMerge.html#a48c668d26c02e602417108e81a4a8746',1,'cdocx::CellMerge']]],
+  ['is_5fvalid_17',['is_valid',['../structcdocx_1_1ImageFormatInfo.html#ac6a2162c68f6e7563d8c62f9117f983b',1,'cdocx::ImageFormatInfo']]],
+  ['italic_18',['italic',['../structcdocx_1_1BookmarkFormat.html#aca9d9798cbc00ca289cdadd3d98a6d85',1,'cdocx::BookmarkFormat::italic'],['../classcdocx_1_1Font.html#a6755978ce8709e831424f1a9d41541f1',1,'cdocx::Font::italic'],['../structcdocx_1_1TextProperties_1_1FontStyle.html#a6603dd1ecaceaeeb26c4bbbda7eaeb00',1,'cdocx::TextProperties::FontStyle::italic']]]
+];

@@ -1,0 +1,575 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: cdocx::Bookmark类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classcdocx_1_1Bookmark.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public 成员函数</a> &#124;
+<a href="#friends">友元</a> &#124;
+<a href="classcdocx_1_1Bookmark-members.html">所有成员列表</a>  </div>
+  <div class="headertitle"><div class="title">cdocx::Bookmark类 参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Represents a bookmark in the document  
+ <a href="classcdocx_1_1Bookmark.html#details">更多...</a></p>
+
+<p><code>#include &lt;<a class="el" href="bookmark_8h_source.html">bookmark.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public 成员函数</h2></td></tr>
+<tr class="memitem:a5c4d6356ceff26b8b91cc906884b7cbc" id="r_a5c4d6356ceff26b8b91cc906884b7cbc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#a5c4d6356ceff26b8b91cc906884b7cbc">Bookmark</a> ()</td></tr>
+<tr class="separator:a5c4d6356ceff26b8b91cc906884b7cbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a595aa7d6f41de95d01bfc0530e81f922" id="r_a595aa7d6f41de95d01bfc0530e81f922"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#a595aa7d6f41de95d01bfc0530e81f922">Bookmark</a> (<a class="el" href="classcdocx_1_1Document.html">Document</a> *doc, std::string name, pugi::xml_node start, pugi::xml_node <a class="el" href="namespacecdocx.html#a95f97defe39c638500f14b9d46505b43">end</a>)</td></tr>
+<tr class="separator:a595aa7d6f41de95d01bfc0530e81f922"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8613af31778307ced98afee0577f9471" id="r_a8613af31778307ced98afee0577f9471"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#a8613af31778307ced98afee0577f9471">get_name</a> () const</td></tr>
+<tr class="separator:a8613af31778307ced98afee0577f9471"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8bb8bcdc64177c8b9261d6dc59f5c0b" id="r_af8bb8bcdc64177c8b9261d6dc59f5c0b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#af8bb8bcdc64177c8b9261d6dc59f5c0b">set_name</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:af8bb8bcdc64177c8b9261d6dc59f5c0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8626e231a5f41c81ce40ddb0bb3747d2" id="r_a8626e231a5f41c81ce40ddb0bb3747d2"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#a8626e231a5f41c81ce40ddb0bb3747d2">get_text</a> () const</td></tr>
+<tr class="separator:a8626e231a5f41c81ce40ddb0bb3747d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a604512bff18ab17c64cee5463230a99b" id="r_a604512bff18ab17c64cee5463230a99b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#a604512bff18ab17c64cee5463230a99b">set_text</a> (const std::string &amp;text)</td></tr>
+<tr class="separator:a604512bff18ab17c64cee5463230a99b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0bd3728d87ad18f7ce7177ea240d74a" id="r_ad0bd3728d87ad18f7ce7177ea240d74a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#ad0bd3728d87ad18f7ce7177ea240d74a">is_valid</a> () const</td></tr>
+<tr class="separator:ad0bd3728d87ad18f7ce7177ea240d74a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e68affbf46a61a3b2a14c3046f5a8ab" id="r_a1e68affbf46a61a3b2a14c3046f5a8ab"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#a1e68affbf46a61a3b2a14c3046f5a8ab">remove</a> ()</td></tr>
+<tr class="separator:a1e68affbf46a61a3b2a14c3046f5a8ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae653faefb68f246ca1351df9fd5538be" id="r_ae653faefb68f246ca1351df9fd5538be"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#ae653faefb68f246ca1351df9fd5538be">remove_with_content</a> ()</td></tr>
+<tr class="separator:ae653faefb68f246ca1351df9fd5538be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe8e16089a303c1f0973eb257b288f06" id="r_abe8e16089a303c1f0973eb257b288f06"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcdocx_1_1BookmarkFormat.html">BookmarkFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#abe8e16089a303c1f0973eb257b288f06">get_format</a> () const</td></tr>
+<tr class="separator:abe8e16089a303c1f0973eb257b288f06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac5417e42f88261e957cfb1020c07a28" id="r_aac5417e42f88261e957cfb1020c07a28"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#aac5417e42f88261e957cfb1020c07a28">set_text_keep_format</a> (const std::string &amp;text)</td></tr>
+<tr class="separator:aac5417e42f88261e957cfb1020c07a28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5639fbc2f3c68c709f4c253b63a614ee" id="r_a5639fbc2f3c68c709f4c253b63a614ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#a5639fbc2f3c68c709f4c253b63a614ee">set_text_formatted</a> (const std::string &amp;text, const <a class="el" href="structcdocx_1_1BookmarkFormat.html">BookmarkFormat</a> &amp;format)</td></tr>
+<tr class="separator:a5639fbc2f3c68c709f4c253b63a614ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a777f94abaed0bd7e3af18c5d1813f3c3" id="r_a777f94abaed0bd7e3af18c5d1813f3c3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#a777f94abaed0bd7e3af18c5d1813f3c3">is_cross_paragraph</a> () const</td></tr>
+<tr class="separator:a777f94abaed0bd7e3af18c5d1813f3c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff08172d339bb91162e4318585ebd3a7" id="r_aff08172d339bb91162e4318585ebd3a7"><td class="memItemLeft" align="right" valign="top">std::vector&lt; pugi::xml_node &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#aff08172d339bb91162e4318585ebd3a7">get_covered_paragraphs</a> () const</td></tr>
+<tr class="separator:aff08172d339bb91162e4318585ebd3a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a522638a72f29793772d2217331a3bc" id="r_a5a522638a72f29793772d2217331a3bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#a5a522638a72f29793772d2217331a3bc">set_text_cross_paragraph</a> (const std::string &amp;text)</td></tr>
+<tr class="separator:a5a522638a72f29793772d2217331a3bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
+友元</h2></td></tr>
+<tr class="memitem:a883538034e58fc5c0de7d4e4cab3cef7" id="r_a883538034e58fc5c0de7d4e4cab3cef7"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#a883538034e58fc5c0de7d4e4cab3cef7">Document</a></td></tr>
+<tr class="separator:a883538034e58fc5c0de7d4e4cab3cef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85e01e8991e24d55dd351085d3d43c02" id="r_a85e01e8991e24d55dd351085d3d43c02"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Bookmark.html#a85e01e8991e24d55dd351085d3d43c02">BookmarkCollection</a></td></tr>
+<tr class="separator:a85e01e8991e24d55dd351085d3d43c02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>Represents a bookmark in the document </p>
+<dl class="section since"><dt>自从</dt><dd>0.2.0 </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="bookmark_8h_source.html">bookmark.h</a> 第 <a class="el" href="bookmark_8h_source.html#l00090">90</a> 行定义.</p>
+</div><h2 class="groupheader">构造及析构函数说明</h2>
+<a id="a5c4d6356ceff26b8b91cc906884b7cbc" name="a5c4d6356ceff26b8b91cc906884b7cbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c4d6356ceff26b8b91cc906884b7cbc">&#9670;&#160;</a></span>Bookmark() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::Bookmark::Bookmark </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a595aa7d6f41de95d01bfc0530e81f922" name="a595aa7d6f41de95d01bfc0530e81f922"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a595aa7d6f41de95d01bfc0530e81f922">&#9670;&#160;</a></span>Bookmark() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::Bookmark::Bookmark </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Document.html">Document</a> *&#160;</td>
+          <td class="paramname"><em>doc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">pugi::xml_node&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">pugi::xml_node&#160;</td>
+          <td class="paramname"><em>end</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00026">26</a> 行定义.</p>
+
+</div>
+</div>
+<h2 class="groupheader">成员函数说明</h2>
+<a id="aff08172d339bb91162e4318585ebd3a7" name="aff08172d339bb91162e4318585ebd3a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff08172d339bb91162e4318585ebd3a7">&#9670;&#160;</a></span>get_covered_paragraphs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; pugi::xml_node &gt; cdocx::Bookmark::get_covered_paragraphs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00501">501</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="bookmark_8cpp_source.html#l00134">is_valid()</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="table__builder_8cpp_source.html#l00249">cdocx::TableBuilder::insert_at_bookmark()</a>, <a class="el" href="bookmark__replacer_8cpp_source.html#l00124">cdocx::BookmarkReplacer::replace_with_image_advanced()</a>, <a class="el" href="bookmark__replacer_8cpp_source.html#l00196">cdocx::BookmarkReplacer::replace_with_image_from_memory()</a> , 以及 <a class="el" href="bookmark_8cpp_source.html#l00533">set_text_cross_paragraph()</a>.</p>
+
+</div>
+</div>
+<a id="abe8e16089a303c1f0973eb257b288f06" name="abe8e16089a303c1f0973eb257b288f06"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe8e16089a303c1f0973eb257b288f06">&#9670;&#160;</a></span>get_format()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcdocx_1_1BookmarkFormat.html">BookmarkFormat</a> cdocx::Bookmark::get_format </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00208">208</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="bookmark_8h_source.html#l00042">cdocx::BookmarkFormat::alignment</a>, <a class="el" href="bookmark_8h_source.html#l00037">cdocx::BookmarkFormat::bold</a>, <a class="el" href="bookmark_8h_source.html#l00036">cdocx::BookmarkFormat::color</a>, <a class="el" href="base__content_8cpp_source.html#l00023">color</a>, <a class="el" href="bookmark_8h_source.html#l00047">cdocx::BookmarkFormat::first_line_indent</a>, <a class="el" href="bookmark_8h_source.html#l00031">cdocx::BookmarkFormat::font_ascii</a>, <a class="el" href="bookmark_8h_source.html#l00032">cdocx::BookmarkFormat::font_far_east</a>, <a class="el" href="bookmark_8h_source.html#l00033">cdocx::BookmarkFormat::font_hansi</a>, <a class="el" href="bookmark_8h_source.html#l00034">cdocx::BookmarkFormat::font_hint</a>, <a class="el" href="bookmark_8h_source.html#l00035">cdocx::BookmarkFormat::font_size</a>, <a class="el" href="bookmark_8cpp_source.html#l00134">is_valid()</a>, <a class="el" href="bookmark_8h_source.html#l00038">cdocx::BookmarkFormat::italic</a>, <a class="el" href="bookmark_8h_source.html#l00051">cdocx::BookmarkFormat::keep_lines</a>, <a class="el" href="bookmark_8h_source.html#l00050">cdocx::BookmarkFormat::keep_next</a>, <a class="el" href="bookmark_8h_source.html#l00048">cdocx::BookmarkFormat::left_indent</a>, <a class="el" href="bookmark_8h_source.html#l00044">cdocx::BookmarkFormat::line_rule</a>, <a class="el" href="bookmark_8h_source.html#l00043">cdocx::BookmarkFormat::line_spacing</a>, <a class="el" href="bookmark_8h_source.html#l00052">cdocx::BookmarkFormat::page_break_before</a>, <a class="el" href="bookmark_8h_source.html#l00049">cdocx::BookmarkFormat::right_indent</a>, <a class="el" href="bookmark_8h_source.html#l00046">cdocx::BookmarkFormat::space_after</a>, <a class="el" href="bookmark_8h_source.html#l00045">cdocx::BookmarkFormat::space_before</a>, <a class="el" href="bookmark_8h_source.html#l00040">cdocx::BookmarkFormat::strikethrough</a> , 以及 <a class="el" href="bookmark_8h_source.html#l00039">cdocx::BookmarkFormat::underline</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="bookmark_8cpp_source.html#l00324">set_text_keep_format()</a>.</p>
+
+</div>
+</div>
+<a id="a8613af31778307ced98afee0577f9471" name="a8613af31778307ced98afee0577f9471"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8613af31778307ced98afee0577f9471">&#9670;&#160;</a></span>get_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string cdocx::Bookmark::get_name </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00030">30</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a8626e231a5f41c81ce40ddb0bb3747d2" name="a8626e231a5f41c81ce40ddb0bb3747d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8626e231a5f41c81ce40ddb0bb3747d2">&#9670;&#160;</a></span>get_text()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string cdocx::Bookmark::get_text </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00045">45</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="sync__common_8cpp_source.html#l00064">cdocx::collect_text_from_runs()</a>, <a class="el" href="bookmark_8cpp_source.html#l00134">is_valid()</a> , 以及 <a class="el" href="document__builder_8cpp_source.html#l00693">result</a>.</p>
+
+</div>
+</div>
+<a id="a777f94abaed0bd7e3af18c5d1813f3c3" name="a777f94abaed0bd7e3af18c5d1813f3c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a777f94abaed0bd7e3af18c5d1813f3c3">&#9670;&#160;</a></span>is_cross_paragraph()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cdocx::Bookmark::is_cross_paragraph </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00493">493</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="bookmark_8cpp_source.html#l00134">is_valid()</a>.</p>
+
+</div>
+</div>
+<a id="ad0bd3728d87ad18f7ce7177ea240d74a" name="ad0bd3728d87ad18f7ce7177ea240d74a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0bd3728d87ad18f7ce7177ea240d74a">&#9670;&#160;</a></span>is_valid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cdocx::Bookmark::is_valid </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00134">134</a> 行定义.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="bookmark_8cpp_source.html#l00501">get_covered_paragraphs()</a>, <a class="el" href="bookmark_8cpp_source.html#l00208">get_format()</a>, <a class="el" href="bookmark_8cpp_source.html#l00045">get_text()</a>, <a class="el" href="bookmark_8cpp_source.html#l00493">is_cross_paragraph()</a>, <a class="el" href="bookmark_8cpp_source.html#l00138">remove()</a>, <a class="el" href="bookmark_8cpp_source.html#l00150">remove_with_content()</a>, <a class="el" href="bookmark_8cpp_source.html#l00111">set_text()</a>, <a class="el" href="bookmark_8cpp_source.html#l00533">set_text_cross_paragraph()</a>, <a class="el" href="bookmark_8cpp_source.html#l00336">set_text_formatted()</a> , 以及 <a class="el" href="bookmark_8cpp_source.html#l00324">set_text_keep_format()</a>.</p>
+
+</div>
+</div>
+<a id="a1e68affbf46a61a3b2a14c3046f5a8ab" name="a1e68affbf46a61a3b2a14c3046f5a8ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e68affbf46a61a3b2a14c3046f5a8ab">&#9670;&#160;</a></span>remove()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cdocx::Bookmark::remove </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00138">138</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="bookmark_8cpp_source.html#l00134">is_valid()</a>.</p>
+
+</div>
+</div>
+<a id="ae653faefb68f246ca1351df9fd5538be" name="ae653faefb68f246ca1351df9fd5538be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae653faefb68f246ca1351df9fd5538be">&#9670;&#160;</a></span>remove_with_content()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cdocx::Bookmark::remove_with_content </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00150">150</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="bookmark_8cpp_source.html#l00134">is_valid()</a>.</p>
+
+</div>
+</div>
+<a id="af8bb8bcdc64177c8b9261d6dc59f5c0b" name="af8bb8bcdc64177c8b9261d6dc59f5c0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8bb8bcdc64177c8b9261d6dc59f5c0b">&#9670;&#160;</a></span>set_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cdocx::Bookmark::set_name </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00034">34</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a604512bff18ab17c64cee5463230a99b" name="a604512bff18ab17c64cee5463230a99b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a604512bff18ab17c64cee5463230a99b">&#9670;&#160;</a></span>set_text()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cdocx::Bookmark::set_text </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00111">111</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="bookmark_8cpp_source.html#l00134">is_valid()</a>.</p>
+
+</div>
+</div>
+<a id="a5a522638a72f29793772d2217331a3bc" name="a5a522638a72f29793772d2217331a3bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a522638a72f29793772d2217331a3bc">&#9670;&#160;</a></span>set_text_cross_paragraph()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cdocx::Bookmark::set_text_cross_paragraph </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00533">533</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="bookmark_8h_source.html#l00031">cdocx::BookmarkFormat::font_ascii</a>, <a class="el" href="bookmark_8h_source.html#l00032">cdocx::BookmarkFormat::font_far_east</a>, <a class="el" href="bookmark_8h_source.html#l00035">cdocx::BookmarkFormat::font_size</a>, <a class="el" href="bookmark_8cpp_source.html#l00501">get_covered_paragraphs()</a>, <a class="el" href="sync__common_8cpp_source.html#l00095">cdocx::is_bookmark_end_node()</a>, <a class="el" href="bookmark_8cpp_source.html#l00134">is_valid()</a>, <a class="el" href="bookmark_8cpp_source.html#l00336">set_text_formatted()</a> , 以及 <a class="el" href="bookmark_8cpp_source.html#l00324">set_text_keep_format()</a>.</p>
+
+</div>
+</div>
+<a id="a5639fbc2f3c68c709f4c253b63a614ee" name="a5639fbc2f3c68c709f4c253b63a614ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5639fbc2f3c68c709f4c253b63a614ee">&#9670;&#160;</a></span>set_text_formatted()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cdocx::Bookmark::set_text_formatted </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structcdocx_1_1BookmarkFormat.html">BookmarkFormat</a> &amp;&#160;</td>
+          <td class="paramname"><em>format</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00336">336</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="bookmark_8h_source.html#l00042">cdocx::BookmarkFormat::alignment</a>, <a class="el" href="bookmark_8h_source.html#l00037">cdocx::BookmarkFormat::bold</a>, <a class="el" href="bookmark_8h_source.html#l00036">cdocx::BookmarkFormat::color</a>, <a class="el" href="base__content_8cpp_source.html#l00023">color</a>, <a class="el" href="sync__common_8cpp_source.html#l00680">cdocx::ensure_child()</a>, <a class="el" href="bookmark_8h_source.html#l00047">cdocx::BookmarkFormat::first_line_indent</a>, <a class="el" href="bookmark_8h_source.html#l00031">cdocx::BookmarkFormat::font_ascii</a>, <a class="el" href="bookmark_8h_source.html#l00032">cdocx::BookmarkFormat::font_far_east</a>, <a class="el" href="bookmark_8h_source.html#l00033">cdocx::BookmarkFormat::font_hansi</a>, <a class="el" href="bookmark_8h_source.html#l00034">cdocx::BookmarkFormat::font_hint</a>, <a class="el" href="bookmark_8h_source.html#l00035">cdocx::BookmarkFormat::font_size</a>, <a class="el" href="sync__common_8cpp_source.html#l00099">cdocx::is_run_node()</a>, <a class="el" href="bookmark_8h_source.html#l00054">cdocx::BookmarkFormat::is_valid()</a>, <a class="el" href="bookmark_8cpp_source.html#l00134">is_valid()</a>, <a class="el" href="bookmark_8h_source.html#l00038">cdocx::BookmarkFormat::italic</a>, <a class="el" href="bookmark_8h_source.html#l00051">cdocx::BookmarkFormat::keep_lines</a>, <a class="el" href="bookmark_8h_source.html#l00050">cdocx::BookmarkFormat::keep_next</a>, <a class="el" href="bookmark_8h_source.html#l00048">cdocx::BookmarkFormat::left_indent</a>, <a class="el" href="bookmark_8h_source.html#l00044">cdocx::BookmarkFormat::line_rule</a>, <a class="el" href="bookmark_8h_source.html#l00043">cdocx::BookmarkFormat::line_spacing</a>, <a class="el" href="bookmark_8h_source.html#l00052">cdocx::BookmarkFormat::page_break_before</a>, <a class="el" href="bookmark_8h_source.html#l00049">cdocx::BookmarkFormat::right_indent</a>, <a class="el" href="bookmark_8h_source.html#l00046">cdocx::BookmarkFormat::space_after</a>, <a class="el" href="bookmark_8h_source.html#l00045">cdocx::BookmarkFormat::space_before</a>, <a class="el" href="bookmark_8h_source.html#l00040">cdocx::BookmarkFormat::strikethrough</a> , 以及 <a class="el" href="bookmark_8h_source.html#l00039">cdocx::BookmarkFormat::underline</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="bookmark__replacer_8cpp_source.html#l00075">cdocx::BookmarkReplacer::replace_text_with_format()</a>, <a class="el" href="bookmark_8cpp_source.html#l00533">set_text_cross_paragraph()</a> , 以及 <a class="el" href="bookmark_8cpp_source.html#l00324">set_text_keep_format()</a>.</p>
+
+</div>
+</div>
+<a id="aac5417e42f88261e957cfb1020c07a28" name="aac5417e42f88261e957cfb1020c07a28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac5417e42f88261e957cfb1020c07a28">&#9670;&#160;</a></span>set_text_keep_format()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cdocx::Bookmark::set_text_keep_format </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a> 第 <a class="el" href="bookmark_8cpp_source.html#l00324">324</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="bookmark_8cpp_source.html#l00208">get_format()</a>, <a class="el" href="bookmark_8cpp_source.html#l00134">is_valid()</a> , 以及 <a class="el" href="bookmark_8cpp_source.html#l00336">set_text_formatted()</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="bookmark__replacer_8cpp_source.html#l00042">cdocx::BookmarkReplacer::replace_text()</a> , 以及 <a class="el" href="bookmark_8cpp_source.html#l00533">set_text_cross_paragraph()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">友元及相关函数文档</h2>
+<a id="a85e01e8991e24d55dd351085d3d43c02" name="a85e01e8991e24d55dd351085d3d43c02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85e01e8991e24d55dd351085d3d43c02">&#9670;&#160;</a></span>BookmarkCollection</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classcdocx_1_1BookmarkCollection.html">BookmarkCollection</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8h_source.html">bookmark.h</a> 第 <a class="el" href="bookmark_8h_source.html#l00093">93</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a883538034e58fc5c0de7d4e4cab3cef7" name="a883538034e58fc5c0de7d4e4cab3cef7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a883538034e58fc5c0de7d4e4cab3cef7">&#9670;&#160;</a></span>Document</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classcdocx_1_1Document.html">Document</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="bookmark_8h_source.html">bookmark.h</a> 第 <a class="el" href="bookmark_8h_source.html#l00092">92</a> 行定义.</p>
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li><a class="el" href="bookmark_8h_source.html">bookmark.h</a></li>
+<li><a class="el" href="bookmark_8cpp_source.html">bookmark.cpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespacecdocx.html">cdocx</a></li><li class="navelem"><a class="el" href="classcdocx_1_1Bookmark.html">Bookmark</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

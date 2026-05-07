@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: document.h 文件参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('document_8h.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">类</a> &#124;
+<a href="#namespaces">命名空间</a> &#124;
+<a href="#enum-members">枚举</a>  </div>
+  <div class="headertitle"><div class="title">document.h 文件参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Document class for working with DOCX files - DOM Style  
+<a href="#details">更多...</a></p>
+<div class="textblock"><code>#include &lt;<a class="el" href="enums_8h_source.html">cdocx/enums.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="format_8h_source.html">cdocx/format.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="node_8h_source.html">cdocx/node.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="numbering_8h_source.html">cdocx/numbering.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="properties_8h_source.html">cdocx/properties.h</a>&gt;</code><br />
+<code>#include &lt;zip.h&gt;</code><br />
+<code>#include &lt;pugixml.hpp&gt;</code><br />
+<code>#include &lt;chrono&gt;</code><br />
+<code>#include &lt;cstdint&gt;</code><br />
+<code>#include &lt;functional&gt;</code><br />
+<code>#include &lt;map&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;set&gt;</code><br />
+<code>#include &lt;shared_mutex&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
+</div>
+<p><a href="document_8h_source.html">浏览源代码.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+类</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1DocxTreeNode.html">cdocx::DocxTreeNode</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocxTree.html">cdocx::DocxTree</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1Relationship.html">cdocx::Relationship</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1ContentType.html">cdocx::ContentType</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1LoadConfig.html">cdocx::LoadConfig</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1LoadError.html">cdocx::LoadError</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1LoadResult.html">cdocx::LoadResult</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1LoadStatistics.html">cdocx::LoadStatistics</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Document.html">cdocx::Document</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+命名空间</h2></td></tr>
+<tr class="memitem:namespacecdocx" id="r_namespacecdocx"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html">cdocx</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+枚举</h2></td></tr>
+<tr class="memitem:a79135431c75934c70eadbe95c59eff67" id="r_a79135431c75934c70eadbe95c59eff67"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a79135431c75934c70eadbe95c59eff67">cdocx::DocxNodeType</a> : std::uint8_t { <br />
+&#160;&#160;<a class="el" href="namespacecdocx.html#a79135431c75934c70eadbe95c59eff67afa03eb688ad8aa1db593d33dabd89bad">cdocx::Root</a>
+, <a class="el" href="namespacecdocx.html#a79135431c75934c70eadbe95c59eff67ae73cda510e8bb947f7e61089e5581494">cdocx::Directory</a>
+, <a class="el" href="namespacecdocx.html#a79135431c75934c70eadbe95c59eff67a0bb2f28d3ad5ef6bac75828da0911c7d">cdocx::XmlFile</a>
+, <a class="el" href="namespacecdocx.html#a79135431c75934c70eadbe95c59eff67a19aacb9ff5189089fabb4670fd6f6ee7">cdocx::MediaFile</a>
+, <br />
+&#160;&#160;<a class="el" href="namespacecdocx.html#a79135431c75934c70eadbe95c59eff67aa3d239688de3c42de2258b9d85ce9e3c">cdocx::BinaryFile</a>
+<br />
+ }</td></tr>
+<tr class="separator:a79135431c75934c70eadbe95c59eff67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38b81fec23e1c99bc5c1cc31fc51264c" id="r_a38b81fec23e1c99bc5c1cc31fc51264c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264c">cdocx::LoadErrorType</a> : std::uint8_t { <br />
+&#160;&#160;<a class="el" href="namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264ca6adf97f83acf6453d4a6a4b1070f3754">cdocx::None</a>
+, <a class="el" href="namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264ca6033ff7c1ef8bf1b7984f046faa1a2c0">cdocx::ZipOpenFailed</a>
+, <a class="el" href="namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264caa86ca81e033101b5ae330a4ed29b959d">cdocx::ZipEntryReadFailed</a>
+, <a class="el" href="namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264caf1e8793fa60635ea685d3f6ba7e42846">cdocx::XmlParseFailed</a>
+, <br />
+&#160;&#160;<a class="el" href="namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264caf114a61fd6e7b65e472a6d65afe39974">cdocx::InvalidStructure</a>
+, <a class="el" href="namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264caf729312d31f742661521ece50e6602d2">cdocx::CorruptedFile</a>
+, <a class="el" href="namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264ca6a10b4834f9cabcc57ddbf0ee05eeb47">cdocx::MemoryAllocation</a>
+, <a class="el" href="namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264caf05cfcbf5123775f7c73e520a8d861e1">cdocx::IoError</a>
+, <br />
+&#160;&#160;<a class="el" href="namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264cac85a251cc457840f1e032f1b733e9398">cdocx::Timeout</a>
+, <a class="el" href="namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264ca88183b946cc5f0e8c96b2e66e1c74a7e">cdocx::Unknown</a>
+<br />
+ }</td></tr>
+<tr class="separator:a38b81fec23e1c99bc5c1cc31fc51264c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13674e367cb43611787fab22d62b1030" id="r_a13674e367cb43611787fab22d62b1030"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a13674e367cb43611787fab22d62b1030">cdocx::DocumentIntegrity</a> : std::uint8_t { <a class="el" href="namespacecdocx.html#a13674e367cb43611787fab22d62b1030aae94f80b3ce82062a5dd7815daa04f9d">cdocx::Complete</a>
+, <a class="el" href="namespacecdocx.html#a13674e367cb43611787fab22d62b1030a44ffd38a6dea695cbe2b34efdcc6cf27">cdocx::Partial</a>
+, <a class="el" href="namespacecdocx.html#a13674e367cb43611787fab22d62b1030a278d01e5af56273bae1bb99a98b370cd">cdocx::Critical</a>
+, <a class="el" href="namespacecdocx.html#a13674e367cb43611787fab22d62b1030a15ff2bcedc465304bd186b34a01e251e">cdocx::Corrupted</a>
+ }</td></tr>
+<tr class="separator:a13674e367cb43611787fab22d62b1030"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab59e5885ab47732841eb5c702f04e30c" id="r_ab59e5885ab47732841eb5c702f04e30c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#ab59e5885ab47732841eb5c702f04e30c">cdocx::ProtectionType</a> : std::uint8_t { <br />
+&#160;&#160;<a class="el" href="namespacecdocx.html#ab59e5885ab47732841eb5c702f04e30ca18f2c901a0893097e2ef30ac53f4086a">cdocx::NoProtection</a> = 0
+, <a class="el" href="namespacecdocx.html#ab59e5885ab47732841eb5c702f04e30cabd3cc3b960cb63a369c8d9c59a94b7ff">cdocx::AllowOnlyRevisions</a>
+, <a class="el" href="namespacecdocx.html#ab59e5885ab47732841eb5c702f04e30ca9fb9e86c065a009c0661c3a0503d16b9">cdocx::AllowOnlyComments</a>
+, <a class="el" href="namespacecdocx.html#ab59e5885ab47732841eb5c702f04e30ca963e26d56f1b265432d7c9d01a099b8e">cdocx::AllowOnlyFormFields</a>
+, <br />
+&#160;&#160;<a class="el" href="namespacecdocx.html#ab59e5885ab47732841eb5c702f04e30ca131fb182a881796e7606ed6da27f1197">cdocx::ReadOnly</a>
+<br />
+ }</td></tr>
+<tr class="separator:ab59e5885ab47732841eb5c702f04e30c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>Document class for working with DOCX files - DOM Style </p>
+<p>Provides the main Document class for opening, creating, modifying, and saving Word documents (.docx). Now uses pure DOM architecture with Document inheriting from CompositeNode.</p>
+<dl class="section author"><dt>作者</dt><dd>lonlng </dd></dl>
+<dl class="section copyright"><dt>版权所有</dt><dd>MIT License </dd></dl>
+<dl class="section date"><dt>日期</dt><dd>2026 </dd></dl>
+<dl class="section version"><dt>版本</dt><dd>0.8.0 - DOM Architecture</dd></dl>
+<dl class="section user"><dt>Usage Example:</dt><dd><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="document_8h.html">cdocx/document.h</a>&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Open existing document</span></div>
+<div class="line"><a class="code hl_class" href="classcdocx_1_1Document.html">cdocx::Document</a> doc(<span class="stringliteral">&quot;input.docx&quot;</span>);</div>
+<div class="line">doc.open();</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Access sections</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; section : doc.get_sections()) {</div>
+<div class="line">    <span class="keyword">auto</span> body = section-&gt;get_body();</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Iterate paragraphs using DOM</span></div>
+<div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; para : body-&gt;get_child_nodes(<a class="code hl_namespace" href="namespacecdocx.html">cdocx</a>::NodeType::Paragraph)) {</div>
+<div class="line">        std::cout &lt;&lt; para-&gt;get_text() &lt;&lt; std::endl;</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Create content using DOM API</span></div>
+<div class="line"><span class="keyword">auto</span> section = doc.append_section();</div>
+<div class="line"><span class="keyword">auto</span> body = section-&gt;get_body();</div>
+<div class="line"><span class="keyword">auto</span> para = body-&gt;append_paragraph(<span class="stringliteral">&quot;Hello, World!&quot;</span>);</div>
+<div class="line">para-&gt;append_run(<span class="stringliteral">&quot; Bold text&quot;</span>)-&gt;set_bold(<span class="keyword">true</span>);</div>
+<div class="line"> </div>
+<div class="line">doc.save(<span class="stringliteral">&quot;output.docx&quot;</span>);</div>
+<div class="ttc" id="aclasscdocx_1_1Document_html"><div class="ttname"><a href="classcdocx_1_1Document.html">cdocx::Document</a></div><div class="ttdef"><b>Definition</b> <a href="document_8h_source.html#l00285">document.h:285</a></div></div>
+<div class="ttc" id="adocument_8h_html"><div class="ttname"><a href="document_8h.html">document.h</a></div><div class="ttdoc">Document class for working with DOCX files - DOM Style</div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+</div><!-- fragment --> </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="document_8h_source.html">document.h</a> 中定义.</p>
+</div></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_45cf22061f640deb443c5da4ff0b00bd.html">cdocx</a></li><li class="navelem"><a class="el" href="document_8h.html">document.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

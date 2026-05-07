@@ -1,0 +1,1270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: cdocx::DocumentVisitor类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classcdocx_1_1DocumentVisitor.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public 成员函数</a> &#124;
+<a href="classcdocx_1_1DocumentVisitor-members.html">所有成员列表</a>  </div>
+  <div class="headertitle"><div class="title">cdocx::DocumentVisitor类 参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="node_8h_source.html">node.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public 成员函数</h2></td></tr>
+<tr class="memitem:ae47a16676dd006e0cf2e2e2902ec6877" id="r_ae47a16676dd006e0cf2e2e2902ec6877"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#ae47a16676dd006e0cf2e2e2902ec6877">~DocumentVisitor</a> ()=default</td></tr>
+<tr class="separator:ae47a16676dd006e0cf2e2e2902ec6877"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa6eea448359d1853da4a5fe45003328" id="r_afa6eea448359d1853da4a5fe45003328"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#afa6eea448359d1853da4a5fe45003328">visit_document_start</a> (<a class="el" href="classcdocx_1_1Document.html">Document</a> &amp;)</td></tr>
+<tr class="separator:afa6eea448359d1853da4a5fe45003328"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae20467c33d1b3a26db58440e529b9496" id="r_ae20467c33d1b3a26db58440e529b9496"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#ae20467c33d1b3a26db58440e529b9496">visit_document_end</a> (<a class="el" href="classcdocx_1_1Document.html">Document</a> &amp;)</td></tr>
+<tr class="separator:ae20467c33d1b3a26db58440e529b9496"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17c2cf07e7f28fcc92a0bcd122fd6069" id="r_a17c2cf07e7f28fcc92a0bcd122fd6069"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a17c2cf07e7f28fcc92a0bcd122fd6069">visit_section_start</a> (<a class="el" href="classcdocx_1_1Section.html">Section</a> &amp;)</td></tr>
+<tr class="separator:a17c2cf07e7f28fcc92a0bcd122fd6069"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6da7e56efb86cd0c649e9e6222925b6c" id="r_a6da7e56efb86cd0c649e9e6222925b6c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a6da7e56efb86cd0c649e9e6222925b6c">visit_section_end</a> (<a class="el" href="classcdocx_1_1Section.html">Section</a> &amp;)</td></tr>
+<tr class="separator:a6da7e56efb86cd0c649e9e6222925b6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98828027ad540c05e3e6bfc786421206" id="r_a98828027ad540c05e3e6bfc786421206"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a98828027ad540c05e3e6bfc786421206">visit_body_start</a> (<a class="el" href="classcdocx_1_1Body.html">Body</a> &amp;)</td></tr>
+<tr class="separator:a98828027ad540c05e3e6bfc786421206"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac88a45b18d47b7985fd0acf75d929e88" id="r_ac88a45b18d47b7985fd0acf75d929e88"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#ac88a45b18d47b7985fd0acf75d929e88">visit_body_end</a> (<a class="el" href="classcdocx_1_1Body.html">Body</a> &amp;)</td></tr>
+<tr class="separator:ac88a45b18d47b7985fd0acf75d929e88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb2a36e20d00b461ff469885fd81f6ae" id="r_adb2a36e20d00b461ff469885fd81f6ae"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#adb2a36e20d00b461ff469885fd81f6ae">visit_header_start</a> (<a class="el" href="classcdocx_1_1HeaderFooter.html">HeaderFooter</a> &amp;)</td></tr>
+<tr class="separator:adb2a36e20d00b461ff469885fd81f6ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a47c78d322b41213453732b193c91b8" id="r_a8a47c78d322b41213453732b193c91b8"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a8a47c78d322b41213453732b193c91b8">visit_header_end</a> (<a class="el" href="classcdocx_1_1HeaderFooter.html">HeaderFooter</a> &amp;)</td></tr>
+<tr class="separator:a8a47c78d322b41213453732b193c91b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf0a999463f2d3a2bab9dde33f29db7c" id="r_aaf0a999463f2d3a2bab9dde33f29db7c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#aaf0a999463f2d3a2bab9dde33f29db7c">visit_footer_start</a> (<a class="el" href="classcdocx_1_1HeaderFooter.html">HeaderFooter</a> &amp;)</td></tr>
+<tr class="separator:aaf0a999463f2d3a2bab9dde33f29db7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a174cfff15aba7e8726b75dde9d1062d6" id="r_a174cfff15aba7e8726b75dde9d1062d6"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a174cfff15aba7e8726b75dde9d1062d6">visit_footer_end</a> (<a class="el" href="classcdocx_1_1HeaderFooter.html">HeaderFooter</a> &amp;)</td></tr>
+<tr class="separator:a174cfff15aba7e8726b75dde9d1062d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac69428a9eef597a773db64d720c25d72" id="r_ac69428a9eef597a773db64d720c25d72"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#ac69428a9eef597a773db64d720c25d72">visit_paragraph_start</a> (<a class="el" href="classcdocx_1_1Paragraph.html">Paragraph</a> &amp;)</td></tr>
+<tr class="separator:ac69428a9eef597a773db64d720c25d72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9498dc6030e484174a5b657bf9ab1fce" id="r_a9498dc6030e484174a5b657bf9ab1fce"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a9498dc6030e484174a5b657bf9ab1fce">visit_paragraph_end</a> (<a class="el" href="classcdocx_1_1Paragraph.html">Paragraph</a> &amp;)</td></tr>
+<tr class="separator:a9498dc6030e484174a5b657bf9ab1fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63fcc996f0bb49b6f5bcd71ba1edaf35" id="r_a63fcc996f0bb49b6f5bcd71ba1edaf35"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a63fcc996f0bb49b6f5bcd71ba1edaf35">visit_table_start</a> (<a class="el" href="classcdocx_1_1Table.html">Table</a> &amp;)</td></tr>
+<tr class="separator:a63fcc996f0bb49b6f5bcd71ba1edaf35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c37ba000d5edee567dc87691c23e4f7" id="r_a2c37ba000d5edee567dc87691c23e4f7"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a2c37ba000d5edee567dc87691c23e4f7">visit_table_end</a> (<a class="el" href="classcdocx_1_1Table.html">Table</a> &amp;)</td></tr>
+<tr class="separator:a2c37ba000d5edee567dc87691c23e4f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae96c48b0e200d0fbcd1d50bb01cb91d0" id="r_ae96c48b0e200d0fbcd1d50bb01cb91d0"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#ae96c48b0e200d0fbcd1d50bb01cb91d0">visit_row_start</a> (<a class="el" href="classcdocx_1_1Row.html">Row</a> &amp;)</td></tr>
+<tr class="separator:ae96c48b0e200d0fbcd1d50bb01cb91d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a954056e0505dc7381b4b9c2a29d25403" id="r_a954056e0505dc7381b4b9c2a29d25403"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a954056e0505dc7381b4b9c2a29d25403">visit_row_end</a> (<a class="el" href="classcdocx_1_1Row.html">Row</a> &amp;)</td></tr>
+<tr class="separator:a954056e0505dc7381b4b9c2a29d25403"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae14bcea9042a6fa66b5ef721c265946b" id="r_ae14bcea9042a6fa66b5ef721c265946b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#ae14bcea9042a6fa66b5ef721c265946b">visit_cell_start</a> (<a class="el" href="classcdocx_1_1Cell.html">Cell</a> &amp;)</td></tr>
+<tr class="separator:ae14bcea9042a6fa66b5ef721c265946b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16610a1e9a53226a051a22cb31d33e30" id="r_a16610a1e9a53226a051a22cb31d33e30"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a16610a1e9a53226a051a22cb31d33e30">visit_cell_end</a> (<a class="el" href="classcdocx_1_1Cell.html">Cell</a> &amp;)</td></tr>
+<tr class="separator:a16610a1e9a53226a051a22cb31d33e30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae359274720ce9bcfe6c1d6ab7917fc18" id="r_ae359274720ce9bcfe6c1d6ab7917fc18"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#ae359274720ce9bcfe6c1d6ab7917fc18">visit_run</a> (<a class="el" href="classcdocx_1_1Run.html">Run</a> &amp;)</td></tr>
+<tr class="separator:ae359274720ce9bcfe6c1d6ab7917fc18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a819f18c951533de4cc715649f3b9f2e7" id="r_a819f18c951533de4cc715649f3b9f2e7"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a819f18c951533de4cc715649f3b9f2e7">visit_special_char</a> (<a class="el" href="classcdocx_1_1SpecialChar.html">SpecialChar</a> &amp;)</td></tr>
+<tr class="separator:a819f18c951533de4cc715649f3b9f2e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9aa40b9f02552e594450a4ffb4563a4" id="r_aa9aa40b9f02552e594450a4ffb4563a4"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#aa9aa40b9f02552e594450a4ffb4563a4">visit_field_start</a> (<a class="el" href="classcdocx_1_1Field.html">Field</a> &amp;)</td></tr>
+<tr class="separator:aa9aa40b9f02552e594450a4ffb4563a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af616393c0346ca5ae65b9091a7a95ef1" id="r_af616393c0346ca5ae65b9091a7a95ef1"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#af616393c0346ca5ae65b9091a7a95ef1">visit_field_separator</a> (<a class="el" href="classcdocx_1_1Field.html">Field</a> &amp;)</td></tr>
+<tr class="separator:af616393c0346ca5ae65b9091a7a95ef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50f0a4bc8ff4f3969940919e587cf932" id="r_a50f0a4bc8ff4f3969940919e587cf932"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a50f0a4bc8ff4f3969940919e587cf932">visit_field_end</a> (<a class="el" href="classcdocx_1_1Field.html">Field</a> &amp;)</td></tr>
+<tr class="separator:a50f0a4bc8ff4f3969940919e587cf932"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dcbfbbcf6ed559ef2380c3b52a14e52" id="r_a3dcbfbbcf6ed559ef2380c3b52a14e52"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a3dcbfbbcf6ed559ef2380c3b52a14e52">visit_bookmark_start</a> (<a class="el" href="classcdocx_1_1BookmarkStart.html">BookmarkStart</a> &amp;)</td></tr>
+<tr class="separator:a3dcbfbbcf6ed559ef2380c3b52a14e52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac43350ac8cb29281232f7d255d4bed6e" id="r_ac43350ac8cb29281232f7d255d4bed6e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#ac43350ac8cb29281232f7d255d4bed6e">visit_bookmark_end</a> (<a class="el" href="classcdocx_1_1BookmarkEnd.html">BookmarkEnd</a> &amp;)</td></tr>
+<tr class="separator:ac43350ac8cb29281232f7d255d4bed6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae349339d4e12f5a3273c6d178a9b1ed5" id="r_ae349339d4e12f5a3273c6d178a9b1ed5"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#ae349339d4e12f5a3273c6d178a9b1ed5">visit_comment</a> (<a class="el" href="classcdocx_1_1Comment.html">Comment</a> &amp;)</td></tr>
+<tr class="separator:ae349339d4e12f5a3273c6d178a9b1ed5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada8b3bbc9eb5842ca1415937a3a7013b" id="r_ada8b3bbc9eb5842ca1415937a3a7013b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#ada8b3bbc9eb5842ca1415937a3a7013b">visit_comment_range_start</a> (<a class="el" href="classcdocx_1_1CommentRangeStart.html">CommentRangeStart</a> &amp;)</td></tr>
+<tr class="separator:ada8b3bbc9eb5842ca1415937a3a7013b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a846525bc1d90b6671038edf7fcbc5f25" id="r_a846525bc1d90b6671038edf7fcbc5f25"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a846525bc1d90b6671038edf7fcbc5f25">visit_comment_range_end</a> (<a class="el" href="classcdocx_1_1CommentRangeEnd.html">CommentRangeEnd</a> &amp;)</td></tr>
+<tr class="separator:a846525bc1d90b6671038edf7fcbc5f25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d5a68d13e3115c35fb011376f697d1a" id="r_a5d5a68d13e3115c35fb011376f697d1a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a5d5a68d13e3115c35fb011376f697d1a">visit_footnote_start</a> (<a class="el" href="classcdocx_1_1Footnote.html">Footnote</a> &amp;)</td></tr>
+<tr class="separator:a5d5a68d13e3115c35fb011376f697d1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a577fbde8877aeb0b8d2b43eeb6cbfe55" id="r_a577fbde8877aeb0b8d2b43eeb6cbfe55"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a577fbde8877aeb0b8d2b43eeb6cbfe55">visit_footnote_end</a> (<a class="el" href="classcdocx_1_1Footnote.html">Footnote</a> &amp;)</td></tr>
+<tr class="separator:a577fbde8877aeb0b8d2b43eeb6cbfe55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49942ccbe3e86aed8bc150d0fa389c25" id="r_a49942ccbe3e86aed8bc150d0fa389c25"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#a49942ccbe3e86aed8bc150d0fa389c25">visit_form_field</a> (<a class="el" href="classcdocx_1_1FormField.html">FormField</a> &amp;)</td></tr>
+<tr class="separator:a49942ccbe3e86aed8bc150d0fa389c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1cf88f1d8bfc2af299634b8a2edaa88" id="r_ae1cf88f1d8bfc2af299634b8a2edaa88"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#ae1cf88f1d8bfc2af299634b8a2edaa88">visit_footnote_reference</a> (<a class="el" href="classcdocx_1_1FootnoteReference.html">FootnoteReference</a> &amp;)</td></tr>
+<tr class="separator:ae1cf88f1d8bfc2af299634b8a2edaa88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba524be6ac4a70483ab1e0f53f408f80" id="r_aba524be6ac4a70483ab1e0f53f408f80"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1DocumentVisitor.html#aba524be6ac4a70483ab1e0f53f408f80">visit_endnote_reference</a> (<a class="el" href="classcdocx_1_1EndnoteReference.html">EndnoteReference</a> &amp;)</td></tr>
+<tr class="separator:aba524be6ac4a70483ab1e0f53f408f80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock">
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00298">298</a> 行定义.</p>
+</div><h2 class="groupheader">构造及析构函数说明</h2>
+<a id="ae47a16676dd006e0cf2e2e2902ec6877" name="ae47a16676dd006e0cf2e2e2902ec6877"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae47a16676dd006e0cf2e2e2902ec6877">&#9670;&#160;</a></span>~DocumentVisitor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual cdocx::DocumentVisitor::~DocumentVisitor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">成员函数说明</h2>
+<a id="ac88a45b18d47b7985fd0acf75d929e88" name="ac88a45b18d47b7985fd0acf75d929e88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac88a45b18d47b7985fd0acf75d929e88">&#9670;&#160;</a></span>visit_body_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_body_end </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Body.html">Body</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00318">318</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="body_8cpp_source.html#l00024">cdocx::Body::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a98828027ad540c05e3e6bfc786421206" name="a98828027ad540c05e3e6bfc786421206"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98828027ad540c05e3e6bfc786421206">&#9670;&#160;</a></span>visit_body_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_body_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Body.html">Body</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00317">317</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="body_8cpp_source.html#l00024">cdocx::Body::accept()</a>.</p>
+
+</div>
+</div>
+<a id="ac43350ac8cb29281232f7d255d4bed6e" name="ac43350ac8cb29281232f7d255d4bed6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac43350ac8cb29281232f7d255d4bed6e">&#9670;&#160;</a></span>visit_bookmark_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_bookmark_end </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1BookmarkEnd.html">BookmarkEnd</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00373">373</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="base__content_8cpp_source.html#l00973">cdocx::BookmarkEnd::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a3dcbfbbcf6ed559ef2380c3b52a14e52" name="a3dcbfbbcf6ed559ef2380c3b52a14e52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dcbfbbcf6ed559ef2380c3b52a14e52">&#9670;&#160;</a></span>visit_bookmark_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_bookmark_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1BookmarkStart.html">BookmarkStart</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00370">370</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="base__content_8cpp_source.html#l00950">cdocx::BookmarkStart::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a16610a1e9a53226a051a22cb31d33e30" name="a16610a1e9a53226a051a22cb31d33e30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16610a1e9a53226a051a22cb31d33e30">&#9670;&#160;</a></span>visit_cell_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_cell_end </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Cell.html">Cell</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00352">352</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="table_8cpp_source.html#l00031">cdocx::Cell::accept()</a>.</p>
+
+</div>
+</div>
+<a id="ae14bcea9042a6fa66b5ef721c265946b" name="ae14bcea9042a6fa66b5ef721c265946b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae14bcea9042a6fa66b5ef721c265946b">&#9670;&#160;</a></span>visit_cell_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_cell_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Cell.html">Cell</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00351">351</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="table_8cpp_source.html#l00031">cdocx::Cell::accept()</a>.</p>
+
+</div>
+</div>
+<a id="ae349339d4e12f5a3273c6d178a9b1ed5" name="ae349339d4e12f5a3273c6d178a9b1ed5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae349339d4e12f5a3273c6d178a9b1ed5">&#9670;&#160;</a></span>visit_comment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_comment </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Comment.html">Comment</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00378">378</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="comment_8cpp_source.html#l00118">cdocx::Comment::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a846525bc1d90b6671038edf7fcbc5f25" name="a846525bc1d90b6671038edf7fcbc5f25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a846525bc1d90b6671038edf7fcbc5f25">&#9670;&#160;</a></span>visit_comment_range_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_comment_range_end </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1CommentRangeEnd.html">CommentRangeEnd</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00382">382</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="comment_8cpp_source.html#l00053">cdocx::CommentRangeEnd::accept()</a>.</p>
+
+</div>
+</div>
+<a id="ada8b3bbc9eb5842ca1415937a3a7013b" name="ada8b3bbc9eb5842ca1415937a3a7013b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada8b3bbc9eb5842ca1415937a3a7013b">&#9670;&#160;</a></span>visit_comment_range_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_comment_range_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1CommentRangeStart.html">CommentRangeStart</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00379">379</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="comment_8cpp_source.html#l00028">cdocx::CommentRangeStart::accept()</a>.</p>
+
+</div>
+</div>
+<a id="ae20467c33d1b3a26db58440e529b9496" name="ae20467c33d1b3a26db58440e529b9496"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae20467c33d1b3a26db58440e529b9496">&#9670;&#160;</a></span>visit_document_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_document_end </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Document.html">Document</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00306">306</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="document_8cpp_source.html#l00485">cdocx::Document::accept()</a>.</p>
+
+</div>
+</div>
+<a id="afa6eea448359d1853da4a5fe45003328" name="afa6eea448359d1853da4a5fe45003328"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa6eea448359d1853da4a5fe45003328">&#9670;&#160;</a></span>visit_document_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_document_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Document.html">Document</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00303">303</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="document_8cpp_source.html#l00485">cdocx::Document::accept()</a>.</p>
+
+</div>
+</div>
+<a id="aba524be6ac4a70483ab1e0f53f408f80" name="aba524be6ac4a70483ab1e0f53f408f80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba524be6ac4a70483ab1e0f53f408f80">&#9670;&#160;</a></span>visit_endnote_reference()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_endnote_reference </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1EndnoteReference.html">EndnoteReference</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00405">405</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="footnote_8cpp_source.html#l00125">cdocx::EndnoteReference::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a50f0a4bc8ff4f3969940919e587cf932" name="a50f0a4bc8ff4f3969940919e587cf932"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50f0a4bc8ff4f3969940919e587cf932">&#9670;&#160;</a></span>visit_field_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_field_end </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Field.html">Field</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00367">367</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="base__content_8cpp_source.html#l00887">cdocx::Field::accept()</a>.</p>
+
+</div>
+</div>
+<a id="af616393c0346ca5ae65b9091a7a95ef1" name="af616393c0346ca5ae65b9091a7a95ef1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af616393c0346ca5ae65b9091a7a95ef1">&#9670;&#160;</a></span>visit_field_separator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_field_separator </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Field.html">Field</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00364">364</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+</div>
+</div>
+<a id="aa9aa40b9f02552e594450a4ffb4563a4" name="aa9aa40b9f02552e594450a4ffb4563a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9aa40b9f02552e594450a4ffb4563a4">&#9670;&#160;</a></span>visit_field_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_field_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Field.html">Field</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00363">363</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="base__content_8cpp_source.html#l00887">cdocx::Field::accept()</a> , 以及 <a class="el" href="base__content_8cpp_source.html#l01041">cdocx::Hyperlink::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a174cfff15aba7e8726b75dde9d1062d6" name="a174cfff15aba7e8726b75dde9d1062d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a174cfff15aba7e8726b75dde9d1062d6">&#9670;&#160;</a></span>visit_footer_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_footer_end </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1HeaderFooter.html">HeaderFooter</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00330">330</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="section_8cpp_source.html#l00689">cdocx::HeaderFooter::accept()</a>.</p>
+
+</div>
+</div>
+<a id="aaf0a999463f2d3a2bab9dde33f29db7c" name="aaf0a999463f2d3a2bab9dde33f29db7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf0a999463f2d3a2bab9dde33f29db7c">&#9670;&#160;</a></span>visit_footer_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_footer_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1HeaderFooter.html">HeaderFooter</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00327">327</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="section_8cpp_source.html#l00689">cdocx::HeaderFooter::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a577fbde8877aeb0b8d2b43eeb6cbfe55" name="a577fbde8877aeb0b8d2b43eeb6cbfe55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a577fbde8877aeb0b8d2b43eeb6cbfe55">&#9670;&#160;</a></span>visit_footnote_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_footnote_end </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Footnote.html">Footnote</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00390">390</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="footnote_8cpp_source.html#l00058">cdocx::Footnote::accept()</a>.</p>
+
+</div>
+</div>
+<a id="ae1cf88f1d8bfc2af299634b8a2edaa88" name="ae1cf88f1d8bfc2af299634b8a2edaa88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1cf88f1d8bfc2af299634b8a2edaa88">&#9670;&#160;</a></span>visit_footnote_reference()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_footnote_reference </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1FootnoteReference.html">FootnoteReference</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00400">400</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="footnote_8cpp_source.html#l00103">cdocx::FootnoteReference::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a5d5a68d13e3115c35fb011376f697d1a" name="a5d5a68d13e3115c35fb011376f697d1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d5a68d13e3115c35fb011376f697d1a">&#9670;&#160;</a></span>visit_footnote_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_footnote_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Footnote.html">Footnote</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00387">387</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="footnote_8cpp_source.html#l00058">cdocx::Footnote::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a49942ccbe3e86aed8bc150d0fa389c25" name="a49942ccbe3e86aed8bc150d0fa389c25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49942ccbe3e86aed8bc150d0fa389c25">&#9670;&#160;</a></span>visit_form_field()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_form_field </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1FormField.html">FormField</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00395">395</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="formfield_8cpp_source.html#l00021">cdocx::FormField::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a8a47c78d322b41213453732b193c91b8" name="a8a47c78d322b41213453732b193c91b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a47c78d322b41213453732b193c91b8">&#9670;&#160;</a></span>visit_header_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_header_end </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1HeaderFooter.html">HeaderFooter</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00324">324</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="section_8cpp_source.html#l00689">cdocx::HeaderFooter::accept()</a>.</p>
+
+</div>
+</div>
+<a id="adb2a36e20d00b461ff469885fd81f6ae" name="adb2a36e20d00b461ff469885fd81f6ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb2a36e20d00b461ff469885fd81f6ae">&#9670;&#160;</a></span>visit_header_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_header_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1HeaderFooter.html">HeaderFooter</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00321">321</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="section_8cpp_source.html#l00689">cdocx::HeaderFooter::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a9498dc6030e484174a5b657bf9ab1fce" name="a9498dc6030e484174a5b657bf9ab1fce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9498dc6030e484174a5b657bf9ab1fce">&#9670;&#160;</a></span>visit_paragraph_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_paragraph_end </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Paragraph.html">Paragraph</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00338">338</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="paragraph_8cpp_source.html#l00107">cdocx::Paragraph::accept()</a>.</p>
+
+</div>
+</div>
+<a id="ac69428a9eef597a773db64d720c25d72" name="ac69428a9eef597a773db64d720c25d72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac69428a9eef597a773db64d720c25d72">&#9670;&#160;</a></span>visit_paragraph_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_paragraph_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Paragraph.html">Paragraph</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00335">335</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="paragraph_8cpp_source.html#l00107">cdocx::Paragraph::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a954056e0505dc7381b4b9c2a29d25403" name="a954056e0505dc7381b4b9c2a29d25403"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a954056e0505dc7381b4b9c2a29d25403">&#9670;&#160;</a></span>visit_row_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_row_end </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Row.html">Row</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00348">348</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="table_8cpp_source.html#l00208">cdocx::Row::accept()</a>.</p>
+
+</div>
+</div>
+<a id="ae96c48b0e200d0fbcd1d50bb01cb91d0" name="ae96c48b0e200d0fbcd1d50bb01cb91d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae96c48b0e200d0fbcd1d50bb01cb91d0">&#9670;&#160;</a></span>visit_row_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_row_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Row.html">Row</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00347">347</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="table_8cpp_source.html#l00208">cdocx::Row::accept()</a>.</p>
+
+</div>
+</div>
+<a id="ae359274720ce9bcfe6c1d6ab7917fc18" name="ae359274720ce9bcfe6c1d6ab7917fc18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae359274720ce9bcfe6c1d6ab7917fc18">&#9670;&#160;</a></span>visit_run()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_run </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Run.html">Run</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00355">355</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="base__content_8cpp_source.html#l00288">cdocx::Run::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a6da7e56efb86cd0c649e9e6222925b6c" name="a6da7e56efb86cd0c649e9e6222925b6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6da7e56efb86cd0c649e9e6222925b6c">&#9670;&#160;</a></span>visit_section_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_section_end </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Section.html">Section</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00312">312</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="section_8cpp_source.html#l00282">cdocx::Section::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a17c2cf07e7f28fcc92a0bcd122fd6069" name="a17c2cf07e7f28fcc92a0bcd122fd6069"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17c2cf07e7f28fcc92a0bcd122fd6069">&#9670;&#160;</a></span>visit_section_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_section_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Section.html">Section</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00309">309</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="section_8cpp_source.html#l00282">cdocx::Section::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a819f18c951533de4cc715649f3b9f2e7" name="a819f18c951533de4cc715649f3b9f2e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a819f18c951533de4cc715649f3b9f2e7">&#9670;&#160;</a></span>visit_special_char()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_special_char </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1SpecialChar.html">SpecialChar</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00358">358</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="base__content_8cpp_source.html#l00835">cdocx::SpecialChar::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a2c37ba000d5edee567dc87691c23e4f7" name="a2c37ba000d5edee567dc87691c23e4f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c37ba000d5edee567dc87691c23e4f7">&#9670;&#160;</a></span>visit_table_end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_table_end </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Table.html">Table</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00344">344</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="table_8cpp_source.html#l00351">cdocx::Table::accept()</a>.</p>
+
+</div>
+</div>
+<a id="a63fcc996f0bb49b6f5bcd71ba1edaf35" name="a63fcc996f0bb49b6f5bcd71ba1edaf35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63fcc996f0bb49b6f5bcd71ba1edaf35">&#9670;&#160;</a></span>visit_table_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672c">VisitorAction</a> cdocx::DocumentVisitor::visit_table_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Table.html">Table</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00343">343</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#ad5dee8e741174e888d583b20b3ec672caa0bfb8e59e6c13fc8d990781f77694fe">cdocx::Continue</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="table_8cpp_source.html#l00351">cdocx::Table::accept()</a>.</p>
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li><a class="el" href="node_8h_source.html">node.h</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespacecdocx.html">cdocx</a></li><li class="navelem"><a class="el" href="classcdocx_1_1DocumentVisitor.html">DocumentVisitor</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

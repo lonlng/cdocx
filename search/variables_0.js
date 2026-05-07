@@ -1,0 +1,17 @@
+var searchData=
+[
+  ['a_0',['a',['../classcdocx_1_1Color.html#a61a4bfc57efc219c2277436630d82333',1,'cdocx::Color']]],
+  ['abstract_5fid_1',['abstract_id',['../structcdocx_1_1NumberingDefinition.html#a2ea4c633db562ae78601f39afe77f014',1,'cdocx::NumberingDefinition']]],
+  ['after_2',['after',['../structcdocx_1_1ParagraphProperties_1_1Spacing.html#ac49d863a3248536759b8919cbded8666',1,'cdocx::ParagraphProperties::Spacing']]],
+  ['align_3',['align',['../structcdocx_1_1ParagraphProperties.html#a43a05b735f6ed13d035b6545e6aaf902',1,'cdocx::ParagraphProperties::align'],['../properties_8cpp.html#a9bd1379a71b955886d4eb552d47d4fba',1,'align:&#160;properties.cpp']]],
+  ['alignment_4',['alignment',['../properties_8cpp.html#a6ab4eaed1811a844d72c929650422dc4',1,'alignment:&#160;properties.cpp'],['../structcdocx_1_1TableAlignmentMapping.html#a301eadc601890288bb79f63ad8300287',1,'cdocx::TableAlignmentMapping::alignment'],['../structcdocx_1_1CellVerticalAlignmentMapping.html#aedcc4ddc58a2b23cc29c6fc56159c3ad',1,'cdocx::CellVerticalAlignmentMapping::alignment'],['../structcdocx_1_1PpAlignmentMapping.html#af8d8fa9595b460ecfe96c38c01582ded',1,'cdocx::PpAlignmentMapping::alignment'],['../structcdocx_1_1ParagraphAlignmentMapping.html#a91eb18847c38908579c61cdd59915799',1,'cdocx::ParagraphAlignmentMapping::alignment'],['../structcdocx_1_1TableProperties.html#a0f3fd0c9add59ae85997f0ad6e8105a5',1,'cdocx::TableProperties::alignment'],['../structcdocx_1_1TabStop.html#a1225c0d2ac2d12212a222058c334cf91',1,'cdocx::TabStop::alignment'],['../classcdocx_1_1TableFormat.html#a1d2f8aeb9f51792e96fc09839c4f9732',1,'cdocx::TableFormat::alignment'],['../classcdocx_1_1ParagraphFormat.html#a6079affd32176c64e1801b0881042231',1,'cdocx::ParagraphFormat::alignment'],['../structcdocx_1_1CaptionFormat.html#aab31c6a1c954f74be47181973c023eca',1,'cdocx::CaptionFormat::alignment'],['../structcdocx_1_1BookmarkFormat.html#a3596d2011fa0685fc21998c0172396ca',1,'cdocx::BookmarkFormat::alignment']]],
+  ['all_5fcaps_5',['all_caps',['../classcdocx_1_1Font.html#aafa53f81d57d994ff7efe5c3e4ad94a7',1,'cdocx::Font']]],
+  ['all_5fsucceeded_6',['all_succeeded',['../structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a5195f6edf6b8e31d1ac37708c38834ac',1,'cdocx::BookmarkReplacer::BatchResult']]],
+  ['allow_5fauto_5ffit_7',['allow_auto_fit',['../classcdocx_1_1TableFormat.html#ae79008a443c3194c0db4ede06dcf7812',1,'cdocx::TableFormat']]],
+  ['allow_5fbreak_5facross_5fpages_8',['allow_break_across_pages',['../classcdocx_1_1RowFormat.html#a2683d73d48a43ca7e53aba81bebd4703',1,'cdocx::RowFormat']]],
+  ['allow_5fcell_5fspacing_9',['allow_cell_spacing',['../classcdocx_1_1TableFormat.html#a712d550c97332d847861377dfbe6f0e4',1,'cdocx::TableFormat']]],
+  ['allow_5fpartial_5fload_10',['allow_partial_load',['../structcdocx_1_1LoadConfig.html#af04c2942aa8fc184ee631b7600ecb408',1,'cdocx::LoadConfig']]],
+  ['ascii_11',['ascii',['../structcdocx_1_1LevelDefinition_1_1LevelFont.html#ad26ba6ed10014801b2d9262c9ea6323b',1,'cdocx::LevelDefinition::LevelFont::ascii'],['../structcdocx_1_1TextProperties_1_1Font.html#a376669a4db0e3ab6c6f6ed11f947126d',1,'cdocx::TextProperties::Font::ascii']]],
+  ['author_12',['author',['../classcdocx_1_1DocumentProperties.html#a596f41ed0cd8456a9a4e4394a07fedbc',1,'cdocx::DocumentProperties']]],
+  ['auto_5ffit_5fbehavior_13',['auto_fit_behavior',['../classcdocx_1_1TableFormat.html#ae62df4c498903adab93f19147809bed3',1,'cdocx::TableFormat']]]
+];

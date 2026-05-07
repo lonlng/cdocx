@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: format_context.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('format__context_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">format_context.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="format__context_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;pugixml.hpp&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="foldopen" id="foldopen00041" data-start="{" data-end="};">
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classcdocx_1_1TextFormatContext.html">   41</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1TextFormatContext.html">TextFormatContext</a> {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TextFormatContext.html#ae79425060af425e1bd8dac0425d99933">apply_color</a>(pugi::xml_node run, <span class="keyword">const</span> std::string&amp; color_hex);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TextFormatContext.html#a3f75ee6a0562bb20f8e1f81c35481e6b">apply_font_size</a>(pugi::xml_node run, <span class="keywordtype">int</span> size);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TextFormatContext.html#a36c375c19b132b3f3f2fe8abea101d47">apply_font_name</a>(pugi::xml_node run, <span class="keyword">const</span> std::string&amp; font_name);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TextFormatContext.html#aca8800e84f0dabc001fdb02520e2c470">apply_bold</a>(pugi::xml_node run, <span class="keywordtype">bool</span> bold);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TextFormatContext.html#afc169459f8c510d99e43dfabb2ff5983">apply_italic</a>(pugi::xml_node run, <span class="keywordtype">bool</span> italic);</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TextFormatContext.html#adef84b1f6010b1c4a0bd3676ae22df59">apply_underline</a>(pugi::xml_node run, <span class="keywordtype">bool</span> underline);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keyword">static</span> pugi::xml_node get_or_create_r_pr(pugi::xml_node run);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>};</div>
+</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="aclasscdocx_1_1TextFormatContext_html"><div class="ttname"><a href="classcdocx_1_1TextFormatContext.html">cdocx::TextFormatContext</a></div><div class="ttdoc">Helper class for applying text formatting to XML run elements</div><div class="ttdef"><b>Definition</b> <a href="format__context_8h_source.html#l00041">format_context.h:41</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TextFormatContext_html_a36c375c19b132b3f3f2fe8abea101d47"><div class="ttname"><a href="classcdocx_1_1TextFormatContext.html#a36c375c19b132b3f3f2fe8abea101d47">cdocx::TextFormatContext::apply_font_name</a></div><div class="ttdeci">static bool apply_font_name(pugi::xml_node run, const std::string &amp;font_name)</div><div class="ttdoc">Apply font name to a run</div><div class="ttdef"><b>Definition</b> <a href="format__context_8cpp_source.html#l00078">format_context.cpp:78</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TextFormatContext_html_a3f75ee6a0562bb20f8e1f81c35481e6b"><div class="ttname"><a href="classcdocx_1_1TextFormatContext.html#a3f75ee6a0562bb20f8e1f81c35481e6b">cdocx::TextFormatContext::apply_font_size</a></div><div class="ttdeci">static bool apply_font_size(pugi::xml_node run, int size)</div><div class="ttdoc">Apply font size to a run</div><div class="ttdef"><b>Definition</b> <a href="format__context_8cpp_source.html#l00054">format_context.cpp:54</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TextFormatContext_html_aca8800e84f0dabc001fdb02520e2c470"><div class="ttname"><a href="classcdocx_1_1TextFormatContext.html#aca8800e84f0dabc001fdb02520e2c470">cdocx::TextFormatContext::apply_bold</a></div><div class="ttdeci">static bool apply_bold(pugi::xml_node run, bool bold)</div><div class="ttdoc">Apply bold formatting to a run</div><div class="ttdef"><b>Definition</b> <a href="format__context_8cpp_source.html#l00099">format_context.cpp:99</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TextFormatContext_html_adef84b1f6010b1c4a0bd3676ae22df59"><div class="ttname"><a href="classcdocx_1_1TextFormatContext.html#adef84b1f6010b1c4a0bd3676ae22df59">cdocx::TextFormatContext::apply_underline</a></div><div class="ttdeci">static bool apply_underline(pugi::xml_node run, bool underline)</div><div class="ttdoc">Apply underline formatting to a run</div><div class="ttdef"><b>Definition</b> <a href="format__context_8cpp_source.html#l00129">format_context.cpp:129</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TextFormatContext_html_ae79425060af425e1bd8dac0425d99933"><div class="ttname"><a href="classcdocx_1_1TextFormatContext.html#ae79425060af425e1bd8dac0425d99933">cdocx::TextFormatContext::apply_color</a></div><div class="ttdeci">static bool apply_color(pugi::xml_node run, const std::string &amp;color_hex)</div><div class="ttdoc">Apply text color to a run</div><div class="ttdef"><b>Definition</b> <a href="format__context_8cpp_source.html#l00035">format_context.cpp:35</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TextFormatContext_html_afc169459f8c510d99e43dfabb2ff5983"><div class="ttname"><a href="classcdocx_1_1TextFormatContext.html#afc169459f8c510d99e43dfabb2ff5983">cdocx::TextFormatContext::apply_italic</a></div><div class="ttdeci">static bool apply_italic(pugi::xml_node run, bool italic)</div><div class="ttdoc">Apply italic formatting to a run</div><div class="ttdef"><b>Definition</b> <a href="format__context_8cpp_source.html#l00114">format_context.cpp:114</a></div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_45cf22061f640deb443c5da4ff0b00bd.html">cdocx</a></li><li class="navelem"><a class="el" href="format__context_8h.html">format_context.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

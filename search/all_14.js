@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['underline_0',['underline',['../structcdocx_1_1BookmarkFormat.html#a6c31ce520abc7315f76df526b0e38f9a',1,'cdocx::BookmarkFormat::underline'],['../classcdocx_1_1Font.html#a4a1e85f185f4c0447263209b089a4eb0',1,'cdocx::Font::underline'],['../structcdocx_1_1TextProperties.html#ae26eb5ea23c524df78f6f8dd1586f2fd',1,'cdocx::TextProperties::underline'],['../classcdocx_1_1TemplateFormat.html#afccf2d62592f07be3557aec16f3c5443',1,'cdocx::TemplateFormat::underline()'],['../structcdocx_1_1TextProperties_1_1Underline.html',1,'cdocx::TextProperties::Underline']]],
+  ['underline_5fcolor_1',['underline_color',['../classcdocx_1_1Font.html#a2661fa7717482be0e0eaec58d3553ba6',1,'cdocx::Font']]],
+  ['underline_5fopt_2',['underline_opt',['../classcdocx_1_1TemplateFormat.html#a1ee5e434c05d81ec800dc9712e349b20',1,'cdocx::TemplateFormat']]],
+  ['underline_5ftype_5fto_5fstring_3',['underline_type_to_string',['../namespacecdocx.html#a0131fc82d4ccf5893b5a5b12959bc84b',1,'cdocx']]],
+  ['underlinestyle_4',['UnderlineStyle',['../structcdocx_1_1TextProperties.html#ace8dd081597b54ba3f5de41cbe0aefe8',1,'cdocx::TextProperties']]],
+  ['underlinetype_5',['UnderlineType',['../namespacecdocx.html#a9e3609cbb0fcf4485a2b7b0e806e11ed',1,'cdocx']]],
+  ['underlinetypemapping_6',['UnderlineTypeMapping',['../structcdocx_1_1UnderlineTypeMapping.html',1,'cdocx']]],
+  ['unknown_7',['unknown',['../namespacecdocx.html#adb1475a65394e4ce57e183cb3de1493fa88183b946cc5f0e8c96b2e66e1c74a7e',1,'cdocx::Unknown'],['../namespacecdocx.html#afab7b1d1461657e5220100fa75ab456ba88183b946cc5f0e8c96b2e66e1c74a7e',1,'cdocx::Unknown'],['../namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65dacccea88183b946cc5f0e8c96b2e66e1c74a7e',1,'cdocx::Unknown'],['../namespacecdocx.html#a94dc995fea51760307c32fde48a651e4a88183b946cc5f0e8c96b2e66e1c74a7e',1,'cdocx::Unknown'],['../namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264ca88183b946cc5f0e8c96b2e66e1c74a7e',1,'cdocx::Unknown']]],
+  ['unlink_8',['unlink',['../classcdocx_1_1Field.html#a61218fd6bf1b5077f55475975e9b8934',1,'cdocx::Field']]],
+  ['unprotect_9',['unprotect',['../classcdocx_1_1Document.html#aa1fc294195a003e3c7b3d7d3ab994205',1,'cdocx::Document']]],
+  ['unresolvedmention_10',['UnresolvedMention',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a2a3c5806b811f1c5768f388a155520d0',1,'cdocx']]],
+  ['update_11',['update',['../classcdocx_1_1Hyperlink.html#aa41401263ec269699061d6cbfa567bc3',1,'cdocx::Hyperlink::update()'],['../classcdocx_1_1Field.html#a946a845c598d789462938e7b91352953',1,'cdocx::Field::update()']]],
+  ['update_5fcontent_5ftypes_5fxml_12',['update_content_types_xml',['../classcdocx_1_1Document.html#aea02db00e700a8aa9872be0e06355b14',1,'cdocx::Document']]],
+  ['update_5frelationships_5fxml_13',['update_relationships_xml',['../classcdocx_1_1Document.html#a0ab5aef6c4f197f44586ee161c17c1cb',1,'cdocx::Document']]],
+  ['upperletter_14',['UpperLetter',['../namespacecdocx.html#afc7a0f8fa1657e5c9648f816f9415017a1561d09d959c5d4a702b90c98fc05be8',1,'cdocx']]],
+  ['upperroman_15',['UpperRoman',['../namespacecdocx.html#afc7a0f8fa1657e5c9648f816f9415017a799604bcefc15d2e27a759d9c4bc7e4d',1,'cdocx']]],
+  ['user_16',['User',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a8f9bfe9d1345237cb3b2b205864da075',1,'cdocx']]]
+];

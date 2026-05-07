@@ -1,0 +1,27 @@
+var classcdocx_1_1Inline =
+[
+    [ "Inline", "classcdocx_1_1Inline.html#ae797b2d9846808272dfa1b80f3f44da7", null ],
+    [ "Inline", "classcdocx_1_1Inline.html#ad12ae62285dc2ddad7e005d869e06429", null ],
+    [ "Inline", "classcdocx_1_1Inline.html#a68c023f4198cb28cd1febda0806393fa", null ],
+    [ "get_font", "classcdocx_1_1Inline.html#ae8e109f9762044d4d44fc1b068a4626a", null ],
+    [ "get_font", "classcdocx_1_1Inline.html#aa165f0242825612377b7063ac88bddd4", null ],
+    [ "get_parent_paragraph", "classcdocx_1_1Inline.html#ab66cfe6af567585fe98b193d3f344f12", null ],
+    [ "get_preserved_r_pr", "classcdocx_1_1Inline.html#abd5721cef83f461e46abf2d5b0bc4728", null ],
+    [ "has_preserved_r_pr", "classcdocx_1_1Inline.html#ac116cea42894ad32c9d17f084a7d8cdf", null ],
+    [ "is_composite", "classcdocx_1_1Inline.html#ad933889ef6ec951e5e23c0c3d028c264", null ],
+    [ "operator=", "classcdocx_1_1Inline.html#adc985a5563cd1ad9692f2b82b0fae207", null ],
+    [ "preserve_r_pr", "classcdocx_1_1Inline.html#ac57372a2aa2a53d6277fe19a21041f6c", null ],
+    [ "set_bold", "classcdocx_1_1Inline.html#a44a26dea8e62297aa7dfc7af4fea6fc1", null ],
+    [ "set_color", "classcdocx_1_1Inline.html#a11923b332a925fe80cfd8e5acaf3b4c9", null ],
+    [ "set_font", "classcdocx_1_1Inline.html#a2358fa224051a9d3624b47b319e8c633", null ],
+    [ "set_font_name", "classcdocx_1_1Inline.html#a2a3a9b5c09cfac3d335f2029837c1758", null ],
+    [ "set_font_size", "classcdocx_1_1Inline.html#af9184e2280b6c51d6998466e1fa98e1c", null ],
+    [ "set_highlight", "classcdocx_1_1Inline.html#a31ffe0dd479009a7e298531cb8c48e5b", null ],
+    [ "set_italic", "classcdocx_1_1Inline.html#a5d80ebc150d1429d6d89a3559fb8b173", null ],
+    [ "set_strikethrough", "classcdocx_1_1Inline.html#ac579a115a24f982b5855427dbee995bf", null ],
+    [ "set_subscript", "classcdocx_1_1Inline.html#a08c307d130773707a54dc9ce43e53bf5", null ],
+    [ "set_superscript", "classcdocx_1_1Inline.html#a2f91da924f3ef9d3910fbb5af484debc", null ],
+    [ "set_underline", "classcdocx_1_1Inline.html#ae26b649ab555c8a13e2310c3b69ec023", null ],
+    [ "font_", "classcdocx_1_1Inline.html#a430e1c6f5806b173c6c123dd39cd2759", null ],
+    [ "preserved_r_pr_", "classcdocx_1_1Inline.html#a4414a5b63a704d16b266fa81786f57a7", null ]
+];

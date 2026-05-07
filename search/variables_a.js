@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['last_5fload_5fresult_5f_0',['last_load_result_',['../classcdocx_1_1Document.html#aac85d1de41edd173aa969b8db9feeb90',1,'cdocx::Document']]],
+  ['last_5fload_5fstats_5f_1',['last_load_stats_',['../classcdocx_1_1Document.html#a56f3785adca344a62daf7256f2c558fe',1,'cdocx::Document']]],
+  ['last_5fprinted_2',['last_printed',['../classcdocx_1_1DocumentProperties.html#a34fcb79cab34267b3c901baafd149537',1,'cdocx::DocumentProperties']]],
+  ['last_5fsynced_5fxml_5fchild_5fcount_5f_3',['last_synced_xml_child_count_',['../classcdocx_1_1Document.html#a7ec554e9d58f372327c43fe1687e0095',1,'cdocx::Document']]],
+  ['layout_4',['layout',['../structcdocx_1_1TextWatermarkOptions.html#a9d9561d62f878be38ef9bc87acb3036d',1,'cdocx::TextWatermarkOptions']]],
+  ['leader_5',['leader',['../properties_8cpp.html#ae75d513d80297215884a53571214da8b',1,'leader:&#160;properties.cpp'],['../structcdocx_1_1TabStop.html#aae71dc4ff1faaac6406327b06f828895',1,'cdocx::TabStop::leader']]],
+  ['left_6',['left',['../structcdocx_1_1ParagraphProperties_1_1Indentation.html#a10d4a1a65d37f1e1b34de6832a231dc0',1,'cdocx::ParagraphProperties::Indentation::left'],['../structcdocx_1_1TableBorders.html#a16c3693c27690a09ffc3c41faf61dc70',1,'cdocx::TableBorders::left'],['../structcdocx_1_1SectionProperties_1_1PageMargins.html#a57c55562fb04feac9b32f8979deeff2d',1,'cdocx::SectionProperties::PageMargins::left'],['../structcdocx_1_1ParagraphProperties_1_1Borders.html#a55afbfe6273d7c85334fbfa6cbb88299',1,'cdocx::ParagraphProperties::Borders::left'],['../classcdocx_1_1Borders.html#adde1983f845371f889c9dc879faa491d',1,'cdocx::Borders::left'],['../structcdocx_1_1TableProperties_1_1CellMargin.html#a910c82ec6ab86fbe14a4db7eab8de206',1,'cdocx::TableProperties::CellMargin::left']]],
+  ['left_5fdefined_7',['left_defined',['../classcdocx_1_1Borders.html#ad68ff362ace51ddbfd12319dbc386e4b',1,'cdocx::Borders']]],
+  ['left_5findent_8',['left_indent',['../structcdocx_1_1BookmarkFormat.html#a9199a0b1c662bf249a6414861356ceb0',1,'cdocx::BookmarkFormat::left_indent'],['../classcdocx_1_1TableFormat.html#a8092e8d0df3aa58053ea1be93400b091',1,'cdocx::TableFormat::left_indent'],['../classcdocx_1_1ParagraphFormat.html#a70a05910c21e1e765bb14f93d60f28b4',1,'cdocx::ParagraphFormat::left_indent']]],
+  ['left_5fmargin_9',['left_margin',['../classcdocx_1_1CellFormat.html#a6af99812eb58848cb5285b5cbab7007e',1,'cdocx::CellFormat::left_margin'],['../classcdocx_1_1PageSetup.html#af177fc23ff9b9914259cbc53e10ceab0',1,'cdocx::PageSetup::left_margin']]],
+  ['left_5fpadding_10',['left_padding',['../classcdocx_1_1TableFormat.html#ab07e36b2bd1aba12ae5c36aac5e236be',1,'cdocx::TableFormat']]],
+  ['level_11',['level',['../structcdocx_1_1ListFormat.html#a0915e15cfaccaab75ba3d0c5392298ed',1,'cdocx::ListFormat']]],
+  ['level_5ffont_12',['level_font',['../structcdocx_1_1LevelDefinition.html#a25c004dc54a9edbab8a40822e02b1508',1,'cdocx::LevelDefinition']]],
+  ['level_5foverrides_13',['level_overrides',['../structcdocx_1_1NumberingDefinition.html#a5cd44dac25c2f0f0527c1de8aed7e38f',1,'cdocx::NumberingDefinition']]],
+  ['level_5ftext_14',['level_text',['../structcdocx_1_1LevelDefinition.html#abfd42a454648a63c6a599ef596a25bba',1,'cdocx::LevelDefinition']]],
+  ['levels_15',['levels',['../structcdocx_1_1AbstractNumberingDefinition.html#a76978f3622944756684f1bbeff97452f',1,'cdocx::AbstractNumberingDefinition']]],
+  ['line_16',['line',['../structcdocx_1_1LoadError.html#af3bef1458036a3ec54455541b3f5a1d9',1,'cdocx::LoadError']]],
+  ['line_5frule_17',['line_rule',['../structcdocx_1_1BookmarkFormat.html#ac525aff878d16f9672d6095e8ae8aab3',1,'cdocx::BookmarkFormat']]],
+  ['line_5fspacing_18',['line_spacing',['../structcdocx_1_1BookmarkFormat.html#a0ef86d0636f58b38c46f4c33c9f5ac49',1,'cdocx::BookmarkFormat::line_spacing'],['../classcdocx_1_1ParagraphFormat.html#a79a37dee8b8662557adf3d5a4719722f',1,'cdocx::ParagraphFormat::line_spacing'],['../structcdocx_1_1ParagraphProperties_1_1Spacing.html#a8ff1148a5f8506e954785a3962c0459a',1,'cdocx::ParagraphProperties::Spacing::line_spacing']]],
+  ['line_5fspacing_5frule_19',['line_spacing_rule',['../classcdocx_1_1ParagraphFormat.html#ab440650373f0d53017ed556c3d014a76',1,'cdocx::ParagraphFormat']]],
+  ['lines_5fto_5fdrop_20',['lines_to_drop',['../classcdocx_1_1ParagraphFormat.html#a2d8b682f72c48cb7f4afd0413a4e1c6d',1,'cdocx::ParagraphFormat']]],
+  ['list_5fid_21',['list_id',['../structcdocx_1_1ListFormat.html#ab770b32a6a535bbec91b01bd41972009',1,'cdocx::ListFormat']]],
+  ['load_5fconfig_5f_22',['load_config_',['../classcdocx_1_1Document.html#af2a483a2967152b277f1d3682dc77b4e',1,'cdocx::Document']]],
+  ['load_5ftime_5fms_23',['load_time_ms',['../structcdocx_1_1LoadResult.html#aa86d17f6df636118d256d6d659d1b488',1,'cdocx::LoadResult']]],
+  ['loaded_5ffiles_24',['loaded_files',['../structcdocx_1_1LoadResult.html#a77078213583dec39590e24c86fe3d884',1,'cdocx::LoadResult']]]
+];

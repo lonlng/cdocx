@@ -1,0 +1,26 @@
+var classcdocx_1_1Row =
+[
+    [ "Row", "classcdocx_1_1Row.html#a0010e8a433aa383eec30da2547d9c87a", null ],
+    [ "Row", "classcdocx_1_1Row.html#ab4e280c5477e8732932aadd1e0c35c0c", null ],
+    [ "accept", "classcdocx_1_1Row.html#ac430daf413f37a3764c7803b90875ab8", null ],
+    [ "append_cell", "classcdocx_1_1Row.html#a993c72ff412fbbe3788ce5f9dd6a5b9b", null ],
+    [ "append_cell", "classcdocx_1_1Row.html#ac0bcf45dba559813af25fde77bc754cc", null ],
+    [ "append_cells", "classcdocx_1_1Row.html#a0c945e36cd1462a3216ea445e6cd159a", null ],
+    [ "append_cells", "classcdocx_1_1Row.html#af47d03e3555b0b5043642a0986324ed2", null ],
+    [ "clone", "classcdocx_1_1Row.html#aeffc2ffb7bf0178cbd6a44989ac6ed00", null ],
+    [ "ensure_minimum", "classcdocx_1_1Row.html#ab62182c646f8c1719e80f448e802ee61", null ],
+    [ "get_cell", "classcdocx_1_1Row.html#a6557b08c633f2e809c7e6a8b822ba8c6", null ],
+    [ "get_cells", "classcdocx_1_1Row.html#a808a85879d65d94757341ef9f947243c", null ],
+    [ "get_first_cell", "classcdocx_1_1Row.html#ad99fb7b6fa6f78b20b7aed9572a41be3", null ],
+    [ "get_last_cell", "classcdocx_1_1Row.html#a722c80714859fcfcb7c9cfea0caa33bf", null ],
+    [ "get_parent_table", "classcdocx_1_1Row.html#afbb68fe19b9950e8f247260aec7ac88e", null ],
+    [ "get_row_format", "classcdocx_1_1Row.html#a44a3196561e4a69fd7405a30dc3394cf", null ],
+    [ "get_row_format", "classcdocx_1_1Row.html#a0f2cb9573f324ecb239e4323cffeeb10", null ],
+    [ "get_row_index", "classcdocx_1_1Row.html#af10fe9dfbd81ce86aecc218965dec463", null ],
+    [ "get_text", "classcdocx_1_1Row.html#aaa9fa3a4a043be9f5e7d9964d2053001", null ],
+    [ "insert_cell", "classcdocx_1_1Row.html#a397c46e9f4a8ff31ec1ade078f1f7948", null ],
+    [ "is_first_row", "classcdocx_1_1Row.html#abd7c4f8e88e7928b25b768bc451c740d", null ],
+    [ "is_last_row", "classcdocx_1_1Row.html#a5ac1810a4c190b66c0e6774adfe27dc5", null ],
+    [ "node_type", "classcdocx_1_1Row.html#a7ea5a9669dfe2ae274b5ab716f1e86cc", null ],
+    [ "set_row_format", "classcdocx_1_1Row.html#accea2ad117bafdfd6adebcbad3d7da81", null ]
+];

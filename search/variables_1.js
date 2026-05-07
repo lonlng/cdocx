@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['b_0',['b',['../classcdocx_1_1Color.html#a50c7238e957c8b53f355b806dd2857e4',1,'cdocx::Color']]],
+  ['background_1',['background',['../classcdocx_1_1Shading.html#aff2a3219ec5b5296f1dab8e202a90dcd',1,'cdocx::Shading']]],
+  ['before_2',['before',['../structcdocx_1_1ParagraphProperties_1_1Spacing.html#a1890a1ee83e9ec198b47fbeeb6b6202c',1,'cdocx::ParagraphProperties::Spacing']]],
+  ['begin_3',['begin',['../structcdocx_1_1SectionRange.html#aa0bba7aca059679af4b8b982e460365b',1,'cdocx::SectionRange']]],
+  ['bidi_4',['bidi',['../classcdocx_1_1TableFormat.html#a07e7a38e03e7618ec145e72443fd253a',1,'cdocx::TableFormat']]],
+  ['binary_5fdata_5',['binary_data',['../structcdocx_1_1DocxTreeNode.html#aacc6ee1a4b7c9913a5fffca26f672c31',1,'cdocx::DocxTreeNode']]],
+  ['binary_5ffiles_6',['binary_files',['../structcdocx_1_1LoadStatistics.html#a71aca6fc321178fe9814ee4147150101',1,'cdocx::LoadStatistics']]],
+  ['bold_7',['bold',['../structcdocx_1_1BookmarkFormat.html#aa2a446c6b0dff7d649e2138d7b9e7e39',1,'cdocx::BookmarkFormat::bold'],['../classcdocx_1_1Font.html#a7d4c67c29e668e20791be0231f67c372',1,'cdocx::Font::bold'],['../structcdocx_1_1TextProperties_1_1FontStyle.html#ad8932be563e6b491e7ad8f95e06f4ba3',1,'cdocx::TextProperties::FontStyle::bold']]],
+  ['border_5fmember_8',['border_member',['../structcdocx_1_1BorderParseMapping.html#a18f4394be162375d472ebcfec18c9ecd',1,'cdocx::BorderParseMapping::border_member'],['../structcdocx_1_1BorderSerializeMapping.html#aecc8becc634365071d0d2e38b8e96eb6',1,'cdocx::BorderSerializeMapping::border_member']]],
+  ['borders_9',['borders',['../classcdocx_1_1CellFormat.html#a158ff5615b1603dc5b5da7b70770b087',1,'cdocx::CellFormat::borders'],['../structcdocx_1_1TableProperties.html#a2679ecb0ae53fc8fb50517b725786ce5',1,'cdocx::TableProperties::borders'],['../structcdocx_1_1ParagraphProperties.html#a9aae6632a74546a888bac932433ceb2a',1,'cdocx::ParagraphProperties::borders'],['../classcdocx_1_1PageSetup.html#aaaa55fb5a03713cb0ce32fda0a5c20da',1,'cdocx::PageSetup::borders'],['../classcdocx_1_1TableFormat.html#afdcd77e7625946a315dbc7787916a5c5',1,'cdocx::TableFormat::borders'],['../classcdocx_1_1ParagraphFormat.html#aeca77605052fd16931ddd116cf59bbcf',1,'cdocx::ParagraphFormat::borders']]],
+  ['bottom_10',['bottom',['../classcdocx_1_1Borders.html#a83dce933f1e00ab4c8dac814add44a98',1,'cdocx::Borders::bottom'],['../structcdocx_1_1ParagraphProperties_1_1Borders.html#a90a768d84c951f39db204b732ca70cd9',1,'cdocx::ParagraphProperties::Borders::bottom'],['../structcdocx_1_1TableProperties_1_1CellMargin.html#a716b3cee7e82cc5907ac1e541a44cc68',1,'cdocx::TableProperties::CellMargin::bottom'],['../structcdocx_1_1SectionProperties_1_1PageMargins.html#a57d7e4de04da3b64c32acdaa7125bf81',1,'cdocx::SectionProperties::PageMargins::bottom'],['../structcdocx_1_1TableBorders.html#ad4f10ea32e7679de73873b799cd3464e',1,'cdocx::TableBorders::bottom']]],
+  ['bottom_5fdefined_11',['bottom_defined',['../classcdocx_1_1Borders.html#a124cb067b427a2e00d0282c288c733c2',1,'cdocx::Borders']]],
+  ['bottom_5fmargin_12',['bottom_margin',['../classcdocx_1_1CellFormat.html#a57bf99a80dc62a8161ff960c84a48c74',1,'cdocx::CellFormat::bottom_margin'],['../classcdocx_1_1PageSetup.html#a512b5612e11c371347df74599047d10d',1,'cdocx::PageSetup::bottom_margin']]],
+  ['bottom_5fpadding_13',['bottom_padding',['../classcdocx_1_1TableFormat.html#a31f64c8a2dd3d48c8a47bcf5709d97a3',1,'cdocx::TableFormat']]],
+  ['break_5ftype_14',['break_type',['../structcdocx_1_1SpecialCharMapping.html#a28edd78e9ddef61b01b919b3f128d25a',1,'cdocx::SpecialCharMapping']]],
+  ['builtin_5fproperties_5f_15',['builtin_properties_',['../classcdocx_1_1Document.html#a62349107cc7a9bc133909ca484fc6d5a',1,'cdocx::Document']]]
+];

@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['page_0',['Page',['../namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65dacccea193cfc9be3b995831c6af2fea6650e60',1,'cdocx']]],
+  ['pagebreak_1',['PageBreak',['../namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62a63be6634e47079da3b4bf81bb9f8cf37',1,'cdocx']]],
+  ['pagenumber_2',['PageNumber',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a30844578151522babbfde2fe9b3a7a22',1,'cdocx']]],
+  ['pageref_3',['PageRef',['../namespacecdocx.html#ad6ce758fc1d69cdc858f4aae65dacccea27add92c17c3d372a5511ca3c91aea29',1,'cdocx']]],
+  ['paragraph_4',['paragraph',['../namespacecdocx.html#a94dc995fea51760307c32fde48a651e4afeaf0a320c3d678ad30dd179b7d21584',1,'cdocx::Paragraph'],['../namespacecdocx.html#afbb9e04d7a452824bc278cc583f75d42afeaf0a320c3d678ad30dd179b7d21584',1,'cdocx::Paragraph']]],
+  ['paragraphbreak_5',['ParagraphBreak',['../namespacecdocx.html#a0beea41884c463a35354088c7cdc0e62ac3316c9c335ce5fa8638df2fc5d518d4',1,'cdocx']]],
+  ['partial_6',['Partial',['../namespacecdocx.html#a13674e367cb43611787fab22d62b1030a44ffd38a6dea695cbe2b34efdcc6cf27',1,'cdocx']]],
+  ['percent_7',['Percent',['../structcdocx_1_1TableProperties.html#a99c6e93a9d30848492aa1082ccb79a67aadaaee4b22041c27198d410c68d952c9',1,'cdocx::TableProperties']]],
+  ['picture_8',['Picture',['../namespacecdocx.html#a94dc995fea51760307c32fde48a651e4a8ae5811be1a55b9b8447ad2dbdadbf6e',1,'cdocx']]],
+  ['pink_9',['Pink',['../namespacecdocx.html#ab4d1b34f04daa2d5ec34afac1073d4f8a8dc5344bc0746e1cc5abf896ca03bbdf',1,'cdocx']]],
+  ['placeholder_10',['Placeholder',['../namespacecdocx.html#a7bd33f1e7ba21e2b4e17a3bcbeeee46ca68753d36ec0c4d7768b20993268d68d1',1,'cdocx']]],
+  ['placeholdertext_11',['PlaceholderText',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a4ffaccfe7f61cfdef24c6088f362ed22',1,'cdocx']]],
+  ['plaintable1_12',['PlainTable1',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a3e4f17b96bb0e53a68cbeb4ccda9af46',1,'cdocx']]],
+  ['plaintable2_13',['PlainTable2',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a102773c65ef878f69145dc165ddb9b3b',1,'cdocx']]],
+  ['plaintable3_14',['PlainTable3',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a8eed85b32333457916c380227d25ca7e',1,'cdocx']]],
+  ['plaintable4_15',['PlainTable4',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a38a9f072fcb5bf6fcabf51aba9fd184f',1,'cdocx']]],
+  ['plaintable5_16',['PlainTable5',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a2e1794d249ca66ff9463b365f91595ce',1,'cdocx']]],
+  ['plaintext_17',['PlainText',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1ab7ebbf7f254ef646928dd58f62383a85',1,'cdocx']]],
+  ['portrait_18',['portrait',['../namespacecdocx.html#aa0c95030ff0574f2dddc5052c7a7b0e6a1c7444be9626d149ab598fb79b639f96',1,'cdocx::Portrait'],['../classcdocx_1_1PageSetup.html#a41d60c121f752c4740029abd3b0caf40a1c7444be9626d149ab598fb79b639f96',1,'cdocx::PageSetup::Portrait'],['../structcdocx_1_1SectionProperties.html#ac977e2409d48014690011ef82d42767ca1c7444be9626d149ab598fb79b639f96',1,'cdocx::SectionProperties::Portrait']]],
+  ['preserve_19',['Preserve',['../namespacecdocx.html#a0b38783402c634bb5bce329771d5ed95a6d2a1af98f2cad1e5ec2dd0a75953919',1,'cdocx']]],
+  ['primary_20',['Primary',['../namespacecdocx.html#ac582d253e338602be7cba859382c5864a074de7e7c226d5c60f8af14c20725352',1,'cdocx']]]
+];

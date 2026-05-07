@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: paragraph_builder.cpp 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('paragraph__builder_8cpp_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">paragraph_builder.cpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="paragraph__builder_8cpp.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;<a class="code" href="base_8h.html">cdocx/base.h</a>&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="paragraph_8h.html">cdocx/paragraph.h</a>&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="paragraph__builder_8h.html">cdocx/paragraph_builder.h</a>&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="foldopen" id="foldopen00013" data-start="{" data-end="}">
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="classcdocx_1_1ParagraphBuilder.html#a88bbb58cba98e2f0dfd7543a1d2e0af2">   13</a></span><a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a88bbb58cba98e2f0dfd7543a1d2e0af2">ParagraphBuilder::ParagraphBuilder</a>() : para_(std::make_shared&lt;<a class="code hl_class" href="classcdocx_1_1Paragraph.html">Paragraph</a>&gt;()) {</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>}</div>
+</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="foldopen" id="foldopen00016" data-start="{" data-end="}">
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classcdocx_1_1ParagraphBuilder.html#a15040ce3ff298c94b39eebcbbd431d1b">   16</a></span><a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a88bbb58cba98e2f0dfd7543a1d2e0af2">ParagraphBuilder::ParagraphBuilder</a>(<span class="keyword">const</span> std::string&amp; text) : para_(std::make_shared&lt;<a class="code hl_class" href="classcdocx_1_1Paragraph.html">Paragraph</a>&gt;()) {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    para_-&gt;append_text(text);</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>}</div>
+</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="foldopen" id="foldopen00020" data-start="{" data-end="}">
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classcdocx_1_1ParagraphBuilder.html#a142969680eef37453cbd2bbf2c137796">   20</a></span><a class="code hl_class" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a142969680eef37453cbd2bbf2c137796">ParagraphBuilder::add_run</a>(<span class="keyword">const</span> std::string&amp; text) {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">auto</span> run = std::make_shared&lt;Run&gt;();</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    run-&gt;set_text(text);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    apply_current_formatting(*run);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    para_-&gt;append_child(run);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>}</div>
+</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="foldopen" id="foldopen00028" data-start="{" data-end="}">
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classcdocx_1_1ParagraphBuilder.html#ad63698c2734b78e056fb0e6946291ce0">   28</a></span><a class="code hl_class" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a142969680eef37453cbd2bbf2c137796">ParagraphBuilder::add_run</a>(<span class="keyword">const</span> std::string&amp; text,</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>                                            <span class="keywordtype">bool</span> bold,</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>                                            <span class="keywordtype">bool</span> italic,</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>                                            <span class="keywordtype">int</span> font_size) {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">auto</span> run = std::make_shared&lt;Run&gt;();</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    run-&gt;set_text(text);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    run-&gt;set_bold(bold);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    run-&gt;set_italic(italic);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordflow">if</span> (font_size &gt; 0) {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        run-&gt;set_font_size(font_size);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    }</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    para_-&gt;append_child(run);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>}</div>
+</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="foldopen" id="foldopen00043" data-start="{" data-end="}">
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classcdocx_1_1ParagraphBuilder.html#a5a50d09c20ea52771cd87377fe83677c">   43</a></span><a class="code hl_class" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a5a50d09c20ea52771cd87377fe83677c">ParagraphBuilder::set_bold</a>(<span class="keywordtype">bool</span> value) {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    bold_ = value;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>}</div>
+</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="foldopen" id="foldopen00048" data-start="{" data-end="}">
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classcdocx_1_1ParagraphBuilder.html#adc327f3e7070fc1947eb2b47887fe954">   48</a></span><a class="code hl_class" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#adc327f3e7070fc1947eb2b47887fe954">ParagraphBuilder::set_italic</a>(<span class="keywordtype">bool</span> value) {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    italic_ = value;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>}</div>
+</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="foldopen" id="foldopen00053" data-start="{" data-end="}">
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classcdocx_1_1ParagraphBuilder.html#ab7579f390dab0514f367b4d20182cb63">   53</a></span><a class="code hl_class" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#ab7579f390dab0514f367b4d20182cb63">ParagraphBuilder::set_underline</a>(<span class="keywordtype">bool</span> value) {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    underline_ = value;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
+</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="foldopen" id="foldopen00058" data-start="{" data-end="}">
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classcdocx_1_1ParagraphBuilder.html#a06e51051a4b6f18ab65b6e4d2d54946c">   58</a></span><a class="code hl_class" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a06e51051a4b6f18ab65b6e4d2d54946c">ParagraphBuilder::set_font_name</a>(<span class="keyword">const</span> std::string&amp; name) {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    font_name_ = name;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}</div>
+</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="foldopen" id="foldopen00063" data-start="{" data-end="}">
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classcdocx_1_1ParagraphBuilder.html#a49095e9ffac5a948d3f4c49ffdaf43ae">   63</a></span><a class="code hl_class" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a49095e9ffac5a948d3f4c49ffdaf43ae">ParagraphBuilder::set_font_size</a>(<span class="keywordtype">int</span> size) {</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    font_size_ = size;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>}</div>
+</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="foldopen" id="foldopen00068" data-start="{" data-end="}">
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="classcdocx_1_1ParagraphBuilder.html#a5b5b5462d34327f3cf3f51eceea60212">   68</a></span><a class="code hl_class" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a5b5b5462d34327f3cf3f51eceea60212">ParagraphBuilder::set_color</a>(<span class="keyword">const</span> std::string&amp; color_hex) {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    color_ = color_hex;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>}</div>
+</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="foldopen" id="foldopen00073" data-start="{" data-end="}">
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="classcdocx_1_1ParagraphBuilder.html#a6108928bdd303ac96a4347c8cda70e0a">   73</a></span><a class="code hl_class" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a6108928bdd303ac96a4347c8cda70e0a">ParagraphBuilder::set_alignment</a>(<span class="keyword">const</span> std::string&amp; <a class="code hl_variable" href="properties_8cpp.html#a6ab4eaed1811a844d72c929650422dc4">alignment</a>) {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    alignment_ = <a class="code hl_variable" href="properties_8cpp.html#a6ab4eaed1811a844d72c929650422dc4">alignment</a>;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>}</div>
+</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="foldopen" id="foldopen00078" data-start="{" data-end="}">
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="classcdocx_1_1ParagraphBuilder.html#a1f9552c5118f77473a3b05e55f488d09">   78</a></span><a class="code hl_class" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a1f9552c5118f77473a3b05e55f488d09">ParagraphBuilder::clear_formatting</a>() {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    bold_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    italic_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    underline_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    font_name_.clear();</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    font_size_ = 0;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    color_.clear();</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>}</div>
+</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="foldopen" id="foldopen00088" data-start="{" data-end="}">
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classcdocx_1_1ParagraphBuilder.html#a39a964b9025789e22f6a3b9a779f947b">   88</a></span>std::shared_ptr&lt;Paragraph&gt; <a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a39a964b9025789e22f6a3b9a779f947b">ParagraphBuilder::build</a>() {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keywordflow">if</span> (!alignment_.empty()) {</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        para_-&gt;set_alignment(alignment_);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordflow">return</span> para_;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>}</div>
+</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="keywordtype">void</span> ParagraphBuilder::apply_current_formatting(<a class="code hl_class" href="classcdocx_1_1Run.html">Run</a>&amp; run) {</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    run.<a class="code hl_function" href="classcdocx_1_1Run.html#ad21921ba2abf995a8491d1dc7677b600">set_bold</a>(bold_);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    run.<a class="code hl_function" href="classcdocx_1_1Run.html#aa2977dc665f36641fb9dbfa6a4310f7e">set_italic</a>(italic_);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keywordflow">if</span> (underline_) {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        run.<a class="code hl_function" href="classcdocx_1_1Run.html#a29d34185e12c85b01e3d0f9b13ce6a0f">set_underline</a>(<a class="code hl_enumvalue" href="namespacecdocx.html#a9e3609cbb0fcf4485a2b7b0e806e11eda66ba162102bbf6ae31b522aec561735e">UnderlineType::Single</a>);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    }</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keywordflow">if</span> (!font_name_.empty()) {</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        run.<a class="code hl_function" href="classcdocx_1_1Run.html#af650ee09b5300f914ecb7aa92429b603">set_font_name</a>(font_name_);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    }</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keywordflow">if</span> (font_size_ &gt; 0) {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        run.<a class="code hl_function" href="classcdocx_1_1Run.html#a69eb4de33a84bd9ad49e76c0b19bb5cd">set_font_size</a>(font_size_);</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    }</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keywordflow">if</span> (!color_.empty()) {</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        run.<a class="code hl_function" href="classcdocx_1_1Run.html#a52b0afe7e9a9a9f51b008cfb380e112d">set_color</a>(color_);</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    }</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>}</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="abase_8h_html"><div class="ttname"><a href="base_8h.html">base.h</a></div><div class="ttdoc">Base content classes for CDocx document model - DOM Style</div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html">cdocx::ParagraphBuilder</a></div><div class="ttdoc">Builder class for creating formatted paragraphs</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8h_source.html#l00039">paragraph_builder.h:39</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_a06e51051a4b6f18ab65b6e4d2d54946c"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#a06e51051a4b6f18ab65b6e4d2d54946c">cdocx::ParagraphBuilder::set_font_name</a></div><div class="ttdeci">ParagraphBuilder &amp; set_font_name(const std::string &amp;name)</div><div class="ttdoc">Set font name for subsequent runs</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00058">paragraph_builder.cpp:58</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_a142969680eef37453cbd2bbf2c137796"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#a142969680eef37453cbd2bbf2c137796">cdocx::ParagraphBuilder::add_run</a></div><div class="ttdeci">ParagraphBuilder &amp; add_run(const std::string &amp;text)</div><div class="ttdoc">Add a run with text</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00020">paragraph_builder.cpp:20</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_a1f9552c5118f77473a3b05e55f488d09"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#a1f9552c5118f77473a3b05e55f488d09">cdocx::ParagraphBuilder::clear_formatting</a></div><div class="ttdeci">ParagraphBuilder &amp; clear_formatting()</div><div class="ttdoc">Clear all run formatting</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00078">paragraph_builder.cpp:78</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_a39a964b9025789e22f6a3b9a779f947b"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#a39a964b9025789e22f6a3b9a779f947b">cdocx::ParagraphBuilder::build</a></div><div class="ttdeci">std::shared_ptr&lt; Paragraph &gt; build()</div><div class="ttdoc">Build the paragraph</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00088">paragraph_builder.cpp:88</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_a49095e9ffac5a948d3f4c49ffdaf43ae"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#a49095e9ffac5a948d3f4c49ffdaf43ae">cdocx::ParagraphBuilder::set_font_size</a></div><div class="ttdeci">ParagraphBuilder &amp; set_font_size(int size)</div><div class="ttdoc">Set font size for subsequent runs</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00063">paragraph_builder.cpp:63</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_a5a50d09c20ea52771cd87377fe83677c"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#a5a50d09c20ea52771cd87377fe83677c">cdocx::ParagraphBuilder::set_bold</a></div><div class="ttdeci">ParagraphBuilder &amp; set_bold(bool value)</div><div class="ttdoc">Set bold flag for subsequent runs</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00043">paragraph_builder.cpp:43</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_a5b5b5462d34327f3cf3f51eceea60212"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#a5b5b5462d34327f3cf3f51eceea60212">cdocx::ParagraphBuilder::set_color</a></div><div class="ttdeci">ParagraphBuilder &amp; set_color(const std::string &amp;color_hex)</div><div class="ttdoc">Set text color for subsequent runs</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00068">paragraph_builder.cpp:68</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_a6108928bdd303ac96a4347c8cda70e0a"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#a6108928bdd303ac96a4347c8cda70e0a">cdocx::ParagraphBuilder::set_alignment</a></div><div class="ttdeci">ParagraphBuilder &amp; set_alignment(const std::string &amp;alignment)</div><div class="ttdoc">Set paragraph alignment</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00073">paragraph_builder.cpp:73</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_a88bbb58cba98e2f0dfd7543a1d2e0af2"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#a88bbb58cba98e2f0dfd7543a1d2e0af2">cdocx::ParagraphBuilder::ParagraphBuilder</a></div><div class="ttdeci">ParagraphBuilder()</div><div class="ttdoc">Construct empty paragraph builder</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00013">paragraph_builder.cpp:13</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_ab7579f390dab0514f367b4d20182cb63"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#ab7579f390dab0514f367b4d20182cb63">cdocx::ParagraphBuilder::set_underline</a></div><div class="ttdeci">ParagraphBuilder &amp; set_underline(bool value)</div><div class="ttdoc">Set underline flag for subsequent runs</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00053">paragraph_builder.cpp:53</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_adc327f3e7070fc1947eb2b47887fe954"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#adc327f3e7070fc1947eb2b47887fe954">cdocx::ParagraphBuilder::set_italic</a></div><div class="ttdeci">ParagraphBuilder &amp; set_italic(bool value)</div><div class="ttdoc">Set italic flag for subsequent runs</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00048">paragraph_builder.cpp:48</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Paragraph_html"><div class="ttname"><a href="classcdocx_1_1Paragraph.html">cdocx::Paragraph</a></div><div class="ttdef"><b>Definition</b> <a href="paragraph_8h_source.html#l00043">paragraph.h:43</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Run_html"><div class="ttname"><a href="classcdocx_1_1Run.html">cdocx::Run</a></div><div class="ttdef"><b>Definition</b> <a href="base_8h_source.html#l00098">base.h:98</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Run_html_a29d34185e12c85b01e3d0f9b13ce6a0f"><div class="ttname"><a href="classcdocx_1_1Run.html#a29d34185e12c85b01e3d0f9b13ce6a0f">cdocx::Run::set_underline</a></div><div class="ttdeci">Run &amp; set_underline(UnderlineType value)</div><div class="ttdef"><b>Definition</b> <a href="base_8h_source.html#l00132">base.h:132</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Run_html_a52b0afe7e9a9a9f51b008cfb380e112d"><div class="ttname"><a href="classcdocx_1_1Run.html#a52b0afe7e9a9a9f51b008cfb380e112d">cdocx::Run::set_color</a></div><div class="ttdeci">Run &amp; set_color(const Color &amp;color)</div><div class="ttdef"><b>Definition</b> <a href="base_8h_source.html#l00148">base.h:148</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Run_html_a69eb4de33a84bd9ad49e76c0b19bb5cd"><div class="ttname"><a href="classcdocx_1_1Run.html#a69eb4de33a84bd9ad49e76c0b19bb5cd">cdocx::Run::set_font_size</a></div><div class="ttdeci">Run &amp; set_font_size(double size)</div><div class="ttdef"><b>Definition</b> <a href="base_8h_source.html#l00140">base.h:140</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Run_html_aa2977dc665f36641fb9dbfa6a4310f7e"><div class="ttname"><a href="classcdocx_1_1Run.html#aa2977dc665f36641fb9dbfa6a4310f7e">cdocx::Run::set_italic</a></div><div class="ttdeci">Run &amp; set_italic(bool value)</div><div class="ttdef"><b>Definition</b> <a href="base_8h_source.html#l00128">base.h:128</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Run_html_ad21921ba2abf995a8491d1dc7677b600"><div class="ttname"><a href="classcdocx_1_1Run.html#ad21921ba2abf995a8491d1dc7677b600">cdocx::Run::set_bold</a></div><div class="ttdeci">Run &amp; set_bold(bool value)</div><div class="ttdef"><b>Definition</b> <a href="base_8h_source.html#l00124">base.h:124</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Run_html_af650ee09b5300f914ecb7aa92429b603"><div class="ttname"><a href="classcdocx_1_1Run.html#af650ee09b5300f914ecb7aa92429b603">cdocx::Run::set_font_name</a></div><div class="ttdeci">Run &amp; set_font_name(const std::string &amp;name)</div><div class="ttdef"><b>Definition</b> <a href="base_8h_source.html#l00144">base.h:144</a></div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a9e3609cbb0fcf4485a2b7b0e806e11eda66ba162102bbf6ae31b522aec561735e"><div class="ttname"><a href="namespacecdocx.html#a9e3609cbb0fcf4485a2b7b0e806e11eda66ba162102bbf6ae31b522aec561735e">cdocx::UnderlineType::Single</a></div><div class="ttdeci">@ Single</div></div>
+<div class="ttc" id="aparagraph_8h_html"><div class="ttname"><a href="paragraph_8h.html">paragraph.h</a></div><div class="ttdoc">Paragraph class for CDocx - DOM Style</div></div>
+<div class="ttc" id="aparagraph__builder_8h_html"><div class="ttname"><a href="paragraph__builder_8h.html">paragraph_builder.h</a></div><div class="ttdoc">Paragraph builder for creating formatted paragraphs</div></div>
+<div class="ttc" id="aproperties_8cpp_html_a6ab4eaed1811a844d72c929650422dc4"><div class="ttname"><a href="properties_8cpp.html#a6ab4eaed1811a844d72c929650422dc4">alignment</a></div><div class="ttdeci">TabAlignment alignment</div><div class="ttdef"><b>Definition</b> <a href="properties_8cpp_source.html#l00532">properties.cpp:532</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="paragraph__builder_8cpp.html">paragraph_builder.cpp</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: convert_util.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('convert__util_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">convert_util.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="convert__util_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="foldopen" id="foldopen00029" data-start="{" data-end="};">
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classcdocx_1_1ConvertUtil.html">   29</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1ConvertUtil.html">ConvertUtil</a> {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classcdocx_1_1ConvertUtil.html#ace7be4c3d006d9c18c9b36c7392c21e6">   31</a></span>    <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#ace7be4c3d006d9c18c9b36c7392c21e6">ConvertUtil</a>() = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="comment">// Points &lt;-&gt; Pixels</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a37335a2c6dbba20e3410220ea4e87c9c">point_to_pixel</a>(<span class="keywordtype">double</span> points);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a37335a2c6dbba20e3410220ea4e87c9c">point_to_pixel</a>(<span class="keywordtype">double</span> points, <span class="keywordtype">double</span> resolution);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a3aaa46327673a7d9f26208d412f0ec2c">pixel_to_point</a>(<span class="keywordtype">double</span> pixels);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a3aaa46327673a7d9f26208d412f0ec2c">pixel_to_point</a>(<span class="keywordtype">double</span> pixels, <span class="keywordtype">double</span> resolution);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a3bd98e58f8bd50d014eac03ed62aabf1">pixel_to_new_dpi</a>(<span class="keywordtype">double</span> pixels, <span class="keywordtype">double</span> old_dpi, <span class="keywordtype">double</span> new_dpi);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="comment">// Points &lt;-&gt; Inches</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a08bd0e472ea0f17d65b1b7843dbc7068">inch_to_point</a>(<span class="keywordtype">double</span> inches);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a1f5ccccccb7c70362f3ebb06eb98b200">point_to_inch</a>(<span class="keywordtype">double</span> points);</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="comment">// Points &lt;-&gt; Millimeters</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#aaf4fe0a66763a54fa7464dd9c9469cd6">millimeter_to_point</a>(<span class="keywordtype">double</span> millimeters);</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a259e78d536d159d9dd49216081048238">point_to_millimeter</a>(<span class="keywordtype">double</span> points);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="comment">// Points &lt;-&gt; Centimeters</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#aba4e865a3f4367453deecac34102102f">centimeter_to_point</a>(<span class="keywordtype">double</span> centimeters);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a172b8e0749337c0cfc3aca78b1c17a16">point_to_centimeter</a>(<span class="keywordtype">double</span> points);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="comment">// Points &lt;-&gt; Twips</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a160c11a02299df4d84420d8492b033eb">point_to_twips</a>(<span class="keywordtype">double</span> points);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a31589e37e75c96d2a4aeb8aebdc28944">twips_to_point</a>(<span class="keywordtype">int</span> twips);</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="comment">// Convenience: Common paper sizes in points</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="classcdocx_1_1ConvertUtil.html#ae830b0ce8152f964995d7f455e78f88f">  156</a></span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#ae830b0ce8152f964995d7f455e78f88f">a4_width</a>() { <span class="keywordflow">return</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#aaf4fe0a66763a54fa7464dd9c9469cd6">millimeter_to_point</a>(210.0); }</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno"><a class="line" href="classcdocx_1_1ConvertUtil.html#a3a9216244ae916eefdab7bd1c25b6d41">  162</a></span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a3a9216244ae916eefdab7bd1c25b6d41">a4_height</a>() { <span class="keywordflow">return</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#aaf4fe0a66763a54fa7464dd9c9469cd6">millimeter_to_point</a>(297.0); }</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno"><a class="line" href="classcdocx_1_1ConvertUtil.html#a67c327e558f11af5cd91754146c74d72">  168</a></span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a67c327e558f11af5cd91754146c74d72">letter_width</a>() { <span class="keywordflow">return</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a08bd0e472ea0f17d65b1b7843dbc7068">inch_to_point</a>(8.5); }</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno"><a class="line" href="classcdocx_1_1ConvertUtil.html#a6d1f06e6361849f34031bb90c1c9848e">  174</a></span>    <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a6d1f06e6361849f34031bb90c1c9848e">letter_height</a>() { <span class="keywordflow">return</span> <a class="code hl_function" href="classcdocx_1_1ConvertUtil.html#a08bd0e472ea0f17d65b1b7843dbc7068">inch_to_point</a>(11.0); }</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>};</div>
+</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html">cdocx::ConvertUtil</a></div><div class="ttdoc">Static utility class for measurement unit conversions</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8h_source.html#l00029">convert_util.h:29</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_a08bd0e472ea0f17d65b1b7843dbc7068"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#a08bd0e472ea0f17d65b1b7843dbc7068">cdocx::ConvertUtil::inch_to_point</a></div><div class="ttdeci">static double inch_to_point(double inches)</div><div class="ttdoc">Convert inches to points</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8cpp_source.html#l00045">convert_util.cpp:45</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_a160c11a02299df4d84420d8492b033eb"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#a160c11a02299df4d84420d8492b033eb">cdocx::ConvertUtil::point_to_twips</a></div><div class="ttdeci">static int point_to_twips(double points)</div><div class="ttdoc">Convert points to twips (1/20 of a point)</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8cpp_source.html#l00069">convert_util.cpp:69</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_a172b8e0749337c0cfc3aca78b1c17a16"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#a172b8e0749337c0cfc3aca78b1c17a16">cdocx::ConvertUtil::point_to_centimeter</a></div><div class="ttdeci">static double point_to_centimeter(double points)</div><div class="ttdoc">Convert points to centimeters</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8cpp_source.html#l00065">convert_util.cpp:65</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_a1f5ccccccb7c70362f3ebb06eb98b200"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#a1f5ccccccb7c70362f3ebb06eb98b200">cdocx::ConvertUtil::point_to_inch</a></div><div class="ttdeci">static double point_to_inch(double points)</div><div class="ttdoc">Convert points to inches</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8cpp_source.html#l00049">convert_util.cpp:49</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_a259e78d536d159d9dd49216081048238"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#a259e78d536d159d9dd49216081048238">cdocx::ConvertUtil::point_to_millimeter</a></div><div class="ttdeci">static double point_to_millimeter(double points)</div><div class="ttdoc">Convert points to millimeters</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8cpp_source.html#l00057">convert_util.cpp:57</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_a31589e37e75c96d2a4aeb8aebdc28944"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#a31589e37e75c96d2a4aeb8aebdc28944">cdocx::ConvertUtil::twips_to_point</a></div><div class="ttdeci">static double twips_to_point(int twips)</div><div class="ttdoc">Convert twips to points</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8cpp_source.html#l00073">convert_util.cpp:73</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_a37335a2c6dbba20e3410220ea4e87c9c"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#a37335a2c6dbba20e3410220ea4e87c9c">cdocx::ConvertUtil::point_to_pixel</a></div><div class="ttdeci">static double point_to_pixel(double points)</div><div class="ttdoc">Convert points to pixels at 96 dpi</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8cpp_source.html#l00025">convert_util.cpp:25</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_a3a9216244ae916eefdab7bd1c25b6d41"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#a3a9216244ae916eefdab7bd1c25b6d41">cdocx::ConvertUtil::a4_height</a></div><div class="ttdeci">static double a4_height()</div><div class="ttdoc">A4 paper height in points (297 mm)</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8h_source.html#l00162">convert_util.h:162</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_a3aaa46327673a7d9f26208d412f0ec2c"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#a3aaa46327673a7d9f26208d412f0ec2c">cdocx::ConvertUtil::pixel_to_point</a></div><div class="ttdeci">static double pixel_to_point(double pixels)</div><div class="ttdoc">Convert pixels to points at 96 dpi</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8cpp_source.html#l00033">convert_util.cpp:33</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_a3bd98e58f8bd50d014eac03ed62aabf1"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#a3bd98e58f8bd50d014eac03ed62aabf1">cdocx::ConvertUtil::pixel_to_new_dpi</a></div><div class="ttdeci">static int pixel_to_new_dpi(double pixels, double old_dpi, double new_dpi)</div><div class="ttdoc">Convert pixels from one resolution to another</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8cpp_source.html#l00041">convert_util.cpp:41</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_a67c327e558f11af5cd91754146c74d72"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#a67c327e558f11af5cd91754146c74d72">cdocx::ConvertUtil::letter_width</a></div><div class="ttdeci">static double letter_width()</div><div class="ttdoc">Letter paper width in points (8.5 inches)</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8h_source.html#l00168">convert_util.h:168</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_a6d1f06e6361849f34031bb90c1c9848e"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#a6d1f06e6361849f34031bb90c1c9848e">cdocx::ConvertUtil::letter_height</a></div><div class="ttdeci">static double letter_height()</div><div class="ttdoc">Letter paper height in points (11 inches)</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8h_source.html#l00174">convert_util.h:174</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_aaf4fe0a66763a54fa7464dd9c9469cd6"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#aaf4fe0a66763a54fa7464dd9c9469cd6">cdocx::ConvertUtil::millimeter_to_point</a></div><div class="ttdeci">static double millimeter_to_point(double millimeters)</div><div class="ttdoc">Convert millimeters to points</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8cpp_source.html#l00053">convert_util.cpp:53</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_aba4e865a3f4367453deecac34102102f"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#aba4e865a3f4367453deecac34102102f">cdocx::ConvertUtil::centimeter_to_point</a></div><div class="ttdeci">static double centimeter_to_point(double centimeters)</div><div class="ttdoc">Convert centimeters to points</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8cpp_source.html#l00061">convert_util.cpp:61</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_ace7be4c3d006d9c18c9b36c7392c21e6"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#ace7be4c3d006d9c18c9b36c7392c21e6">cdocx::ConvertUtil::ConvertUtil</a></div><div class="ttdeci">ConvertUtil()=delete</div></div>
+<div class="ttc" id="aclasscdocx_1_1ConvertUtil_html_ae830b0ce8152f964995d7f455e78f88f"><div class="ttname"><a href="classcdocx_1_1ConvertUtil.html#ae830b0ce8152f964995d7f455e78f88f">cdocx::ConvertUtil::a4_width</a></div><div class="ttdeci">static double a4_width()</div><div class="ttdoc">A4 paper width in points (210 mm)</div><div class="ttdef"><b>Definition</b> <a href="convert__util_8h_source.html#l00156">convert_util.h:156</a></div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_45cf22061f640deb443c5da4ff0b00bd.html">cdocx</a></li><li class="navelem"><a class="el" href="convert__util_8h.html">convert_util.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

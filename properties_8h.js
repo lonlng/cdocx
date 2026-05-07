@@ -1,0 +1,28 @@
+var properties_8h =
+[
+    [ "cdocx::TextProperties", "structcdocx_1_1TextProperties.html", "structcdocx_1_1TextProperties" ],
+    [ "cdocx::TextProperties::Font", "structcdocx_1_1TextProperties_1_1Font.html", "structcdocx_1_1TextProperties_1_1Font" ],
+    [ "cdocx::TextProperties::FontStyle", "structcdocx_1_1TextProperties_1_1FontStyle.html", "structcdocx_1_1TextProperties_1_1FontStyle" ],
+    [ "cdocx::TextProperties::Underline", "structcdocx_1_1TextProperties_1_1Underline.html", "structcdocx_1_1TextProperties_1_1Underline" ],
+    [ "cdocx::TextProperties::Spacing", "structcdocx_1_1TextProperties_1_1Spacing.html", "structcdocx_1_1TextProperties_1_1Spacing" ],
+    [ "cdocx::TextProperties::Position", "structcdocx_1_1TextProperties_1_1Position.html", "structcdocx_1_1TextProperties_1_1Position" ],
+    [ "cdocx::TabStop", "structcdocx_1_1TabStop.html", "structcdocx_1_1TabStop" ],
+    [ "cdocx::TabStopCollection", "classcdocx_1_1TabStopCollection.html", "classcdocx_1_1TabStopCollection" ],
+    [ "cdocx::ParagraphProperties", "structcdocx_1_1ParagraphProperties.html", "structcdocx_1_1ParagraphProperties" ],
+    [ "cdocx::ParagraphProperties::Indentation", "structcdocx_1_1ParagraphProperties_1_1Indentation.html", "structcdocx_1_1ParagraphProperties_1_1Indentation" ],
+    [ "cdocx::ParagraphProperties::Indentation::Indent", "structcdocx_1_1ParagraphProperties_1_1Indentation_1_1Indent.html", "structcdocx_1_1ParagraphProperties_1_1Indentation_1_1Indent" ],
+    [ "cdocx::ParagraphProperties::Indentation::Special", "structcdocx_1_1ParagraphProperties_1_1Indentation_1_1Special.html", "structcdocx_1_1ParagraphProperties_1_1Indentation_1_1Special" ],
+    [ "cdocx::ParagraphProperties::Spacing", "structcdocx_1_1ParagraphProperties_1_1Spacing.html", "structcdocx_1_1ParagraphProperties_1_1Spacing" ],
+    [ "cdocx::ParagraphProperties::Spacing::ParaSpacing", "structcdocx_1_1ParagraphProperties_1_1Spacing_1_1ParaSpacing.html", "structcdocx_1_1ParagraphProperties_1_1Spacing_1_1ParaSpacing" ],
+    [ "cdocx::ParagraphProperties::Spacing::LineSpacing", "structcdocx_1_1ParagraphProperties_1_1Spacing_1_1LineSpacing.html", "structcdocx_1_1ParagraphProperties_1_1Spacing_1_1LineSpacing" ],
+    [ "cdocx::ParagraphProperties::Border", "structcdocx_1_1ParagraphProperties_1_1Border.html", "structcdocx_1_1ParagraphProperties_1_1Border" ],
+    [ "cdocx::ParagraphProperties::Borders", "structcdocx_1_1ParagraphProperties_1_1Borders.html", "structcdocx_1_1ParagraphProperties_1_1Borders" ],
+    [ "cdocx::TableProperties", "structcdocx_1_1TableProperties.html", "structcdocx_1_1TableProperties" ],
+    [ "cdocx::TableProperties::Width", "structcdocx_1_1TableProperties_1_1Width.html", "structcdocx_1_1TableProperties_1_1Width" ],
+    [ "cdocx::TableProperties::CellMargin", "structcdocx_1_1TableProperties_1_1CellMargin.html", "structcdocx_1_1TableProperties_1_1CellMargin" ],
+    [ "cdocx::SectionProperties", "structcdocx_1_1SectionProperties.html", "structcdocx_1_1SectionProperties" ],
+    [ "cdocx::SectionProperties::PageSize", "structcdocx_1_1SectionProperties_1_1PageSize.html", "structcdocx_1_1SectionProperties_1_1PageSize" ],
+    [ "cdocx::SectionProperties::PageMargins", "structcdocx_1_1SectionProperties_1_1PageMargins.html", "structcdocx_1_1SectionProperties_1_1PageMargins" ],
+    [ "cdocx::SectionProperties::Columns", "structcdocx_1_1SectionProperties_1_1Columns.html", "structcdocx_1_1SectionProperties_1_1Columns" ],
+    [ "cdocx::DocumentProperties", "classcdocx_1_1DocumentProperties.html", "classcdocx_1_1DocumentProperties" ]
+];

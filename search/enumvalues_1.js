@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['balloontext_0',['BalloonText',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a55fb36f3b338974f930272f3c770e44a',1,'cdocx']]],
+  ['bar_1',['Bar',['../namespacecdocx.html#a020609f9e1e37f81cb678591a340e801addc35f88fa71b6ef142ae61f35364653',1,'cdocx']]],
+  ['bibliography_2',['Bibliography',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1aa7cc81119daa478a68f07f26836adbbf',1,'cdocx']]],
+  ['binaryfile_3',['BinaryFile',['../namespacecdocx.html#a79135431c75934c70eadbe95c59eff67aa3d239688de3c42de2258b9d85ce9e3c',1,'cdocx']]],
+  ['black_4',['black',['../namespacecdocx.html#ab4d1b34f04daa2d5ec34afac1073d4f8ae90dfb84e30edf611e326eeb04d680de',1,'cdocx::Black'],['../structcdocx_1_1TextProperties.html#ad26626e6c60e5f1cd34ee8695b3acd81ae90dfb84e30edf611e326eeb04d680de',1,'cdocx::TextProperties::Black']]],
+  ['blocktext_5',['BlockText',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1ad134031319a67923e03a5c52562abca9',1,'cdocx']]],
+  ['blue_6',['blue',['../structcdocx_1_1TextProperties.html#ad26626e6c60e5f1cd34ee8695b3acd81a9594eec95be70e7b1710f730fdda33d9',1,'cdocx::TextProperties::Blue'],['../namespacecdocx.html#ab4d1b34f04daa2d5ec34afac1073d4f8a9594eec95be70e7b1710f730fdda33d9',1,'cdocx::Blue']]],
+  ['body_7',['Body',['../namespacecdocx.html#a94dc995fea51760307c32fde48a651e4aac101b32dda4448cf13a93fe283dddd8',1,'cdocx']]],
+  ['bodytext_8',['bodytext',['../structcdocx_1_1ParagraphProperties.html#ae7bd0e86193d5c74309cf7283ba60237a4cfff2d57e16cda5e4256c5491568c58',1,'cdocx::ParagraphProperties::BodyText'],['../namespacecdocx.html#ac6ea17128e542bdd8a30b2cba5018f58a4cfff2d57e16cda5e4256c5491568c58',1,'cdocx::BodyText'],['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a4cfff2d57e16cda5e4256c5491568c58',1,'cdocx::BodyText']]],
+  ['bodytext1i_9',['BodyText1I',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a3de443be3cd70dfe3544a026d9914c03',1,'cdocx']]],
+  ['bodytext1i2_10',['BodyText1I2',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a10d16418e9b8197344c915f87b9cc718',1,'cdocx']]],
+  ['bodytext2_11',['BodyText2',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a270ef48035ba515fcb6224a3581190fe',1,'cdocx']]],
+  ['bodytext3_12',['BodyText3',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1ab8db369a7a584d129b84973f2ad71063',1,'cdocx']]],
+  ['bodytextind_13',['BodyTextInd',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1af13602c2478ea9123d0a712dd05fdb80',1,'cdocx']]],
+  ['bodytextind2_14',['BodyTextInd2',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1aa7e3bc77f66f97e39bc22733c9ae25ec',1,'cdocx']]],
+  ['bodytextind3_15',['BodyTextInd3',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a3a50a509a2f0d05c584fa66a6190c5ed',1,'cdocx']]],
+  ['bookmarkend_16',['BookmarkEnd',['../namespacecdocx.html#a94dc995fea51760307c32fde48a651e4acf68b65492c5c8b1aa801725023836c0',1,'cdocx']]],
+  ['bookmarkstart_17',['BookmarkStart',['../namespacecdocx.html#a94dc995fea51760307c32fde48a651e4ad67c32ed140020eb5c069e6ce87f3aa3',1,'cdocx']]],
+  ['bookmarktarget_18',['BookmarkTarget',['../namespacecdocx.html#a7bd33f1e7ba21e2b4e17a3bcbeeee46ca18768c2f6c69039879fe74246ad495ea',1,'cdocx']]],
+  ['booktitle_19',['BookTitle',['../namespacecdocx.html#a88593c1c577c4fa49bce0a872d02bec1a2d1e78debcdc3976d273f894b1e3cbe5',1,'cdocx']]],
+  ['bottom_20',['Bottom',['../namespacecdocx.html#abbffa2b33d80840ab78067cb6ca16cbaa2ad9d63b69c4a10a5cc9cad923133bc4',1,'cdocx']]],
+  ['brightgreen_21',['BrightGreen',['../namespacecdocx.html#ab4d1b34f04daa2d5ec34afac1073d4f8ab249e671af05e6d993727a3d4e65a431',1,'cdocx']]],
+  ['bullet_22',['Bullet',['../namespacecdocx.html#afc7a0f8fa1657e5c9648f816f9415017a7533f96ec01fd81438833f71539c7d4e',1,'cdocx']]]
+];

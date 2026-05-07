@@ -1,0 +1,616 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: cdocx::CellCollection类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classcdocx_1_1CellCollection.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public 类型</a> &#124;
+<a href="#pub-methods">Public 成员函数</a> &#124;
+<a href="classcdocx_1_1CellCollection-members.html">所有成员列表</a>  </div>
+  <div class="headertitle"><div class="title">cdocx::CellCollection类 参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="table_8h_source.html">table.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public 类型</h2></td></tr>
+<tr class="memitem:ac86eadb47c86f66e452f8bd66e2b1c5b" id="r_ac86eadb47c86f66e452f8bd66e2b1c5b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#ac86eadb47c86f66e452f8bd66e2b1c5b">iterator</a> = std::vector&lt; std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt; &gt;::iterator</td></tr>
+<tr class="separator:ac86eadb47c86f66e452f8bd66e2b1c5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c5054d928985fddf99e2487ccf85d50" id="r_a5c5054d928985fddf99e2487ccf85d50"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#a5c5054d928985fddf99e2487ccf85d50">const_iterator</a> = std::vector&lt; std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt; &gt;::const_iterator</td></tr>
+<tr class="separator:a5c5054d928985fddf99e2487ccf85d50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public 成员函数</h2></td></tr>
+<tr class="memitem:a3bde0ae1773d8b78f05f4884a53c80f2" id="r_a3bde0ae1773d8b78f05f4884a53c80f2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#a3bde0ae1773d8b78f05f4884a53c80f2">CellCollection</a> ()=default</td></tr>
+<tr class="separator:a3bde0ae1773d8b78f05f4884a53c80f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb14b872ebb6692960846f503f5e6e10" id="r_abb14b872ebb6692960846f503f5e6e10"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#abb14b872ebb6692960846f503f5e6e10">CellCollection</a> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt; &gt; &amp;cells)</td></tr>
+<tr class="separator:abb14b872ebb6692960846f503f5e6e10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4953a98459171f22dcb3ed3b9a018492" id="r_a4953a98459171f22dcb3ed3b9a018492"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#a4953a98459171f22dcb3ed3b9a018492">get_count</a> () const</td></tr>
+<tr class="separator:a4953a98459171f22dcb3ed3b9a018492"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e059b7873e9ee28b3206ea70821142d" id="r_a3e059b7873e9ee28b3206ea70821142d"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#a3e059b7873e9ee28b3206ea70821142d">get_item</a> (int index) const</td></tr>
+<tr class="separator:a3e059b7873e9ee28b3206ea70821142d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cad1b9c212a9fcee645e563d8e1a5f0" id="r_a6cad1b9c212a9fcee645e563d8e1a5f0"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#a6cad1b9c212a9fcee645e563d8e1a5f0">operator[]</a> (int index) const</td></tr>
+<tr class="separator:a6cad1b9c212a9fcee645e563d8e1a5f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bdc4b0494c3f832a83b09406c49e77b" id="r_a0bdc4b0494c3f832a83b09406c49e77b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1CellCollection.html#ac86eadb47c86f66e452f8bd66e2b1c5b">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#a0bdc4b0494c3f832a83b09406c49e77b">begin</a> ()</td></tr>
+<tr class="separator:a0bdc4b0494c3f832a83b09406c49e77b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56301fba73fbc7ea89e3d06a8ccf1ef2" id="r_a56301fba73fbc7ea89e3d06a8ccf1ef2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1CellCollection.html#ac86eadb47c86f66e452f8bd66e2b1c5b">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#a56301fba73fbc7ea89e3d06a8ccf1ef2">end</a> ()</td></tr>
+<tr class="separator:a56301fba73fbc7ea89e3d06a8ccf1ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a365f89cc840e6e813552b2ed9bc35eb1" id="r_a365f89cc840e6e813552b2ed9bc35eb1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1CellCollection.html#a5c5054d928985fddf99e2487ccf85d50">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#a365f89cc840e6e813552b2ed9bc35eb1">begin</a> () const</td></tr>
+<tr class="separator:a365f89cc840e6e813552b2ed9bc35eb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d4ed088dbb34590ab2bdd2b4d59d3f2" id="r_a4d4ed088dbb34590ab2bdd2b4d59d3f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1CellCollection.html#a5c5054d928985fddf99e2487ccf85d50">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#a4d4ed088dbb34590ab2bdd2b4d59d3f2">end</a> () const</td></tr>
+<tr class="separator:a4d4ed088dbb34590ab2bdd2b4d59d3f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a072c2083cae52c1e5798115be4146656" id="r_a072c2083cae52c1e5798115be4146656"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#a072c2083cae52c1e5798115be4146656">add</a> (std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt; cell)</td></tr>
+<tr class="separator:a072c2083cae52c1e5798115be4146656"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa359acf0ddc8612db7b42914d01e564a" id="r_aa359acf0ddc8612db7b42914d01e564a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#aa359acf0ddc8612db7b42914d01e564a">remove</a> (std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt; cell)</td></tr>
+<tr class="separator:aa359acf0ddc8612db7b42914d01e564a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a421759b9a007ad21f56071cd1f746e1b" id="r_a421759b9a007ad21f56071cd1f746e1b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#a421759b9a007ad21f56071cd1f746e1b">remove_at</a> (int index)</td></tr>
+<tr class="separator:a421759b9a007ad21f56071cd1f746e1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0952956c2f4a40b1967e2dc1f179d2c" id="r_aa0952956c2f4a40b1967e2dc1f179d2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#aa0952956c2f4a40b1967e2dc1f179d2c">clear</a> ()</td></tr>
+<tr class="separator:aa0952956c2f4a40b1967e2dc1f179d2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ca6ef2830492881dd2e64b906a56a92" id="r_a3ca6ef2830492881dd2e64b906a56a92"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#a3ca6ef2830492881dd2e64b906a56a92">insert</a> (int index, std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt; cell)</td></tr>
+<tr class="separator:a3ca6ef2830492881dd2e64b906a56a92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb4a316ea88f8fc3237ddff1ad5f43f7" id="r_aeb4a316ea88f8fc3237ddff1ad5f43f7"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#aeb4a316ea88f8fc3237ddff1ad5f43f7">first</a> () const</td></tr>
+<tr class="separator:aeb4a316ea88f8fc3237ddff1ad5f43f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5b545772776ae2da2d1f65dbcf11d0c" id="r_ac5b545772776ae2da2d1f65dbcf11d0c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#ac5b545772776ae2da2d1f65dbcf11d0c">last</a> () const</td></tr>
+<tr class="separator:ac5b545772776ae2da2d1f65dbcf11d0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a4c55b26cfc672799e695072932461a" id="r_a2a4c55b26cfc672799e695072932461a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1CellCollection.html#a2a4c55b26cfc672799e695072932461a">get_text</a> () const</td></tr>
+<tr class="separator:a2a4c55b26cfc672799e695072932461a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock">
+<p class="definition">在文件 <a class="el" href="table_8h_source.html">table.h</a> 第 <a class="el" href="table_8h_source.html#l00106">106</a> 行定义.</p>
+</div><h2 class="groupheader">成员类型定义说明</h2>
+<a id="a5c5054d928985fddf99e2487ccf85d50" name="a5c5054d928985fddf99e2487ccf85d50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c5054d928985fddf99e2487ccf85d50">&#9670;&#160;</a></span>const_iterator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classcdocx_1_1CellCollection.html#a5c5054d928985fddf99e2487ccf85d50">cdocx::CellCollection::const_iterator</a> =  std::vector&lt;std::shared_ptr&lt;<a class="el" href="classcdocx_1_1Cell.html">Cell</a>&gt; &gt;::const_iterator</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="table_8h_source.html">table.h</a> 第 <a class="el" href="table_8h_source.html#l00111">111</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ac86eadb47c86f66e452f8bd66e2b1c5b" name="ac86eadb47c86f66e452f8bd66e2b1c5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac86eadb47c86f66e452f8bd66e2b1c5b">&#9670;&#160;</a></span>iterator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classcdocx_1_1CellCollection.html#ac86eadb47c86f66e452f8bd66e2b1c5b">cdocx::CellCollection::iterator</a> =  std::vector&lt;std::shared_ptr&lt;<a class="el" href="classcdocx_1_1Cell.html">Cell</a>&gt; &gt;::iterator</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="table_8h_source.html">table.h</a> 第 <a class="el" href="table_8h_source.html#l00110">110</a> 行定义.</p>
+
+</div>
+</div>
+<h2 class="groupheader">构造及析构函数说明</h2>
+<a id="a3bde0ae1773d8b78f05f4884a53c80f2" name="a3bde0ae1773d8b78f05f4884a53c80f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3bde0ae1773d8b78f05f4884a53c80f2">&#9670;&#160;</a></span>CellCollection() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::CellCollection::CellCollection </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abb14b872ebb6692960846f503f5e6e10" name="abb14b872ebb6692960846f503f5e6e10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb14b872ebb6692960846f503f5e6e10">&#9670;&#160;</a></span>CellCollection() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::CellCollection::CellCollection </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>cells</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="table_8h_source.html">table.h</a> 第 <a class="el" href="table_8h_source.html#l00114">114</a> 行定义.</p>
+
+</div>
+</div>
+<h2 class="groupheader">成员函数说明</h2>
+<a id="a072c2083cae52c1e5798115be4146656" name="a072c2083cae52c1e5798115be4146656"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a072c2083cae52c1e5798115be4146656">&#9670;&#160;</a></span>add()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cdocx::CellCollection::add </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt;&#160;</td>
+          <td class="paramname"><em>cell</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0bdc4b0494c3f832a83b09406c49e77b" name="a0bdc4b0494c3f832a83b09406c49e77b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bdc4b0494c3f832a83b09406c49e77b">&#9670;&#160;</a></span>begin() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1CellCollection.html#ac86eadb47c86f66e452f8bd66e2b1c5b">iterator</a> cdocx::CellCollection::begin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="table_8h_source.html">table.h</a> 第 <a class="el" href="table_8h_source.html#l00125">125</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a365f89cc840e6e813552b2ed9bc35eb1" name="a365f89cc840e6e813552b2ed9bc35eb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a365f89cc840e6e813552b2ed9bc35eb1">&#9670;&#160;</a></span>begin() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1CellCollection.html#a5c5054d928985fddf99e2487ccf85d50">const_iterator</a> cdocx::CellCollection::begin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="table_8h_source.html">table.h</a> 第 <a class="el" href="table_8h_source.html#l00127">127</a> 行定义.</p>
+
+</div>
+</div>
+<a id="aa0952956c2f4a40b1967e2dc1f179d2c" name="aa0952956c2f4a40b1967e2dc1f179d2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0952956c2f4a40b1967e2dc1f179d2c">&#9670;&#160;</a></span>clear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cdocx::CellCollection::clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a56301fba73fbc7ea89e3d06a8ccf1ef2" name="a56301fba73fbc7ea89e3d06a8ccf1ef2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56301fba73fbc7ea89e3d06a8ccf1ef2">&#9670;&#160;</a></span>end() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1CellCollection.html#ac86eadb47c86f66e452f8bd66e2b1c5b">iterator</a> cdocx::CellCollection::end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="table_8h_source.html">table.h</a> 第 <a class="el" href="table_8h_source.html#l00126">126</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a4d4ed088dbb34590ab2bdd2b4d59d3f2" name="a4d4ed088dbb34590ab2bdd2b4d59d3f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d4ed088dbb34590ab2bdd2b4d59d3f2">&#9670;&#160;</a></span>end() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1CellCollection.html#a5c5054d928985fddf99e2487ccf85d50">const_iterator</a> cdocx::CellCollection::end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="table_8h_source.html">table.h</a> 第 <a class="el" href="table_8h_source.html#l00128">128</a> 行定义.</p>
+
+</div>
+</div>
+<a id="aeb4a316ea88f8fc3237ddff1ad5f43f7" name="aeb4a316ea88f8fc3237ddff1ad5f43f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb4a316ea88f8fc3237ddff1ad5f43f7">&#9670;&#160;</a></span>first()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt; cdocx::CellCollection::first </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="table_8h_source.html">table.h</a> 第 <a class="el" href="table_8h_source.html#l00136">136</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a4953a98459171f22dcb3ed3b9a018492" name="a4953a98459171f22dcb3ed3b9a018492"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4953a98459171f22dcb3ed3b9a018492">&#9670;&#160;</a></span>get_count()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t cdocx::CellCollection::get_count </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="table_8h_source.html">table.h</a> 第 <a class="el" href="table_8h_source.html#l00116">116</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a3e059b7873e9ee28b3206ea70821142d" name="a3e059b7873e9ee28b3206ea70821142d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e059b7873e9ee28b3206ea70821142d">&#9670;&#160;</a></span>get_item()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt; cdocx::CellCollection::get_item </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="table_8h_source.html">table.h</a> 第 <a class="el" href="table_8h_source.html#l00117">117</a> 行定义.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="table_8h_source.html#l00123">operator[]()</a>.</p>
+
+</div>
+</div>
+<a id="a2a4c55b26cfc672799e695072932461a" name="a2a4c55b26cfc672799e695072932461a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a4c55b26cfc672799e695072932461a">&#9670;&#160;</a></span>get_text()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string cdocx::CellCollection::get_text </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3ca6ef2830492881dd2e64b906a56a92" name="a3ca6ef2830492881dd2e64b906a56a92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ca6ef2830492881dd2e64b906a56a92">&#9670;&#160;</a></span>insert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cdocx::CellCollection::insert </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt;&#160;</td>
+          <td class="paramname"><em>cell</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac5b545772776ae2da2d1f65dbcf11d0c" name="ac5b545772776ae2da2d1f65dbcf11d0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5b545772776ae2da2d1f65dbcf11d0c">&#9670;&#160;</a></span>last()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt; cdocx::CellCollection::last </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="table_8h_source.html">table.h</a> 第 <a class="el" href="table_8h_source.html#l00137">137</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a6cad1b9c212a9fcee645e563d8e1a5f0" name="a6cad1b9c212a9fcee645e563d8e1a5f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cad1b9c212a9fcee645e563d8e1a5f0">&#9670;&#160;</a></span>operator[]()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt; cdocx::CellCollection::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="table_8h_source.html">table.h</a> 第 <a class="el" href="table_8h_source.html#l00123">123</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="table_8h_source.html#l00117">get_item()</a>.</p>
+
+</div>
+</div>
+<a id="aa359acf0ddc8612db7b42914d01e564a" name="aa359acf0ddc8612db7b42914d01e564a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa359acf0ddc8612db7b42914d01e564a">&#9670;&#160;</a></span>remove()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cdocx::CellCollection::remove </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Cell.html">Cell</a> &gt;&#160;</td>
+          <td class="paramname"><em>cell</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a421759b9a007ad21f56071cd1f746e1b" name="a421759b9a007ad21f56071cd1f746e1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a421759b9a007ad21f56071cd1f746e1b">&#9670;&#160;</a></span>remove_at()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cdocx::CellCollection::remove_at </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li><a class="el" href="table_8h_source.html">table.h</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespacecdocx.html">cdocx</a></li><li class="navelem"><a class="el" href="classcdocx_1_1CellCollection.html">CellCollection</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

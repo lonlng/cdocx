@@ -1,0 +1,304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: sync_common.cpp 文件参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('sync__common_8cpp.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">类</a> &#124;
+<a href="#namespaces">命名空间</a> &#124;
+<a href="#func-members">函数</a> &#124;
+<a href="#var-members">变量</a>  </div>
+  <div class="headertitle"><div class="title">sync_common.cpp 文件参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Shared helpers and lookup tables for DOM-Physical sync  
+<a href="#details">更多...</a></p>
+<div class="textblock"><code>#include &quot;<a class="el" href="sync__common_8h_source.html">sync_common.h</a>&quot;</code><br />
+<code>#include &lt;<a class="el" href="document_8h_source.html">cdocx/document.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="document__builder_8h_source.html">cdocx/document_builder.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="formfield_8h_source.html">cdocx/formfield.h</a>&gt;</code><br />
+<code>#include &lt;charconv&gt;</code><br />
+<code>#include &lt;cstring&gt;</code><br />
+<code>#include &lt;ctime&gt;</code><br />
+</div>
+<p><a href="sync__common_8cpp_source.html">浏览源代码.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+类</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1HeaderFooterTypeMapping.html">cdocx::HeaderFooterTypeMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1BorderTypeMapping.html">cdocx::BorderTypeMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1UnderlineTypeMapping.html">cdocx::UnderlineTypeMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1ParagraphAlignmentMapping.html">cdocx::ParagraphAlignmentMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1PpAlignmentMapping.html">cdocx::PpAlignmentMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1CellVerticalAlignmentMapping.html">cdocx::CellVerticalAlignmentMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1TableAlignmentMapping.html">cdocx::TableAlignmentMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1DropCapPositionMapping.html">cdocx::DropCapPositionMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1ScriptTypeMapping.html">cdocx::ScriptTypeMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1LineSpacingRuleMapping.html">cdocx::LineSpacingRuleMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1BorderParseMapping.html">cdocx::BorderParseMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1BorderSerializeMapping.html">cdocx::BorderSerializeMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1HighlightMapping.html">cdocx::HighlightMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1TextFormFieldTypeMapping.html">cdocx::TextFormFieldTypeMapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+命名空间</h2></td></tr>
+<tr class="memitem:namespacecdocx" id="r_namespacecdocx"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html">cdocx</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+函数</h2></td></tr>
+<tr class="memitem:a467341a206179c178c5d961fc4cf9c9a" id="r_a467341a206179c178c5d961fc4cf9c9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a467341a206179c178c5d961fc4cf9c9a">cdocx::remove_managed_children</a> (pugi::xml_node parent, std::initializer_list&lt; const char * &gt; names)</td></tr>
+<tr class="separator:a467341a206179c178c5d961fc4cf9c9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a36fb3a497ed4b34e146d0a7d597807" id="r_a7a36fb3a497ed4b34e146d0a7d597807"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a7a36fb3a497ed4b34e146d0a7d597807">cdocx::trim_whitespace</a> (const std::string &amp;str)</td></tr>
+<tr class="separator:a7a36fb3a497ed4b34e146d0a7d597807"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f2764c22c6117214dcfdb484faa5c37" id="r_a9f2764c22c6117214dcfdb484faa5c37"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a9f2764c22c6117214dcfdb484faa5c37">cdocx::iequals</a> (const std::string &amp;a, const std::string &amp;b)</td></tr>
+<tr class="separator:a9f2764c22c6117214dcfdb484faa5c37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace46d0b9391ac248bd1d6e61e33084db" id="r_ace46d0b9391ac248bd1d6e61e33084db"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#ace46d0b9391ac248bd1d6e61e33084db">cdocx::to_lower</a> (std::string s)</td></tr>
+<tr class="separator:ace46d0b9391ac248bd1d6e61e33084db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb95aa1e830002f702c43389d79b88f3" id="r_afb95aa1e830002f702c43389d79b88f3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#afb95aa1e830002f702c43389d79b88f3">cdocx::collect_text_from_runs</a> (pugi::xml_node para)</td></tr>
+<tr class="separator:afb95aa1e830002f702c43389d79b88f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab8b714f36ee962ac68c13b928386ab8" id="r_aab8b714f36ee962ac68c13b928386ab8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#aab8b714f36ee962ac68c13b928386ab8">cdocx::is_para_node</a> (const char *name)</td></tr>
+<tr class="separator:aab8b714f36ee962ac68c13b928386ab8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f07dea5094c7d97f0e6f87c8e87a245" id="r_a3f07dea5094c7d97f0e6f87c8e87a245"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a3f07dea5094c7d97f0e6f87c8e87a245">cdocx::is_table_node</a> (const char *name)</td></tr>
+<tr class="separator:a3f07dea5094c7d97f0e6f87c8e87a245"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfdb8f37c411b896a4e31de6a0e1f64d" id="r_abfdb8f37c411b896a4e31de6a0e1f64d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#abfdb8f37c411b896a4e31de6a0e1f64d">cdocx::is_sectpr_node</a> (const char *name)</td></tr>
+<tr class="separator:abfdb8f37c411b896a4e31de6a0e1f64d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fe48384d1b5bf91d09b1205a1adf10b" id="r_a2fe48384d1b5bf91d09b1205a1adf10b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a2fe48384d1b5bf91d09b1205a1adf10b">cdocx::is_content_node</a> (const char *name)</td></tr>
+<tr class="separator:a2fe48384d1b5bf91d09b1205a1adf10b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae245c0216b3228fb7b3bc9e798f025b1" id="r_ae245c0216b3228fb7b3bc9e798f025b1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#ae245c0216b3228fb7b3bc9e798f025b1">cdocx::is_bookmark_start_node</a> (const char *name)</td></tr>
+<tr class="separator:ae245c0216b3228fb7b3bc9e798f025b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af09699eae9809acd254b9c1db31b30ba" id="r_af09699eae9809acd254b9c1db31b30ba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#af09699eae9809acd254b9c1db31b30ba">cdocx::is_bookmark_end_node</a> (const char *name)</td></tr>
+<tr class="separator:af09699eae9809acd254b9c1db31b30ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5adaccb857985a5694199d937f308755" id="r_a5adaccb857985a5694199d937f308755"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a5adaccb857985a5694199d937f308755">cdocx::is_run_node</a> (const char *name)</td></tr>
+<tr class="separator:a5adaccb857985a5694199d937f308755"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abea26a9eae78f1a019b6cd22adf7ec97" id="r_abea26a9eae78f1a019b6cd22adf7ec97"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structcdocx_1_1SectionRange.html">SectionRange</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#abea26a9eae78f1a019b6cd22adf7ec97">cdocx::collect_section_ranges</a> (pugi::xml_node body)</td></tr>
+<tr class="separator:abea26a9eae78f1a019b6cd22adf7ec97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e41a4a784ddb980ebf605a486a4b9e4" id="r_a1e41a4a784ddb980ebf605a486a4b9e4"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a1e41a4a784ddb980ebf605a486a4b9e4">cdocx::header_footer_type_to_string</a> (<a class="el" href="namespacecdocx.html#ac582d253e338602be7cba859382c5864">HeaderFooterType</a> <a class="el" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>)</td></tr>
+<tr class="separator:a1e41a4a784ddb980ebf605a486a4b9e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25beb116998ab35b271754e74b263e77" id="r_a25beb116998ab35b271754e74b263e77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecdocx.html#ac582d253e338602be7cba859382c5864">HeaderFooterType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a25beb116998ab35b271754e74b263e77">cdocx::string_to_header_footer_type</a> (const char *val)</td></tr>
+<tr class="separator:a25beb116998ab35b271754e74b263e77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0297b287dbbab1e67b887bf468511b3" id="r_ad0297b287dbbab1e67b887bf468511b3"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#ad0297b287dbbab1e67b887bf468511b3">cdocx::border_type_to_string</a> (<a class="el" href="namespacecdocx.html#a4aa2d676efcea2b05d606bc6dee6bb3e">BorderType</a> <a class="el" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>)</td></tr>
+<tr class="separator:ad0297b287dbbab1e67b887bf468511b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b42527b1bd7970d0a07fb7af9ea7e10" id="r_a7b42527b1bd7970d0a07fb7af9ea7e10"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecdocx.html#a4aa2d676efcea2b05d606bc6dee6bb3e">BorderType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a7b42527b1bd7970d0a07fb7af9ea7e10">cdocx::string_to_border_type</a> (const char *str)</td></tr>
+<tr class="separator:a7b42527b1bd7970d0a07fb7af9ea7e10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0131fc82d4ccf5893b5a5b12959bc84b" id="r_a0131fc82d4ccf5893b5a5b12959bc84b"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a0131fc82d4ccf5893b5a5b12959bc84b">cdocx::underline_type_to_string</a> (<a class="el" href="namespacecdocx.html#a9e3609cbb0fcf4485a2b7b0e806e11ed">UnderlineType</a> <a class="el" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>)</td></tr>
+<tr class="separator:a0131fc82d4ccf5893b5a5b12959bc84b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bbad1d9fc10fb611770798853c44071" id="r_a4bbad1d9fc10fb611770798853c44071"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecdocx.html#a9e3609cbb0fcf4485a2b7b0e806e11ed">UnderlineType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a4bbad1d9fc10fb611770798853c44071">cdocx::string_to_underline_type</a> (const char *str)</td></tr>
+<tr class="separator:a4bbad1d9fc10fb611770798853c44071"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb71fa8a85a2fc5435add2c2cb44e39b" id="r_adb71fa8a85a2fc5435add2c2cb44e39b"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#adb71fa8a85a2fc5435add2c2cb44e39b">cdocx::paragraph_alignment_to_string</a> (<a class="el" href="namespacecdocx.html#aad40c2b87dee1cf90ebc0eb91f886e0b">ParagraphAlignment</a> <a class="el" href="properties_8cpp.html#a6ab4eaed1811a844d72c929650422dc4">alignment</a>)</td></tr>
+<tr class="separator:adb71fa8a85a2fc5435add2c2cb44e39b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afec5ca7aaea051385f24b8956b8b45fb" id="r_afec5ca7aaea051385f24b8956b8b45fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecdocx.html#aad40c2b87dee1cf90ebc0eb91f886e0b">ParagraphAlignment</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#afec5ca7aaea051385f24b8956b8b45fb">cdocx::string_to_paragraph_alignment</a> (const char *str)</td></tr>
+<tr class="separator:afec5ca7aaea051385f24b8956b8b45fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04aba7c5e4fc877fe6e5813a0a6565e4" id="r_a04aba7c5e4fc877fe6e5813a0a6565e4"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a04aba7c5e4fc877fe6e5813a0a6565e4">cdocx::pp_alignment_to_string</a> (<a class="el" href="structcdocx_1_1ParagraphProperties.html#a3fded160c48fe3f6c9d4828ca8e56160">ParagraphProperties::Alignment</a> <a class="el" href="properties_8cpp.html#a6ab4eaed1811a844d72c929650422dc4">alignment</a>)</td></tr>
+<tr class="separator:a04aba7c5e4fc877fe6e5813a0a6565e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a637c3d1b3a962a31c692f6aca3dead85" id="r_a637c3d1b3a962a31c692f6aca3dead85"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcdocx_1_1ParagraphProperties.html#a3fded160c48fe3f6c9d4828ca8e56160">ParagraphProperties::Alignment</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a637c3d1b3a962a31c692f6aca3dead85">cdocx::string_to_pp_alignment</a> (const char *str)</td></tr>
+<tr class="separator:a637c3d1b3a962a31c692f6aca3dead85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2545553e7a8213f10107ced43e7ab03f" id="r_a2545553e7a8213f10107ced43e7ab03f"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a2545553e7a8213f10107ced43e7ab03f">cdocx::cell_vertical_alignment_to_string</a> (<a class="el" href="namespacecdocx.html#abbffa2b33d80840ab78067cb6ca16cba">CellVerticalAlignment</a> <a class="el" href="properties_8cpp.html#a6ab4eaed1811a844d72c929650422dc4">alignment</a>)</td></tr>
+<tr class="separator:a2545553e7a8213f10107ced43e7ab03f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7feb210e335e24faba614c5680181e76" id="r_a7feb210e335e24faba614c5680181e76"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecdocx.html#abbffa2b33d80840ab78067cb6ca16cba">CellVerticalAlignment</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a7feb210e335e24faba614c5680181e76">cdocx::string_to_cell_vertical_alignment</a> (const char *str)</td></tr>
+<tr class="separator:a7feb210e335e24faba614c5680181e76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac11fb1222a3c2275ba7a8c677ef68b25" id="r_ac11fb1222a3c2275ba7a8c677ef68b25"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#ac11fb1222a3c2275ba7a8c677ef68b25">cdocx::table_alignment_to_string</a> (<a class="el" href="namespacecdocx.html#a0fd041d130873987cc8a90ac2b1f3871">TableAlignment</a> <a class="el" href="properties_8cpp.html#a6ab4eaed1811a844d72c929650422dc4">alignment</a>)</td></tr>
+<tr class="separator:ac11fb1222a3c2275ba7a8c677ef68b25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dc78a73873c4f91a5d979aec5033610" id="r_a3dc78a73873c4f91a5d979aec5033610"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecdocx.html#a0fd041d130873987cc8a90ac2b1f3871">TableAlignment</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a3dc78a73873c4f91a5d979aec5033610">cdocx::string_to_table_alignment</a> (const char *str)</td></tr>
+<tr class="separator:a3dc78a73873c4f91a5d979aec5033610"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a223a82588378b4edb64c094e02f9eb9d" id="r_a223a82588378b4edb64c094e02f9eb9d"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a223a82588378b4edb64c094e02f9eb9d">cdocx::drop_cap_position_to_string</a> (<a class="el" href="namespacecdocx.html#a61433728db2ae4b5b30a5bfd2b81bf05">DropCapPosition</a> <a class="el" href="base__content_8cpp.html#ade8140d8414598e976f4e89e4dfc68ad">position</a>)</td></tr>
+<tr class="separator:a223a82588378b4edb64c094e02f9eb9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe4d1180ccfdd8bd4b335ef6a3906aa6" id="r_afe4d1180ccfdd8bd4b335ef6a3906aa6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecdocx.html#a61433728db2ae4b5b30a5bfd2b81bf05">DropCapPosition</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#afe4d1180ccfdd8bd4b335ef6a3906aa6">cdocx::string_to_drop_cap_position</a> (const char *str)</td></tr>
+<tr class="separator:afe4d1180ccfdd8bd4b335ef6a3906aa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab0b8c5dcdf4f573902b238c0b76b015" id="r_aab0b8c5dcdf4f573902b238c0b76b015"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#aab0b8c5dcdf4f573902b238c0b76b015">cdocx::script_type_to_string</a> (<a class="el" href="namespacecdocx.html#a1fb699a31e5a1c2ceed57b56b71f9bdd">ScriptType</a> <a class="el" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>)</td></tr>
+<tr class="separator:aab0b8c5dcdf4f573902b238c0b76b015"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14715eeac08f1240ef682027649f46b2" id="r_a14715eeac08f1240ef682027649f46b2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecdocx.html#a1fb699a31e5a1c2ceed57b56b71f9bdd">ScriptType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a14715eeac08f1240ef682027649f46b2">cdocx::string_to_script_type</a> (const char *str)</td></tr>
+<tr class="separator:a14715eeac08f1240ef682027649f46b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a588f1323dc86d0161e6412b0d4726c16" id="r_a588f1323dc86d0161e6412b0d4726c16"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a588f1323dc86d0161e6412b0d4726c16">cdocx::line_spacing_rule_to_string</a> (<a class="el" href="namespacecdocx.html#a53f387bca36d650e6a67dd7cffe483b1">LineSpacingRule</a> rule)</td></tr>
+<tr class="separator:a588f1323dc86d0161e6412b0d4726c16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa8c6551585f7c9a8dd8ed1a7cbb6810" id="r_afa8c6551585f7c9a8dd8ed1a7cbb6810"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecdocx.html#a53f387bca36d650e6a67dd7cffe483b1">LineSpacingRule</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#afa8c6551585f7c9a8dd8ed1a7cbb6810">cdocx::string_to_line_spacing_rule</a> (const char *str)</td></tr>
+<tr class="separator:afa8c6551585f7c9a8dd8ed1a7cbb6810"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a104210feb5bf4f2407f6b7f00472e706" id="r_a104210feb5bf4f2407f6b7f00472e706"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a104210feb5bf4f2407f6b7f00472e706">cdocx::strip_whitespace_text_nodes</a> (pugi::xml_node node)</td></tr>
+<tr class="separator:a104210feb5bf4f2407f6b7f00472e706"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a0305fd097d86078b89b3e65ecc9b7c" id="r_a0a0305fd097d86078b89b3e65ecc9b7c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a0a0305fd097d86078b89b3e65ecc9b7c">cdocx::serialize_shading_to_xml</a> (pugi::xml_node parent, const <a class="el" href="classcdocx_1_1Shading.html">Shading</a> &amp;shading)</td></tr>
+<tr class="separator:a0a0305fd097d86078b89b3e65ecc9b7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06c19485647e452cb6b432130dd94a83" id="r_a06c19485647e452cb6b432130dd94a83"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a06c19485647e452cb6b432130dd94a83">cdocx::parse_shading_from_xml</a> (pugi::xml_node shd, <a class="el" href="classcdocx_1_1Shading.html">Shading</a> &amp;shading)</td></tr>
+<tr class="separator:a06c19485647e452cb6b432130dd94a83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9621b2719b821af502565b2e421bbc2e" id="r_a9621b2719b821af502565b2e421bbc2e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a9621b2719b821af502565b2e421bbc2e">cdocx::parse_border_from_xml</a> (pugi::xml_node border_node, <a class="el" href="classcdocx_1_1Border.html">Border</a> &amp;border)</td></tr>
+<tr class="separator:a9621b2719b821af502565b2e421bbc2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fd8c7eabdd3c62fd7e5cf076ccdcbda" id="r_a6fd8c7eabdd3c62fd7e5cf076ccdcbda"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a6fd8c7eabdd3c62fd7e5cf076ccdcbda">cdocx::parse_borders_from_xml</a> (pugi::xml_node borders_node, <a class="el" href="classcdocx_1_1Borders.html">Borders</a> &amp;borders)</td></tr>
+<tr class="separator:a6fd8c7eabdd3c62fd7e5cf076ccdcbda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e28d644e1c6a78e3fb012d579f4021f" id="r_a1e28d644e1c6a78e3fb012d579f4021f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a1e28d644e1c6a78e3fb012d579f4021f">cdocx::serialize_border_to_xml</a> (pugi::xml_node parent, const char *name, const <a class="el" href="classcdocx_1_1Border.html">Border</a> &amp;border, bool include_nil=false)</td></tr>
+<tr class="separator:a1e28d644e1c6a78e3fb012d579f4021f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e8ef32f36195cfd8c53d89b4f0a9fb4" id="r_a1e8ef32f36195cfd8c53d89b4f0a9fb4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a1e8ef32f36195cfd8c53d89b4f0a9fb4">cdocx::serialize_borders_to_xml</a> (pugi::xml_node parent, const char *container_name, const <a class="el" href="classcdocx_1_1Borders.html">Borders</a> &amp;borders)</td></tr>
+<tr class="separator:a1e8ef32f36195cfd8c53d89b4f0a9fb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61e69b66f5e2f1d33ed6568bf82a50c0" id="r_a61e69b66f5e2f1d33ed6568bf82a50c0"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a61e69b66f5e2f1d33ed6568bf82a50c0">cdocx::time_to_w3cdtf</a> (std::time_t t)</td></tr>
+<tr class="separator:a61e69b66f5e2f1d33ed6568bf82a50c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eb98938d808b91ff3aa8b9fcb912b1f" id="r_a8eb98938d808b91ff3aa8b9fcb912b1f"><td class="memItemLeft" align="right" valign="top">std::time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a8eb98938d808b91ff3aa8b9fcb912b1f">cdocx::timegm_wrapper</a> (std::tm *tm)</td></tr>
+<tr class="separator:a8eb98938d808b91ff3aa8b9fcb912b1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbaa71823e0872acb90708b72a09de85" id="r_abbaa71823e0872acb90708b72a09de85"><td class="memItemLeft" align="right" valign="top">std::time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#abbaa71823e0872acb90708b72a09de85">cdocx::w3cdtf_to_time</a> (const std::string &amp;s)</td></tr>
+<tr class="separator:abbaa71823e0872acb90708b72a09de85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acaef7d738053a7b393cd80ebbf25fa97" id="r_acaef7d738053a7b393cd80ebbf25fa97"><td class="memItemLeft" align="right" valign="top">pugi::xml_node&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#acaef7d738053a7b393cd80ebbf25fa97">cdocx::get_or_create_child</a> (pugi::xml_node parent, const char *name)</td></tr>
+<tr class="separator:acaef7d738053a7b393cd80ebbf25fa97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a845291b75f232acb7cf85634e9e12d71" id="r_a845291b75f232acb7cf85634e9e12d71"><td class="memItemLeft" align="right" valign="top">pugi::xml_node&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a845291b75f232acb7cf85634e9e12d71">cdocx::ensure_child</a> (pugi::xml_node parent, const char *name)</td></tr>
+<tr class="separator:a845291b75f232acb7cf85634e9e12d71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cc6d92f8107ad91d236fcf60f8aac54" id="r_a9cc6d92f8107ad91d236fcf60f8aac54"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a9cc6d92f8107ad91d236fcf60f8aac54">cdocx::set_text_child</a> (pugi::xml_node parent, const char *name, const std::string &amp;value)</td></tr>
+<tr class="separator:a9cc6d92f8107ad91d236fcf60f8aac54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cbc1f1b018c1c408ac7d878bce3af43" id="r_a0cbc1f1b018c1c408ac7d878bce3af43"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a0cbc1f1b018c1c408ac7d878bce3af43">cdocx::highlight_to_string</a> (<a class="el" href="structcdocx_1_1TextProperties.html#ad26626e6c60e5f1cd34ee8695b3acd81">TextProperties::Highlight</a> <a class="el" href="base__content_8cpp.html#a30822ca2dbf97533bee20dd26e86b94b">highlight</a>)</td></tr>
+<tr class="separator:a0cbc1f1b018c1c408ac7d878bce3af43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12efa0c0a0e4580c0738f77984a55d34" id="r_a12efa0c0a0e4580c0738f77984a55d34"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcdocx_1_1TextProperties.html#ad26626e6c60e5f1cd34ee8695b3acd81">TextProperties::Highlight</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a12efa0c0a0e4580c0738f77984a55d34">cdocx::string_to_highlight</a> (const char *str)</td></tr>
+<tr class="separator:a12efa0c0a0e4580c0738f77984a55d34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae78c12b015c0a5a6d8c5aa36524f8007" id="r_ae78c12b015c0a5a6d8c5aa36524f8007"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#ae78c12b015c0a5a6d8c5aa36524f8007">cdocx::text_form_field_type_to_string</a> (<a class="el" href="namespacecdocx.html#acad538ede526cf3c75c9ea4bce592807">TextFormFieldType</a> <a class="el" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>)</td></tr>
+<tr class="separator:ae78c12b015c0a5a6d8c5aa36524f8007"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93482dc26ca4c3640536288f20ef2f96" id="r_a93482dc26ca4c3640536288f20ef2f96"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecdocx.html#acad538ede526cf3c75c9ea4bce592807">TextFormFieldType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a93482dc26ca4c3640536288f20ef2f96">cdocx::string_to_text_form_field_type</a> (const char *str)</td></tr>
+<tr class="separator:a93482dc26ca4c3640536288f20ef2f96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f2904ebf755c4a42a19c8a6a557baf2" id="r_a7f2904ebf755c4a42a19c8a6a557baf2"><td class="memItemLeft" align="right" valign="top">pugi::xml_node&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a7f2904ebf755c4a42a19c8a6a557baf2">cdocx::append_image_drawing</a> (pugi::xml_node parent, const std::string &amp;rel_id, const <a class="el" href="structcdocx_1_1ImageSize.html">ImageSize</a> &amp;size, <a class="el" href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2">ImageAlignment</a> <a class="el" href="properties_8cpp.html#a9bd1379a71b955886d4eb552d47d4fba">align</a>, int image_id, const std::string &amp;image_name)</td></tr>
+<tr class="separator:a7f2904ebf755c4a42a19c8a6a557baf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac9e8b1bd13d45257bac6ec75b4de8ea" id="r_aac9e8b1bd13d45257bac6ec75b4de8ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#aac9e8b1bd13d45257bac6ec75b4de8ea">cdocx::serialize_ffdata_to_fld_char</a> (pugi::xml_node fld_char, const <a class="el" href="classcdocx_1_1FormField.html">FormField</a> *field)</td></tr>
+<tr class="separator:aac9e8b1bd13d45257bac6ec75b4de8ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aace4a42afd910e60809db90038e6117a" id="r_aace4a42afd910e60809db90038e6117a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#aace4a42afd910e60809db90038e6117a">cdocx::append_form_field_sequence</a> (pugi::xml_node parent, const <a class="el" href="classcdocx_1_1FormField.html">FormField</a> *field, <a class="el" href="classcdocx_1_1Document.html">Document</a> *doc)</td></tr>
+<tr class="separator:aace4a42afd910e60809db90038e6117a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+变量</h2></td></tr>
+<tr class="memitem:afd27c6cb9898385dd99f85e7dc358942" id="r_afd27c6cb9898385dd99f85e7dc358942"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1HeaderFooterTypeMapping.html">HeaderFooterTypeMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#afd27c6cb9898385dd99f85e7dc358942">cdocx::kHeaderFooterTypeMappings</a> []</td></tr>
+<tr class="separator:afd27c6cb9898385dd99f85e7dc358942"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adaced21ed3f5e90bb7be9ca3dd4180b4" id="r_adaced21ed3f5e90bb7be9ca3dd4180b4"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1BorderTypeMapping.html">BorderTypeMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#adaced21ed3f5e90bb7be9ca3dd4180b4">cdocx::kBorderTypeMappings</a> []</td></tr>
+<tr class="separator:adaced21ed3f5e90bb7be9ca3dd4180b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a203a683f41d5f0bc5ac287f411eb448c" id="r_a203a683f41d5f0bc5ac287f411eb448c"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1UnderlineTypeMapping.html">UnderlineTypeMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a203a683f41d5f0bc5ac287f411eb448c">cdocx::kUnderlineTypeMappings</a> []</td></tr>
+<tr class="separator:a203a683f41d5f0bc5ac287f411eb448c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02acdc46f90e1b780cf5f8b00b888f13" id="r_a02acdc46f90e1b780cf5f8b00b888f13"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1ParagraphAlignmentMapping.html">ParagraphAlignmentMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a02acdc46f90e1b780cf5f8b00b888f13">cdocx::kParagraphAlignmentMappings</a> []</td></tr>
+<tr class="separator:a02acdc46f90e1b780cf5f8b00b888f13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa998713ea1c3084ba9da9ac5861acf7b" id="r_aa998713ea1c3084ba9da9ac5861acf7b"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1PpAlignmentMapping.html">PpAlignmentMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#aa998713ea1c3084ba9da9ac5861acf7b">cdocx::kPpAlignmentMappings</a> []</td></tr>
+<tr class="separator:aa998713ea1c3084ba9da9ac5861acf7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61b7df24640c0a65c0d4355983a8053e" id="r_a61b7df24640c0a65c0d4355983a8053e"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1CellVerticalAlignmentMapping.html">CellVerticalAlignmentMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a61b7df24640c0a65c0d4355983a8053e">cdocx::kCellVerticalAlignmentMappings</a> []</td></tr>
+<tr class="separator:a61b7df24640c0a65c0d4355983a8053e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a826f1f5657ab3d482c59cd2e0f3d41ff" id="r_a826f1f5657ab3d482c59cd2e0f3d41ff"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1TableAlignmentMapping.html">TableAlignmentMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a826f1f5657ab3d482c59cd2e0f3d41ff">cdocx::kTableAlignmentMappings</a> []</td></tr>
+<tr class="separator:a826f1f5657ab3d482c59cd2e0f3d41ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a043c6ee3ea86c1708e4ac0b2c84f516b" id="r_a043c6ee3ea86c1708e4ac0b2c84f516b"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1DropCapPositionMapping.html">DropCapPositionMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a043c6ee3ea86c1708e4ac0b2c84f516b">cdocx::kDropCapPositionMappings</a> []</td></tr>
+<tr class="separator:a043c6ee3ea86c1708e4ac0b2c84f516b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedd923092e568c50538c048dd20aeba8" id="r_aedd923092e568c50538c048dd20aeba8"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1ScriptTypeMapping.html">ScriptTypeMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#aedd923092e568c50538c048dd20aeba8">cdocx::kScriptTypeMappings</a> []</td></tr>
+<tr class="separator:aedd923092e568c50538c048dd20aeba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3be47792e740350ea6101d9630b69fc1" id="r_a3be47792e740350ea6101d9630b69fc1"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1LineSpacingRuleMapping.html">LineSpacingRuleMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a3be47792e740350ea6101d9630b69fc1">cdocx::kLineSpacingRuleMappings</a> []</td></tr>
+<tr class="separator:a3be47792e740350ea6101d9630b69fc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14cec82bd8849978b4c0d429fc7e53e9" id="r_a14cec82bd8849978b4c0d429fc7e53e9"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1BorderParseMapping.html">BorderParseMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a14cec82bd8849978b4c0d429fc7e53e9">cdocx::kBorderParseMappings</a> []</td></tr>
+<tr class="separator:a14cec82bd8849978b4c0d429fc7e53e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f493848e0909e4aa04fdd232f1fceff" id="r_a3f493848e0909e4aa04fdd232f1fceff"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1BorderSerializeMapping.html">BorderSerializeMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a3f493848e0909e4aa04fdd232f1fceff">cdocx::kBorderSerializeMappings</a> []</td></tr>
+<tr class="separator:a3f493848e0909e4aa04fdd232f1fceff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91da929164d6899f0588218933119c92" id="r_a91da929164d6899f0588218933119c92"><td class="memItemLeft" align="right" valign="top">static const HighlightMapping&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a91da929164d6899f0588218933119c92">cdocx::kHighlightMappings</a> []</td></tr>
+<tr class="separator:a91da929164d6899f0588218933119c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af947126e6e1420435b28424d9611de75" id="r_af947126e6e1420435b28424d9611de75"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structcdocx_1_1TextFormFieldTypeMapping.html">TextFormFieldTypeMapping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#af947126e6e1420435b28424d9611de75">cdocx::kTextFormFieldTypeMappings</a> []</td></tr>
+<tr class="separator:af947126e6e1420435b28424d9611de75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>Shared helpers and lookup tables for DOM-Physical sync </p>
+
+<p class="definition">在文件 <a class="el" href="sync__common_8cpp_source.html">sync_common.cpp</a> 中定义.</p>
+</div></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="sync__common_8cpp.html">sync_common.cpp</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

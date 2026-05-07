@@ -1,0 +1,989 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: cdocx::TemplateEngine类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classcdocx_1_1TemplateEngine.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">类</a> &#124;
+<a href="#pub-methods">Public 成员函数</a> &#124;
+<a href="classcdocx_1_1TemplateEngine-members.html">所有成员列表</a>  </div>
+  <div class="headertitle"><div class="title">cdocx::TemplateEngine类 参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Unified dictionary-style template engine  
+ <a href="classcdocx_1_1TemplateEngine.html#details">更多...</a></p>
+
+<p><code>#include &lt;<a class="el" href="template__engine_8h_source.html">template_engine.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+类</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcdocx_1_1TemplateEngine_1_1Result.html">Result</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execution statistics  <a href="structcdocx_1_1TemplateEngine_1_1Result.html#details">更多...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine_1_1Setter.html">Setter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Proxy object returned by operator[]  <a href="classcdocx_1_1TemplateEngine_1_1Setter.html#details">更多...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public 成员函数</h2></td></tr>
+<tr class="memitem:ad3c26c16819b0082b7de4e9da7a2fc60" id="r_ad3c26c16819b0082b7de4e9da7a2fc60"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#ad3c26c16819b0082b7de4e9da7a2fc60">TemplateEngine</a> (<a class="el" href="classcdocx_1_1Document.html">Document</a> *doc)</td></tr>
+<tr class="memdesc:ad3c26c16819b0082b7de4e9da7a2fc60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct engine bound to a document  <br /></td></tr>
+<tr class="separator:ad3c26c16819b0082b7de4e9da7a2fc60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca5dab9f3e0fc20429555f99aceaec5b" id="r_aca5dab9f3e0fc20429555f99aceaec5b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#aca5dab9f3e0fc20429555f99aceaec5b">~TemplateEngine</a> ()=default</td></tr>
+<tr class="separator:aca5dab9f3e0fc20429555f99aceaec5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0eb641115caf3cbcac5e2dc6d08efa0b" id="r_a0eb641115caf3cbcac5e2dc6d08efa0b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a0eb641115caf3cbcac5e2dc6d08efa0b">TemplateEngine</a> (const <a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;)=delete</td></tr>
+<tr class="separator:a0eb641115caf3cbcac5e2dc6d08efa0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c5e56925f63fc81c58ba2a777821dcc" id="r_a6c5e56925f63fc81c58ba2a777821dcc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a6c5e56925f63fc81c58ba2a777821dcc">operator=</a> (const <a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;)=delete</td></tr>
+<tr class="separator:a6c5e56925f63fc81c58ba2a777821dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ddd2f022da3b67e6ae084981e539596" id="r_a0ddd2f022da3b67e6ae084981e539596"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a0ddd2f022da3b67e6ae084981e539596">TemplateEngine</a> (<a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:a0ddd2f022da3b67e6ae084981e539596"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41a4b65237f3d9c088285b76fc5ef532" id="r_a41a4b65237f3d9c088285b76fc5ef532"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a41a4b65237f3d9c088285b76fc5ef532">operator=</a> (<a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:a41a4b65237f3d9c088285b76fc5ef532"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a812dca097d2ecc6cd4583bd1a363a514" id="r_a812dca097d2ecc6cd4583bd1a363a514"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine_1_1Setter.html">Setter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a812dca097d2ecc6cd4583bd1a363a514">operator[]</a> (const std::string &amp;key)</td></tr>
+<tr class="memdesc:a812dca097d2ecc6cd4583bd1a363a514"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dictionary-style access  <br /></td></tr>
+<tr class="separator:a812dca097d2ecc6cd4583bd1a363a514"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f2232a69560fd58ab940ef3e316102b" id="r_a2f2232a69560fd58ab940ef3e316102b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a2f2232a69560fd58ab940ef3e316102b">set</a> (const std::string &amp;key, const <a class="el" href="classcdocx_1_1TemplateValue.html">TemplateValue</a> &amp;value)</td></tr>
+<tr class="memdesc:a2f2232a69560fd58ab940ef3e316102b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a template value  <br /></td></tr>
+<tr class="separator:a2f2232a69560fd58ab940ef3e316102b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c5c5989ba577fcaf6c90049091402eb" id="r_a0c5c5989ba577fcaf6c90049091402eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a0c5c5989ba577fcaf6c90049091402eb">set</a> (const std::string &amp;key, <a class="el" href="classcdocx_1_1TemplateValue.html">TemplateValue</a> &amp;&amp;value)</td></tr>
+<tr class="separator:a0c5c5989ba577fcaf6c90049091402eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae46c56714553c072042ccac35e9f9ea9" id="r_ae46c56714553c072042ccac35e9f9ea9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#ae46c56714553c072042ccac35e9f9ea9">set</a> (const std::string &amp;key, const std::string &amp;text)</td></tr>
+<tr class="memdesc:ae46c56714553c072042ccac35e9f9ea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a text value (convenience overload)  <br /></td></tr>
+<tr class="separator:ae46c56714553c072042ccac35e9f9ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c02bac7a3e5466828d2ff4ece8bce78" id="r_a1c02bac7a3e5466828d2ff4ece8bce78"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a1c02bac7a3e5466828d2ff4ece8bce78">set</a> (const std::string &amp;key, const char *text)</td></tr>
+<tr class="memdesc:a1c02bac7a3e5466828d2ff4ece8bce78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a text value (C-string convenience overload)  <br /></td></tr>
+<tr class="separator:a1c02bac7a3e5466828d2ff4ece8bce78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5202fcb97661eee69a7752b3a4eccc9b" id="r_a5202fcb97661eee69a7752b3a4eccc9b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a5202fcb97661eee69a7752b3a4eccc9b">set_batch</a> (const std::map&lt; std::string, <a class="el" href="classcdocx_1_1TemplateValue.html">TemplateValue</a> &gt; &amp;data)</td></tr>
+<tr class="memdesc:a5202fcb97661eee69a7752b3a4eccc9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set multiple values from a map  <br /></td></tr>
+<tr class="separator:a5202fcb97661eee69a7752b3a4eccc9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c0e78db8442c0d801378b73de8ffa83" id="r_a9c0e78db8442c0d801378b73de8ffa83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a9c0e78db8442c0d801378b73de8ffa83">set_batch</a> (const std::map&lt; std::string, std::string &gt; &amp;data)</td></tr>
+<tr class="memdesc:a9c0e78db8442c0d801378b73de8ffa83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set multiple text values from a string map  <br /></td></tr>
+<tr class="separator:a9c0e78db8442c0d801378b73de8ffa83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac775323e82e019006593d042587b02e1" id="r_ac775323e82e019006593d042587b02e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#ac775323e82e019006593d042587b02e1">with_action</a> (<a class="el" href="namespacecdocx.html#a060d4c07d180d370fb5c772e595d3992">TemplateAction</a> action)</td></tr>
+<tr class="memdesc:ac775323e82e019006593d042587b02e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set action mode for subsequent <a class="el" href="classcdocx_1_1TemplateEngine.html#ae1730d97f77b30fceb5eff023d61f60c" title="Apply all queued template values">apply()</a> calls  <br /></td></tr>
+<tr class="separator:ac775323e82e019006593d042587b02e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2543061ecad9934fc92c6c3111dcb0d" id="r_ab2543061ecad9934fc92c6c3111dcb0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#ab2543061ecad9934fc92c6c3111dcb0d">with_scope</a> (<a class="el" href="namespacecdocx.html#aa486b4cd3e2a94e2ab7d097debd7e993">TemplateScope</a> scope)</td></tr>
+<tr class="memdesc:ab2543061ecad9934fc92c6c3111dcb0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set match scope for subsequent <a class="el" href="classcdocx_1_1TemplateEngine.html#ae1730d97f77b30fceb5eff023d61f60c" title="Apply all queued template values">apply()</a> calls  <br /></td></tr>
+<tr class="separator:ab2543061ecad9934fc92c6c3111dcb0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51fc35d462ec1c191e0cbc1ed4c74a70" id="r_a51fc35d462ec1c191e0cbc1ed4c74a70"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a51fc35d462ec1c191e0cbc1ed4c74a70">with_target</a> (<a class="el" href="namespacecdocx.html#a7bd33f1e7ba21e2b4e17a3bcbeeee46c">TemplateTarget</a> target)</td></tr>
+<tr class="memdesc:a51fc35d462ec1c191e0cbc1ed4c74a70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set target type for subsequent <a class="el" href="classcdocx_1_1TemplateEngine.html#ae1730d97f77b30fceb5eff023d61f60c" title="Apply all queued template values">apply()</a> calls  <br /></td></tr>
+<tr class="separator:a51fc35d462ec1c191e0cbc1ed4c74a70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab387ffc59903345cc3c7324a47c0af1" id="r_aab387ffc59903345cc3c7324a47c0af1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#aab387ffc59903345cc3c7324a47c0af1">with_format_policy</a> (<a class="el" href="namespacecdocx.html#a0b38783402c634bb5bce329771d5ed95">FormatPolicy</a> policy)</td></tr>
+<tr class="memdesc:aab387ffc59903345cc3c7324a47c0af1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set format policy for subsequent <a class="el" href="classcdocx_1_1TemplateEngine.html#ae1730d97f77b30fceb5eff023d61f60c" title="Apply all queued template values">apply()</a> calls  <br /></td></tr>
+<tr class="separator:aab387ffc59903345cc3c7324a47c0af1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae18a578ccb6950b9a413f0a991ad87d" id="r_aae18a578ccb6950b9a413f0a991ad87d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#aae18a578ccb6950b9a413f0a991ad87d">with_default_format</a> (const <a class="el" href="classcdocx_1_1TemplateFormat.html">TemplateFormat</a> &amp;format)</td></tr>
+<tr class="memdesc:aae18a578ccb6950b9a413f0a991ad87d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set default format applied when <a class="el" href="namespacecdocx.html#a0b38783402c634bb5bce329771d5ed95a6da8e67225fdcfa78c3ea5dc3154b849" title="Use the format specified in TemplateValue">FormatPolicy::Override</a>  <br /></td></tr>
+<tr class="separator:aae18a578ccb6950b9a413f0a991ad87d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad84e5bf4f85757be51a346f0365cca48" id="r_ad84e5bf4f85757be51a346f0365cca48"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#ad84e5bf4f85757be51a346f0365cca48">with_delimiters</a> (const std::string &amp;prefix, const std::string &amp;suffix)</td></tr>
+<tr class="memdesc:ad84e5bf4f85757be51a346f0365cca48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set placeholder delimiters (default: {{ }})  <br /></td></tr>
+<tr class="separator:ad84e5bf4f85757be51a346f0365cca48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1730d97f77b30fceb5eff023d61f60c" id="r_ae1730d97f77b30fceb5eff023d61f60c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcdocx_1_1TemplateEngine_1_1Result.html">Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#ae1730d97f77b30fceb5eff023d61f60c">apply</a> ()</td></tr>
+<tr class="memdesc:ae1730d97f77b30fceb5eff023d61f60c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply all queued template values  <br /></td></tr>
+<tr class="separator:ae1730d97f77b30fceb5eff023d61f60c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09f573e831402d7e7d6c084c02f67b84" id="r_a09f573e831402d7e7d6c084c02f67b84"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcdocx_1_1TemplateEngine_1_1Result.html">Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a09f573e831402d7e7d6c084c02f67b84">apply</a> (const std::string &amp;key)</td></tr>
+<tr class="memdesc:a09f573e831402d7e7d6c084c02f67b84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply a single key  <br /></td></tr>
+<tr class="separator:a09f573e831402d7e7d6c084c02f67b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c242ac9282ed6390f0973948f05550b" id="r_a0c242ac9282ed6390f0973948f05550b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcdocx_1_1TemplateEngine_1_1Result.html">Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a0c242ac9282ed6390f0973948f05550b">apply_if</a> (const std::function&lt; bool(const std::string &amp;)&gt; &amp;predicate)</td></tr>
+<tr class="memdesc:a0c242ac9282ed6390f0973948f05550b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply only keys matching a predicate  <br /></td></tr>
+<tr class="separator:a0c242ac9282ed6390f0973948f05550b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf11e35428a1923b9eee38e1ab2b6c98" id="r_abf11e35428a1923b9eee38e1ab2b6c98"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#abf11e35428a1923b9eee38e1ab2b6c98">has</a> (const std::string &amp;key) const</td></tr>
+<tr class="memdesc:abf11e35428a1923b9eee38e1ab2b6c98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a key has been set  <br /></td></tr>
+<tr class="separator:abf11e35428a1923b9eee38e1ab2b6c98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5983d8c1e4d15e3f5ceecf72ef9cee16" id="r_a5983d8c1e4d15e3f5ceecf72ef9cee16"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a5983d8c1e4d15e3f5ceecf72ef9cee16">remove</a> (const std::string &amp;key)</td></tr>
+<tr class="memdesc:a5983d8c1e4d15e3f5ceecf72ef9cee16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a queued key  <br /></td></tr>
+<tr class="separator:a5983d8c1e4d15e3f5ceecf72ef9cee16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d3510ad42d24348d49be30e0209a68e" id="r_a3d3510ad42d24348d49be30e0209a68e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a3d3510ad42d24348d49be30e0209a68e">clear</a> ()</td></tr>
+<tr class="memdesc:a3d3510ad42d24348d49be30e0209a68e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear all queued keys  <br /></td></tr>
+<tr class="separator:a3d3510ad42d24348d49be30e0209a68e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61af9d35b34fbfcf46d40997d5d85516" id="r_a61af9d35b34fbfcf46d40997d5d85516"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a61af9d35b34fbfcf46d40997d5d85516">size</a> () const</td></tr>
+<tr class="memdesc:a61af9d35b34fbfcf46d40997d5d85516"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get number of queued entries  <br /></td></tr>
+<tr class="separator:a61af9d35b34fbfcf46d40997d5d85516"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a346704219ad4cd0c9ec017f47e30a94c" id="r_a346704219ad4cd0c9ec017f47e30a94c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structcdocx_1_1TemplateEngine_1_1Result.html">Result</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1TemplateEngine.html#a346704219ad4cd0c9ec017f47e30a94c">last_result</a> () const</td></tr>
+<tr class="memdesc:a346704219ad4cd0c9ec017f47e30a94c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last execution result  <br /></td></tr>
+<tr class="separator:a346704219ad4cd0c9ec017f47e30a94c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>Unified dictionary-style template engine </p>
+<p>The one-stop API for template population. Supports both placeholder (<code>{{key}}</code>) and bookmark-based replacement.</p>
+<dl class="section user"><dt>Dictionary Style:</dt><dd><div class="fragment"><div class="line"><a class="code hl_class" href="classcdocx_1_1TemplateEngine.html">cdocx::TemplateEngine</a> engine(&amp;doc);</div>
+<div class="line">engine[<span class="stringliteral">&quot;name&quot;</span>] = <a class="code hl_function" href="classcdocx_1_1TemplateValue.html#af403c77156154b69969fd14cec24ed3d">cdocx::TemplateValue::text</a>(<span class="stringliteral">&quot;John&quot;</span>);</div>
+<div class="line">engine[<span class="stringliteral">&quot;logo&quot;</span>] = <a class="code hl_function" href="classcdocx_1_1TemplateValue.html#a3c8ab90df8b306fbae665a789dc5b395">cdocx::TemplateValue::image</a>(<span class="stringliteral">&quot;logo.png&quot;</span>);</div>
+<div class="line">engine.apply();</div>
+<div class="ttc" id="aclasscdocx_1_1TemplateEngine_html"><div class="ttname"><a href="classcdocx_1_1TemplateEngine.html">cdocx::TemplateEngine</a></div><div class="ttdoc">Unified dictionary-style template engine</div><div class="ttdef"><b>Definition</b> <a href="template__engine_8h_source.html#l00390">template_engine.h:390</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TemplateValue_html_a3c8ab90df8b306fbae665a789dc5b395"><div class="ttname"><a href="classcdocx_1_1TemplateValue.html#a3c8ab90df8b306fbae665a789dc5b395">cdocx::TemplateValue::image</a></div><div class="ttdeci">static TemplateValue image(const std::string &amp;path)</div><div class="ttdoc">Create an image value</div><div class="ttdef"><b>Definition</b> <a href="template__engine_8cpp_source.html#l00158">template_engine.cpp:158</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TemplateValue_html_af403c77156154b69969fd14cec24ed3d"><div class="ttname"><a href="classcdocx_1_1TemplateValue.html#af403c77156154b69969fd14cec24ed3d">cdocx::TemplateValue::text</a></div><div class="ttdeci">static TemplateValue text(const std::string &amp;content)</div><div class="ttdoc">Create a text value</div><div class="ttdef"><b>Definition</b> <a href="template__engine_8cpp_source.html#l00150">template_engine.cpp:150</a></div></div>
+</div><!-- fragment --></dd></dl>
+<dl class="section user"><dt>Programmatic Style:</dt><dd><div class="fragment"><div class="line">engine.set(<span class="stringliteral">&quot;name&quot;</span>, <span class="stringliteral">&quot;John&quot;</span>)</div>
+<div class="line">      .set(<span class="stringliteral">&quot;logo&quot;</span>, <a class="code hl_function" href="classcdocx_1_1TemplateValue.html#a3c8ab90df8b306fbae665a789dc5b395">cdocx::TemplateValue::image</a>(<span class="stringliteral">&quot;logo.png&quot;</span>))</div>
+<div class="line">      .with_scope(<a class="code hl_enumvalue" href="namespacecdocx.html#aa486b4cd3e2a94e2ab7d097debd7e993ab1c94ca2fbc3e78fc30069c8d0f01680">cdocx::TemplateScope::All</a>)</div>
+<div class="line">      .apply();</div>
+<div class="ttc" id="anamespacecdocx_html_aa486b4cd3e2a94e2ab7d097debd7e993ab1c94ca2fbc3e78fc30069c8d0f01680"><div class="ttname"><a href="namespacecdocx.html#aa486b4cd3e2a94e2ab7d097debd7e993ab1c94ca2fbc3e78fc30069c8d0f01680">cdocx::TemplateScope::All</a></div><div class="ttdeci">@ All</div><div class="ttdoc">Match all occurrences (default)</div></div>
+</div><!-- fragment --></dd></dl>
+<dl class="section user"><dt>Batch Style:</dt><dd><div class="fragment"><div class="line">std::map&lt;std::string, std::string&gt; texts = {{<span class="stringliteral">&quot;a&quot;</span>, <span class="stringliteral">&quot;1&quot;</span>}, {<span class="stringliteral">&quot;b&quot;</span>, <span class="stringliteral">&quot;2&quot;</span>}};</div>
+<div class="line">engine.set_batch(texts).apply();</div>
+</div><!-- fragment --></dd></dl>
+<dl class="section since"><dt>自从</dt><dd>0.8.0 </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8h_source.html">template_engine.h</a> 第 <a class="el" href="template__engine_8h_source.html#l00390">390</a> 行定义.</p>
+</div><h2 class="groupheader">构造及析构函数说明</h2>
+<a id="ad3c26c16819b0082b7de4e9da7a2fc60" name="ad3c26c16819b0082b7de4e9da7a2fc60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3c26c16819b0082b7de4e9da7a2fc60">&#9670;&#160;</a></span>TemplateEngine() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::TemplateEngine::TemplateEngine </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1Document.html">Document</a> *&#160;</td>
+          <td class="paramname"><em>doc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct engine bound to a document </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">doc</td><td>Target document (must remain valid during engine lifetime) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00277">277</a> 行定义.</p>
+
+</div>
+</div>
+<a id="aca5dab9f3e0fc20429555f99aceaec5b" name="aca5dab9f3e0fc20429555f99aceaec5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca5dab9f3e0fc20429555f99aceaec5b">&#9670;&#160;</a></span>~TemplateEngine()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::TemplateEngine::~TemplateEngine </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0eb641115caf3cbcac5e2dc6d08efa0b" name="a0eb641115caf3cbcac5e2dc6d08efa0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0eb641115caf3cbcac5e2dc6d08efa0b">&#9670;&#160;</a></span>TemplateEngine() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::TemplateEngine::TemplateEngine </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0ddd2f022da3b67e6ae084981e539596" name="a0ddd2f022da3b67e6ae084981e539596"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ddd2f022da3b67e6ae084981e539596">&#9670;&#160;</a></span>TemplateEngine() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::TemplateEngine::TemplateEngine </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">成员函数说明</h2>
+<a id="ae1730d97f77b30fceb5eff023d61f60c" name="ae1730d97f77b30fceb5eff023d61f60c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1730d97f77b30fceb5eff023d61f60c">&#9670;&#160;</a></span>apply() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcdocx_1_1TemplateEngine_1_1Result.html">TemplateEngine::Result</a> cdocx::TemplateEngine::apply </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Apply all queued template values </p>
+<dl class="section return"><dt>返回</dt><dd><a class="el" href="structcdocx_1_1TemplateEngine_1_1Result.html" title="Execution statistics">Result</a> statistics</dd></dl>
+<p>Executes replacements in order: first all bookmark targets, then all placeholder targets. Clears the queue on success. </p>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00502">502</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="template__engine_8cpp_source.html#l00534">apply_if()</a>.</p>
+
+</div>
+</div>
+<a id="a09f573e831402d7e7d6c084c02f67b84" name="a09f573e831402d7e7d6c084c02f67b84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09f573e831402d7e7d6c084c02f67b84">&#9670;&#160;</a></span>apply() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcdocx_1_1TemplateEngine_1_1Result.html">TemplateEngine::Result</a> cdocx::TemplateEngine::apply </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>key</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Apply a single key </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>The key to apply </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd><a class="el" href="structcdocx_1_1TemplateEngine_1_1Result.html" title="Execution statistics">Result</a> statistics (0 or 1 success/fail) </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00506">506</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document_8h_source.html#l00311">cdocx::Document::is_open()</a>, <a class="el" href="namespacecdocx.html#a7bd33f1e7ba21e2b4e17a3bcbeeee46ca68753d36ec0c4d7768b20993268d68d1">cdocx::Placeholder</a>, <a class="el" href="template__engine_8cpp_source.html#l00395">cdocx::resolve_target()</a>, <a class="el" href="template__engine_8h_source.html#l00403">cdocx::TemplateEngine::Result::skipped</a> , 以及 <a class="el" href="document__sync_8cpp_source.html#l00028">cdocx::Document::sync_from_physical_tree()</a>.</p>
+
+</div>
+</div>
+<a id="a0c242ac9282ed6390f0973948f05550b" name="a0c242ac9282ed6390f0973948f05550b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c242ac9282ed6390f0973948f05550b">&#9670;&#160;</a></span>apply_if()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcdocx_1_1TemplateEngine_1_1Result.html">TemplateEngine::Result</a> cdocx::TemplateEngine::apply_if </td>
+          <td>(</td>
+          <td class="paramtype">const std::function&lt; bool(const std::string &amp;)&gt; &amp;&#160;</td>
+          <td class="paramname"><em>predicate</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Apply only keys matching a predicate </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">predicate</td><td>Function(key) -&gt; bool </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd><a class="el" href="structcdocx_1_1TemplateEngine_1_1Result.html" title="Execution statistics">Result</a> statistics </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00534">534</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="namespacecdocx.html#a7bd33f1e7ba21e2b4e17a3bcbeeee46ca06b9281e396db002010bde1de57262eb">cdocx::Auto</a>, <a class="el" href="template__engine_8h_source.html#l00402">cdocx::TemplateEngine::Result::failed</a>, <a class="el" href="bookmark_8cpp_source.html#l00673">cdocx::BookmarkCollection::get()</a>, <a class="el" href="document_8cpp_source.html#l01214">cdocx::Document::get_bookmarks()</a>, <a class="el" href="document_8h_source.html#l00311">cdocx::Document::is_open()</a>, <a class="el" href="namespacecdocx.html#a7bd33f1e7ba21e2b4e17a3bcbeeee46ca68753d36ec0c4d7768b20993268d68d1">cdocx::Placeholder</a>, <a class="el" href="template__engine_8cpp_source.html#l00395">cdocx::resolve_target()</a>, <a class="el" href="template__engine_8h_source.html#l00403">cdocx::TemplateEngine::Result::skipped</a>, <a class="el" href="template__engine_8h_source.html#l00401">cdocx::TemplateEngine::Result::success</a>, <a class="el" href="document__sync_8cpp_source.html#l00028">cdocx::Document::sync_from_physical_tree()</a> , 以及 <a class="el" href="document__sync_8cpp_source.html#l00019">cdocx::Document::sync_to_physical_tree()</a>.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="template__engine_8cpp_source.html#l00502">apply()</a>.</p>
+
+</div>
+</div>
+<a id="a3d3510ad42d24348d49be30e0209a68e" name="a3d3510ad42d24348d49be30e0209a68e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d3510ad42d24348d49be30e0209a68e">&#9670;&#160;</a></span>clear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Clear all queued keys </p>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00358">358</a> 行定义.</p>
+
+</div>
+</div>
+<a id="abf11e35428a1923b9eee38e1ab2b6c98" name="abf11e35428a1923b9eee38e1ab2b6c98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf11e35428a1923b9eee38e1ab2b6c98">&#9670;&#160;</a></span>has()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cdocx::TemplateEngine::has </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>key</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if a key has been set </p>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00349">349</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a346704219ad4cd0c9ec017f47e30a94c" name="a346704219ad4cd0c9ec017f47e30a94c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a346704219ad4cd0c9ec017f47e30a94c">&#9670;&#160;</a></span>last_result()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structcdocx_1_1TemplateEngine_1_1Result.html">Result</a> &amp; cdocx::TemplateEngine::last_result </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get last execution result </p>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8h_source.html">template_engine.h</a> 第 <a class="el" href="template__engine_8h_source.html#l00583">583</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a6c5e56925f63fc81c58ba2a777821dcc" name="a6c5e56925f63fc81c58ba2a777821dcc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c5e56925f63fc81c58ba2a777821dcc">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a41a4b65237f3d9c088285b76fc5ef532" name="a41a4b65237f3d9c088285b76fc5ef532"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41a4b65237f3d9c088285b76fc5ef532">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a812dca097d2ecc6cd4583bd1a363a514" name="a812dca097d2ecc6cd4583bd1a363a514"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a812dca097d2ecc6cd4583bd1a363a514">&#9670;&#160;</a></span>operator[]()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine_1_1Setter.html">TemplateEngine::Setter</a> cdocx::TemplateEngine::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>key</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Dictionary-style access </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td><a class="el" href="classcdocx_1_1Template.html" title="Template engine for placeholder replacement in DOCX documents">Template</a> key (bookmark name or placeholder key without delimiters) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd><a class="el" href="classcdocx_1_1TemplateEngine_1_1Setter.html" title="Proxy object returned by operator[]">Setter</a> proxy for assignment</dd></dl>
+<dl class="section user"><dt>Usage:</dt><dd><div class="fragment"><div class="line">engine[<span class="stringliteral">&quot;company&quot;</span>] = <a class="code hl_function" href="classcdocx_1_1TemplateValue.html#af403c77156154b69969fd14cec24ed3d">cdocx::TemplateValue::text</a>(<span class="stringliteral">&quot;Acme&quot;</span>);</div>
+<div class="line">engine[<span class="stringliteral">&quot;date&quot;</span>]    = <span class="stringliteral">&quot;2025-04-21&quot;</span>;  <span class="comment">// auto-wrapped</span></div>
+</div><!-- fragment --> </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00279">279</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a5983d8c1e4d15e3f5ceecf72ef9cee16" name="a5983d8c1e4d15e3f5ceecf72ef9cee16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5983d8c1e4d15e3f5ceecf72ef9cee16">&#9670;&#160;</a></span>remove()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::remove </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>key</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove a queued key </p>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00353">353</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a1c02bac7a3e5466828d2ff4ece8bce78" name="a1c02bac7a3e5466828d2ff4ece8bce78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c02bac7a3e5466828d2ff4ece8bce78">&#9670;&#160;</a></span>set() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::set </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>text</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set a text value (C-string convenience overload) </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td><a class="el" href="classcdocx_1_1Template.html" title="Template engine for placeholder replacement in DOCX documents">Template</a> key </td></tr>
+    <tr><td class="paramname">text</td><td>Plain text </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00298">298</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="template__engine_8cpp_source.html#l00150">cdocx::TemplateValue::text()</a>.</p>
+
+</div>
+</div>
+<a id="ae46c56714553c072042ccac35e9f9ea9" name="ae46c56714553c072042ccac35e9f9ea9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae46c56714553c072042ccac35e9f9ea9">&#9670;&#160;</a></span>set() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::set </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set a text value (convenience overload) </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td><a class="el" href="classcdocx_1_1Template.html" title="Template engine for placeholder replacement in DOCX documents">Template</a> key </td></tr>
+    <tr><td class="paramname">text</td><td>Plain text (auto-wrapped as TemplateValue::Text) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00293">293</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="template__engine_8cpp_source.html#l00150">cdocx::TemplateValue::text()</a>.</p>
+
+</div>
+</div>
+<a id="a2f2232a69560fd58ab940ef3e316102b" name="a2f2232a69560fd58ab940ef3e316102b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f2232a69560fd58ab940ef3e316102b">&#9670;&#160;</a></span>set() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::set </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcdocx_1_1TemplateValue.html">TemplateValue</a> &amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set a template value </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td><a class="el" href="classcdocx_1_1Template.html" title="Template engine for placeholder replacement in DOCX documents">Template</a> key </td></tr>
+    <tr><td class="paramname">value</td><td><a class="el" href="classcdocx_1_1TemplateValue.html" title="A polymorphic value for template population">TemplateValue</a> (Text or Image) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00283">283</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a0c5c5989ba577fcaf6c90049091402eb" name="a0c5c5989ba577fcaf6c90049091402eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c5c5989ba577fcaf6c90049091402eb">&#9670;&#160;</a></span>set() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::set </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1TemplateValue.html">TemplateValue</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00288">288</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a9c0e78db8442c0d801378b73de8ffa83" name="a9c0e78db8442c0d801378b73de8ffa83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c0e78db8442c0d801378b73de8ffa83">&#9670;&#160;</a></span>set_batch() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::set_batch </td>
+          <td>(</td>
+          <td class="paramtype">const std::map&lt; std::string, std::string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set multiple text values from a string map </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Map of key -&gt; text </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00310">310</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="template__engine_8cpp_source.html#l00150">cdocx::TemplateValue::text()</a>.</p>
+
+</div>
+</div>
+<a id="a5202fcb97661eee69a7752b3a4eccc9b" name="a5202fcb97661eee69a7752b3a4eccc9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5202fcb97661eee69a7752b3a4eccc9b">&#9670;&#160;</a></span>set_batch() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::set_batch </td>
+          <td>(</td>
+          <td class="paramtype">const std::map&lt; std::string, <a class="el" href="classcdocx_1_1TemplateValue.html">TemplateValue</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set multiple values from a map </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Map of key -&gt; <a class="el" href="classcdocx_1_1TemplateValue.html" title="A polymorphic value for template population">TemplateValue</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00303">303</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a61af9d35b34fbfcf46d40997d5d85516" name="a61af9d35b34fbfcf46d40997d5d85516"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61af9d35b34fbfcf46d40997d5d85516">&#9670;&#160;</a></span>size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t cdocx::TemplateEngine::size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get number of queued entries </p>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00363">363</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ac775323e82e019006593d042587b02e1" name="ac775323e82e019006593d042587b02e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac775323e82e019006593d042587b02e1">&#9670;&#160;</a></span>with_action()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::with_action </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecdocx.html#a060d4c07d180d370fb5c772e595d3992">TemplateAction</a>&#160;</td>
+          <td class="paramname"><em>action</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set action mode for subsequent <a class="el" href="classcdocx_1_1TemplateEngine.html#ae1730d97f77b30fceb5eff023d61f60c" title="Apply all queued template values">apply()</a> calls </p>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00317">317</a> 行定义.</p>
+
+</div>
+</div>
+<a id="aae18a578ccb6950b9a413f0a991ad87d" name="aae18a578ccb6950b9a413f0a991ad87d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae18a578ccb6950b9a413f0a991ad87d">&#9670;&#160;</a></span>with_default_format()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::with_default_format </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcdocx_1_1TemplateFormat.html">TemplateFormat</a> &amp;&#160;</td>
+          <td class="paramname"><em>format</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set default format applied when <a class="el" href="namespacecdocx.html#a0b38783402c634bb5bce329771d5ed95a6da8e67225fdcfa78c3ea5dc3154b849" title="Use the format specified in TemplateValue">FormatPolicy::Override</a> </p>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00337">337</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ad84e5bf4f85757be51a346f0365cca48" name="ad84e5bf4f85757be51a346f0365cca48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad84e5bf4f85757be51a346f0365cca48">&#9670;&#160;</a></span>with_delimiters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::with_delimiters </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>prefix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>suffix</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set placeholder delimiters (default: {{ }}) </p>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00342">342</a> 行定义.</p>
+
+</div>
+</div>
+<a id="aab387ffc59903345cc3c7324a47c0af1" name="aab387ffc59903345cc3c7324a47c0af1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab387ffc59903345cc3c7324a47c0af1">&#9670;&#160;</a></span>with_format_policy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::with_format_policy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecdocx.html#a0b38783402c634bb5bce329771d5ed95">FormatPolicy</a>&#160;</td>
+          <td class="paramname"><em>policy</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set format policy for subsequent <a class="el" href="classcdocx_1_1TemplateEngine.html#ae1730d97f77b30fceb5eff023d61f60c" title="Apply all queued template values">apply()</a> calls </p>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00332">332</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ab2543061ecad9934fc92c6c3111dcb0d" name="ab2543061ecad9934fc92c6c3111dcb0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2543061ecad9934fc92c6c3111dcb0d">&#9670;&#160;</a></span>with_scope()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::with_scope </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecdocx.html#aa486b4cd3e2a94e2ab7d097debd7e993">TemplateScope</a>&#160;</td>
+          <td class="paramname"><em>scope</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set match scope for subsequent <a class="el" href="classcdocx_1_1TemplateEngine.html#ae1730d97f77b30fceb5eff023d61f60c" title="Apply all queued template values">apply()</a> calls </p>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00322">322</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a51fc35d462ec1c191e0cbc1ed4c74a70" name="a51fc35d462ec1c191e0cbc1ed4c74a70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51fc35d462ec1c191e0cbc1ed4c74a70">&#9670;&#160;</a></span>with_target()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a> &amp; cdocx::TemplateEngine::with_target </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecdocx.html#a7bd33f1e7ba21e2b4e17a3bcbeeee46c">TemplateTarget</a>&#160;</td>
+          <td class="paramname"><em>target</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set target type for subsequent <a class="el" href="classcdocx_1_1TemplateEngine.html#ae1730d97f77b30fceb5eff023d61f60c" title="Apply all queued template values">apply()</a> calls </p>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 第 <a class="el" href="template__engine_8cpp_source.html#l00327">327</a> 行定义.</p>
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li><a class="el" href="template__engine_8h_source.html">template_engine.h</a></li>
+<li><a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespacecdocx.html">cdocx</a></li><li class="navelem"><a class="el" href="classcdocx_1_1TemplateEngine.html">TemplateEngine</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: bookmark_replacer.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('bookmark__replacer_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">bookmark_replacer.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="bookmark__replacer_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#include &lt;<a class="code" href="advanced_8h.html">cdocx/advanced.h</a>&gt;</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#include &lt;<a class="code" href="fwd_8h.html">cdocx/fwd.h</a>&gt;</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#include &lt;functional&gt;</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#include &lt;tuple&gt;</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">// Forward declaration</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">class </span>Bookmark;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="namespacecdocx.html#a06ece722541268fdfed894c0055d783d">   74</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespacecdocx.html#a06ece722541268fdfed894c0055d783d">ReplaceCallback</a> = std::function&lt;bool(</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">const</span> std::string&amp; bookmark_name, <span class="keyword">const</span> std::string&amp; old_text, std::string&amp; new_text)&gt;;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="foldopen" id="foldopen00082" data-start="{" data-end="};">
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="structcdocx_1_1ReplacementStats.html">   82</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structcdocx_1_1ReplacementStats.html">ReplacementStats</a> {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="structcdocx_1_1ReplacementStats.html#a3a97a61514788aac97fa540e842adc6a">   83</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structcdocx_1_1ReplacementStats.html#a3a97a61514788aac97fa540e842adc6a">success_count</a> = 0;  </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="structcdocx_1_1ReplacementStats.html#a07bbb26e1613e4ee5c798cef5832fe92">   84</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structcdocx_1_1ReplacementStats.html#a07bbb26e1613e4ee5c798cef5832fe92">fail_count</a> = 0;     </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="structcdocx_1_1ReplacementStats.html#adb789e8f8a0fe06c57708a682e6cf7b3">   85</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structcdocx_1_1ReplacementStats.html#adb789e8f8a0fe06c57708a682e6cf7b3">skip_count</a> = 0;     </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="foldopen" id="foldopen00090" data-start="{" data-end="}">
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="structcdocx_1_1ReplacementStats.html#a089aedb8134d0475645b7be977de26ff">   90</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structcdocx_1_1ReplacementStats.html#a089aedb8134d0475645b7be977de26ff">reset</a>() {</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <a class="code hl_variable" href="structcdocx_1_1ReplacementStats.html#a3a97a61514788aac97fa540e842adc6a">success_count</a> = 0;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <a class="code hl_variable" href="structcdocx_1_1ReplacementStats.html#a07bbb26e1613e4ee5c798cef5832fe92">fail_count</a> = 0;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <a class="code hl_variable" href="structcdocx_1_1ReplacementStats.html#adb789e8f8a0fe06c57708a682e6cf7b3">skip_count</a> = 0;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    }</div>
+</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="structcdocx_1_1ReplacementStats.html#a8661f7784ea8ba2891a12dc3d4930848">  100</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="structcdocx_1_1ReplacementStats.html#a8661f7784ea8ba2891a12dc3d4930848">total</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structcdocx_1_1ReplacementStats.html#a3a97a61514788aac97fa540e842adc6a">success_count</a> + <a class="code hl_variable" href="structcdocx_1_1ReplacementStats.html#a07bbb26e1613e4ee5c798cef5832fe92">fail_count</a> + <a class="code hl_variable" href="structcdocx_1_1ReplacementStats.html#adb789e8f8a0fe06c57708a682e6cf7b3">skip_count</a>; }</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>};</div>
+</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="foldopen" id="foldopen00119" data-start="{" data-end="};">
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkReplacer.html">  119</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1BookmarkReplacer.html">BookmarkReplacer</a> {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classcdocx_1_1BookmarkReplacer.html">BookmarkReplacer</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkReplacer.html#aac758049d5a3f69be57ef54fbc99179d">  130</a></span>    <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#aac758049d5a3f69be57ef54fbc99179d">~BookmarkReplacer</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="comment">// Disable copy, enable move</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkReplacer.html#a089eace436d166f90640779cfd9c4f79">  133</a></span>    <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a089eace436d166f90640779cfd9c4f79">BookmarkReplacer</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1BookmarkReplacer.html">BookmarkReplacer</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkReplacer.html#a0d9774ca27210dc419cacf380ccd59b9">  134</a></span>    <a class="code hl_class" href="classcdocx_1_1BookmarkReplacer.html">BookmarkReplacer</a>&amp; <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a0d9774ca27210dc419cacf380ccd59b9">operator=</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1BookmarkReplacer.html">BookmarkReplacer</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkReplacer.html#a6028952d265405a690202d4e83e43a2b">  135</a></span>    <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a6028952d265405a690202d4e83e43a2b">BookmarkReplacer</a>(<a class="code hl_class" href="classcdocx_1_1BookmarkReplacer.html">BookmarkReplacer</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkReplacer.html#a9f573201f20afb6b408b25d418f257c6">  136</a></span>    <a class="code hl_class" href="classcdocx_1_1BookmarkReplacer.html">BookmarkReplacer</a>&amp; <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a9f573201f20afb6b408b25d418f257c6">operator=</a>(<a class="code hl_class" href="classcdocx_1_1BookmarkReplacer.html">BookmarkReplacer</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="comment">// Text Replacement</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#af74d3e51d9593d2692d3fef50c8f05ee">replace_text</a>(<span class="keyword">const</span> std::string&amp; bookmark_name, <span class="keyword">const</span> std::string&amp; new_text);</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#af74d3e51d9593d2692d3fef50c8f05ee">replace_text</a>(<a class="code hl_class" href="classcdocx_1_1Bookmark.html">Bookmark</a>&amp; bookmark, <span class="keyword">const</span> std::string&amp; new_text);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a825d4e102fa7ef83db6c6956fa2e9372">replace_text_batch</a>(<span class="keyword">const</span> std::map&lt;std::string, std::string&gt;&amp; replacements);</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    std::vector&lt;std::tuple&lt;std::string, bool, std::string&gt;&gt; <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#ac29738e261958bd3ba239c3e6707cde6">preview_replacements</a>(</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        <span class="keyword">const</span> std::map&lt;std::string, std::string&gt;&amp; replacements) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
+<div class="foldopen" id="foldopen00181" data-start="{" data-end="};">
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno"><a class="line" href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html">  181</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html">BatchResult</a> {</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno"><a class="line" href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a5195f6edf6b8e31d1ac37708c38834ac">  182</a></span>        <span class="keywordtype">bool</span> <a class="code hl_variable" href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a5195f6edf6b8e31d1ac37708c38834ac">all_succeeded</a> = <span class="keyword">false</span>;  </div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno"><a class="line" href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a278d32db68e616c839c22a16bd891561">  183</a></span>        <span class="keywordtype">int</span> <a class="code hl_variable" href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a278d32db68e616c839c22a16bd891561">success_count</a> = 0;       </div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno"><a class="line" href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a587fa13b84fa70f0158e4e1cafd3d2b6">  184</a></span>        <span class="keywordtype">int</span> <a class="code hl_variable" href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a587fa13b84fa70f0158e4e1cafd3d2b6">fail_count</a> = 0;          </div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno"><a class="line" href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a07a34dc9cf2e1a4273b878cc7a35fc92">  185</a></span>        std::vector&lt;std::pair&lt;std::string, std::string&gt;&gt; <a class="code hl_variable" href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a07a34dc9cf2e1a4273b878cc7a35fc92">failures</a>;  </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        <span class="keywordtype">bool</span> <a class="code hl_function" href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a828518f8b40ce789abc3052b64718a7f">did_succeed</a>(<span class="keyword">const</span> std::string&amp; bookmark_name) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        std::string <a class="code hl_function" href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a4b4823959a344745aec9316a0222e6de">get_error</a>(<span class="keyword">const</span> std::string&amp; bookmark_name) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    };</div>
+</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <a class="code hl_struct" href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html">BatchResult</a> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a1269cadda83dc93cd2b7782268cb34a5">replace_text_batch_transaction</a>(</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        <span class="keyword">const</span> std::map&lt;std::string, std::string&gt;&amp; replacements, <span class="keywordtype">bool</span> strict = <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#ad2c0f72370910abf53125f1c4e59a244">replace_text_with_format</a>(<span class="keyword">const</span> std::string&amp; bookmark_name,</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                                  <span class="keyword">const</span> std::string&amp; new_text,</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                                  <span class="keyword">const</span> <a class="code hl_struct" href="structcdocx_1_1BookmarkFormat.html">BookmarkFormat</a>&amp; format);</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#ad2c0f72370910abf53125f1c4e59a244">replace_text_with_format</a>(<a class="code hl_class" href="classcdocx_1_1Bookmark.html">Bookmark</a>&amp; bookmark,</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>                                  <span class="keyword">const</span> std::string&amp; new_text,</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                                  <span class="keyword">const</span> <a class="code hl_struct" href="structcdocx_1_1BookmarkFormat.html">BookmarkFormat</a>&amp; format);</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    <span class="comment">// Image Replacement</span></div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a8b19586133c2497a3fdae4930a42b02b">replace_with_image</a>(<span class="keyword">const</span> std::string&amp; bookmark_name,</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                            <span class="keyword">const</span> std::string&amp; image_path,</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                            <span class="keyword">const</span> std::string&amp; caption = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a8b19586133c2497a3fdae4930a42b02b">replace_with_image</a>(<a class="code hl_class" href="classcdocx_1_1Bookmark.html">Bookmark</a>&amp; bookmark,</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>                            <span class="keyword">const</span> std::string&amp; image_path,</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>                            <span class="keyword">const</span> std::string&amp; caption = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a0a8871d67baba47e646d06d439efb65c">replace_with_image_advanced</a>(<span class="keyword">const</span> std::string&amp; bookmark_name,</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>                                     <span class="keyword">const</span> std::string&amp; image_path,</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>                                     <span class="keyword">const</span> <a class="code hl_struct" href="structcdocx_1_1ImageSize.html">ImageSize</a>&amp; size,</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>                                     <span class="keyword">const</span> std::string&amp; caption = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>                                     <a class="code hl_enumeration" href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2">ImageAlignment</a> <a class="code hl_variable" href="properties_8cpp.html#a9bd1379a71b955886d4eb552d47d4fba">align</a> = <a class="code hl_enumvalue" href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2a4f1f6016fc9f3f2353c0cc7c67b292bd">ImageAlignment::Center</a>);</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a0a8871d67baba47e646d06d439efb65c">replace_with_image_advanced</a>(<a class="code hl_class" href="classcdocx_1_1Bookmark.html">Bookmark</a>&amp; bookmark,</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>                                     <span class="keyword">const</span> std::string&amp; image_path,</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>                                     <span class="keyword">const</span> <a class="code hl_struct" href="structcdocx_1_1ImageSize.html">ImageSize</a>&amp; size,</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>                                     <span class="keyword">const</span> std::string&amp; caption = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>                                     <a class="code hl_enumeration" href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2">ImageAlignment</a> <a class="code hl_variable" href="properties_8cpp.html#a9bd1379a71b955886d4eb552d47d4fba">align</a> = <a class="code hl_enumvalue" href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2a4f1f6016fc9f3f2353c0cc7c67b292bd">ImageAlignment::Center</a>);</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a3bd74f0a78ab698fc6c11e9dfcbb888e">replace_with_image_from_memory</a>(<span class="keyword">const</span> std::string&amp; bookmark_name,</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>                                        <span class="keyword">const</span> std::vector&lt;uint8_t&gt;&amp; image_data,</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>                                        <span class="keyword">const</span> std::string&amp; image_name,</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>                                        <span class="keyword">const</span> <a class="code hl_struct" href="structcdocx_1_1ImageSize.html">ImageSize</a>&amp; size,</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>                                        <span class="keyword">const</span> std::string&amp; caption = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>                                        <a class="code hl_enumeration" href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2">ImageAlignment</a> <a class="code hl_variable" href="properties_8cpp.html#a9bd1379a71b955886d4eb552d47d4fba">align</a> = <a class="code hl_enumvalue" href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2a4f1f6016fc9f3f2353c0cc7c67b292bd">ImageAlignment::Center</a>);</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a3bd74f0a78ab698fc6c11e9dfcbb888e">replace_with_image_from_memory</a>(<a class="code hl_class" href="classcdocx_1_1Bookmark.html">Bookmark</a>&amp; bookmark,</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                                        <span class="keyword">const</span> std::vector&lt;uint8_t&gt;&amp; image_data,</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                                        <span class="keyword">const</span> std::string&amp; image_name,</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>                                        <span class="keyword">const</span> <a class="code hl_struct" href="structcdocx_1_1ImageSize.html">ImageSize</a>&amp; size,</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                                        <span class="keyword">const</span> std::string&amp; caption = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                                        <a class="code hl_enumeration" href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2">ImageAlignment</a> <a class="code hl_variable" href="properties_8cpp.html#a9bd1379a71b955886d4eb552d47d4fba">align</a> = <a class="code hl_enumvalue" href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2a4f1f6016fc9f3f2353c0cc7c67b292bd">ImageAlignment::Center</a>);</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span> </div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    <span class="comment">// Advanced Features</span></div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span> </div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a73f056afcf6febe67502bd4cc7ce33d0">replace_if</a>(<span class="keyword">const</span> std::string&amp; bookmark_name, <span class="keyword">const</span> <a class="code hl_typedef" href="namespacecdocx.html#a06ece722541268fdfed894c0055d783d">ReplaceCallback</a>&amp; callback);</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span> </div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#ae382e8457ffeb5a9d69640f43a354283">replace_and_remove</a>(<span class="keyword">const</span> std::string&amp; bookmark_name, <span class="keyword">const</span> std::string&amp; new_text);</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span> </div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a06e716de9794741eb3fd14bc9955c1a7">replace_with_image_and_remove</a>(<span class="keyword">const</span> std::string&amp; bookmark_name,</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>                                       <span class="keyword">const</span> std::string&amp; image_path,</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>                                       <span class="keyword">const</span> std::string&amp; caption = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span> </div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>    <span class="comment">// Query Methods</span></div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span> </div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a81b42f9877220aae99c9161742eae39f">has_bookmark</a>(<span class="keyword">const</span> std::string&amp; bookmark_name) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    std::vector&lt;std::string&gt; <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#acbfcd4c111a2b351c762867c966f8c90">list_bookmarks</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    std::string <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#af6fd6ffd1c079f3af487344953915b1d">get_bookmark_text</a>(<span class="keyword">const</span> std::string&amp; bookmark_name) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span> </div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    <span class="comment">// Statistics</span></div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span> </div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkReplacer.html#a9a77584d36a6dc795d31e7d908ca489e">  394</a></span>    <a class="code hl_struct" href="structcdocx_1_1ReplacementStats.html">ReplacementStats</a> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a9a77584d36a6dc795d31e7d908ca489e">get_stats</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> stats_; }</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span> </div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkReplacer.html#a62ab60392e6bc2af2b1a9b4d5b1f7d8e">  399</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1BookmarkReplacer.html#a62ab60392e6bc2af2b1a9b4d5b1f7d8e">reset_stats</a>() { stats_.<a class="code hl_function" href="structcdocx_1_1ReplacementStats.html#a089aedb8134d0475645b7be977de26ff">reset</a>(); }</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span> </div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    <a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc_;                  </div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    <a class="code hl_struct" href="structcdocx_1_1ReplacementStats.html">ReplacementStats</a> stats_;         </div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    <span class="keyword">mutable</span> <span class="keywordtype">int</span> next_image_id_ = 1;  </div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span> </div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    std::optional&lt;Bookmark&gt; get_bookmark(<span class="keyword">const</span> std::string&amp; name) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span> </div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>    <span class="keywordtype">bool</span> clear_bookmark_content(<a class="code hl_class" href="classcdocx_1_1Bookmark.html">Bookmark</a>&amp; bookmark);</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span> </div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>    <span class="keywordtype">int</span> generate_image_id()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> next_image_id_++; }</div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span> </div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>    <span class="keywordtype">bool</span> insert_image_at_bookmark(Bookmark&amp; bookmark,</div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>                                  <span class="keyword">const</span> std::string&amp; image_path,</div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>                                  <span class="keyword">const</span> ImageSize&amp; size,</div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>                                  <a class="code hl_enumeration" href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2">ImageAlignment</a> <a class="code hl_variable" href="properties_8cpp.html#a9bd1379a71b955886d4eb552d47d4fba">align</a>,</div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>                                  <span class="keyword">const</span> std::string&amp; rel_id);</div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span> </div>
+<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>    std::string get_file_extension(<span class="keyword">const</span> std::string&amp; path) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span> </div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>    std::string get_content_type(<span class="keyword">const</span> std::string&amp; ext) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>};</div>
+</div>
+<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span> </div>
+<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="aadvanced_8h_html"><div class="ttname"><a href="advanced_8h.html">advanced.h</a></div><div class="ttdoc">Advanced features for CDocx (aggregate header)</div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html">cdocx::BookmarkReplacer</a></div><div class="ttdoc">High-level API for bookmark-based content replacement</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00119">bookmark_replacer.h:119</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a06e716de9794741eb3fd14bc9955c1a7"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a06e716de9794741eb3fd14bc9955c1a7">cdocx::BookmarkReplacer::replace_with_image_and_remove</a></div><div class="ttdeci">bool replace_with_image_and_remove(const std::string &amp;bookmark_name, const std::string &amp;image_path, const std::string &amp;caption=&quot;&quot;)</div><div class="ttdoc">Replace with image and remove bookmark</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00279">bookmark_replacer.cpp:279</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a089eace436d166f90640779cfd9c4f79"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a089eace436d166f90640779cfd9c4f79">cdocx::BookmarkReplacer::BookmarkReplacer</a></div><div class="ttdeci">BookmarkReplacer(const BookmarkReplacer &amp;)=delete</div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a0a8871d67baba47e646d06d439efb65c"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a0a8871d67baba47e646d06d439efb65c">cdocx::BookmarkReplacer::replace_with_image_advanced</a></div><div class="ttdeci">bool replace_with_image_advanced(const std::string &amp;bookmark_name, const std::string &amp;image_path, const ImageSize &amp;size, const std::string &amp;caption=&quot;&quot;, ImageAlignment align=ImageAlignment::Center)</div><div class="ttdoc">Replace bookmark with image (advanced version)</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00111">bookmark_replacer.cpp:111</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a0d9774ca27210dc419cacf380ccd59b9"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a0d9774ca27210dc419cacf380ccd59b9">cdocx::BookmarkReplacer::operator=</a></div><div class="ttdeci">BookmarkReplacer &amp; operator=(const BookmarkReplacer &amp;)=delete</div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a1269cadda83dc93cd2b7782268cb34a5"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a1269cadda83dc93cd2b7782268cb34a5">cdocx::BookmarkReplacer::replace_text_batch_transaction</a></div><div class="ttdeci">BatchResult replace_text_batch_transaction(const std::map&lt; std::string, std::string &gt; &amp;replacements, bool strict=true)</div><div class="ttdoc">Replace bookmarks in transaction mode (all or nothing)</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00528">bookmark_replacer.cpp:528</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a3bd74f0a78ab698fc6c11e9dfcbb888e"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a3bd74f0a78ab698fc6c11e9dfcbb888e">cdocx::BookmarkReplacer::replace_with_image_from_memory</a></div><div class="ttdeci">bool replace_with_image_from_memory(const std::string &amp;bookmark_name, const std::vector&lt; uint8_t &gt; &amp;image_data, const std::string &amp;image_name, const ImageSize &amp;size, const std::string &amp;caption=&quot;&quot;, ImageAlignment align=ImageAlignment::Center)</div><div class="ttdoc">Replace bookmark with image from memory</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00182">bookmark_replacer.cpp:182</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a6028952d265405a690202d4e83e43a2b"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a6028952d265405a690202d4e83e43a2b">cdocx::BookmarkReplacer::BookmarkReplacer</a></div><div class="ttdeci">BookmarkReplacer(BookmarkReplacer &amp;&amp;)=default</div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a62ab60392e6bc2af2b1a9b4d5b1f7d8e"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a62ab60392e6bc2af2b1a9b4d5b1f7d8e">cdocx::BookmarkReplacer::reset_stats</a></div><div class="ttdeci">void reset_stats()</div><div class="ttdoc">Reset statistics counters</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00399">bookmark_replacer.h:399</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a73f056afcf6febe67502bd4cc7ce33d0"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a73f056afcf6febe67502bd4cc7ce33d0">cdocx::BookmarkReplacer::replace_if</a></div><div class="ttdeci">bool replace_if(const std::string &amp;bookmark_name, const ReplaceCallback &amp;callback)</div><div class="ttdoc">Replace using callback for conditional logic</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00248">bookmark_replacer.cpp:248</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a81b42f9877220aae99c9161742eae39f"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a81b42f9877220aae99c9161742eae39f">cdocx::BookmarkReplacer::has_bookmark</a></div><div class="ttdeci">bool has_bookmark(const std::string &amp;bookmark_name) const</div><div class="ttdoc">Check if bookmark exists in document</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00296">bookmark_replacer.cpp:296</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a825d4e102fa7ef83db6c6956fa2e9372"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a825d4e102fa7ef83db6c6956fa2e9372">cdocx::BookmarkReplacer::replace_text_batch</a></div><div class="ttdeci">int replace_text_batch(const std::map&lt; std::string, std::string &gt; &amp;replacements)</div><div class="ttdoc">Replace multiple bookmarks in batch</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00052">bookmark_replacer.cpp:52</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a8b19586133c2497a3fdae4930a42b02b"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a8b19586133c2497a3fdae4930a42b02b">cdocx::BookmarkReplacer::replace_with_image</a></div><div class="ttdeci">bool replace_with_image(const std::string &amp;bookmark_name, const std::string &amp;image_path, const std::string &amp;caption=&quot;&quot;)</div><div class="ttdoc">Replace bookmark with image (simple version)</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00091">bookmark_replacer.cpp:91</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a9a77584d36a6dc795d31e7d908ca489e"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a9a77584d36a6dc795d31e7d908ca489e">cdocx::BookmarkReplacer::get_stats</a></div><div class="ttdeci">ReplacementStats get_stats() const</div><div class="ttdoc">Get replacement statistics</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00394">bookmark_replacer.h:394</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_a9f573201f20afb6b408b25d418f257c6"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#a9f573201f20afb6b408b25d418f257c6">cdocx::BookmarkReplacer::operator=</a></div><div class="ttdeci">BookmarkReplacer &amp; operator=(BookmarkReplacer &amp;&amp;)=default</div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_aac758049d5a3f69be57ef54fbc99179d"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#aac758049d5a3f69be57ef54fbc99179d">cdocx::BookmarkReplacer::~BookmarkReplacer</a></div><div class="ttdeci">~BookmarkReplacer()=default</div><div class="ttdoc">Destructor</div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_ac29738e261958bd3ba239c3e6707cde6"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#ac29738e261958bd3ba239c3e6707cde6">cdocx::BookmarkReplacer::preview_replacements</a></div><div class="ttdeci">std::vector&lt; std::tuple&lt; std::string, bool, std::string &gt; &gt; preview_replacements(const std::map&lt; std::string, std::string &gt; &amp;replacements) const</div><div class="ttdoc">Preview batch replacements without actually applying them</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00491">bookmark_replacer.cpp:491</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_acbfcd4c111a2b351c762867c966f8c90"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#acbfcd4c111a2b351c762867c966f8c90">cdocx::BookmarkReplacer::list_bookmarks</a></div><div class="ttdeci">std::vector&lt; std::string &gt; list_bookmarks() const</div><div class="ttdoc">Get all bookmark names in document</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00300">bookmark_replacer.cpp:300</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_ad2c0f72370910abf53125f1c4e59a244"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#ad2c0f72370910abf53125f1c4e59a244">cdocx::BookmarkReplacer::replace_text_with_format</a></div><div class="ttdeci">bool replace_text_with_format(const std::string &amp;bookmark_name, const std::string &amp;new_text, const BookmarkFormat &amp;format)</div><div class="ttdoc">Replace text with explicit format control</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00064">bookmark_replacer.cpp:64</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_ae382e8457ffeb5a9d69640f43a354283"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#ae382e8457ffeb5a9d69640f43a354283">cdocx::BookmarkReplacer::replace_and_remove</a></div><div class="ttdeci">bool replace_and_remove(const std::string &amp;bookmark_name, const std::string &amp;new_text)</div><div class="ttdoc">Replace text and remove bookmark markers</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00267">bookmark_replacer.cpp:267</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_af6fd6ffd1c079f3af487344953915b1d"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#af6fd6ffd1c079f3af487344953915b1d">cdocx::BookmarkReplacer::get_bookmark_text</a></div><div class="ttdeci">std::string get_bookmark_text(const std::string &amp;bookmark_name) const</div><div class="ttdoc">Get bookmark text content</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00309">bookmark_replacer.cpp:309</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkReplacer_html_af74d3e51d9593d2692d3fef50c8f05ee"><div class="ttname"><a href="classcdocx_1_1BookmarkReplacer.html#af74d3e51d9593d2692d3fef50c8f05ee">cdocx::BookmarkReplacer::replace_text</a></div><div class="ttdeci">bool replace_text(const std::string &amp;bookmark_name, const std::string &amp;new_text)</div><div class="ttdoc">Replace bookmark text (preserves original format)</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00033">bookmark_replacer.cpp:33</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Bookmark_html"><div class="ttname"><a href="classcdocx_1_1Bookmark.html">cdocx::Bookmark</a></div><div class="ttdoc">Represents a bookmark in the document</div><div class="ttdef"><b>Definition</b> <a href="bookmark_8h_source.html#l00090">bookmark.h:90</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html"><div class="ttname"><a href="classcdocx_1_1Document.html">cdocx::Document</a></div><div class="ttdef"><b>Definition</b> <a href="document_8h_source.html#l00285">document.h:285</a></div></div>
+<div class="ttc" id="afwd_8h_html"><div class="ttname"><a href="fwd_8h.html">fwd.h</a></div><div class="ttdoc">Forward declarations for CDocx library</div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a06ece722541268fdfed894c0055d783d"><div class="ttname"><a href="namespacecdocx.html#a06ece722541268fdfed894c0055d783d">cdocx::ReplaceCallback</a></div><div class="ttdeci">std::function&lt; bool(const std::string &amp;bookmark_name, const std::string &amp;old_text, std::string &amp;new_text)&gt; ReplaceCallback</div><div class="ttdoc">Callback function type for conditional replacement</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00074">bookmark_replacer.h:75</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a301533a88970bc6b789cb50d3d32eee2"><div class="ttname"><a href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2">cdocx::ImageAlignment</a></div><div class="ttdeci">ImageAlignment</div><div class="ttdef"><b>Definition</b> <a href="document__builder_8h_source.html#l00027">document_builder.h:27</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a301533a88970bc6b789cb50d3d32eee2a4f1f6016fc9f3f2353c0cc7c67b292bd"><div class="ttname"><a href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2a4f1f6016fc9f3f2353c0cc7c67b292bd">cdocx::ImageAlignment::Center</a></div><div class="ttdeci">@ Center</div></div>
+<div class="ttc" id="aproperties_8cpp_html_a9bd1379a71b955886d4eb552d47d4fba"><div class="ttname"><a href="properties_8cpp.html#a9bd1379a71b955886d4eb552d47d4fba">align</a></div><div class="ttdeci">TextProperties::VertAlign align</div><div class="ttdef"><b>Definition</b> <a href="properties_8cpp_source.html#l00121">properties.cpp:121</a></div></div>
+<div class="ttc" id="astructcdocx_1_1BookmarkFormat_html"><div class="ttname"><a href="structcdocx_1_1BookmarkFormat.html">cdocx::BookmarkFormat</a></div><div class="ttdoc">Represents formatting information extracted from a bookmark</div><div class="ttdef"><b>Definition</b> <a href="bookmark_8h_source.html#l00030">bookmark.h:30</a></div></div>
+<div class="ttc" id="astructcdocx_1_1BookmarkReplacer_1_1BatchResult_html"><div class="ttname"><a href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html">cdocx::BookmarkReplacer::BatchResult</a></div><div class="ttdoc">Detailed result for batch replacement operations</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00181">bookmark_replacer.h:181</a></div></div>
+<div class="ttc" id="astructcdocx_1_1BookmarkReplacer_1_1BatchResult_html_a07a34dc9cf2e1a4273b878cc7a35fc92"><div class="ttname"><a href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a07a34dc9cf2e1a4273b878cc7a35fc92">cdocx::BookmarkReplacer::BatchResult::failures</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; std::string, std::string &gt; &gt; failures</div><div class="ttdoc">(bookmark, error) pairs</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00185">bookmark_replacer.h:185</a></div></div>
+<div class="ttc" id="astructcdocx_1_1BookmarkReplacer_1_1BatchResult_html_a278d32db68e616c839c22a16bd891561"><div class="ttname"><a href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a278d32db68e616c839c22a16bd891561">cdocx::BookmarkReplacer::BatchResult::success_count</a></div><div class="ttdeci">int success_count</div><div class="ttdoc">Number of successful replacements</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00183">bookmark_replacer.h:183</a></div></div>
+<div class="ttc" id="astructcdocx_1_1BookmarkReplacer_1_1BatchResult_html_a4b4823959a344745aec9316a0222e6de"><div class="ttname"><a href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a4b4823959a344745aec9316a0222e6de">cdocx::BookmarkReplacer::BatchResult::get_error</a></div><div class="ttdeci">std::string get_error(const std::string &amp;bookmark_name) const</div><div class="ttdoc">Get error message for specific bookmark</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00519">bookmark_replacer.cpp:519</a></div></div>
+<div class="ttc" id="astructcdocx_1_1BookmarkReplacer_1_1BatchResult_html_a5195f6edf6b8e31d1ac37708c38834ac"><div class="ttname"><a href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a5195f6edf6b8e31d1ac37708c38834ac">cdocx::BookmarkReplacer::BatchResult::all_succeeded</a></div><div class="ttdeci">bool all_succeeded</div><div class="ttdoc">Whether all replacements succeeded</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00182">bookmark_replacer.h:182</a></div></div>
+<div class="ttc" id="astructcdocx_1_1BookmarkReplacer_1_1BatchResult_html_a587fa13b84fa70f0158e4e1cafd3d2b6"><div class="ttname"><a href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a587fa13b84fa70f0158e4e1cafd3d2b6">cdocx::BookmarkReplacer::BatchResult::fail_count</a></div><div class="ttdeci">int fail_count</div><div class="ttdoc">Number of failed replacements</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00184">bookmark_replacer.h:184</a></div></div>
+<div class="ttc" id="astructcdocx_1_1BookmarkReplacer_1_1BatchResult_html_a828518f8b40ce789abc3052b64718a7f"><div class="ttname"><a href="structcdocx_1_1BookmarkReplacer_1_1BatchResult.html#a828518f8b40ce789abc3052b64718a7f">cdocx::BookmarkReplacer::BatchResult::did_succeed</a></div><div class="ttdeci">bool did_succeed(const std::string &amp;bookmark_name) const</div><div class="ttdoc">Check if specific bookmark succeeded</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8cpp_source.html#l00514">bookmark_replacer.cpp:514</a></div></div>
+<div class="ttc" id="astructcdocx_1_1ImageSize_html"><div class="ttname"><a href="structcdocx_1_1ImageSize.html">cdocx::ImageSize</a></div><div class="ttdef"><b>Definition</b> <a href="document__builder_8h_source.html#l00033">document_builder.h:33</a></div></div>
+<div class="ttc" id="astructcdocx_1_1ReplacementStats_html"><div class="ttname"><a href="structcdocx_1_1ReplacementStats.html">cdocx::ReplacementStats</a></div><div class="ttdoc">Statistics for replacement operations</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00082">bookmark_replacer.h:82</a></div></div>
+<div class="ttc" id="astructcdocx_1_1ReplacementStats_html_a07bbb26e1613e4ee5c798cef5832fe92"><div class="ttname"><a href="structcdocx_1_1ReplacementStats.html#a07bbb26e1613e4ee5c798cef5832fe92">cdocx::ReplacementStats::fail_count</a></div><div class="ttdeci">int fail_count</div><div class="ttdoc">Number of failed replacements</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00084">bookmark_replacer.h:84</a></div></div>
+<div class="ttc" id="astructcdocx_1_1ReplacementStats_html_a089aedb8134d0475645b7be977de26ff"><div class="ttname"><a href="structcdocx_1_1ReplacementStats.html#a089aedb8134d0475645b7be977de26ff">cdocx::ReplacementStats::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdoc">Reset all counters to zero</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00090">bookmark_replacer.h:90</a></div></div>
+<div class="ttc" id="astructcdocx_1_1ReplacementStats_html_a3a97a61514788aac97fa540e842adc6a"><div class="ttname"><a href="structcdocx_1_1ReplacementStats.html#a3a97a61514788aac97fa540e842adc6a">cdocx::ReplacementStats::success_count</a></div><div class="ttdeci">int success_count</div><div class="ttdoc">Number of successful replacements</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00083">bookmark_replacer.h:83</a></div></div>
+<div class="ttc" id="astructcdocx_1_1ReplacementStats_html_a8661f7784ea8ba2891a12dc3d4930848"><div class="ttname"><a href="structcdocx_1_1ReplacementStats.html#a8661f7784ea8ba2891a12dc3d4930848">cdocx::ReplacementStats::total</a></div><div class="ttdeci">int total() const</div><div class="ttdoc">Get total operations count</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00100">bookmark_replacer.h:100</a></div></div>
+<div class="ttc" id="astructcdocx_1_1ReplacementStats_html_adb789e8f8a0fe06c57708a682e6cf7b3"><div class="ttname"><a href="structcdocx_1_1ReplacementStats.html#adb789e8f8a0fe06c57708a682e6cf7b3">cdocx::ReplacementStats::skip_count</a></div><div class="ttdeci">int skip_count</div><div class="ttdoc">Number of skipped replacements</div><div class="ttdef"><b>Definition</b> <a href="bookmark__replacer_8h_source.html#l00085">bookmark_replacer.h:85</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_45cf22061f640deb443c5da4ff0b00bd.html">cdocx</a></li><li class="navelem"><a class="el" href="bookmark__replacer_8h.html">bookmark_replacer.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

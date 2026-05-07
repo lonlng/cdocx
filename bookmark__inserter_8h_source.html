@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: bookmark_inserter.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('bookmark__inserter_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">bookmark_inserter.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="bookmark__inserter_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;<a class="code" href="document_8h.html">cdocx/document.h</a>&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="foldopen" id="foldopen00030" data-start="{" data-end="};">
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkInserter.html">   30</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1BookmarkInserter.html">BookmarkInserter</a> {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classcdocx_1_1BookmarkInserter.html">BookmarkInserter</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkInserter.html#a352bebc6cb64ef97544758d52d9eb60e">   38</a></span>    <a class="code hl_function" href="classcdocx_1_1BookmarkInserter.html#a352bebc6cb64ef97544758d52d9eb60e">~BookmarkInserter</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="comment">// Disable copy, enable move</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkInserter.html#a25ae08802d46727f03bbc4eb51a6ac9e">   41</a></span>    <a class="code hl_function" href="classcdocx_1_1BookmarkInserter.html#a25ae08802d46727f03bbc4eb51a6ac9e">BookmarkInserter</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1BookmarkInserter.html">BookmarkInserter</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkInserter.html#a9b8fe04f4c7edab228a999b0228fd114">   42</a></span>    <a class="code hl_class" href="classcdocx_1_1BookmarkInserter.html">BookmarkInserter</a>&amp; <a class="code hl_function" href="classcdocx_1_1BookmarkInserter.html#a9b8fe04f4c7edab228a999b0228fd114">operator=</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1BookmarkInserter.html">BookmarkInserter</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkInserter.html#a94353d1690bf10c8a60cf03783714ab8">   43</a></span>    <a class="code hl_function" href="classcdocx_1_1BookmarkInserter.html#a94353d1690bf10c8a60cf03783714ab8">BookmarkInserter</a>(<a class="code hl_class" href="classcdocx_1_1BookmarkInserter.html">BookmarkInserter</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classcdocx_1_1BookmarkInserter.html#aada893ec24ed19677e57bad1f78f7f93">   44</a></span>    <a class="code hl_class" href="classcdocx_1_1BookmarkInserter.html">BookmarkInserter</a>&amp; <a class="code hl_function" href="classcdocx_1_1BookmarkInserter.html#aada893ec24ed19677e57bad1f78f7f93">operator=</a>(<a class="code hl_class" href="classcdocx_1_1BookmarkInserter.html">BookmarkInserter</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1BookmarkInserter.html#a922373b7b9415adc7494eed1a5795e20">insert</a>(<span class="keyword">const</span> std::string&amp; bookmark_name, <span class="keyword">const</span> std::string&amp; text);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classcdocx_1_1BookmarkInserter.html#ad4e501ceeac41916aef8ca48b6dff2f5">insert_all</a>(<span class="keyword">const</span> std::string&amp; bookmark_name, <span class="keyword">const</span> std::string&amp; text);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classcdocx_1_1BookmarkInserter.html#ad29568a574e017083d167bfaecec7ef7">insert_batch</a>(<span class="keyword">const</span> std::map&lt;std::string, std::string&gt;&amp; mappings);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordtype">int</span> next_bookmark_id_ = 1;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordtype">int</span> allocate_bookmark_id();</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordtype">bool</span> insert_in_paragraph(pugi::xml_node paragraph,</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                             <span class="keyword">const</span> std::string&amp; bookmark_name,</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                             <span class="keyword">const</span> std::string&amp; text);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>};</div>
+</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkInserter_html"><div class="ttname"><a href="classcdocx_1_1BookmarkInserter.html">cdocx::BookmarkInserter</a></div><div class="ttdoc">Programmatically insert bookmarks around existing text in a document.</div><div class="ttdef"><b>Definition</b> <a href="bookmark__inserter_8h_source.html#l00030">bookmark_inserter.h:30</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkInserter_html_a25ae08802d46727f03bbc4eb51a6ac9e"><div class="ttname"><a href="classcdocx_1_1BookmarkInserter.html#a25ae08802d46727f03bbc4eb51a6ac9e">cdocx::BookmarkInserter::BookmarkInserter</a></div><div class="ttdeci">BookmarkInserter(const BookmarkInserter &amp;)=delete</div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkInserter_html_a352bebc6cb64ef97544758d52d9eb60e"><div class="ttname"><a href="classcdocx_1_1BookmarkInserter.html#a352bebc6cb64ef97544758d52d9eb60e">cdocx::BookmarkInserter::~BookmarkInserter</a></div><div class="ttdeci">~BookmarkInserter()=default</div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkInserter_html_a922373b7b9415adc7494eed1a5795e20"><div class="ttname"><a href="classcdocx_1_1BookmarkInserter.html#a922373b7b9415adc7494eed1a5795e20">cdocx::BookmarkInserter::insert</a></div><div class="ttdeci">bool insert(const std::string &amp;bookmark_name, const std::string &amp;text)</div><div class="ttdoc">Insert a bookmark around the first occurrence of text.</div><div class="ttdef"><b>Definition</b> <a href="bookmark__inserter_8cpp_source.html#l00074">bookmark_inserter.cpp:74</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkInserter_html_a94353d1690bf10c8a60cf03783714ab8"><div class="ttname"><a href="classcdocx_1_1BookmarkInserter.html#a94353d1690bf10c8a60cf03783714ab8">cdocx::BookmarkInserter::BookmarkInserter</a></div><div class="ttdeci">BookmarkInserter(BookmarkInserter &amp;&amp;)=default</div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkInserter_html_a9b8fe04f4c7edab228a999b0228fd114"><div class="ttname"><a href="classcdocx_1_1BookmarkInserter.html#a9b8fe04f4c7edab228a999b0228fd114">cdocx::BookmarkInserter::operator=</a></div><div class="ttdeci">BookmarkInserter &amp; operator=(const BookmarkInserter &amp;)=delete</div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkInserter_html_aada893ec24ed19677e57bad1f78f7f93"><div class="ttname"><a href="classcdocx_1_1BookmarkInserter.html#aada893ec24ed19677e57bad1f78f7f93">cdocx::BookmarkInserter::operator=</a></div><div class="ttdeci">BookmarkInserter &amp; operator=(BookmarkInserter &amp;&amp;)=default</div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkInserter_html_ad29568a574e017083d167bfaecec7ef7"><div class="ttname"><a href="classcdocx_1_1BookmarkInserter.html#ad29568a574e017083d167bfaecec7ef7">cdocx::BookmarkInserter::insert_batch</a></div><div class="ttdeci">int insert_batch(const std::map&lt; std::string, std::string &gt; &amp;mappings)</div><div class="ttdoc">Insert multiple bookmarks in one call.</div><div class="ttdef"><b>Definition</b> <a href="bookmark__inserter_8cpp_source.html#l00148">bookmark_inserter.cpp:148</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1BookmarkInserter_html_ad4e501ceeac41916aef8ca48b6dff2f5"><div class="ttname"><a href="classcdocx_1_1BookmarkInserter.html#ad4e501ceeac41916aef8ca48b6dff2f5">cdocx::BookmarkInserter::insert_all</a></div><div class="ttdeci">int insert_all(const std::string &amp;bookmark_name, const std::string &amp;text)</div><div class="ttdoc">Insert bookmarks around ALL occurrences of text in the document.</div><div class="ttdef"><b>Definition</b> <a href="bookmark__inserter_8cpp_source.html#l00109">bookmark_inserter.cpp:109</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html"><div class="ttname"><a href="classcdocx_1_1Document.html">cdocx::Document</a></div><div class="ttdef"><b>Definition</b> <a href="document_8h_source.html#l00285">document.h:285</a></div></div>
+<div class="ttc" id="adocument_8h_html"><div class="ttname"><a href="document_8h.html">document.h</a></div><div class="ttdoc">Document class for working with DOCX files - DOM Style</div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_45cf22061f640deb443c5da4ff0b00bd.html">cdocx</a></li><li class="navelem"><a class="el" href="bookmark__inserter_8h.html">bookmark_inserter.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

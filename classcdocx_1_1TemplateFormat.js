@@ -1,0 +1,26 @@
+var classcdocx_1_1TemplateFormat =
+[
+    [ "TemplateFormat", "classcdocx_1_1TemplateFormat.html#a93324d1aa2ae3e05b00d819212c32d0b", null ],
+    [ "alignment", "classcdocx_1_1TemplateFormat.html#a1b0cc61d38d34238cbf6be6bdbc52567", null ],
+    [ "alignment_opt", "classcdocx_1_1TemplateFormat.html#a8e757c66fa4887534b36c76af3c5daf0", null ],
+    [ "bold", "classcdocx_1_1TemplateFormat.html#aded7766de142d3168eac75e6bc144580", null ],
+    [ "bold_opt", "classcdocx_1_1TemplateFormat.html#a6d2e66471c2153741c5dfe1234221db1", null ],
+    [ "color", "classcdocx_1_1TemplateFormat.html#ae596db77b8b6d48aae52b62645579ab5", null ],
+    [ "color_opt", "classcdocx_1_1TemplateFormat.html#a6da61143de4bb9f3f868f609f25558e7", null ],
+    [ "font", "classcdocx_1_1TemplateFormat.html#aec6b1c04d143ab3dc3c977bf837039c8", null ],
+    [ "font_ascii", "classcdocx_1_1TemplateFormat.html#af1409e24874b2a51fe9cba11dc0fd3b6", null ],
+    [ "font_far_east", "classcdocx_1_1TemplateFormat.html#a32d14b732e95ddc5a041b6dc7c42da02", null ],
+    [ "font_opt", "classcdocx_1_1TemplateFormat.html#ac5825460f59d47ef28946ff94d867f70", null ],
+    [ "is_empty", "classcdocx_1_1TemplateFormat.html#ac7e16b0ffdeacb3e2f637ac025920036", null ],
+    [ "italic", "classcdocx_1_1TemplateFormat.html#a8a34fdc88feb375e56a438b4db9cb99c", null ],
+    [ "italic_opt", "classcdocx_1_1TemplateFormat.html#abe7503914cd8d5cdcf3cb6cdfa122a37", null ],
+    [ "line_spacing", "classcdocx_1_1TemplateFormat.html#affe3e6d5115fa1458418f653e39a4337", null ],
+    [ "size", "classcdocx_1_1TemplateFormat.html#a56d314422e0a5d612f6f227b5a6988b9", null ],
+    [ "size_opt", "classcdocx_1_1TemplateFormat.html#a196858a8e2f15c8939bad82f457b81a9", null ],
+    [ "space_after", "classcdocx_1_1TemplateFormat.html#aeeba8c4d1a087855b3fc6747da6a791c", null ],
+    [ "space_before", "classcdocx_1_1TemplateFormat.html#a9dba34751d7644acf3f932dbb725fefa", null ],
+    [ "strikethrough", "classcdocx_1_1TemplateFormat.html#a30c0e94813941c3755ed579e7a87b6f4", null ],
+    [ "to_bookmark_format", "classcdocx_1_1TemplateFormat.html#a3be52c7ff32a72e5486ef2c325ff2538", null ],
+    [ "underline", "classcdocx_1_1TemplateFormat.html#afccf2d62592f07be3557aec16f3c5443", null ],
+    [ "underline_opt", "classcdocx_1_1TemplateFormat.html#a1ee5e434c05d81ec800dc9712e349b20", null ]
+];

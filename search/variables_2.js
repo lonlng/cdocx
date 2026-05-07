@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['c_0',['c',['../structcdocx_1_1XmlEscapeMapping.html#a1deeb3882373071aa92bf44975eff585',1,'cdocx::XmlEscapeMapping']]],
+  ['category_1',['category',['../classcdocx_1_1DocumentProperties.html#aa6956688dd3df76e5621b0e11e5461c1',1,'cdocx::DocumentProperties']]],
+  ['cell_5fmargin_2',['cell_margin',['../structcdocx_1_1TableProperties.html#a4a891e36d4ca599bf0bd0e7f1876a49d',1,'cdocx::TableProperties']]],
+  ['cell_5fspacing_3',['cell_spacing',['../classcdocx_1_1TableFormat.html#aa99276a7db609f6e472dda663b81d187',1,'cdocx::TableFormat']]],
+  ['char_5fcode_4',['char_code',['../paragraph_8cpp.html#ae0340b2a848b13ef0e314a2712e6ca5e',1,'paragraph.cpp']]],
+  ['child_5fname_5',['child_name',['../structcdocx_1_1BorderParseMapping.html#aa2923946921bc527982c6e4bd47465df',1,'cdocx::BorderParseMapping::child_name'],['../structcdocx_1_1BorderSerializeMapping.html#a0409bb8a721f4445a4f4caf4615b8797',1,'cdocx::BorderSerializeMapping::child_name']]],
+  ['children_6',['children',['../structcdocx_1_1DocxTreeNode.html#a247ad1aa5ae2a917e29f2a008877c20b',1,'cdocx::DocxTreeNode']]],
+  ['children_5f_7',['children_',['../classcdocx_1_1CompositeNode.html#a2edf97d7ffce18ecc63284f416af795d',1,'cdocx::CompositeNode']]],
+  ['code_8',['code',['../structcdocx_1_1SpecialCharMapping.html#a8e4eee676ad085a12101d27dc972236e',1,'cdocx::SpecialCharMapping::code'],['../document__builder_8cpp.html#ad0e6b406ad1011f626536339fb6427dc',1,'code:&#160;document_builder.cpp']]],
+  ['col_5fspan_9',['col_span',['../structcdocx_1_1CellMerge.html#a8aecc9d68e828d7c40e5998a3944f1f1',1,'cdocx::CellMerge']]],
+  ['color_10',['color',['../base__content_8cpp.html#ac0248eee8c0373866ea133cac9e2d4c5',1,'color:&#160;base_content.cpp'],['../structcdocx_1_1TextWatermarkOptions.html#aaba725606f5e0b1702387400de47218d',1,'cdocx::TextWatermarkOptions::color'],['../structcdocx_1_1TableBorders.html#a91b3ef82068109e37efbf793f2f11f9c',1,'cdocx::TableBorders::color'],['../structcdocx_1_1TextProperties_1_1Underline.html#a155e075c560f19d916d7de4518562195',1,'cdocx::TextProperties::Underline::color'],['../structcdocx_1_1BookmarkFormat.html#a2040464d50677db82b532e16b9048546',1,'cdocx::BookmarkFormat::color'],['../classcdocx_1_1Border.html#a5148ac10d509cb6f293d335a83528408',1,'cdocx::Border::color'],['../classcdocx_1_1Font.html#acf3b4adc31faacf2259a2b05aaf3459f',1,'cdocx::Font::color'],['../structcdocx_1_1ParagraphProperties_1_1Border.html#a073de65b1d300a6d33ececbd532b1bb8',1,'cdocx::ParagraphProperties::Border::color'],['../structcdocx_1_1TextProperties.html#aec8f2b15d5fcda0a90fcb70b34a57786',1,'cdocx::TextProperties::color']]],
+  ['columns_11',['columns',['../structcdocx_1_1SectionProperties.html#a48045babe067675a1ce63243f8cf22ac',1,'cdocx::SectionProperties']]],
+  ['comments_12',['comments',['../classcdocx_1_1DocumentProperties.html#a3e59128ebcc8f0330b0052de76ee945c',1,'cdocx::DocumentProperties']]],
+  ['comments_5fcache_5f_13',['comments_cache_',['../classcdocx_1_1Document.html#abc3f1cffc14ed6981d2607e296b65330',1,'cdocx::Document']]],
+  ['comments_5fdirty_5f_14',['comments_dirty_',['../classcdocx_1_1Document.html#aa029a8d1fd8e78260ad844890abb1109',1,'cdocx::Document']]],
+  ['company_15',['company',['../classcdocx_1_1DocumentProperties.html#ae5189cd554adb42fd495f2a40d0325c7',1,'cdocx::DocumentProperties']]],
+  ['content_5fstatus_16',['content_status',['../classcdocx_1_1DocumentProperties.html#a24e340663fc9ac225e1579a3c3cb7bf7',1,'cdocx::DocumentProperties']]],
+  ['content_5ftype_17',['content_type',['../structcdocx_1_1DocxTreeNode.html#aa1c6f62b331c54515b35e5d27291aced',1,'cdocx::DocxTreeNode::content_type'],['../structcdocx_1_1ContentType.html#a2116017fcd32e2276b51630486ddae14',1,'cdocx::ContentType::content_type'],['../classcdocx_1_1DocumentProperties.html#ad22b1dfe76a0f804fe6db5056e2e9805',1,'cdocx::DocumentProperties::content_type']]],
+  ['content_5ftypes_5f_18',['content_types_',['../classcdocx_1_1Document.html#a34356bc3901e4a69d624e099f7858191',1,'cdocx::Document']]],
+  ['count_19',['count',['../structcdocx_1_1SectionProperties_1_1Columns.html#a6a32f549c2f029ca79a4a42664aa610a',1,'cdocx::SectionProperties::Columns']]],
+  ['created_20',['created',['../classcdocx_1_1DocumentProperties.html#ae191319bce38f8f3d216967d0bb8fce5',1,'cdocx::DocumentProperties']]],
+  ['cs_21',['cs',['../structcdocx_1_1LevelDefinition_1_1LevelFont.html#a57200b186206c06092aba780ce83af41',1,'cdocx::LevelDefinition::LevelFont::cs'],['../structcdocx_1_1TextProperties_1_1Font.html#ad3ab413e605db2abe2371826fc36d76e',1,'cdocx::TextProperties::Font::cs']]],
+  ['custom_5fid_5f_22',['custom_id_',['../classcdocx_1_1Node.html#aaea22b6a3c2a2cf742a3864b80ad3208',1,'cdocx::Node']]],
+  ['custom_5fproperties_23',['custom_properties',['../classcdocx_1_1DocumentProperties.html#ae3ac8c57b74d2baa38607a40a22299c3',1,'cdocx::DocumentProperties']]],
+  ['custom_5fproperties_5f_24',['custom_properties_',['../classcdocx_1_1Document.html#ac9774a5b075b8fbc08b28fbc7c4ccaca',1,'cdocx::Document']]]
+];

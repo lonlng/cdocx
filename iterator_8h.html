@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: iterator.h 文件参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('iterator_8h.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">类</a> &#124;
+<a href="#namespaces">命名空间</a> &#124;
+<a href="#func-members">函数</a>  </div>
+  <div class="headertitle"><div class="title">iterator.h 文件参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Iterator classes for CDocx document traversal  
+<a href="#details">更多...</a></p>
+<div class="textblock"><code>#include &lt;<a class="el" href="fwd_8h_source.html">cdocx/fwd.h</a>&gt;</code><br />
+</div>
+<p><a href="iterator_8h_source.html">浏览源代码.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+类</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1Iterator.html">cdocx::Iterator&lt; T, P, C &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classcdocx_1_1Template.html" title="Template engine for placeholder replacement in DOCX documents">Template</a> iterator for <a class="el" href="classcdocx_1_1CDocx.html" title="Main CDocx API entry point">CDocx</a> collections  <a href="classcdocx_1_1Iterator.html#details">更多...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1IteratorHelper.html">cdocx::IteratorHelper</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper class for creating begin/end iterators  <a href="classcdocx_1_1IteratorHelper.html#details">更多...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+命名空间</h2></td></tr>
+<tr class="memitem:namespacepugi" id="r_namespacepugi"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepugi.html">pugi</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacecdocx" id="r_namespacecdocx"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html">cdocx</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+函数</h2></td></tr>
+<tr class="memitem:a5d5d459ce8c2dd7ec4d08d3eea13e791" id="r_a5d5d459ce8c2dd7ec4d08d3eea13e791"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a5d5d459ce8c2dd7ec4d08d3eea13e791"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a5d5d459ce8c2dd7ec4d08d3eea13e791">cdocx::begin</a> (const T &amp;obj) -&gt; <a class="el" href="classcdocx_1_1Iterator.html">Iterator</a>&lt; T, pugi::xml_node &gt;</td></tr>
+<tr class="memdesc:a5d5d459ce8c2dd7ec4d08d3eea13e791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get begin iterator for range-based for loop  <br /></td></tr>
+<tr class="separator:a5d5d459ce8c2dd7ec4d08d3eea13e791"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95f97defe39c638500f14b9d46505b43" id="r_a95f97defe39c638500f14b9d46505b43"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a95f97defe39c638500f14b9d46505b43"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a95f97defe39c638500f14b9d46505b43">cdocx::end</a> (const T &amp;obj) -&gt; <a class="el" href="classcdocx_1_1Iterator.html">Iterator</a>&lt; T, pugi::xml_node &gt;</td></tr>
+<tr class="memdesc:a95f97defe39c638500f14b9d46505b43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get end iterator for range-based for loop  <br /></td></tr>
+<tr class="separator:a95f97defe39c638500f14b9d46505b43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>Iterator classes for CDocx document traversal </p>
+<p>Provides template-based iterator classes for traversing document elements (paragraphs, runs, tables, etc.) using C++11 range-based for loops and traditional iterator patterns.</p>
+<dl class="section author"><dt>作者</dt><dd>lonlng </dd></dl>
+<dl class="section copyright"><dt>版权所有</dt><dd>MIT License </dd></dl>
+<dl class="section date"><dt>日期</dt><dd>2026 </dd></dl>
+<dl class="section version"><dt>版本</dt><dd>0.2.0</dd></dl>
+<dl class="section user"><dt>Usage Example:</dt><dd><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="iterator_8h.html">cdocx/iterator.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="base_8h.html">cdocx/base.h</a>&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_class" href="classcdocx_1_1Document.html">cdocx::Document</a> doc(<span class="stringliteral">&quot;file.docx&quot;</span>);</div>
+<div class="line">doc.open();</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Range-based for loop</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; para : doc.paragraphs()) {</div>
+<div class="line">    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; run : para.runs()) {</div>
+<div class="line">        std::cout &lt;&lt; run.get_text() &lt;&lt; std::endl;</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Traditional iterator style</span></div>
+<div class="line"><span class="keyword">auto</span> para = doc.paragraphs();</div>
+<div class="line"><span class="keywordflow">while</span> (para.has_next()) {</div>
+<div class="line">    <span class="keyword">auto</span> run = para.runs();</div>
+<div class="line">    <span class="keywordflow">while</span> (run.has_next()) {</div>
+<div class="line">        std::cout &lt;&lt; run.get_text() &lt;&lt; std::endl;</div>
+<div class="line">        run.next();</div>
+<div class="line">    }</div>
+<div class="line">    para.next();</div>
+<div class="line">}</div>
+<div class="ttc" id="abase_8h_html"><div class="ttname"><a href="base_8h.html">base.h</a></div><div class="ttdoc">Base content classes for CDocx document model - DOM Style</div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html"><div class="ttname"><a href="classcdocx_1_1Document.html">cdocx::Document</a></div><div class="ttdef"><b>Definition</b> <a href="document_8h_source.html#l00285">document.h:285</a></div></div>
+<div class="ttc" id="aiterator_8h_html"><div class="ttname"><a href="iterator_8h.html">iterator.h</a></div><div class="ttdoc">Iterator classes for CDocx document traversal</div></div>
+</div><!-- fragment --> </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="iterator_8h_source.html">iterator.h</a> 中定义.</p>
+</div></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_45cf22061f640deb443c5da4ff0b00bd.html">cdocx</a></li><li class="navelem"><a class="el" href="iterator_8h.html">iterator.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: base_content.cpp 文件参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('base__content_8cpp.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#namespaces">命名空间</a>  </div>
+  <div class="headertitle"><div class="title">base_content.cpp 文件参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Implementation of base content classes (Run, SpecialChar, Field, etc.)  
+<a href="#details">更多...</a></p>
+<div class="textblock"><code>#include &lt;<a class="el" href="base_8h_source.html">cdocx/base.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="convert__util_8h_source.html">cdocx/convert_util.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="document_8h_source.html">cdocx/document.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="paragraph_8h_source.html">cdocx/paragraph.h</a>&gt;</code><br />
+<code>#include &quot;<a class="el" href="sync__common_8h_source.html">sync_common.h</a>&quot;</code><br />
+<code>#include &lt;cstring&gt;</code><br />
+<code>#include &lt;utility&gt;</code><br />
+</div>
+<p><a href="base__content_8cpp_source.html">浏览源代码.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+命名空间</h2></td></tr>
+<tr class="memitem:namespacecdocx" id="r_namespacecdocx"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html">cdocx</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>Implementation of base content classes (Run, SpecialChar, Field, etc.) </p>
+<dl class="section version"><dt>版本</dt><dd>0.8.0 - DOM Style </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="base__content_8cpp_source.html">base_content.cpp</a> 中定义.</p>
+</div><h2 class="groupheader">变量说明</h2>
+<a id="ac0248eee8c0373866ea133cac9e2d4c5" name="ac0248eee8c0373866ea133cac9e2d4c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0248eee8c0373866ea133cac9e2d4c5">&#9670;&#160;</a></span>color</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HighlightColor color</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="base__content_8cpp_source.html">base_content.cpp</a> 第 <a class="el" href="base__content_8cpp_source.html#l00023">23</a> 行定义.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="format__context_8cpp_source.html#l00035">cdocx::TextFormatContext::apply_color()</a>, <a class="el" href="bookmark_8cpp_source.html#l00208">cdocx::Bookmark::get_format()</a>, <a class="el" href="base__content_8cpp_source.html#l00555">cdocx::Run::get_properties_xml()</a>, <a class="el" href="sync__common_8cpp_source.html#l00509">cdocx::parse_border_from_xml()</a>, <a class="el" href="sync__style_8cpp_source.html#l00051">cdocx::parse_font_from_xml()</a>, <a class="el" href="sync__serialize_8cpp_source.html#l00246">cdocx::serialize_font_to_r_pr()</a>, <a class="el" href="body_8cpp_source.html#l00228">cdocx::Inline::set_color()</a>, <a class="el" href="base_8h_source.html#l00148">cdocx::Run::set_color()</a>, <a class="el" href="base__content_8cpp_source.html#l00392">cdocx::Run::set_color_xml()</a>, <a class="el" href="body_8cpp_source.html#l00233">cdocx::Inline::set_highlight()</a>, <a class="el" href="base_8h_source.html#l00156">cdocx::Run::set_highlight()</a>, <a class="el" href="base__content_8cpp_source.html#l00283">cdocx::Run::set_highlight()</a>, <a class="el" href="base__content_8cpp_source.html#l00647">cdocx::Run::set_highlight_xml()</a>, <a class="el" href="format_8h_source.html#l00165">cdocx::Shading::set_solid_fill()</a>, <a class="el" href="bookmark_8cpp_source.html#l00336">cdocx::Bookmark::set_text_formatted()</a>, <a class="el" href="base__content_8cpp_source.html#l00242">cdocx::Run::set_underline_style()</a>, <a class="el" href="base__content_8cpp_source.html#l00665">cdocx::Run::set_underline_style_xml()</a> , 以及 <a class="el" href="classcdocx_1_1DocumentBuilder.html#a1d92d67a0dd795227819f32e410e27f3">cdocx::DocumentBuilder::~DocumentBuilder()</a>.</p>
+
+</div>
+</div>
+<a id="a30822ca2dbf97533bee20dd26e86b94b" name="a30822ca2dbf97533bee20dd26e86b94b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30822ca2dbf97533bee20dd26e86b94b">&#9670;&#160;</a></span>highlight</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TextProperties::Highlight highlight</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="base__content_8cpp_source.html">base_content.cpp</a> 第 <a class="el" href="base__content_8cpp_source.html#l00022">22</a> 行定义.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="sync__common_8cpp_source.html#l00725">cdocx::highlight_to_string()</a>.</p>
+
+</div>
+</div>
+<a id="ade8140d8414598e976f4e89e4dfc68ad" name="ade8140d8414598e976f4e89e4dfc68ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade8140d8414598e976f4e89e4dfc68ad">&#9670;&#160;</a></span>position</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TextProperties::PositionType position</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="base__content_8cpp_source.html">base_content.cpp</a> 第 <a class="el" href="base__content_8cpp_source.html#l00172">172</a> 行定义.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="properties_8cpp_source.html#l00607">cdocx::TabStopCollection::add()</a>, <a class="el" href="properties_8cpp_source.html#l00638">cdocx::TabStopCollection::contains()</a>, <a class="el" href="sync__common_8cpp_source.html#l00375">cdocx::drop_cap_position_to_string()</a>, <a class="el" href="properties_8cpp_source.html#l00629">cdocx::TabStopCollection::get()</a>, <a class="el" href="inserter_8cpp_source.html#l00195">cdocx::DocumentInserter::insert_document_at()</a>, <a class="el" href="inserter_8cpp_source.html#l00263">cdocx::DocumentInserter::insert_paragraphs()</a>, <a class="el" href="inserter_8cpp_source.html#l00324">cdocx::DocumentInserter::insert_tables()</a> , 以及 <a class="el" href="properties_8cpp_source.html#l00611">cdocx::TabStopCollection::remove()</a>.</p>
+
+</div>
+</div>
+<a id="abe40ff4ff713ee34de1b17c27bbcc3f2" name="abe40ff4ff713ee34de1b17c27bbcc3f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe40ff4ff713ee34de1b17c27bbcc3f2">&#9670;&#160;</a></span>script</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ScriptType script</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="base__content_8cpp_source.html">base_content.cpp</a> 第 <a class="el" href="base__content_8cpp_source.html#l00173">173</a> 行定义.</p>
+
+</div>
+</div>
+<a id="abbeb8ae63622a7fef0b5a56bb91a1682" name="abbeb8ae63622a7fef0b5a56bb91a1682"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbeb8ae63622a7fef0b5a56bb91a1682">&#9670;&#160;</a></span>sign</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int sign</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="base__content_8cpp_source.html">base_content.cpp</a> 第 <a class="el" href="base__content_8cpp_source.html#l00187">187</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a2d19748ee2cda9e3eb553e4c1ba93e0f" name="a2d19748ee2cda9e3eb553e4c1ba93e0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d19748ee2cda9e3eb553e4c1ba93e0f">&#9670;&#160;</a></span>style</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TextProperties::UnderlineStyle style {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="base__content_8cpp_source.html">base_content.cpp</a> 第 <a class="el" href="base__content_8cpp_source.html#l00055">55</a> 行定义.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="style_8cpp_source.html#l00074">cdocx::StyleCollection::add()</a>, <a class="el" href="style_8cpp_source.html#l00066">cdocx::StyleCollection::add()</a>, <a class="el" href="document_8cpp_source.html#l01007">cdocx::Document::add_numbered_list_definition()</a>, <a class="el" href="numbering_8cpp_source.html#l00202">cdocx::NumberingManager::add_numbered_list_definition()</a>, <a class="el" href="numbering_8cpp_source.html#l00044">cdocx::LevelDefinition::make_numbered_level()</a>, <a class="el" href="numbering_8cpp_source.html#l00097">cdocx::AbstractNumberingDefinition::make_numbered_list()</a>, <a class="el" href="numbering_8cpp_source.html#l00441">cdocx::number_style_to_string()</a>, <a class="el" href="sync__style_8cpp_source.html#l00241">cdocx::parse_style_from_xml()</a>, <a class="el" href="style_8cpp_source.html#l00082">cdocx::StyleCollection::remove()</a>, <a class="el" href="sync__style_8cpp_source.html#l00114">cdocx::serialize_style_to_xml()</a>, <a class="el" href="base__content_8cpp_source.html#l00278">cdocx::Run::set_strike()</a>, <a class="el" href="base__content_8cpp_source.html#l00687">cdocx::Run::set_strike_xml()</a>, <a class="el" href="table_8cpp_source.html#l00609">cdocx::Table::set_style()</a>, <a class="el" href="base__content_8cpp_source.html#l00242">cdocx::Run::set_underline_style()</a>, <a class="el" href="base__content_8cpp_source.html#l00665">cdocx::Run::set_underline_style_xml()</a>, <a class="el" href="sync__style_8cpp_source.html#l00332">cdocx::Document::sync_styles_from_physical()</a> , 以及 <a class="el" href="sync__style_8cpp_source.html#l00299">cdocx::Document::sync_styles_to_physical()</a>.</p>
+
+</div>
+</div>
+<a id="a6bd37bc7b340338d4765e62079730289" name="a6bd37bc7b340338d4765e62079730289"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bd37bc7b340338d4765e62079730289">&#9670;&#160;</a></span>type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TextProperties::SpacingType type {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="base__content_8cpp_source.html">base_content.cpp</a> 第 <a class="el" href="base__content_8cpp_source.html#l00099">99</a> 行定义.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="style_8cpp_source.html#l00066">cdocx::StyleCollection::add()</a>, <a class="el" href="section_8cpp_source.html#l00487">cdocx::Section::add_footer()</a>, <a class="el" href="section_8cpp_source.html#l00479">cdocx::Section::add_header()</a>, <a class="el" href="section_8cpp_source.html#l00195">cdocx::add_header_footer_impl()</a>, <a class="el" href="document__relationships_8cpp_source.html#l00098">cdocx::Document::add_relationship()</a>, <a class="el" href="tree_8cpp_source.html#l00253">cdocx::DocxTree::add_zip_entry()</a>, <a class="el" href="paragraph_8cpp_source.html#l00177">cdocx::Paragraph::append_field()</a>, <a class="el" href="sync__common_8cpp_source.html#l00973">cdocx::append_form_field_sequence()</a>, <a class="el" href="sync__common_8cpp_source.html#l00187">cdocx::border_type_to_string()</a>, <a class="el" href="section_8h_source.html#l00120">cdocx::Section::ensure_footer()</a>, <a class="el" href="section_8h_source.html#l00113">cdocx::Section::ensure_header()</a>, <a class="el" href="tree_8cpp_source.html#l00201">cdocx::DocxTree::find_or_create_node()</a>, <a class="el" href="section_8cpp_source.html#l00594">cdocx::find_ref()</a>, <a class="el" href="node_8cpp_source.html#l00275">cdocx::CompositeNode::get_child_nodes()</a>, <a class="el" href="section_8cpp_source.html#l00499">cdocx::Section::get_footer()</a>, <a class="el" href="section_8cpp_source.html#l00495">cdocx::Section::get_header()</a>, <a class="el" href="section_8cpp_source.html#l00066">cdocx::get_header_footer()</a>, <a class="el" href="section_8cpp_source.html#l00507">cdocx::Section::has_footer()</a>, <a class="el" href="section_8cpp_source.html#l00503">cdocx::Section::has_header()</a>, <a class="el" href="section_8cpp_source.html#l00058">cdocx::has_header_footer()</a>, <a class="el" href="sync__common_8cpp_source.html#l00132">cdocx::header_footer_type_to_string()</a>, <a class="el" href="paragraph_8cpp_source.html#l00183">cdocx::Paragraph::insert_field()</a>, <a class="el" href="document__builder_8cpp_source.html#l00647">cdocx::DocumentBuilder::insert_footnote()</a>, <a class="el" href="document__builder_8cpp_source.html#l00652">cdocx::DocumentBuilder::insert_footnote()</a>, <a class="el" href="document__builder_8cpp_source.html#l01108">cdocx::DocumentBuilder::insert_text_input()</a>, <a class="el" href="section_8cpp_source.html#l00665">cdocx::Section::is_linked_to_previous()</a>, <a class="el" href="section_8cpp_source.html#l00640">cdocx::Section::is_linked_to_previous()</a>, <a class="el" href="section_8cpp_source.html#l00105">cdocx::link_hf_to_previous()</a>, <a class="el" href="section_8cpp_source.html#l00610">cdocx::Section::link_to_previous()</a>, <a class="el" href="document__builder_8cpp_source.html#l00517">cdocx::DocumentBuilder::move_to_header_footer()</a>, <a class="el" href="node_8cpp_source.html#l00289">cdocx::NodeCollection::of_type()</a>, <a class="el" href="sync__deserialize_8cpp_source.html#l00496">cdocx::Document::parse_paragraph_from_xml()</a>, <a class="el" href="document_8cpp_source.html#l00671">cdocx::Document::protect()</a>, <a class="el" href="section_8cpp_source.html#l00515">cdocx::Section::remove_footer()</a>, <a class="el" href="section_8cpp_source.html#l00511">cdocx::Section::remove_header()</a>, <a class="el" href="section_8cpp_source.html#l00087">cdocx::remove_header_footer()</a>, <a class="el" href="section_8cpp_source.html#l00044">cdocx::remove_ref_from_node()</a>, <a class="el" href="sync__common_8cpp_source.html#l00404">cdocx::script_type_to_string()</a>, <a class="el" href="footnote_8h_source.html#l00032">cdocx::Footnote::set_footnote_type()</a>, <a class="el" href="formfield_8h_source.html#l00034">cdocx::FormField::set_form_field_type()</a>, <a class="el" href="section_8h_source.html#l00197">cdocx::HeaderFooter::set_header_footer_type()</a>, <a class="el" href="base__content_8cpp_source.html#l00261">cdocx::Run::set_position()</a>, <a class="el" href="base__content_8cpp_source.html#l00737">cdocx::Run::set_position_xml()</a>, <a class="el" href="base__content_8cpp_source.html#l00250">cdocx::Run::set_spacing()</a>, <a class="el" href="base__content_8cpp_source.html#l00719">cdocx::Run::set_spacing_xml()</a>, <a class="el" href="formfield_8h_source.html#l00059">cdocx::FormField::set_text_input_type()</a>, <a class="el" href="base_8h_source.html#l00320">cdocx::Field::set_type()</a>, <a class="el" href="style_8h_source.html#l00046">cdocx::Style::set_type()</a>, <a class="el" href="format_8h_source.html#l00330">cdocx::Font::set_underline()</a>, <a class="el" href="sync__style_8cpp_source.html#l00029">cdocx::style_type_to_string()</a>, <a class="el" href="sync__footnote_8cpp_source.html#l00104">cdocx::sync_notes_from_physical_impl()</a>, <a class="el" href="sync__common_8cpp_source.html#l00757">cdocx::text_form_field_type_to_string()</a> , 以及 <a class="el" href="sync__common_8cpp_source.html#l00227">cdocx::underline_type_to_string()</a>.</p>
+
+</div>
+</div>
+<a id="a320ccd617e8eb7b0d3606b1483901a13" name="a320ccd617e8eb7b0d3606b1483901a13"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a320ccd617e8eb7b0d3606b1483901a13">&#9670;&#160;</a></span>xml_value</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* xml_value {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="base__content_8cpp_source.html">base_content.cpp</a> 第 <a class="el" href="base__content_8cpp_source.html#l00056">56</a> 行定义.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="document_8cpp_source.html#l00671">cdocx::Document::protect()</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="base__content_8cpp.html">base_content.cpp</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

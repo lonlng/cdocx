@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: mail_merge.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('mail__merge_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">mail_merge.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="mail__merge_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;<a class="code" href="base_8h.html">cdocx/base.h</a>&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;<a class="code" href="document_8h.html">cdocx/document.h</a>&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;<a class="code" href="section_8h.html">cdocx/section.h</a>&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">// Cleanup Options</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="foldopen" id="foldopen00027" data-start="{" data-end="};">
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">   27</a></span><span class="keyword">enum class</span> <a class="code hl_enumeration" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">MailMergeCleanupOptions</a> : std::uint8_t {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <a class="code hl_enumvalue" href="namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264ca6adf97f83acf6453d4a6a4b1070f3754">None</a> = 0,</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <a class="code hl_enumvalue" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2a39bfd25b2387829338e7aff9f46af280">RemoveEmptyParagraphs</a> = 1,</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <a class="code hl_enumvalue" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2a2a799c5162f49d56a9f514e20341cc11">RemoveUnusedFields</a> = 2,</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <a class="code hl_enumvalue" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2a2f6cd525e3d8382d6c117042973ff730">RemoveEmptyRegions</a> = 4</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>};</div>
+</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="foldopen" id="foldopen00034" data-start="{" data-end="}">
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="namespacecdocx.html#ac310d50ef37f4c0b9986ac8591c2dd89">   34</a></span><span class="keyword">inline</span> <a class="code hl_enumeration" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">MailMergeCleanupOptions</a> <a class="code hl_function" href="namespacecdocx.html#ac310d50ef37f4c0b9986ac8591c2dd89">operator|</a>(<a class="code hl_enumeration" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">MailMergeCleanupOptions</a> lhs, <a class="code hl_enumeration" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">MailMergeCleanupOptions</a> rhs) {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">MailMergeCleanupOptions</a><span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(lhs) |</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                                                <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(rhs));</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}</div>
+</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="foldopen" id="foldopen00039" data-start="{" data-end="}">
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="namespacecdocx.html#a5a38bcfa37c75fa16a7edd12e8e9ab39">   39</a></span><span class="keyword">inline</span> <a class="code hl_enumeration" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">MailMergeCleanupOptions</a> <a class="code hl_function" href="namespacecdocx.html#a5a38bcfa37c75fa16a7edd12e8e9ab39">operator&amp;</a>(<a class="code hl_enumeration" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">MailMergeCleanupOptions</a> lhs, <a class="code hl_enumeration" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">MailMergeCleanupOptions</a> rhs) {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">MailMergeCleanupOptions</a><span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(lhs) &amp;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                                                <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(rhs));</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}</div>
+</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment">// MailMerge</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="foldopen" id="foldopen00048" data-start="{" data-end="};">
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classcdocx_1_1MailMerge.html">   48</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1MailMerge.html">MailMerge</a> {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classcdocx_1_1MailMerge.html">MailMerge</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1MailMerge.html#a849ce1c692c611be0abb46e374b2082e">execute</a>(<span class="keyword">const</span> std::map&lt;std::string, std::string&gt;&amp; data);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1MailMerge.html#a849ce1c692c611be0abb46e374b2082e">execute</a>(<span class="keyword">const</span> std::vector&lt;std::pair&lt;std::string, std::string&gt;&gt;&amp; data);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    std::vector&lt;std::string&gt; <a class="code hl_function" href="classcdocx_1_1MailMerge.html#ac380a666c46954b9b93a9a9bc23b1fbf">get_field_names</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1MailMerge.html#a1cc37731a2fb46d5c3d0213b85d5073c">delete_fields</a>();</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="comment">// Cleanup options</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="classcdocx_1_1MailMerge.html#a776ff692edd9ea7cf3bc9173270d6fab">   76</a></span>    <a class="code hl_enumeration" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">MailMergeCleanupOptions</a> <a class="code hl_function" href="classcdocx_1_1MailMerge.html#a776ff692edd9ea7cf3bc9173270d6fab">get_cleanup_options</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cleanup_options_; }</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classcdocx_1_1MailMerge.html#a9033644d5586d4bcba9d5a7159241dc6">   77</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1MailMerge.html#a9033644d5586d4bcba9d5a7159241dc6">set_cleanup_options</a>(<a class="code hl_enumeration" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">MailMergeCleanupOptions</a> options) { cleanup_options_ = options; }</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <a class="code hl_enumeration" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">MailMergeCleanupOptions</a> cleanup_options_ = <a class="code hl_enumvalue" href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2a2a799c5162f49d56a9f514e20341cc11">MailMergeCleanupOptions::RemoveUnusedFields</a>;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keywordtype">void</span> execute_impl(<span class="keyword">const</span> std::map&lt;std::string, std::string&gt;&amp; data);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    std::vector&lt;std::string&gt; collect_field_names() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordtype">void</span> apply_cleanup();</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>};</div>
+</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="abase_8h_html"><div class="ttname"><a href="base_8h.html">base.h</a></div><div class="ttdoc">Base content classes for CDocx document model - DOM Style</div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html"><div class="ttname"><a href="classcdocx_1_1Document.html">cdocx::Document</a></div><div class="ttdef"><b>Definition</b> <a href="document_8h_source.html#l00285">document.h:285</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1MailMerge_html"><div class="ttname"><a href="classcdocx_1_1MailMerge.html">cdocx::MailMerge</a></div><div class="ttdef"><b>Definition</b> <a href="mail__merge_8h_source.html#l00048">mail_merge.h:48</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1MailMerge_html_a1cc37731a2fb46d5c3d0213b85d5073c"><div class="ttname"><a href="classcdocx_1_1MailMerge.html#a1cc37731a2fb46d5c3d0213b85d5073c">cdocx::MailMerge::delete_fields</a></div><div class="ttdeci">void delete_fields()</div><div class="ttdoc">Remove all MERGEFIELD and NEXT fields from the document.</div><div class="ttdef"><b>Definition</b> <a href="mail__merge_8cpp_source.html#l00221">mail_merge.cpp:221</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1MailMerge_html_a776ff692edd9ea7cf3bc9173270d6fab"><div class="ttname"><a href="classcdocx_1_1MailMerge.html#a776ff692edd9ea7cf3bc9173270d6fab">cdocx::MailMerge::get_cleanup_options</a></div><div class="ttdeci">MailMergeCleanupOptions get_cleanup_options() const</div><div class="ttdef"><b>Definition</b> <a href="mail__merge_8h_source.html#l00076">mail_merge.h:76</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1MailMerge_html_a849ce1c692c611be0abb46e374b2082e"><div class="ttname"><a href="classcdocx_1_1MailMerge.html#a849ce1c692c611be0abb46e374b2082e">cdocx::MailMerge::execute</a></div><div class="ttdeci">void execute(const std::map&lt; std::string, std::string &gt; &amp;data)</div><div class="ttdoc">Perform simple mail merge with a map of field names to values.</div><div class="ttdef"><b>Definition</b> <a href="mail__merge_8cpp_source.html#l00093">mail_merge.cpp:93</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1MailMerge_html_a9033644d5586d4bcba9d5a7159241dc6"><div class="ttname"><a href="classcdocx_1_1MailMerge.html#a9033644d5586d4bcba9d5a7159241dc6">cdocx::MailMerge::set_cleanup_options</a></div><div class="ttdeci">void set_cleanup_options(MailMergeCleanupOptions options)</div><div class="ttdef"><b>Definition</b> <a href="mail__merge_8h_source.html#l00077">mail_merge.h:77</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1MailMerge_html_ac380a666c46954b9b93a9a9bc23b1fbf"><div class="ttname"><a href="classcdocx_1_1MailMerge.html#ac380a666c46954b9b93a9a9bc23b1fbf">cdocx::MailMerge::get_field_names</a></div><div class="ttdeci">std::vector&lt; std::string &gt; get_field_names() const</div><div class="ttdoc">Get all MERGEFIELD names available in the document.</div><div class="ttdef"><b>Definition</b> <a href="mail__merge_8cpp_source.html#l00171">mail_merge.cpp:171</a></div></div>
+<div class="ttc" id="adocument_8h_html"><div class="ttname"><a href="document_8h.html">document.h</a></div><div class="ttdoc">Document class for working with DOCX files - DOM Style</div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a38b81fec23e1c99bc5c1cc31fc51264ca6adf97f83acf6453d4a6a4b1070f3754"><div class="ttname"><a href="namespacecdocx.html#a38b81fec23e1c99bc5c1cc31fc51264ca6adf97f83acf6453d4a6a4b1070f3754">cdocx::LoadErrorType::None</a></div><div class="ttdeci">@ None</div></div>
+<div class="ttc" id="anamespacecdocx_html_a5a38bcfa37c75fa16a7edd12e8e9ab39"><div class="ttname"><a href="namespacecdocx.html#a5a38bcfa37c75fa16a7edd12e8e9ab39">cdocx::operator&amp;</a></div><div class="ttdeci">MailMergeCleanupOptions operator&amp;(MailMergeCleanupOptions lhs, MailMergeCleanupOptions rhs)</div><div class="ttdef"><b>Definition</b> <a href="mail__merge_8h_source.html#l00039">mail_merge.h:39</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_ac310d50ef37f4c0b9986ac8591c2dd89"><div class="ttname"><a href="namespacecdocx.html#ac310d50ef37f4c0b9986ac8591c2dd89">cdocx::operator|</a></div><div class="ttdeci">MailMergeCleanupOptions operator|(MailMergeCleanupOptions lhs, MailMergeCleanupOptions rhs)</div><div class="ttdef"><b>Definition</b> <a href="mail__merge_8h_source.html#l00034">mail_merge.h:34</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_afeb9eab85e3a2e2b69b3d08f1775a1a2"><div class="ttname"><a href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2">cdocx::MailMergeCleanupOptions</a></div><div class="ttdeci">MailMergeCleanupOptions</div><div class="ttdef"><b>Definition</b> <a href="mail__merge_8h_source.html#l00027">mail_merge.h:27</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_afeb9eab85e3a2e2b69b3d08f1775a1a2a2a799c5162f49d56a9f514e20341cc11"><div class="ttname"><a href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2a2a799c5162f49d56a9f514e20341cc11">cdocx::MailMergeCleanupOptions::RemoveUnusedFields</a></div><div class="ttdeci">@ RemoveUnusedFields</div></div>
+<div class="ttc" id="anamespacecdocx_html_afeb9eab85e3a2e2b69b3d08f1775a1a2a2f6cd525e3d8382d6c117042973ff730"><div class="ttname"><a href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2a2f6cd525e3d8382d6c117042973ff730">cdocx::MailMergeCleanupOptions::RemoveEmptyRegions</a></div><div class="ttdeci">@ RemoveEmptyRegions</div></div>
+<div class="ttc" id="anamespacecdocx_html_afeb9eab85e3a2e2b69b3d08f1775a1a2a39bfd25b2387829338e7aff9f46af280"><div class="ttname"><a href="namespacecdocx.html#afeb9eab85e3a2e2b69b3d08f1775a1a2a39bfd25b2387829338e7aff9f46af280">cdocx::MailMergeCleanupOptions::RemoveEmptyParagraphs</a></div><div class="ttdeci">@ RemoveEmptyParagraphs</div></div>
+<div class="ttc" id="asection_8h_html"><div class="ttname"><a href="section_8h.html">section.h</a></div><div class="ttdoc">Section support for CDocx - DOM Style</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_45cf22061f640deb443c5da4ff0b00bd.html">cdocx</a></li><li class="navelem"><a class="el" href="mail__merge_8h.html">mail_merge.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

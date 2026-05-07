@@ -1,0 +1,26 @@
+var structcdocx_1_1BookmarkFormat =
+[
+    [ "clear", "structcdocx_1_1BookmarkFormat.html#a5d2b2c0b5993a9f45a2ce34c8cebda70", null ],
+    [ "is_valid", "structcdocx_1_1BookmarkFormat.html#a5131f42478b81620eb4d54c0425fafca", null ],
+    [ "alignment", "structcdocx_1_1BookmarkFormat.html#a3596d2011fa0685fc21998c0172396ca", null ],
+    [ "bold", "structcdocx_1_1BookmarkFormat.html#aa2a446c6b0dff7d649e2138d7b9e7e39", null ],
+    [ "color", "structcdocx_1_1BookmarkFormat.html#a2040464d50677db82b532e16b9048546", null ],
+    [ "first_line_indent", "structcdocx_1_1BookmarkFormat.html#ab52f620810de392f5ac8916d2a94803b", null ],
+    [ "font_ascii", "structcdocx_1_1BookmarkFormat.html#a0c3ae71307b2c1bc4a7b7f5400f18a62", null ],
+    [ "font_far_east", "structcdocx_1_1BookmarkFormat.html#a77401666dc9a626c4acada90737fd666", null ],
+    [ "font_hansi", "structcdocx_1_1BookmarkFormat.html#a5270234283a9db98228a45e74f7680b7", null ],
+    [ "font_hint", "structcdocx_1_1BookmarkFormat.html#ac79397888c21353fd96b598e41c0c0d0", null ],
+    [ "font_size", "structcdocx_1_1BookmarkFormat.html#a344358b046c50c2272486a666639562d", null ],
+    [ "italic", "structcdocx_1_1BookmarkFormat.html#aca9d9798cbc00ca289cdadd3d98a6d85", null ],
+    [ "keep_lines", "structcdocx_1_1BookmarkFormat.html#a1e8beade97a9dc0d027c7b977fe72cfd", null ],
+    [ "keep_next", "structcdocx_1_1BookmarkFormat.html#af3eae994f82b815ae0a543965769620f", null ],
+    [ "left_indent", "structcdocx_1_1BookmarkFormat.html#a9199a0b1c662bf249a6414861356ceb0", null ],
+    [ "line_rule", "structcdocx_1_1BookmarkFormat.html#ac525aff878d16f9672d6095e8ae8aab3", null ],
+    [ "line_spacing", "structcdocx_1_1BookmarkFormat.html#a0ef86d0636f58b38c46f4c33c9f5ac49", null ],
+    [ "page_break_before", "structcdocx_1_1BookmarkFormat.html#a16cfe01671c4bf855af9750cbc9ac7a2", null ],
+    [ "right_indent", "structcdocx_1_1BookmarkFormat.html#a0c754c57319edf0c70b8adac02865425", null ],
+    [ "space_after", "structcdocx_1_1BookmarkFormat.html#a259d1c779db7f0ba7cc09503792f0792", null ],
+    [ "space_before", "structcdocx_1_1BookmarkFormat.html#ae7f1c195bf5c54b919823479cfcbe00b", null ],
+    [ "strikethrough", "structcdocx_1_1BookmarkFormat.html#a6a5bf05615fb08f0564d2dd38c7971ca", null ],
+    [ "underline", "structcdocx_1_1BookmarkFormat.html#a6c31ce520abc7315f76df526b0e38f9a", null ]
+];

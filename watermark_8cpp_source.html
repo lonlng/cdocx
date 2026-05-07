@@ -1,0 +1,558 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: watermark.cpp 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('watermark_8cpp_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">watermark.cpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="watermark_8cpp.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;<a class="code" href="document_8h.html">cdocx/document.h</a>&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;<a class="code" href="paragraph_8h.html">cdocx/paragraph.h</a>&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="section_8h.html">cdocx/section.h</a>&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="table_8h.html">cdocx/table.h</a>&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="watermark_8h.html">cdocx/watermark.h</a>&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;cstring&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;fstream&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">// Helper Functions</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="foldopen" id="foldopen00022" data-start="{" data-end="}">
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="namespacecdocx.html#a0358b0e872b61adfbaa8c0bd780833d0">   22</a></span><span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="namespacecdocx.html#a0358b0e872b61adfbaa8c0bd780833d0">is_word_watermark_shape</a>(<span class="keyword">const</span> pugi::xml_node shape) {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">const</span> pugi::xml_attribute id_attr = shape.attribute(<span class="stringliteral">&quot;id&quot;</span>);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keywordflow">return</span> id_attr &amp;&amp; std::strcmp(id_attr.value(), <span class="stringliteral">&quot;PowerPlusWaterMarkObject&quot;</span>) == 0;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>}</div>
+</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="foldopen" id="foldopen00028" data-start="{" data-end="};">
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="structcdocx_1_1XmlEscapeMapping.html">   28</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structcdocx_1_1XmlEscapeMapping.html">XmlEscapeMapping</a> {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="structcdocx_1_1XmlEscapeMapping.html#a1deeb3882373071aa92bf44975eff585">   29</a></span>    <span class="keywordtype">char</span> <a class="code hl_variable" href="structcdocx_1_1XmlEscapeMapping.html#a1deeb3882373071aa92bf44975eff585">c</a>;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="structcdocx_1_1XmlEscapeMapping.html#a43ce3bbbdec85b7c23737fb529fd0a50">   30</a></span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="structcdocx_1_1XmlEscapeMapping.html#a43ce3bbbdec85b7c23737fb529fd0a50">replacement</a>;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>};</div>
+</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="foldopen" id="foldopen00033" data-start="{" data-end="};">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="namespacecdocx.html#ab0e9acbc6f2d6f7d2931bb5e282c88f3">   33</a></span><span class="keyword">static</span> <span class="keyword">const</span> <a class="code hl_struct" href="structcdocx_1_1XmlEscapeMapping.html">XmlEscapeMapping</a> <a class="code hl_variable" href="namespacecdocx.html#ab0e9acbc6f2d6f7d2931bb5e282c88f3">kXmlEscapeMappings</a>[] = {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    {<span class="charliteral">&#39;&amp;&#39;</span>, <span class="stringliteral">&quot;&amp;amp;&quot;</span>},</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    {<span class="charliteral">&#39;&lt;&#39;</span>, <span class="stringliteral">&quot;&amp;lt;&quot;</span>},</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    {<span class="charliteral">&#39;&gt;&#39;</span>, <span class="stringliteral">&quot;&amp;gt;&quot;</span>},</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    {<span class="charliteral">&#39;&quot;&#39;</span>, <span class="stringliteral">&quot;&amp;quot;&quot;</span>},</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    {<span class="charliteral">&#39;\&#39;&#39;</span>, <span class="stringliteral">&quot;&amp;apos;&quot;</span>},</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>};</div>
+</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="foldopen" id="foldopen00041" data-start="{" data-end="}">
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="namespacecdocx.html#afb47719a1ab12b5e3a9a0c4b3d4c68b1">   41</a></span><span class="keyword">static</span> std::string <a class="code hl_function" href="namespacecdocx.html#afb47719a1ab12b5e3a9a0c4b3d4c68b1">escape_xml</a>(<span class="keyword">const</span> std::string&amp; text) {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    std::string <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a>.reserve(text.size());</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keywordtype">char</span> c : text) {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keywordtype">bool</span> found = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; mapping : <a class="code hl_variable" href="namespacecdocx.html#ab0e9acbc6f2d6f7d2931bb5e282c88f3">kXmlEscapeMappings</a>) {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            <span class="keywordflow">if</span> (mapping.c == c) {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a> += mapping.<a class="code hl_variable" href="structcdocx_1_1XmlEscapeMapping.html#a43ce3bbbdec85b7c23737fb529fd0a50">replacement</a>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                found = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordflow">if</span> (!found) {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a> += c;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        }</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    }</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a>;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}</div>
+</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="namespacecdocx.html#a937d7e4d6839205c847744a7a8ab9fbe">   60</a></span><span class="keyword">static</span> pugi::xml_node <a class="code hl_function" href="namespacecdocx.html#a937d7e4d6839205c847744a7a8ab9fbe">get_first_header_xml</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc) {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">auto</span> names = doc-&gt;<a class="code hl_function" href="classcdocx_1_1Document.html#a0922e2e7fc2f0519542eaeb7be6050d6">get_header_names</a>();</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordflow">if</span> (names.empty()) {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keywordflow">return</span> pugi::xml_node{};</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    }</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    pugi::xml_document* header_doc = doc-&gt;<a class="code hl_function" href="classcdocx_1_1Document.html#a13d87d9e87bd9a5f9ee5bd5925a58b38">get_header</a>(0);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">if</span> (!header_doc) {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordflow">return</span> pugi::xml_node{};</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    }</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordflow">return</span> header_doc-&gt;child(<span class="stringliteral">&quot;w:hdr&quot;</span>);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>}</div>
+</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="foldopen" id="foldopen00072" data-start="{" data-end="}">
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="namespacecdocx.html#a9390290eb82964986b43ffaac0888fff">   72</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespacecdocx.html#a9390290eb82964986b43ffaac0888fff">remove_watermark_nodes</a>(pugi::xml_node header) {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordflow">if</span> (!header) {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    }</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordflow">for</span> (pugi::xml_node para = header.child(<span class="stringliteral">&quot;w:p&quot;</span>); para;) {</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keywordtype">bool</span> is_watermark = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keywordflow">for</span> (pugi::xml_node run = para.child(<span class="stringliteral">&quot;w:r&quot;</span>); run; run = run.next_sibling(<span class="stringliteral">&quot;w:r&quot;</span>)) {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            <span class="keywordflow">for</span> (pugi::xml_node pict = run.child(<span class="stringliteral">&quot;w:pict&quot;</span>); pict;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                 pict = pict.next_sibling(<span class="stringliteral">&quot;w:pict&quot;</span>)) {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                <span class="keyword">const</span> pugi::xml_node shape = pict.child(<span class="stringliteral">&quot;v:shape&quot;</span>);</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                <span class="keywordflow">if</span> (shape) {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespacecdocx.html#a0358b0e872b61adfbaa8c0bd780833d0">is_word_watermark_shape</a>(shape)) {</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                        is_watermark = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                    }</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                }</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>            }</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            <span class="keywordflow">if</span> (is_watermark) {</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            <span class="keywordflow">for</span> (pugi::xml_node drawing = run.child(<span class="stringliteral">&quot;w:drawing&quot;</span>); drawing;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                 drawing = drawing.next_sibling(<span class="stringliteral">&quot;w:drawing&quot;</span>)) {</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                <span class="keyword">const</span> pugi::xml_node doc_pr =</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                    drawing.child(<span class="stringliteral">&quot;wp:anchor&quot;</span>).child(<span class="stringliteral">&quot;a:graphic&quot;</span>).child(<span class="stringliteral">&quot;a:graphicData&quot;</span>);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                <span class="keywordflow">if</span> (doc_pr) {</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                    <span class="keyword">const</span> pugi::xml_attribute name_attr = doc_pr.attribute(<span class="stringliteral">&quot;uri&quot;</span>);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                    <span class="keywordflow">if</span> (name_attr &amp;&amp; std::strstr(name_attr.value(), <span class="stringliteral">&quot;watermark&quot;</span>) != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                        is_watermark = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                    }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                }</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            }</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>            <span class="keywordflow">if</span> (is_watermark) {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            }</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        }</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keyword">const</span> pugi::xml_node next_para = para.next_sibling(<span class="stringliteral">&quot;w:p&quot;</span>);</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="keywordflow">if</span> (is_watermark) {</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>            header.remove_child(para);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        }</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        para = next_para;</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    }</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>}</div>
+</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="comment">// Watermark Implementation</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+<div class="foldopen" id="foldopen00120" data-start="{" data-end="}">
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="classcdocx_1_1Watermark.html#a99ebda6bbb345ed74a4bac7cdc55fb13">  120</a></span><a class="code hl_function" href="classcdocx_1_1Watermark.html#a99ebda6bbb345ed74a4bac7cdc55fb13">Watermark::Watermark</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc) : document_(doc) {</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>}</div>
+</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="foldopen" id="foldopen00123" data-start="{" data-end="}">
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="classcdocx_1_1Watermark.html#a1d3ad31a0269e81a340c36b1c99b5570">  123</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Watermark.html#a1d3ad31a0269e81a340c36b1c99b5570">Watermark::set_text</a>(<span class="keyword">const</span> std::string&amp; text) {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structcdocx_1_1TextWatermarkOptions.html">TextWatermarkOptions</a> options;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <a class="code hl_function" href="classcdocx_1_1Watermark.html#a1d3ad31a0269e81a340c36b1c99b5570">set_text</a>(text, options);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>}</div>
+</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="foldopen" id="foldopen00128" data-start="{" data-end="}">
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno"><a class="line" href="classcdocx_1_1Watermark.html#ae085da2cbd354d668fcb0d4bb053b2ea">  128</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Watermark.html#a1d3ad31a0269e81a340c36b1c99b5570">Watermark::set_text</a>(<span class="keyword">const</span> std::string&amp; text, <span class="keyword">const</span> <a class="code hl_struct" href="structcdocx_1_1TextWatermarkOptions.html">TextWatermarkOptions</a>&amp; options) {</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keywordflow">if</span> (!document_) {</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    }</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <a class="code hl_function" href="classcdocx_1_1Watermark.html#a736f795b03dac71697eddcaf0c2107a7">remove</a>();</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    ensure_header_for_watermark();</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    insert_text_watermark_into_header(text, options);</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>}</div>
+</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+<div class="foldopen" id="foldopen00137" data-start="{" data-end="}">
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno"><a class="line" href="classcdocx_1_1Watermark.html#a9b40c27b9718cebfe211129c4e0a3b9e">  137</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Watermark.html#a9b40c27b9718cebfe211129c4e0a3b9e">Watermark::set_image</a>(<span class="keyword">const</span> std::string&amp; image_path) {</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structcdocx_1_1ImageWatermarkOptions.html">ImageWatermarkOptions</a> options;</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <a class="code hl_function" href="classcdocx_1_1Watermark.html#a9b40c27b9718cebfe211129c4e0a3b9e">set_image</a>(image_path, options);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>}</div>
+</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
+<div class="foldopen" id="foldopen00142" data-start="{" data-end="}">
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno"><a class="line" href="classcdocx_1_1Watermark.html#ac167980de55b0b7a4bd9c67f4ee96eb5">  142</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Watermark.html#a9b40c27b9718cebfe211129c4e0a3b9e">Watermark::set_image</a>(<span class="keyword">const</span> std::string&amp; image_path, <span class="keyword">const</span> <a class="code hl_struct" href="structcdocx_1_1ImageWatermarkOptions.html">ImageWatermarkOptions</a>&amp; options) {</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <span class="keywordflow">if</span> (!document_) {</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    }</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <a class="code hl_function" href="classcdocx_1_1Watermark.html#a736f795b03dac71697eddcaf0c2107a7">remove</a>();</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    ensure_header_for_watermark();</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    insert_image_watermark_into_header(image_path, options);</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>}</div>
+</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
+<div class="foldopen" id="foldopen00151" data-start="{" data-end="}">
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="classcdocx_1_1Watermark.html#a736f795b03dac71697eddcaf0c2107a7">  151</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Watermark.html#a736f795b03dac71697eddcaf0c2107a7">Watermark::remove</a>() {</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="keywordflow">if</span> (!document_) {</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    }</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keyword">const</span> pugi::xml_node header = <a class="code hl_function" href="namespacecdocx.html#a937d7e4d6839205c847744a7a8ab9fbe">get_first_header_xml</a>(document_);</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keywordflow">if</span> (header) {</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        <a class="code hl_function" href="namespacecdocx.html#a9390290eb82964986b43ffaac0888fff">remove_watermark_nodes</a>(header);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    }</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>}</div>
+</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
+<div class="foldopen" id="foldopen00161" data-start="{" data-end="}">
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno"><a class="line" href="classcdocx_1_1Watermark.html#ad45f32c0357a0852482ddf41de0b9d02">  161</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1Watermark.html#ad45f32c0357a0852482ddf41de0b9d02">Watermark::has_watermark</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keywordflow">if</span> (!document_) {</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    }</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="keyword">const</span> pugi::xml_node header = <a class="code hl_function" href="namespacecdocx.html#a937d7e4d6839205c847744a7a8ab9fbe">get_first_header_xml</a>(document_);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keywordflow">if</span> (!header) {</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    }</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keywordflow">for</span> (pugi::xml_node para = header.child(<span class="stringliteral">&quot;w:p&quot;</span>); para; para = para.next_sibling(<span class="stringliteral">&quot;w:p&quot;</span>)) {</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        <span class="keywordflow">for</span> (pugi::xml_node run = para.child(<span class="stringliteral">&quot;w:r&quot;</span>); run; run = run.next_sibling(<span class="stringliteral">&quot;w:r&quot;</span>)) {</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            <span class="keywordflow">for</span> (pugi::xml_node pict = run.child(<span class="stringliteral">&quot;w:pict&quot;</span>); pict;</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                 pict = pict.next_sibling(<span class="stringliteral">&quot;w:pict&quot;</span>)) {</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                <span class="keyword">const</span> pugi::xml_node shape = pict.child(<span class="stringliteral">&quot;v:shape&quot;</span>);</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                <span class="keywordflow">if</span> (shape) {</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespacecdocx.html#a0358b0e872b61adfbaa8c0bd780833d0">is_word_watermark_shape</a>(shape)) {</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                    }</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                }</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>            }</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        }</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    }</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>}</div>
+</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span> </div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="keywordtype">void</span> Watermark::ensure_header_for_watermark() {</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <span class="keyword">auto</span> sect = document_-&gt;<a class="code hl_function" href="classcdocx_1_1Document.html#a45dbff2fba6394f3d70be6b8d4b63e18">get_first_section</a>();</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="keywordflow">if</span> (!sect) {</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    }</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="keywordflow">if</span> (!sect-&gt;has_header(<a class="code hl_enumvalue" href="namespacecdocx.html#ac582d253e338602be7cba859382c5864a7a1920d61156abc05a60135aefe8bc67">HeaderFooterType::Default</a>)) {</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        sect-&gt;add_header(<a class="code hl_enumvalue" href="namespacecdocx.html#ac582d253e338602be7cba859382c5864a7a1920d61156abc05a60135aefe8bc67">HeaderFooterType::Default</a>);</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    }</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>}</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span><span class="keywordtype">void</span> Watermark::insert_text_watermark_into_header(<span class="keyword">const</span> std::string&amp; text,</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                                                  <span class="keyword">const</span> TextWatermarkOptions&amp; options) {</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    pugi::xml_node header = <a class="code hl_function" href="namespacecdocx.html#a937d7e4d6839205c847744a7a8ab9fbe">get_first_header_xml</a>(document_);</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keywordflow">if</span> (!header) {</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    }</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keyword">auto</span> para = header.append_child(<span class="stringliteral">&quot;w:p&quot;</span>);</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="keyword">auto</span> p_pr = para.append_child(<span class="stringliteral">&quot;w:pPr&quot;</span>);</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    p_pr.append_child(<span class="stringliteral">&quot;w:pStyle&quot;</span>).append_attribute(<span class="stringliteral">&quot;w:val&quot;</span>).set_value(<span class="stringliteral">&quot;Header&quot;</span>);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keyword">auto</span> run = para.append_child(<span class="stringliteral">&quot;w:r&quot;</span>);</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="keyword">auto</span> pict = run.append_child(<span class="stringliteral">&quot;w:pict&quot;</span>);</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="comment">// VML namespace</span></div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keyword">auto</span> shapetype = pict.append_child(<span class="stringliteral">&quot;v:shapetype&quot;</span>);</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    shapetype.append_attribute(<span class="stringliteral">&quot;id&quot;</span>).set_value(<span class="stringliteral">&quot;_x0000_t136&quot;</span>);</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    shapetype.append_attribute(<span class="stringliteral">&quot;coordsize&quot;</span>).set_value(<span class="stringliteral">&quot;21600,21600&quot;</span>);</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    shapetype.append_attribute(<span class="stringliteral">&quot;o:spt&quot;</span>).set_value(<span class="stringliteral">&quot;136&quot;</span>);</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    shapetype.append_attribute(<span class="stringliteral">&quot;adj&quot;</span>).set_value(<span class="stringliteral">&quot;10800&quot;</span>);</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    shapetype.append_attribute(<span class="stringliteral">&quot;path&quot;</span>).set_value(<span class="stringliteral">&quot;m@7,l@8,m@5,21600l@6,21600e&quot;</span>);</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <span class="keyword">auto</span> formulas = shapetype.append_child(<span class="stringliteral">&quot;v:formulas&quot;</span>);</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;sum #0 0 10800&quot;</span>);</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;prod #0 2 1&quot;</span>);</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;sum 21600 0 @1&quot;</span>);</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;sum 0 0 @2&quot;</span>);</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;sum 21600 0 @3&quot;</span>);</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;if @0 @3 0&quot;</span>);</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;if @0 21600 @1&quot;</span>);</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;if @0 0 @2&quot;</span>);</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;if @0 @4 21600&quot;</span>);</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;mid @5 @6&quot;</span>);</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;mid @8 @5&quot;</span>);</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;mid @6 @8&quot;</span>);</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;mid @7 @8&quot;</span>);</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    formulas.append_child(<span class="stringliteral">&quot;v:f&quot;</span>).append_attribute(<span class="stringliteral">&quot;eqn&quot;</span>).set_value(<span class="stringliteral">&quot;sum @6 0 @5&quot;</span>);</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keyword">auto</span> path = shapetype.append_child(<span class="stringliteral">&quot;v:path&quot;</span>);</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    path.append_attribute(<span class="stringliteral">&quot;textpathok&quot;</span>).set_value(<span class="stringliteral">&quot;t&quot;</span>);</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    path.append_attribute(<span class="stringliteral">&quot;o:connecttype&quot;</span>).set_value(<span class="stringliteral">&quot;custom&quot;</span>);</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    path.append_attribute(<span class="stringliteral">&quot;o:connectlocs&quot;</span>).set_value(<span class="stringliteral">&quot;@9,0;@10,10800;@11,21600;@12,10800&quot;</span>);</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    path.append_attribute(<span class="stringliteral">&quot;o:connectangles&quot;</span>).set_value(<span class="stringliteral">&quot;270,180,90,0&quot;</span>);</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    <span class="keyword">auto</span> textpath = shapetype.append_child(<span class="stringliteral">&quot;v:textpath&quot;</span>);</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    textpath.append_attribute(<span class="stringliteral">&quot;on&quot;</span>).set_value(<span class="stringliteral">&quot;t&quot;</span>);</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    textpath.append_attribute(<span class="stringliteral">&quot;fitshape&quot;</span>).set_value(<span class="stringliteral">&quot;t&quot;</span>);</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="keyword">auto</span> handles = shapetype.append_child(<span class="stringliteral">&quot;v:handles&quot;</span>);</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="keyword">auto</span> h = handles.append_child(<span class="stringliteral">&quot;v:h&quot;</span>);</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    h.append_attribute(<span class="stringliteral">&quot;position&quot;</span>).set_value(<span class="stringliteral">&quot;#0,bottomRight&quot;</span>);</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    h.append_attribute(<span class="stringliteral">&quot;xrange&quot;</span>).set_value(<span class="stringliteral">&quot;6629,14971&quot;</span>);</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    <span class="keyword">auto</span> lock = shapetype.append_child(<span class="stringliteral">&quot;o:lock&quot;</span>);</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    lock.append_attribute(<span class="stringliteral">&quot;v:ext&quot;</span>).set_value(<span class="stringliteral">&quot;edit&quot;</span>);</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    lock.append_attribute(<span class="stringliteral">&quot;text&quot;</span>).set_value(<span class="stringliteral">&quot;t&quot;</span>);</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    lock.append_attribute(<span class="stringliteral">&quot;shapetype&quot;</span>).set_value(<span class="stringliteral">&quot;t&quot;</span>);</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    <span class="comment">// Main watermark shape</span></div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    <span class="keyword">auto</span> shape = pict.append_child(<span class="stringliteral">&quot;v:shape&quot;</span>);</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    shape.append_attribute(<span class="stringliteral">&quot;id&quot;</span>).set_value(<span class="stringliteral">&quot;PowerPlusWaterMarkObject&quot;</span>);</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    shape.append_attribute(<span class="stringliteral">&quot;o:spid&quot;</span>).set_value(<span class="stringliteral">&quot;_x0000_s2049&quot;</span>);</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    shape.append_attribute(<span class="stringliteral">&quot;type&quot;</span>).set_value(<span class="stringliteral">&quot;#_x0000_t136&quot;</span>);</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> rotation = (options.layout == <a class="code hl_enumvalue" href="namespacecdocx.html#a33c031026362fe30c3127f711e005590a9ac677ee4eec25d9e59707a661d2c5e1">WatermarkLayout::Diagonal</a>) ? 315 : 0;</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    std::string <a class="code hl_variable" href="base__content_8cpp.html#a2d19748ee2cda9e3eb553e4c1ba93e0f">style</a> = <span class="stringliteral">&quot;position:absolute;margin-left:0;margin-top:0;width:468pt;height:117pt;&quot;</span>;</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <a class="code hl_variable" href="base__content_8cpp.html#a2d19748ee2cda9e3eb553e4c1ba93e0f">style</a> += <span class="stringliteral">&quot;rotation:&quot;</span> + std::to_string(rotation) + <span class="stringliteral">&quot;;&quot;</span>;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <a class="code hl_variable" href="base__content_8cpp.html#a2d19748ee2cda9e3eb553e4c1ba93e0f">style</a> += <span class="stringliteral">&quot;z-index:-251658752;&quot;</span>;</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    <a class="code hl_variable" href="base__content_8cpp.html#a2d19748ee2cda9e3eb553e4c1ba93e0f">style</a> += <span class="stringliteral">&quot;mso-position-horizontal:center;mso-position-horizontal-relative:margin;&quot;</span>;</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    <a class="code hl_variable" href="base__content_8cpp.html#a2d19748ee2cda9e3eb553e4c1ba93e0f">style</a> += <span class="stringliteral">&quot;mso-position-vertical:center;mso-position-vertical-relative:margin&quot;</span>;</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    shape.append_attribute(<span class="stringliteral">&quot;style&quot;</span>).set_value(<a class="code hl_variable" href="base__content_8cpp.html#a2d19748ee2cda9e3eb553e4c1ba93e0f">style</a>.c_str());</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    shape.append_attribute(<span class="stringliteral">&quot;o:allowincell&quot;</span>).set_value(<span class="stringliteral">&quot;f&quot;</span>);</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    shape.append_attribute(<span class="stringliteral">&quot;fillcolor&quot;</span>).set_value((<span class="stringliteral">&quot;#&quot;</span> + options.color).c_str());</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    shape.append_attribute(<span class="stringliteral">&quot;stroked&quot;</span>).set_value(<span class="stringliteral">&quot;f&quot;</span>);</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span> </div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    <span class="keyword">auto</span> fill = shape.append_child(<span class="stringliteral">&quot;v:fill&quot;</span>);</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    fill.append_attribute(<span class="stringliteral">&quot;opacity&quot;</span>).set_value(options.semi_transparent ? <span class="stringliteral">&quot;.5&quot;</span> : <span class="stringliteral">&quot;1&quot;</span>);</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span> </div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="keyword">const</span> <span class="keywordtype">float</span> font_size = options.font_size &gt; 0 ? options.font_size : 1.0f;</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keyword">const</span> std::string font_style =</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        <span class="stringliteral">&quot;font-family:\&quot;&quot;</span> + options.font_family + <span class="stringliteral">&quot;\&quot;;font-size:&quot;</span> + std::to_string(font_size) + <span class="stringliteral">&quot;pt&quot;</span>;</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span> </div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    <span class="keyword">auto</span> tp = shape.append_child(<span class="stringliteral">&quot;v:textpath&quot;</span>);</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    tp.append_attribute(<span class="stringliteral">&quot;style&quot;</span>).set_value(font_style.c_str());</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    tp.append_attribute(<span class="stringliteral">&quot;string&quot;</span>).set_value(<a class="code hl_function" href="namespacecdocx.html#afb47719a1ab12b5e3a9a0c4b3d4c68b1">escape_xml</a>(text).c_str());</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span> </div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    <span class="keyword">auto</span> wrap = shape.append_child(<span class="stringliteral">&quot;w10:wrap&quot;</span>);</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    wrap.append_attribute(<span class="stringliteral">&quot;anchorx&quot;</span>).set_value(<span class="stringliteral">&quot;margin&quot;</span>);</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    wrap.append_attribute(<span class="stringliteral">&quot;anchory&quot;</span>).set_value(<span class="stringliteral">&quot;margin&quot;</span>);</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>}</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span> </div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span><span class="keywordtype">void</span> Watermark::insert_image_watermark_into_header(<span class="keyword">const</span> std::string&amp; image_path,</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>                                                   <span class="keyword">const</span> ImageWatermarkOptions&amp; options) {</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    <span class="keywordflow">if</span> (!document_) {</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    }</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span> </div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    <span class="comment">// Read image file into memory</span></div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    std::ifstream file(image_path, std::ios::binary);</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    <span class="keywordflow">if</span> (!file) {</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    }</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    <span class="keyword">const</span> std::vector&lt;uint8_t&gt; data((std::istreambuf_iterator&lt;char&gt;(file)),</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>                                    std::istreambuf_iterator&lt;char&gt;());</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    file.close();</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    <span class="keywordflow">if</span> (data.empty()) {</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    }</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span> </div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    <span class="comment">// Determine media filename and ensure uniqueness</span></div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    std::string filename = std::filesystem::path(image_path).filename().string();</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    <span class="keywordflow">if</span> (document_-&gt;<a class="code hl_function" href="classcdocx_1_1Document.html#a8bcd5c161cd4159fb241e2926b4edf2e">has_media</a>(filename)) {</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        filename = document_-&gt;<a class="code hl_function" href="classcdocx_1_1Document.html#a042fa5a50dcde10986dcc2b871687559">generate_unique_image_name</a>(filename);</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    }</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span> </div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    <span class="comment">// Add media to document</span></div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    <span class="keywordflow">if</span> (!document_-&gt;<a class="code hl_function" href="classcdocx_1_1Document.html#ab853bf8c5b4791f8875d244cab58f6f3">add_media_from_memory</a>(filename, data)) {</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    }</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span> </div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    <span class="comment">// Find the first header and its rels path</span></div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    <span class="keyword">auto</span> header_names = document_-&gt;<a class="code hl_function" href="classcdocx_1_1Document.html#a0922e2e7fc2f0519542eaeb7be6050d6">get_header_names</a>();</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    <span class="keywordflow">if</span> (header_names.empty()) {</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    }</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span> </div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>    <span class="keyword">const</span> std::string&amp; header_path = header_names[0];</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    std::string rels_path;</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    <span class="keywordflow">if</span> (header_path.find(<span class="charliteral">&#39;/&#39;</span>) != std::string::npos) {</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>        rels_path = header_path.substr(0, header_path.rfind(<span class="charliteral">&#39;/&#39;</span>) + 1) + <span class="stringliteral">&quot;_rels/&quot;</span> +</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                    header_path.substr(header_path.rfind(<span class="charliteral">&#39;/&#39;</span>) + 1) + <span class="stringliteral">&quot;.rels&quot;</span>;</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        rels_path = <span class="stringliteral">&quot;word/_rels/&quot;</span> + header_path + <span class="stringliteral">&quot;.rels&quot;</span>;</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    }</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span> </div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>    <span class="comment">// Create relationship in header rels</span></div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    <span class="keyword">const</span> std::string rel_id = document_-&gt;<a class="code hl_function" href="classcdocx_1_1Document.html#a7f6b048584c2267ecb4a7a05af57d82a">add_relationship</a>(</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        rels_path,</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        <span class="stringliteral">&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/image&quot;</span>,</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        <span class="stringliteral">&quot;media/&quot;</span> + filename);</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    <span class="keywordflow">if</span> (rel_id.empty()) {</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>    }</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span> </div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    pugi::xml_node header = <a class="code hl_function" href="namespacecdocx.html#a937d7e4d6839205c847744a7a8ab9fbe">get_first_header_xml</a>(document_);</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    <span class="keywordflow">if</span> (!header) {</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    }</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    <span class="keyword">auto</span> para = header.append_child(<span class="stringliteral">&quot;w:p&quot;</span>);</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    <span class="keyword">auto</span> p_pr = para.append_child(<span class="stringliteral">&quot;w:pPr&quot;</span>);</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    <span class="keyword">auto</span> jc = p_pr.append_child(<span class="stringliteral">&quot;w:jc&quot;</span>);</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    jc.append_attribute(<span class="stringliteral">&quot;w:val&quot;</span>).set_value(<span class="stringliteral">&quot;center&quot;</span>);</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span> </div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    <span class="keyword">auto</span> run = para.append_child(<span class="stringliteral">&quot;w:r&quot;</span>);</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    <span class="keyword">auto</span> pict = run.append_child(<span class="stringliteral">&quot;w:pict&quot;</span>);</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>    <span class="keyword">auto</span> shape = pict.append_child(<span class="stringliteral">&quot;v:shape&quot;</span>);</div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>    shape.append_attribute(<span class="stringliteral">&quot;id&quot;</span>).set_value(<span class="stringliteral">&quot;PowerPlusWaterMarkObject&quot;</span>);</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>    shape.append_attribute(<span class="stringliteral">&quot;style&quot;</span>).set_value(</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <span class="stringliteral">&quot;position:absolute;margin-left:0;margin-top:0;width:400pt;height:300pt;z-index:-251658752;&quot;</span></div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        <span class="stringliteral">&quot;mso-position-horizontal:center;mso-position-horizontal-relative:margin;mso-position-&quot;</span></div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>        <span class="stringliteral">&quot;vertical:center;mso-position-vertical-relative:margin&quot;</span>);</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    shape.append_attribute(<span class="stringliteral">&quot;o:allowincell&quot;</span>).set_value(<span class="stringliteral">&quot;f&quot;</span>);</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    shape.append_attribute(<span class="stringliteral">&quot;stroked&quot;</span>).set_value(<span class="stringliteral">&quot;f&quot;</span>);</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span> </div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    <span class="comment">// Apply scale if explicitly set (&gt; 0)</span></div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    <span class="keywordflow">if</span> (options.scale &gt; 0) {</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>        <span class="keyword">const</span> <span class="keywordtype">int</span> width_pt = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(400.0 * options.scale / 100.0);</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>        <span class="keyword">const</span> <span class="keywordtype">int</span> height_pt = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(300.0 * options.scale / 100.0);</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>        <span class="keyword">const</span> std::string <a class="code hl_variable" href="base__content_8cpp.html#a2d19748ee2cda9e3eb553e4c1ba93e0f">style</a> =</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>            <span class="stringliteral">&quot;position:absolute;margin-left:0;margin-top:0;width:&quot;</span> + std::to_string(width_pt) +</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>            <span class="stringliteral">&quot;pt;height:&quot;</span> + std::to_string(height_pt) +</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>            <span class="stringliteral">&quot;pt;z-index:-251658752;&quot;</span></div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>            <span class="stringliteral">&quot;mso-position-horizontal:center;mso-position-horizontal-relative:margin;&quot;</span></div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>            <span class="stringliteral">&quot;mso-position-vertical:center;mso-position-vertical-relative:margin&quot;</span>;</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        shape.attribute(<span class="stringliteral">&quot;style&quot;</span>).set_value(<a class="code hl_variable" href="base__content_8cpp.html#a2d19748ee2cda9e3eb553e4c1ba93e0f">style</a>.c_str());</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    }</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    <span class="comment">// Apply washout effect (grayscale + reduced contrast)</span></div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <span class="keywordflow">if</span> (options.washout) {</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>        <span class="keyword">auto</span> fill = shape.append_child(<span class="stringliteral">&quot;v:fill&quot;</span>);</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>        fill.append_attribute(<span class="stringliteral">&quot;type&quot;</span>).set_value(<span class="stringliteral">&quot;frame&quot;</span>);</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>        fill.append_attribute(<span class="stringliteral">&quot;opacity&quot;</span>).set_value(<span class="stringliteral">&quot;0.5&quot;</span>);</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>        <span class="keyword">auto</span> image = shape.append_child(<span class="stringliteral">&quot;v:image&quot;</span>);</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>        image.append_attribute(<span class="stringliteral">&quot;o:title&quot;</span>).set_value(<span class="stringliteral">&quot;Watermark&quot;</span>);</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>        image.append_attribute(<span class="stringliteral">&quot;cropleft&quot;</span>).set_value(<span class="stringliteral">&quot;f&quot;</span>);</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    }</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span> </div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    <span class="keyword">auto</span> imagedata = shape.append_child(<span class="stringliteral">&quot;v:imagedata&quot;</span>);</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    imagedata.append_attribute(<span class="stringliteral">&quot;r:id&quot;</span>).set_value(rel_id.c_str());</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    imagedata.append_attribute(<span class="stringliteral">&quot;o:title&quot;</span>).set_value(<span class="stringliteral">&quot;Watermark&quot;</span>);</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>}</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span><span class="keywordtype">void</span> Watermark::clear_watermark_from_header() {</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>    <a class="code hl_function" href="classcdocx_1_1Watermark.html#a736f795b03dac71697eddcaf0c2107a7">remove</a>();</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>}</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span> </div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="abase__content_8cpp_html_a2d19748ee2cda9e3eb553e4c1ba93e0f"><div class="ttname"><a href="base__content_8cpp.html#a2d19748ee2cda9e3eb553e4c1ba93e0f">style</a></div><div class="ttdeci">TextProperties::UnderlineStyle style</div><div class="ttdef"><b>Definition</b> <a href="base__content_8cpp_source.html#l00055">base_content.cpp:55</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html"><div class="ttname"><a href="classcdocx_1_1Document.html">cdocx::Document</a></div><div class="ttdef"><b>Definition</b> <a href="document_8h_source.html#l00285">document.h:285</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html_a042fa5a50dcde10986dcc2b871687559"><div class="ttname"><a href="classcdocx_1_1Document.html#a042fa5a50dcde10986dcc2b871687559">cdocx::Document::generate_unique_image_name</a></div><div class="ttdeci">std::string generate_unique_image_name(const std::string &amp;base_name) const</div><div class="ttdef"><b>Definition</b> <a href="document__media_8cpp_source.html#l00399">document_media.cpp:399</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html_a0922e2e7fc2f0519542eaeb7be6050d6"><div class="ttname"><a href="classcdocx_1_1Document.html#a0922e2e7fc2f0519542eaeb7be6050d6">cdocx::Document::get_header_names</a></div><div class="ttdeci">std::vector&lt; std::string &gt; get_header_names() const</div><div class="ttdef"><b>Definition</b> <a href="document_8cpp_source.html#l01195">document.cpp:1195</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html_a13d87d9e87bd9a5f9ee5bd5925a58b38"><div class="ttname"><a href="classcdocx_1_1Document.html#a13d87d9e87bd9a5f9ee5bd5925a58b38">cdocx::Document::get_header</a></div><div class="ttdeci">pugi::xml_document * get_header(int index)</div><div class="ttdef"><b>Definition</b> <a href="document_8cpp_source.html#l01174">document.cpp:1174</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html_a45dbff2fba6394f3d70be6b8d4b63e18"><div class="ttname"><a href="classcdocx_1_1Document.html#a45dbff2fba6394f3d70be6b8d4b63e18">cdocx::Document::get_first_section</a></div><div class="ttdeci">std::shared_ptr&lt; Section &gt; get_first_section() const</div><div class="ttdef"><b>Definition</b> <a href="document_8cpp_source.html#l00826">document.cpp:826</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html_a7f6b048584c2267ecb4a7a05af57d82a"><div class="ttname"><a href="classcdocx_1_1Document.html#a7f6b048584c2267ecb4a7a05af57d82a">cdocx::Document::add_relationship</a></div><div class="ttdeci">std::string add_relationship(const std::string &amp;rels_path, const std::string &amp;type, const std::string &amp;target, const std::string &amp;target_mode=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> <a href="document__relationships_8cpp_source.html#l00098">document_relationships.cpp:98</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html_a8bcd5c161cd4159fb241e2926b4edf2e"><div class="ttname"><a href="classcdocx_1_1Document.html#a8bcd5c161cd4159fb241e2926b4edf2e">cdocx::Document::has_media</a></div><div class="ttdeci">bool has_media(const std::string &amp;image_name) const</div><div class="ttdef"><b>Definition</b> <a href="document__media_8cpp_source.html#l00178">document_media.cpp:178</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html_ab853bf8c5b4791f8875d244cab58f6f3"><div class="ttname"><a href="classcdocx_1_1Document.html#ab853bf8c5b4791f8875d244cab58f6f3">cdocx::Document::add_media_from_memory</a></div><div class="ttdeci">bool add_media_from_memory(const std::string &amp;name, const std::vector&lt; uint8_t &gt; &amp;data, const std::string &amp;content_type=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> <a href="document__media_8cpp_source.html#l00077">document_media.cpp:77</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Watermark_html_a1d3ad31a0269e81a340c36b1c99b5570"><div class="ttname"><a href="classcdocx_1_1Watermark.html#a1d3ad31a0269e81a340c36b1c99b5570">cdocx::Watermark::set_text</a></div><div class="ttdeci">void set_text(const std::string &amp;text)</div><div class="ttdoc">Set text watermark with default options</div><div class="ttdef"><b>Definition</b> <a href="watermark_8cpp_source.html#l00123">watermark.cpp:123</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Watermark_html_a736f795b03dac71697eddcaf0c2107a7"><div class="ttname"><a href="classcdocx_1_1Watermark.html#a736f795b03dac71697eddcaf0c2107a7">cdocx::Watermark::remove</a></div><div class="ttdeci">void remove()</div><div class="ttdoc">Remove all watermarks from the document</div><div class="ttdef"><b>Definition</b> <a href="watermark_8cpp_source.html#l00151">watermark.cpp:151</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Watermark_html_a99ebda6bbb345ed74a4bac7cdc55fb13"><div class="ttname"><a href="classcdocx_1_1Watermark.html#a99ebda6bbb345ed74a4bac7cdc55fb13">cdocx::Watermark::Watermark</a></div><div class="ttdeci">Watermark(Document *doc)</div><div class="ttdef"><b>Definition</b> <a href="watermark_8cpp_source.html#l00120">watermark.cpp:120</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Watermark_html_a9b40c27b9718cebfe211129c4e0a3b9e"><div class="ttname"><a href="classcdocx_1_1Watermark.html#a9b40c27b9718cebfe211129c4e0a3b9e">cdocx::Watermark::set_image</a></div><div class="ttdeci">void set_image(const std::string &amp;image_path)</div><div class="ttdoc">Set image watermark from file</div><div class="ttdef"><b>Definition</b> <a href="watermark_8cpp_source.html#l00137">watermark.cpp:137</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Watermark_html_ad45f32c0357a0852482ddf41de0b9d02"><div class="ttname"><a href="classcdocx_1_1Watermark.html#ad45f32c0357a0852482ddf41de0b9d02">cdocx::Watermark::has_watermark</a></div><div class="ttdeci">bool has_watermark() const</div><div class="ttdoc">Check if document has a watermark</div><div class="ttdef"><b>Definition</b> <a href="watermark_8cpp_source.html#l00161">watermark.cpp:161</a></div></div>
+<div class="ttc" id="adocument_8h_html"><div class="ttname"><a href="document_8h.html">document.h</a></div><div class="ttdoc">Document class for working with DOCX files - DOM Style</div></div>
+<div class="ttc" id="adocument__builder_8cpp_html_a5558580ea8d3854253a721ee58cff12d"><div class="ttname"><a href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a></div><div class="ttdeci">const char * result</div><div class="ttdef"><b>Definition</b> <a href="document__builder_8cpp_source.html#l00693">document_builder.cpp:693</a></div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a0358b0e872b61adfbaa8c0bd780833d0"><div class="ttname"><a href="namespacecdocx.html#a0358b0e872b61adfbaa8c0bd780833d0">cdocx::is_word_watermark_shape</a></div><div class="ttdeci">static bool is_word_watermark_shape(const pugi::xml_node shape)</div><div class="ttdef"><b>Definition</b> <a href="watermark_8cpp_source.html#l00022">watermark.cpp:22</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a33c031026362fe30c3127f711e005590a9ac677ee4eec25d9e59707a661d2c5e1"><div class="ttname"><a href="namespacecdocx.html#a33c031026362fe30c3127f711e005590a9ac677ee4eec25d9e59707a661d2c5e1">cdocx::WatermarkLayout::Diagonal</a></div><div class="ttdeci">@ Diagonal</div></div>
+<div class="ttc" id="anamespacecdocx_html_a937d7e4d6839205c847744a7a8ab9fbe"><div class="ttname"><a href="namespacecdocx.html#a937d7e4d6839205c847744a7a8ab9fbe">cdocx::get_first_header_xml</a></div><div class="ttdeci">static pugi::xml_node get_first_header_xml(Document *doc)</div><div class="ttdef"><b>Definition</b> <a href="watermark_8cpp_source.html#l00060">watermark.cpp:60</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a9390290eb82964986b43ffaac0888fff"><div class="ttname"><a href="namespacecdocx.html#a9390290eb82964986b43ffaac0888fff">cdocx::remove_watermark_nodes</a></div><div class="ttdeci">static void remove_watermark_nodes(pugi::xml_node header)</div><div class="ttdef"><b>Definition</b> <a href="watermark_8cpp_source.html#l00072">watermark.cpp:72</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_ab0e9acbc6f2d6f7d2931bb5e282c88f3"><div class="ttname"><a href="namespacecdocx.html#ab0e9acbc6f2d6f7d2931bb5e282c88f3">cdocx::kXmlEscapeMappings</a></div><div class="ttdeci">static const XmlEscapeMapping kXmlEscapeMappings[]</div><div class="ttdef"><b>Definition</b> <a href="watermark_8cpp_source.html#l00033">watermark.cpp:33</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_ac582d253e338602be7cba859382c5864a7a1920d61156abc05a60135aefe8bc67"><div class="ttname"><a href="namespacecdocx.html#ac582d253e338602be7cba859382c5864a7a1920d61156abc05a60135aefe8bc67">cdocx::HeaderFooterType::Default</a></div><div class="ttdeci">@ Default</div><div class="ttdoc">Default header/footer</div></div>
+<div class="ttc" id="anamespacecdocx_html_afb47719a1ab12b5e3a9a0c4b3d4c68b1"><div class="ttname"><a href="namespacecdocx.html#afb47719a1ab12b5e3a9a0c4b3d4c68b1">cdocx::escape_xml</a></div><div class="ttdeci">static std::string escape_xml(const std::string &amp;text)</div><div class="ttdef"><b>Definition</b> <a href="watermark_8cpp_source.html#l00041">watermark.cpp:41</a></div></div>
+<div class="ttc" id="aparagraph_8h_html"><div class="ttname"><a href="paragraph_8h.html">paragraph.h</a></div><div class="ttdoc">Paragraph class for CDocx - DOM Style</div></div>
+<div class="ttc" id="asection_8h_html"><div class="ttname"><a href="section_8h.html">section.h</a></div><div class="ttdoc">Section support for CDocx - DOM Style</div></div>
+<div class="ttc" id="astructcdocx_1_1ImageWatermarkOptions_html"><div class="ttname"><a href="structcdocx_1_1ImageWatermarkOptions.html">cdocx::ImageWatermarkOptions</a></div><div class="ttdef"><b>Definition</b> <a href="watermark_8h_source.html#l00043">watermark.h:43</a></div></div>
+<div class="ttc" id="astructcdocx_1_1TextWatermarkOptions_html"><div class="ttname"><a href="structcdocx_1_1TextWatermarkOptions.html">cdocx::TextWatermarkOptions</a></div><div class="ttdef"><b>Definition</b> <a href="watermark_8h_source.html#l00031">watermark.h:31</a></div></div>
+<div class="ttc" id="astructcdocx_1_1XmlEscapeMapping_html"><div class="ttname"><a href="structcdocx_1_1XmlEscapeMapping.html">cdocx::XmlEscapeMapping</a></div><div class="ttdef"><b>Definition</b> <a href="watermark_8cpp_source.html#l00028">watermark.cpp:28</a></div></div>
+<div class="ttc" id="astructcdocx_1_1XmlEscapeMapping_html_a1deeb3882373071aa92bf44975eff585"><div class="ttname"><a href="structcdocx_1_1XmlEscapeMapping.html#a1deeb3882373071aa92bf44975eff585">cdocx::XmlEscapeMapping::c</a></div><div class="ttdeci">char c</div><div class="ttdef"><b>Definition</b> <a href="watermark_8cpp_source.html#l00029">watermark.cpp:29</a></div></div>
+<div class="ttc" id="astructcdocx_1_1XmlEscapeMapping_html_a43ce3bbbdec85b7c23737fb529fd0a50"><div class="ttname"><a href="structcdocx_1_1XmlEscapeMapping.html#a43ce3bbbdec85b7c23737fb529fd0a50">cdocx::XmlEscapeMapping::replacement</a></div><div class="ttdeci">const char * replacement</div><div class="ttdef"><b>Definition</b> <a href="watermark_8cpp_source.html#l00030">watermark.cpp:30</a></div></div>
+<div class="ttc" id="atable_8h_html"><div class="ttname"><a href="table_8h.html">table.h</a></div><div class="ttdoc">Table classes for CDocx - DOM Style</div></div>
+<div class="ttc" id="awatermark_8h_html"><div class="ttname"><a href="watermark_8h.html">watermark.h</a></div><div class="ttdoc">Document watermark support for CDocx</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="watermark_8cpp.html">watermark.cpp</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,711 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: cdocx::ParagraphBuilder类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classcdocx_1_1ParagraphBuilder.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public 成员函数</a> &#124;
+<a href="classcdocx_1_1ParagraphBuilder-members.html">所有成员列表</a>  </div>
+  <div class="headertitle"><div class="title">cdocx::ParagraphBuilder类 参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Builder class for creating formatted paragraphs  
+ <a href="classcdocx_1_1ParagraphBuilder.html#details">更多...</a></p>
+
+<p><code>#include &lt;<a class="el" href="paragraph__builder_8h_source.html">paragraph_builder.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public 成员函数</h2></td></tr>
+<tr class="memitem:a88bbb58cba98e2f0dfd7543a1d2e0af2" id="r_a88bbb58cba98e2f0dfd7543a1d2e0af2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#a88bbb58cba98e2f0dfd7543a1d2e0af2">ParagraphBuilder</a> ()</td></tr>
+<tr class="memdesc:a88bbb58cba98e2f0dfd7543a1d2e0af2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct empty paragraph builder  <br /></td></tr>
+<tr class="separator:a88bbb58cba98e2f0dfd7543a1d2e0af2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15040ce3ff298c94b39eebcbbd431d1b" id="r_a15040ce3ff298c94b39eebcbbd431d1b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#a15040ce3ff298c94b39eebcbbd431d1b">ParagraphBuilder</a> (const std::string &amp;text)</td></tr>
+<tr class="memdesc:a15040ce3ff298c94b39eebcbbd431d1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct paragraph builder with initial text  <br /></td></tr>
+<tr class="separator:a15040ce3ff298c94b39eebcbbd431d1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96ddae5c1dbc0a87b15f3fb0a7891473" id="r_a96ddae5c1dbc0a87b15f3fb0a7891473"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#a96ddae5c1dbc0a87b15f3fb0a7891473">~ParagraphBuilder</a> ()=default</td></tr>
+<tr class="memdesc:a96ddae5c1dbc0a87b15f3fb0a7891473"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor  <br /></td></tr>
+<tr class="separator:a96ddae5c1dbc0a87b15f3fb0a7891473"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f6ba24267a57d68c3deb922b5b1982e" id="r_a6f6ba24267a57d68c3deb922b5b1982e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#a6f6ba24267a57d68c3deb922b5b1982e">ParagraphBuilder</a> (const <a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;)=delete</td></tr>
+<tr class="separator:a6f6ba24267a57d68c3deb922b5b1982e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad458cda61699f3174ef76b148013715b" id="r_ad458cda61699f3174ef76b148013715b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#ad458cda61699f3174ef76b148013715b">operator=</a> (const <a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;)=delete</td></tr>
+<tr class="separator:ad458cda61699f3174ef76b148013715b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10c02519a5cabcbf856ab333adb72cd6" id="r_a10c02519a5cabcbf856ab333adb72cd6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#a10c02519a5cabcbf856ab333adb72cd6">ParagraphBuilder</a> (<a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:a10c02519a5cabcbf856ab333adb72cd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5df46f9d060742de6ff312e1ebb8be3" id="r_ae5df46f9d060742de6ff312e1ebb8be3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#ae5df46f9d060742de6ff312e1ebb8be3">operator=</a> (<a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:ae5df46f9d060742de6ff312e1ebb8be3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a142969680eef37453cbd2bbf2c137796" id="r_a142969680eef37453cbd2bbf2c137796"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#a142969680eef37453cbd2bbf2c137796">add_run</a> (const std::string &amp;text)</td></tr>
+<tr class="memdesc:a142969680eef37453cbd2bbf2c137796"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a run with text  <br /></td></tr>
+<tr class="separator:a142969680eef37453cbd2bbf2c137796"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad63698c2734b78e056fb0e6946291ce0" id="r_ad63698c2734b78e056fb0e6946291ce0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#ad63698c2734b78e056fb0e6946291ce0">add_run</a> (const std::string &amp;text, bool bold, bool italic, int font_size)</td></tr>
+<tr class="memdesc:ad63698c2734b78e056fb0e6946291ce0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a run with text and formatting  <br /></td></tr>
+<tr class="separator:ad63698c2734b78e056fb0e6946291ce0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a50d09c20ea52771cd87377fe83677c" id="r_a5a50d09c20ea52771cd87377fe83677c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#a5a50d09c20ea52771cd87377fe83677c">set_bold</a> (bool value)</td></tr>
+<tr class="memdesc:a5a50d09c20ea52771cd87377fe83677c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set bold flag for subsequent runs  <br /></td></tr>
+<tr class="separator:a5a50d09c20ea52771cd87377fe83677c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc327f3e7070fc1947eb2b47887fe954" id="r_adc327f3e7070fc1947eb2b47887fe954"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#adc327f3e7070fc1947eb2b47887fe954">set_italic</a> (bool value)</td></tr>
+<tr class="memdesc:adc327f3e7070fc1947eb2b47887fe954"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set italic flag for subsequent runs  <br /></td></tr>
+<tr class="separator:adc327f3e7070fc1947eb2b47887fe954"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7579f390dab0514f367b4d20182cb63" id="r_ab7579f390dab0514f367b4d20182cb63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#ab7579f390dab0514f367b4d20182cb63">set_underline</a> (bool value)</td></tr>
+<tr class="memdesc:ab7579f390dab0514f367b4d20182cb63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set underline flag for subsequent runs  <br /></td></tr>
+<tr class="separator:ab7579f390dab0514f367b4d20182cb63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06e51051a4b6f18ab65b6e4d2d54946c" id="r_a06e51051a4b6f18ab65b6e4d2d54946c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#a06e51051a4b6f18ab65b6e4d2d54946c">set_font_name</a> (const std::string &amp;name)</td></tr>
+<tr class="memdesc:a06e51051a4b6f18ab65b6e4d2d54946c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set font name for subsequent runs  <br /></td></tr>
+<tr class="separator:a06e51051a4b6f18ab65b6e4d2d54946c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49095e9ffac5a948d3f4c49ffdaf43ae" id="r_a49095e9ffac5a948d3f4c49ffdaf43ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#a49095e9ffac5a948d3f4c49ffdaf43ae">set_font_size</a> (int size)</td></tr>
+<tr class="memdesc:a49095e9ffac5a948d3f4c49ffdaf43ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set font size for subsequent runs  <br /></td></tr>
+<tr class="separator:a49095e9ffac5a948d3f4c49ffdaf43ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b5b5462d34327f3cf3f51eceea60212" id="r_a5b5b5462d34327f3cf3f51eceea60212"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#a5b5b5462d34327f3cf3f51eceea60212">set_color</a> (const std::string &amp;color_hex)</td></tr>
+<tr class="memdesc:a5b5b5462d34327f3cf3f51eceea60212"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set text color for subsequent runs  <br /></td></tr>
+<tr class="separator:a5b5b5462d34327f3cf3f51eceea60212"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6108928bdd303ac96a4347c8cda70e0a" id="r_a6108928bdd303ac96a4347c8cda70e0a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#a6108928bdd303ac96a4347c8cda70e0a">set_alignment</a> (const std::string &amp;<a class="el" href="properties_8cpp.html#a6ab4eaed1811a844d72c929650422dc4">alignment</a>)</td></tr>
+<tr class="memdesc:a6108928bdd303ac96a4347c8cda70e0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set paragraph alignment  <br /></td></tr>
+<tr class="separator:a6108928bdd303ac96a4347c8cda70e0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f9552c5118f77473a3b05e55f488d09" id="r_a1f9552c5118f77473a3b05e55f488d09"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#a1f9552c5118f77473a3b05e55f488d09">clear_formatting</a> ()</td></tr>
+<tr class="memdesc:a1f9552c5118f77473a3b05e55f488d09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear all run formatting  <br /></td></tr>
+<tr class="separator:a1f9552c5118f77473a3b05e55f488d09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39a964b9025789e22f6a3b9a779f947b" id="r_a39a964b9025789e22f6a3b9a779f947b"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Paragraph.html">Paragraph</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1ParagraphBuilder.html#a39a964b9025789e22f6a3b9a779f947b">build</a> ()</td></tr>
+<tr class="memdesc:a39a964b9025789e22f6a3b9a779f947b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the paragraph  <br /></td></tr>
+<tr class="separator:a39a964b9025789e22f6a3b9a779f947b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>Builder class for creating formatted paragraphs </p>
+<dl class="section since"><dt>自从</dt><dd>0.8.0</dd></dl>
+<dl class="section user"><dt>Usage Example:</dt><dd><div class="fragment"><div class="line"><span class="keyword">auto</span> para = <a class="code hl_class" href="classcdocx_1_1ParagraphBuilder.html">cdocx::ParagraphBuilder</a>()</div>
+<div class="line">    .<a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a142969680eef37453cbd2bbf2c137796">add_run</a>(<span class="stringliteral">&quot;Hello, &quot;</span>)</div>
+<div class="line">    .<a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a5a50d09c20ea52771cd87377fe83677c">set_bold</a>(<span class="keyword">true</span>)</div>
+<div class="line">    .<a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a142969680eef37453cbd2bbf2c137796">add_run</a>(<span class="stringliteral">&quot;World!&quot;</span>)</div>
+<div class="line">    .<a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a6108928bdd303ac96a4347c8cda70e0a">set_alignment</a>(<span class="stringliteral">&quot;center&quot;</span>)</div>
+<div class="line">    .<a class="code hl_function" href="classcdocx_1_1ParagraphBuilder.html#a39a964b9025789e22f6a3b9a779f947b">build</a>();</div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html">cdocx::ParagraphBuilder</a></div><div class="ttdoc">Builder class for creating formatted paragraphs</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8h_source.html#l00039">paragraph_builder.h:39</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_a142969680eef37453cbd2bbf2c137796"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#a142969680eef37453cbd2bbf2c137796">cdocx::ParagraphBuilder::add_run</a></div><div class="ttdeci">ParagraphBuilder &amp; add_run(const std::string &amp;text)</div><div class="ttdoc">Add a run with text</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00020">paragraph_builder.cpp:20</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_a39a964b9025789e22f6a3b9a779f947b"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#a39a964b9025789e22f6a3b9a779f947b">cdocx::ParagraphBuilder::build</a></div><div class="ttdeci">std::shared_ptr&lt; Paragraph &gt; build()</div><div class="ttdoc">Build the paragraph</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00088">paragraph_builder.cpp:88</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_a5a50d09c20ea52771cd87377fe83677c"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#a5a50d09c20ea52771cd87377fe83677c">cdocx::ParagraphBuilder::set_bold</a></div><div class="ttdeci">ParagraphBuilder &amp; set_bold(bool value)</div><div class="ttdoc">Set bold flag for subsequent runs</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00043">paragraph_builder.cpp:43</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1ParagraphBuilder_html_a6108928bdd303ac96a4347c8cda70e0a"><div class="ttname"><a href="classcdocx_1_1ParagraphBuilder.html#a6108928bdd303ac96a4347c8cda70e0a">cdocx::ParagraphBuilder::set_alignment</a></div><div class="ttdeci">ParagraphBuilder &amp; set_alignment(const std::string &amp;alignment)</div><div class="ttdoc">Set paragraph alignment</div><div class="ttdef"><b>Definition</b> <a href="paragraph__builder_8cpp_source.html#l00073">paragraph_builder.cpp:73</a></div></div>
+</div><!-- fragment --> </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8h_source.html">paragraph_builder.h</a> 第 <a class="el" href="paragraph__builder_8h_source.html#l00039">39</a> 行定义.</p>
+</div><h2 class="groupheader">构造及析构函数说明</h2>
+<a id="a88bbb58cba98e2f0dfd7543a1d2e0af2" name="a88bbb58cba98e2f0dfd7543a1d2e0af2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88bbb58cba98e2f0dfd7543a1d2e0af2">&#9670;&#160;</a></span>ParagraphBuilder() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::ParagraphBuilder::ParagraphBuilder </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construct empty paragraph builder </p>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a> 第 <a class="el" href="paragraph__builder_8cpp_source.html#l00013">13</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a15040ce3ff298c94b39eebcbbd431d1b" name="a15040ce3ff298c94b39eebcbbd431d1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15040ce3ff298c94b39eebcbbd431d1b">&#9670;&#160;</a></span>ParagraphBuilder() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::ParagraphBuilder::ParagraphBuilder </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct paragraph builder with initial text </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td>Initial paragraph text </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a> 第 <a class="el" href="paragraph__builder_8cpp_source.html#l00016">16</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a96ddae5c1dbc0a87b15f3fb0a7891473" name="a96ddae5c1dbc0a87b15f3fb0a7891473"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96ddae5c1dbc0a87b15f3fb0a7891473">&#9670;&#160;</a></span>~ParagraphBuilder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::ParagraphBuilder::~ParagraphBuilder </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Destructor </p>
+
+</div>
+</div>
+<a id="a6f6ba24267a57d68c3deb922b5b1982e" name="a6f6ba24267a57d68c3deb922b5b1982e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f6ba24267a57d68c3deb922b5b1982e">&#9670;&#160;</a></span>ParagraphBuilder() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::ParagraphBuilder::ParagraphBuilder </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a10c02519a5cabcbf856ab333adb72cd6" name="a10c02519a5cabcbf856ab333adb72cd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10c02519a5cabcbf856ab333adb72cd6">&#9670;&#160;</a></span>ParagraphBuilder() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::ParagraphBuilder::ParagraphBuilder </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">成员函数说明</h2>
+<a id="a142969680eef37453cbd2bbf2c137796" name="a142969680eef37453cbd2bbf2c137796"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a142969680eef37453cbd2bbf2c137796">&#9670;&#160;</a></span>add_run() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp; cdocx::ParagraphBuilder::add_run </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add a run with text </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td><a class="el" href="classcdocx_1_1Run.html">Run</a> text content </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this builder for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a> 第 <a class="el" href="paragraph__builder_8cpp_source.html#l00020">20</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ad63698c2734b78e056fb0e6946291ce0" name="ad63698c2734b78e056fb0e6946291ce0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad63698c2734b78e056fb0e6946291ce0">&#9670;&#160;</a></span>add_run() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp; cdocx::ParagraphBuilder::add_run </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bold</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>italic</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>font_size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add a run with text and formatting </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td><a class="el" href="classcdocx_1_1Run.html">Run</a> text content </td></tr>
+    <tr><td class="paramname">bold</td><td>Bold flag </td></tr>
+    <tr><td class="paramname">italic</td><td>Italic flag </td></tr>
+    <tr><td class="paramname">font_size</td><td><a class="el" href="classcdocx_1_1Font.html">Font</a> size in points </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this builder for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a> 第 <a class="el" href="paragraph__builder_8cpp_source.html#l00028">28</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a39a964b9025789e22f6a3b9a779f947b" name="a39a964b9025789e22f6a3b9a779f947b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39a964b9025789e22f6a3b9a779f947b">&#9670;&#160;</a></span>build()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Paragraph.html">Paragraph</a> &gt; cdocx::ParagraphBuilder::build </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Build the paragraph </p>
+<dl class="section return"><dt>返回</dt><dd>Shared pointer to the created paragraph </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a> 第 <a class="el" href="paragraph__builder_8cpp_source.html#l00088">88</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a1f9552c5118f77473a3b05e55f488d09" name="a1f9552c5118f77473a3b05e55f488d09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f9552c5118f77473a3b05e55f488d09">&#9670;&#160;</a></span>clear_formatting()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp; cdocx::ParagraphBuilder::clear_formatting </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Clear all run formatting </p>
+<dl class="section return"><dt>返回</dt><dd>Reference to this builder for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a> 第 <a class="el" href="paragraph__builder_8cpp_source.html#l00078">78</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ad458cda61699f3174ef76b148013715b" name="ad458cda61699f3174ef76b148013715b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad458cda61699f3174ef76b148013715b">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp; cdocx::ParagraphBuilder::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae5df46f9d060742de6ff312e1ebb8be3" name="ae5df46f9d060742de6ff312e1ebb8be3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5df46f9d060742de6ff312e1ebb8be3">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp; cdocx::ParagraphBuilder::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6108928bdd303ac96a4347c8cda70e0a" name="a6108928bdd303ac96a4347c8cda70e0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6108928bdd303ac96a4347c8cda70e0a">&#9670;&#160;</a></span>set_alignment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp; cdocx::ParagraphBuilder::set_alignment </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>alignment</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set paragraph alignment </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">alignment</td><td>"left", "center", "right", or "justify" </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this builder for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a> 第 <a class="el" href="paragraph__builder_8cpp_source.html#l00073">73</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="properties_8cpp_source.html#l00532">alignment</a>.</p>
+
+</div>
+</div>
+<a id="a5a50d09c20ea52771cd87377fe83677c" name="a5a50d09c20ea52771cd87377fe83677c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a50d09c20ea52771cd87377fe83677c">&#9670;&#160;</a></span>set_bold()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp; cdocx::ParagraphBuilder::set_bold </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set bold flag for subsequent runs </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>true to enable bold </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this builder for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a> 第 <a class="el" href="paragraph__builder_8cpp_source.html#l00043">43</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a5b5b5462d34327f3cf3f51eceea60212" name="a5b5b5462d34327f3cf3f51eceea60212"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b5b5462d34327f3cf3f51eceea60212">&#9670;&#160;</a></span>set_color()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp; cdocx::ParagraphBuilder::set_color </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>color_hex</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set text color for subsequent runs </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color_hex</td><td>Hex color code (e.g., "FF0000") </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this builder for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a> 第 <a class="el" href="paragraph__builder_8cpp_source.html#l00068">68</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a06e51051a4b6f18ab65b6e4d2d54946c" name="a06e51051a4b6f18ab65b6e4d2d54946c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06e51051a4b6f18ab65b6e4d2d54946c">&#9670;&#160;</a></span>set_font_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp; cdocx::ParagraphBuilder::set_font_name </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set font name for subsequent runs </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td><a class="el" href="classcdocx_1_1Font.html">Font</a> family name </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this builder for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a> 第 <a class="el" href="paragraph__builder_8cpp_source.html#l00058">58</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a49095e9ffac5a948d3f4c49ffdaf43ae" name="a49095e9ffac5a948d3f4c49ffdaf43ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49095e9ffac5a948d3f4c49ffdaf43ae">&#9670;&#160;</a></span>set_font_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp; cdocx::ParagraphBuilder::set_font_size </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set font size for subsequent runs </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">size</td><td><a class="el" href="classcdocx_1_1Font.html">Font</a> size in points </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this builder for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a> 第 <a class="el" href="paragraph__builder_8cpp_source.html#l00063">63</a> 行定义.</p>
+
+</div>
+</div>
+<a id="adc327f3e7070fc1947eb2b47887fe954" name="adc327f3e7070fc1947eb2b47887fe954"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc327f3e7070fc1947eb2b47887fe954">&#9670;&#160;</a></span>set_italic()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp; cdocx::ParagraphBuilder::set_italic </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set italic flag for subsequent runs </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>true to enable italic </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this builder for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a> 第 <a class="el" href="paragraph__builder_8cpp_source.html#l00048">48</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ab7579f390dab0514f367b4d20182cb63" name="ab7579f390dab0514f367b4d20182cb63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7579f390dab0514f367b4d20182cb63">&#9670;&#160;</a></span>set_underline()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a> &amp; cdocx::ParagraphBuilder::set_underline </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set underline flag for subsequent runs </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>true to enable underline </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>Reference to this builder for chaining </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a> 第 <a class="el" href="paragraph__builder_8cpp_source.html#l00053">53</a> 行定义.</p>
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li><a class="el" href="paragraph__builder_8h_source.html">paragraph_builder.h</a></li>
+<li><a class="el" href="paragraph__builder_8cpp_source.html">paragraph_builder.cpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespacecdocx.html">cdocx</a></li><li class="navelem"><a class="el" href="classcdocx_1_1ParagraphBuilder.html">ParagraphBuilder</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

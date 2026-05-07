@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: advanced.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('advanced_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">advanced.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="advanced_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;<a class="code" href="bookmark_8h.html">cdocx/bookmark.h</a>&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;<a class="code" href="document__builder_8h.html">cdocx/document_builder.h</a>&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;<a class="code" href="document__search_8h.html">cdocx/document_search.h</a>&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;<a class="code" href="range_8h.html">cdocx/range.h</a>&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;<a class="code" href="base_8h.html">cdocx/base.h</a>&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;<a class="code" href="formfield_8h.html">cdocx/formfield.h</a>&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;cctype&gt;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;functional&gt;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">// Table Operations</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="foldopen" id="foldopen00045" data-start="{" data-end="};">
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableOperations.html">   45</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1TableOperations.html">TableOperations</a> {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a4a4b4d5a9bfa586a7e3e1b071225c01b">insert_row</a>(<a class="code hl_class" href="classcdocx_1_1Table.html">Table</a>&amp; table, <span class="keywordtype">size_t</span> index);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#aee27ce3c9ed352049b02f1af0d6cf724">append_row</a>(<a class="code hl_class" href="classcdocx_1_1Table.html">Table</a>&amp; table);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a27d0c2999617ed5a6abf9463c3553c41">delete_row</a>(<a class="code hl_class" href="classcdocx_1_1Table.html">Table</a>&amp; table, <span class="keywordtype">size_t</span> index);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#af9a3bbb87a2f150e5c41b7b0942f1376">insert_cell</a>(<a class="code hl_class" href="classcdocx_1_1Row.html">Row</a>&amp; row, <span class="keywordtype">size_t</span> index);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a5fdb81de510bcbb15f4596cf1bb40fba">delete_cell</a>(<a class="code hl_class" href="classcdocx_1_1Row.html">Row</a>&amp; row, <span class="keywordtype">size_t</span> index);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a56162462c8fdd4b0cecee60eab185ee4">get_row_count</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1Table.html">Table</a>&amp; table);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a18db25f33624492b6dd3f5de4bd54ed1">get_column_count</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1Table.html">Table</a>&amp; table);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a21153134773488225d6746482411cf7c">merge_cells_horizontal</a>(<a class="code hl_class" href="classcdocx_1_1Row.html">Row</a>&amp; row, <span class="keywordtype">size_t</span> start, <span class="keywordtype">size_t</span> <a class="code hl_function" href="namespacecdocx.html#a95f97defe39c638500f14b9d46505b43">end</a>);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableOperations.html#a33682d81d440407820ccf9125d845613">set_cell_text</a>(<a class="code hl_class" href="classcdocx_1_1Cell.html">Cell</a>&amp; cell, <span class="keyword">const</span> std::string&amp; text);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">static</span> std::string <a class="code hl_function" href="classcdocx_1_1TableOperations.html#ab38fff69abaa3c5362be170ba4441389">get_cell_text</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1Cell.html">Cell</a>&amp; cell);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>};</div>
+</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">// Utility Functions</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="foldopen" id="foldopen00063" data-start="{" data-end="}">
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="namespacecdocx_1_1utils.html">   63</a></span><span class="keyword">namespace </span>utils {</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="foldopen" id="foldopen00065" data-start="{" data-end="}">
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="namespacecdocx_1_1utils.html#a23d0780bb6848c711bf91fa7e4d1a13e">   65</a></span><span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code hl_function" href="namespacecdocx_1_1utils.html#a23d0780bb6848c711bf91fa7e4d1a13e">points_to_twips</a>(<span class="keywordtype">double</span> points) {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(points * 20);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}</div>
+</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="foldopen" id="foldopen00069" data-start="{" data-end="}">
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="namespacecdocx_1_1utils.html#ac1b5e8bc392fdcd178742d5b0a37497a">   69</a></span><span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code hl_function" href="namespacecdocx_1_1utils.html#ac1b5e8bc392fdcd178742d5b0a37497a">twips_to_points</a>(<span class="keywordtype">int</span> twips) {</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordflow">return</span> twips / 20.0;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>}</div>
+</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="foldopen" id="foldopen00073" data-start="{" data-end="}">
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="namespacecdocx_1_1utils.html#a173411ea9561983fd0c8b47c2638abc0">   73</a></span><span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code hl_function" href="namespacecdocx_1_1utils.html#a173411ea9561983fd0c8b47c2638abc0">inches_to_twips</a>(<span class="keywordtype">double</span> inches) {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(inches * 1440);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>}</div>
+</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="foldopen" id="foldopen00077" data-start="{" data-end="}">
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="namespacecdocx_1_1utils.html#abd29f57aad8a36a24807e50cd361df49">   77</a></span><span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="namespacecdocx_1_1utils.html#abd29f57aad8a36a24807e50cd361df49">starts_with_ci</a>(<span class="keyword">const</span> std::string&amp; str, <span class="keyword">const</span> std::string&amp; prefix) {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordflow">if</span> (prefix.size() &gt; str.size()) {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    }</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordflow">return</span> std::equal(prefix.begin(), prefix.end(), str.begin(), [](<span class="keywordtype">char</span> a, <span class="keywordtype">char</span> b) {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        return std::tolower(static_cast&lt;unsigned char&gt;(a)) ==</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>               std::tolower(static_cast&lt;unsigned char&gt;(b));</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    });</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>}</div>
+</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="foldopen" id="foldopen00087" data-start="{" data-end="}">
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="namespacecdocx_1_1utils.html#a0f6d10dde050b838ea7ffe1a94dda57e">   87</a></span><span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="namespacecdocx_1_1utils.html#a0f6d10dde050b838ea7ffe1a94dda57e">contains_ci</a>(<span class="keyword">const</span> std::string&amp; str, <span class="keyword">const</span> std::string&amp; substr) {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">if</span> (substr.empty()) {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    }</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keywordflow">if</span> (substr.size() &gt; str.size()) {</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    }</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keyword">auto</span> it = std::search(str.begin(), str.end(), substr.begin(), substr.end(), [](<span class="keywordtype">char</span> a, <span class="keywordtype">char</span> b) {</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        return std::tolower(static_cast&lt;unsigned char&gt;(a)) ==</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>               std::tolower(static_cast&lt;unsigned char&gt;(b));</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    });</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keywordflow">return</span> it != str.end();</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>}</div>
+</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="foldopen" id="foldopen00101" data-start="{" data-end="}">
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="namespacecdocx_1_1utils.html#a5ccf4a0c3c536750c1f001b91ac5499d">  101</a></span><span class="keyword">inline</span> std::string <a class="code hl_function" href="namespacecdocx_1_1utils.html#a5ccf4a0c3c536750c1f001b91ac5499d">to_lower</a>(<span class="keyword">const</span> std::string&amp; str) {</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    std::string <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a> = str;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    std::transform(<a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a>.begin(), <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a>.end(), <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a>.begin(),</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                   [](<span class="keywordtype">char</span> c) { return static_cast&lt;char&gt;(std::tolower(static_cast&lt;unsigned char&gt;(c))); });</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a>;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>}</div>
+</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>}  <span class="comment">// namespace utils</span></div>
+</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="abase_8h_html"><div class="ttname"><a href="base_8h.html">base.h</a></div><div class="ttdoc">Base content classes for CDocx document model - DOM Style</div></div>
+<div class="ttc" id="abookmark_8h_html"><div class="ttname"><a href="bookmark_8h.html">bookmark.h</a></div><div class="ttdoc">Bookmark management for CDocx</div></div>
+<div class="ttc" id="aclasscdocx_1_1Cell_html"><div class="ttname"><a href="classcdocx_1_1Cell.html">cdocx::Cell</a></div><div class="ttdef"><b>Definition</b> <a href="table_8h_source.html#l00041">table.h:41</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Row_html"><div class="ttname"><a href="classcdocx_1_1Row.html">cdocx::Row</a></div><div class="ttdef"><b>Definition</b> <a href="table_8h_source.html#l00146">table.h:146</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html"><div class="ttname"><a href="classcdocx_1_1TableOperations.html">cdocx::TableOperations</a></div><div class="ttdoc">Static utility class for table manipulation</div><div class="ttdef"><b>Definition</b> <a href="advanced_8h_source.html#l00045">advanced.h:45</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a18db25f33624492b6dd3f5de4bd54ed1"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a18db25f33624492b6dd3f5de4bd54ed1">cdocx::TableOperations::get_column_count</a></div><div class="ttdeci">static size_t get_column_count(const Table &amp;table)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00278">range.cpp:278</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a21153134773488225d6746482411cf7c"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a21153134773488225d6746482411cf7c">cdocx::TableOperations::merge_cells_horizontal</a></div><div class="ttdeci">static bool merge_cells_horizontal(Row &amp;row, size_t start, size_t end)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00282">range.cpp:282</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a27d0c2999617ed5a6abf9463c3553c41"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a27d0c2999617ed5a6abf9463c3553c41">cdocx::TableOperations::delete_row</a></div><div class="ttdeci">static bool delete_row(Table &amp;table, size_t index)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00256">range.cpp:256</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a33682d81d440407820ccf9125d845613"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a33682d81d440407820ccf9125d845613">cdocx::TableOperations::set_cell_text</a></div><div class="ttdeci">static bool set_cell_text(Cell &amp;cell, const std::string &amp;text)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00296">range.cpp:296</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a4a4b4d5a9bfa586a7e3e1b071225c01b"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a4a4b4d5a9bfa586a7e3e1b071225c01b">cdocx::TableOperations::insert_row</a></div><div class="ttdeci">static bool insert_row(Table &amp;table, size_t index)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00248">range.cpp:248</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a56162462c8fdd4b0cecee60eab185ee4"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a56162462c8fdd4b0cecee60eab185ee4">cdocx::TableOperations::get_row_count</a></div><div class="ttdeci">static size_t get_row_count(const Table &amp;table)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00274">range.cpp:274</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_a5fdb81de510bcbb15f4596cf1bb40fba"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#a5fdb81de510bcbb15f4596cf1bb40fba">cdocx::TableOperations::delete_cell</a></div><div class="ttdeci">static bool delete_cell(Row &amp;row, size_t index)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00265">range.cpp:265</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_ab38fff69abaa3c5362be170ba4441389"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#ab38fff69abaa3c5362be170ba4441389">cdocx::TableOperations::get_cell_text</a></div><div class="ttdeci">static std::string get_cell_text(const Cell &amp;cell)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00301">range.cpp:301</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_aee27ce3c9ed352049b02f1af0d6cf724"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#aee27ce3c9ed352049b02f1af0d6cf724">cdocx::TableOperations::append_row</a></div><div class="ttdeci">static bool append_row(Table &amp;table)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00252">range.cpp:252</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableOperations_html_af9a3bbb87a2f150e5c41b7b0942f1376"><div class="ttname"><a href="classcdocx_1_1TableOperations.html#af9a3bbb87a2f150e5c41b7b0942f1376">cdocx::TableOperations::insert_cell</a></div><div class="ttdeci">static bool insert_cell(Row &amp;row, size_t index)</div><div class="ttdef"><b>Definition</b> <a href="range_8cpp_source.html#l00261">range.cpp:261</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Table_html"><div class="ttname"><a href="classcdocx_1_1Table.html">cdocx::Table</a></div><div class="ttdef"><b>Definition</b> <a href="table_8h_source.html#l00282">table.h:282</a></div></div>
+<div class="ttc" id="adocument__builder_8cpp_html_a5558580ea8d3854253a721ee58cff12d"><div class="ttname"><a href="document__builder_8cpp.html#a5558580ea8d3854253a721ee58cff12d">result</a></div><div class="ttdeci">const char * result</div><div class="ttdef"><b>Definition</b> <a href="document__builder_8cpp_source.html#l00693">document_builder.cpp:693</a></div></div>
+<div class="ttc" id="adocument__builder_8h_html"><div class="ttname"><a href="document__builder_8h.html">document_builder.h</a></div><div class="ttdoc">Fluent document construction API for CDocx</div></div>
+<div class="ttc" id="adocument__search_8h_html"><div class="ttname"><a href="document__search_8h.html">document_search.h</a></div><div class="ttdoc">Document search and replace for CDocx</div></div>
+<div class="ttc" id="aformfield_8h_html"><div class="ttname"><a href="formfield_8h.html">formfield.h</a></div><div class="ttdoc">Form field support for CDocx</div></div>
+<div class="ttc" id="anamespacecdocx_1_1utils_html_a0f6d10dde050b838ea7ffe1a94dda57e"><div class="ttname"><a href="namespacecdocx_1_1utils.html#a0f6d10dde050b838ea7ffe1a94dda57e">cdocx::utils::contains_ci</a></div><div class="ttdeci">bool contains_ci(const std::string &amp;str, const std::string &amp;substr)</div><div class="ttdef"><b>Definition</b> <a href="advanced_8h_source.html#l00087">advanced.h:87</a></div></div>
+<div class="ttc" id="anamespacecdocx_1_1utils_html_a173411ea9561983fd0c8b47c2638abc0"><div class="ttname"><a href="namespacecdocx_1_1utils.html#a173411ea9561983fd0c8b47c2638abc0">cdocx::utils::inches_to_twips</a></div><div class="ttdeci">int inches_to_twips(double inches)</div><div class="ttdef"><b>Definition</b> <a href="advanced_8h_source.html#l00073">advanced.h:73</a></div></div>
+<div class="ttc" id="anamespacecdocx_1_1utils_html_a23d0780bb6848c711bf91fa7e4d1a13e"><div class="ttname"><a href="namespacecdocx_1_1utils.html#a23d0780bb6848c711bf91fa7e4d1a13e">cdocx::utils::points_to_twips</a></div><div class="ttdeci">int points_to_twips(double points)</div><div class="ttdef"><b>Definition</b> <a href="advanced_8h_source.html#l00065">advanced.h:65</a></div></div>
+<div class="ttc" id="anamespacecdocx_1_1utils_html_a5ccf4a0c3c536750c1f001b91ac5499d"><div class="ttname"><a href="namespacecdocx_1_1utils.html#a5ccf4a0c3c536750c1f001b91ac5499d">cdocx::utils::to_lower</a></div><div class="ttdeci">std::string to_lower(const std::string &amp;str)</div><div class="ttdef"><b>Definition</b> <a href="advanced_8h_source.html#l00101">advanced.h:101</a></div></div>
+<div class="ttc" id="anamespacecdocx_1_1utils_html_abd29f57aad8a36a24807e50cd361df49"><div class="ttname"><a href="namespacecdocx_1_1utils.html#abd29f57aad8a36a24807e50cd361df49">cdocx::utils::starts_with_ci</a></div><div class="ttdeci">bool starts_with_ci(const std::string &amp;str, const std::string &amp;prefix)</div><div class="ttdef"><b>Definition</b> <a href="advanced_8h_source.html#l00077">advanced.h:77</a></div></div>
+<div class="ttc" id="anamespacecdocx_1_1utils_html_ac1b5e8bc392fdcd178742d5b0a37497a"><div class="ttname"><a href="namespacecdocx_1_1utils.html#ac1b5e8bc392fdcd178742d5b0a37497a">cdocx::utils::twips_to_points</a></div><div class="ttdeci">double twips_to_points(int twips)</div><div class="ttdef"><b>Definition</b> <a href="advanced_8h_source.html#l00069">advanced.h:69</a></div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a95f97defe39c638500f14b9d46505b43"><div class="ttname"><a href="namespacecdocx.html#a95f97defe39c638500f14b9d46505b43">cdocx::end</a></div><div class="ttdeci">auto end(const T &amp;obj) -&gt; Iterator&lt; T, pugi::xml_node &gt;</div><div class="ttdoc">Get end iterator for range-based for loop</div><div class="ttdef"><b>Definition</b> <a href="iterator_8h_source.html#l00221">iterator.h:221</a></div></div>
+<div class="ttc" id="arange_8h_html"><div class="ttname"><a href="range_8h.html">range.h</a></div><div class="ttdoc">Document range operations for CDocx</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_45cf22061f640deb443c5da4ff0b00bd.html">cdocx</a></li><li class="navelem"><a class="el" href="advanced_8h.html">advanced.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

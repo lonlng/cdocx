@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: file_format_util.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('file__format__util_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">file_format_util.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="file__format__util_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;<a class="code" href="enums_8h.html">cdocx/enums.h</a>&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;istream&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">// FileFormatInfo</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="foldopen" id="foldopen00036" data-start="{" data-end="};">
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatInfo.html">   36</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1FileFormatInfo.html">FileFormatInfo</a> {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatInfo.html#adfd56b74bc81cb0619764c3dad4af7fe">   38</a></span>    <a class="code hl_function" href="classcdocx_1_1FileFormatInfo.html#adfd56b74bc81cb0619764c3dad4af7fe">FileFormatInfo</a>();</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatInfo.html#a017d1f24dfa41c4653da81d04a903f08">   41</a></span>    <a class="code hl_enumeration" href="namespacecdocx.html#afab7b1d1461657e5220100fa75ab456b">LoadFormat</a> <a class="code hl_function" href="classcdocx_1_1FileFormatInfo.html#a017d1f24dfa41c4653da81d04a903f08">load_format</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> load_format_; }</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatInfo.html#a6a24310a00d3563a8eab683514c6a77f">   42</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FileFormatInfo.html#a6a24310a00d3563a8eab683514c6a77f">set_load_format</a>(<a class="code hl_enumeration" href="namespacecdocx.html#afab7b1d1461657e5220100fa75ab456b">LoadFormat</a> value) { load_format_ = value; }</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatInfo.html#a01b68606343419cfcbf1225ed15f2569">   45</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1FileFormatInfo.html#a01b68606343419cfcbf1225ed15f2569">is_encrypted</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> is_encrypted_; }</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatInfo.html#a7db276c38a37f8aa904b4fea20be8e2d">   46</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FileFormatInfo.html#a7db276c38a37f8aa904b4fea20be8e2d">set_is_encrypted</a>(<span class="keywordtype">bool</span> value) { is_encrypted_ = value; }</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatInfo.html#a94e2cfe0e79dc16f2f1d542bbadc6a02">   49</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1FileFormatInfo.html#a94e2cfe0e79dc16f2f1d542bbadc6a02">has_digital_signature</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> has_digital_signature_; }</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatInfo.html#a667d8d568f966425375b48c10f7d3bd7">   50</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FileFormatInfo.html#a667d8d568f966425375b48c10f7d3bd7">set_has_digital_signature</a>(<span class="keywordtype">bool</span> value) { has_digital_signature_ = value; }</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatInfo.html#a222ca8fb0ae112a14604f8729ed6f8ba">   53</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1FileFormatInfo.html#a222ca8fb0ae112a14604f8729ed6f8ba">has_macros</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> has_macros_; }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatInfo.html#a1a405b148336d41ea1e62239fe868bd0">   54</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FileFormatInfo.html#a1a405b148336d41ea1e62239fe868bd0">set_has_macros</a>(<span class="keywordtype">bool</span> value) { has_macros_ = value; }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatInfo.html#a0f38a26920ba4db8f48450fd5c6359d8">   57</a></span>    <span class="keyword">const</span> std::string&amp; <a class="code hl_function" href="classcdocx_1_1FileFormatInfo.html#a0f38a26920ba4db8f48450fd5c6359d8">encoding</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> encoding_; }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatInfo.html#a038f02630e1beff37ed9c105c42c9c42">   58</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1FileFormatInfo.html#a038f02630e1beff37ed9c105c42c9c42">set_encoding</a>(<span class="keyword">const</span> std::string&amp; value) { encoding_ = value; }</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <a class="code hl_enumeration" href="namespacecdocx.html#afab7b1d1461657e5220100fa75ab456b">LoadFormat</a> load_format_ = <a class="code hl_enumvalue" href="namespacecdocx.html#afab7b1d1461657e5220100fa75ab456ba88183b946cc5f0e8c96b2e66e1c74a7e">LoadFormat::Unknown</a>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">bool</span> is_encrypted_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">bool</span> has_digital_signature_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordtype">bool</span> has_macros_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    std::string encoding_;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>};</div>
+</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="comment">// FileFormatUtil</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="foldopen" id="foldopen00075" data-start="{" data-end="};">
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatUtil.html">   75</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1FileFormatUtil.html">FileFormatUtil</a> {</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classcdocx_1_1FileFormatUtil.html#afefb763a629152dee57a0c8e93acc369">   77</a></span>    <a class="code hl_function" href="classcdocx_1_1FileFormatUtil.html#afefb763a629152dee57a0c8e93acc369">FileFormatUtil</a>() = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keyword">static</span> std::shared_ptr&lt;FileFormatInfo&gt; <a class="code hl_function" href="classcdocx_1_1FileFormatUtil.html#af9a97a1b32c31a3917aa6a84d45f8500">detect_file_format</a>(<span class="keyword">const</span> std::string&amp; file_name);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keyword">static</span> std::shared_ptr&lt;FileFormatInfo&gt; <a class="code hl_function" href="classcdocx_1_1FileFormatUtil.html#af9a97a1b32c31a3917aa6a84d45f8500">detect_file_format</a>(std::istream&amp; stream);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keyword">static</span> std::shared_ptr&lt;FileFormatInfo&gt; <a class="code hl_function" href="classcdocx_1_1FileFormatUtil.html#af9a97a1b32c31a3917aa6a84d45f8500">detect_file_format</a>(<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&amp; data);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keyword">static</span> std::string <a class="code hl_function" href="classcdocx_1_1FileFormatUtil.html#a9e48e465a5033a89e090ca4c5e05e751">load_format_to_extension</a>(<a class="code hl_enumeration" href="namespacecdocx.html#afab7b1d1461657e5220100fa75ab456b">LoadFormat</a> load_format);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keyword">static</span> std::string <a class="code hl_function" href="classcdocx_1_1FileFormatUtil.html#add2f5a3ccf66b6b93f30d7f5d8eb4463">save_format_to_extension</a>(<a class="code hl_enumeration" href="namespacecdocx.html#adb1475a65394e4ce57e183cb3de1493f">SaveFormat</a> save_format);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keyword">static</span> <a class="code hl_enumeration" href="namespacecdocx.html#adb1475a65394e4ce57e183cb3de1493f">SaveFormat</a> <a class="code hl_function" href="classcdocx_1_1FileFormatUtil.html#a27380ec4355d52c6245a0b4ed3aaa379">extension_to_save_format</a>(<span class="keyword">const</span> std::string&amp; extension);</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keyword">static</span> <a class="code hl_enumeration" href="namespacecdocx.html#afab7b1d1461657e5220100fa75ab456b">LoadFormat</a> <a class="code hl_function" href="classcdocx_1_1FileFormatUtil.html#a193e0f4155e45285f21607d8eff48bfd">save_format_to_load_format</a>(<a class="code hl_enumeration" href="namespacecdocx.html#adb1475a65394e4ce57e183cb3de1493f">SaveFormat</a> save_format);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="keyword">static</span> <a class="code hl_enumeration" href="namespacecdocx.html#adb1475a65394e4ce57e183cb3de1493f">SaveFormat</a> <a class="code hl_function" href="classcdocx_1_1FileFormatUtil.html#a0f5cf143a20082bcf24d25b8d5470113">load_format_to_save_format</a>(<a class="code hl_enumeration" href="namespacecdocx.html#afab7b1d1461657e5220100fa75ab456b">LoadFormat</a> load_format);</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>};</div>
+</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatInfo_html"><div class="ttname"><a href="classcdocx_1_1FileFormatInfo.html">cdocx::FileFormatInfo</a></div><div class="ttdoc">Contains data returned by FileFormatUtil document format detection</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8h_source.html#l00036">file_format_util.h:36</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatInfo_html_a017d1f24dfa41c4653da81d04a903f08"><div class="ttname"><a href="classcdocx_1_1FileFormatInfo.html#a017d1f24dfa41c4653da81d04a903f08">cdocx::FileFormatInfo::load_format</a></div><div class="ttdeci">LoadFormat load_format() const</div><div class="ttdoc">Gets the detected document format</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8h_source.html#l00041">file_format_util.h:41</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatInfo_html_a01b68606343419cfcbf1225ed15f2569"><div class="ttname"><a href="classcdocx_1_1FileFormatInfo.html#a01b68606343419cfcbf1225ed15f2569">cdocx::FileFormatInfo::is_encrypted</a></div><div class="ttdeci">bool is_encrypted() const</div><div class="ttdoc">Returns true if the document is encrypted and requires a password</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8h_source.html#l00045">file_format_util.h:45</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatInfo_html_a038f02630e1beff37ed9c105c42c9c42"><div class="ttname"><a href="classcdocx_1_1FileFormatInfo.html#a038f02630e1beff37ed9c105c42c9c42">cdocx::FileFormatInfo::set_encoding</a></div><div class="ttdeci">void set_encoding(const std::string &amp;value)</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8h_source.html#l00058">file_format_util.h:58</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatInfo_html_a0f38a26920ba4db8f48450fd5c6359d8"><div class="ttname"><a href="classcdocx_1_1FileFormatInfo.html#a0f38a26920ba4db8f48450fd5c6359d8">cdocx::FileFormatInfo::encoding</a></div><div class="ttdeci">const std::string &amp; encoding() const</div><div class="ttdoc">Gets the detected encoding if applicable (e.g., HTML)</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8h_source.html#l00057">file_format_util.h:57</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatInfo_html_a1a405b148336d41ea1e62239fe868bd0"><div class="ttname"><a href="classcdocx_1_1FileFormatInfo.html#a1a405b148336d41ea1e62239fe868bd0">cdocx::FileFormatInfo::set_has_macros</a></div><div class="ttdeci">void set_has_macros(bool value)</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8h_source.html#l00054">file_format_util.h:54</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatInfo_html_a222ca8fb0ae112a14604f8729ed6f8ba"><div class="ttname"><a href="classcdocx_1_1FileFormatInfo.html#a222ca8fb0ae112a14604f8729ed6f8ba">cdocx::FileFormatInfo::has_macros</a></div><div class="ttdeci">bool has_macros() const</div><div class="ttdoc">Returns true if this document contains VBA macros</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8h_source.html#l00053">file_format_util.h:53</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatInfo_html_a667d8d568f966425375b48c10f7d3bd7"><div class="ttname"><a href="classcdocx_1_1FileFormatInfo.html#a667d8d568f966425375b48c10f7d3bd7">cdocx::FileFormatInfo::set_has_digital_signature</a></div><div class="ttdeci">void set_has_digital_signature(bool value)</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8h_source.html#l00050">file_format_util.h:50</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatInfo_html_a6a24310a00d3563a8eab683514c6a77f"><div class="ttname"><a href="classcdocx_1_1FileFormatInfo.html#a6a24310a00d3563a8eab683514c6a77f">cdocx::FileFormatInfo::set_load_format</a></div><div class="ttdeci">void set_load_format(LoadFormat value)</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8h_source.html#l00042">file_format_util.h:42</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatInfo_html_a7db276c38a37f8aa904b4fea20be8e2d"><div class="ttname"><a href="classcdocx_1_1FileFormatInfo.html#a7db276c38a37f8aa904b4fea20be8e2d">cdocx::FileFormatInfo::set_is_encrypted</a></div><div class="ttdeci">void set_is_encrypted(bool value)</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8h_source.html#l00046">file_format_util.h:46</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatInfo_html_a94e2cfe0e79dc16f2f1d542bbadc6a02"><div class="ttname"><a href="classcdocx_1_1FileFormatInfo.html#a94e2cfe0e79dc16f2f1d542bbadc6a02">cdocx::FileFormatInfo::has_digital_signature</a></div><div class="ttdeci">bool has_digital_signature() const</div><div class="ttdoc">Returns true if this document contains a digital signature</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8h_source.html#l00049">file_format_util.h:49</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatInfo_html_adfd56b74bc81cb0619764c3dad4af7fe"><div class="ttname"><a href="classcdocx_1_1FileFormatInfo.html#adfd56b74bc81cb0619764c3dad4af7fe">cdocx::FileFormatInfo::FileFormatInfo</a></div><div class="ttdeci">FileFormatInfo()</div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatUtil_html"><div class="ttname"><a href="classcdocx_1_1FileFormatUtil.html">cdocx::FileFormatUtil</a></div><div class="ttdoc">Provides utility methods for working with file formats</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8h_source.html#l00075">file_format_util.h:75</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatUtil_html_a0f5cf143a20082bcf24d25b8d5470113"><div class="ttname"><a href="classcdocx_1_1FileFormatUtil.html#a0f5cf143a20082bcf24d25b8d5470113">cdocx::FileFormatUtil::load_format_to_save_format</a></div><div class="ttdeci">static SaveFormat load_format_to_save_format(LoadFormat load_format)</div><div class="ttdoc">Converts a LoadFormat value to a SaveFormat value if possible</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8cpp_source.html#l00335">file_format_util.cpp:335</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatUtil_html_a193e0f4155e45285f21607d8eff48bfd"><div class="ttname"><a href="classcdocx_1_1FileFormatUtil.html#a193e0f4155e45285f21607d8eff48bfd">cdocx::FileFormatUtil::save_format_to_load_format</a></div><div class="ttdeci">static LoadFormat save_format_to_load_format(SaveFormat save_format)</div><div class="ttdoc">Converts a SaveFormat value to a LoadFormat value if possible</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8cpp_source.html#l00331">file_format_util.cpp:331</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatUtil_html_a27380ec4355d52c6245a0b4ed3aaa379"><div class="ttname"><a href="classcdocx_1_1FileFormatUtil.html#a27380ec4355d52c6245a0b4ed3aaa379">cdocx::FileFormatUtil::extension_to_save_format</a></div><div class="ttdeci">static SaveFormat extension_to_save_format(const std::string &amp;extension)</div><div class="ttdoc">Converts a file name extension into a SaveFormat value</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8cpp_source.html#l00303">file_format_util.cpp:303</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatUtil_html_a9e48e465a5033a89e090ca4c5e05e751"><div class="ttname"><a href="classcdocx_1_1FileFormatUtil.html#a9e48e465a5033a89e090ca4c5e05e751">cdocx::FileFormatUtil::load_format_to_extension</a></div><div class="ttdeci">static std::string load_format_to_extension(LoadFormat load_format)</div><div class="ttdoc">Converts a load format enumerated value into a file extension</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8cpp_source.html#l00295">file_format_util.cpp:295</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatUtil_html_add2f5a3ccf66b6b93f30d7f5d8eb4463"><div class="ttname"><a href="classcdocx_1_1FileFormatUtil.html#add2f5a3ccf66b6b93f30d7f5d8eb4463">cdocx::FileFormatUtil::save_format_to_extension</a></div><div class="ttdeci">static std::string save_format_to_extension(SaveFormat save_format)</div><div class="ttdoc">Converts a save format enumerated value into a file extension</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8cpp_source.html#l00299">file_format_util.cpp:299</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatUtil_html_af9a97a1b32c31a3917aa6a84d45f8500"><div class="ttname"><a href="classcdocx_1_1FileFormatUtil.html#af9a97a1b32c31a3917aa6a84d45f8500">cdocx::FileFormatUtil::detect_file_format</a></div><div class="ttdeci">static std::shared_ptr&lt; FileFormatInfo &gt; detect_file_format(const std::string &amp;file_name)</div><div class="ttdoc">Detects and returns information about a format of a document file</div><div class="ttdef"><b>Definition</b> <a href="file__format__util_8cpp_source.html#l00173">file_format_util.cpp:173</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1FileFormatUtil_html_afefb763a629152dee57a0c8e93acc369"><div class="ttname"><a href="classcdocx_1_1FileFormatUtil.html#afefb763a629152dee57a0c8e93acc369">cdocx::FileFormatUtil::FileFormatUtil</a></div><div class="ttdeci">FileFormatUtil()=delete</div></div>
+<div class="ttc" id="aenums_8h_html"><div class="ttname"><a href="enums_8h.html">enums.h</a></div><div class="ttdoc">Enumerations for CDocx library</div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_adb1475a65394e4ce57e183cb3de1493f"><div class="ttname"><a href="namespacecdocx.html#adb1475a65394e4ce57e183cb3de1493f">cdocx::SaveFormat</a></div><div class="ttdeci">SaveFormat</div><div class="ttdef"><b>Definition</b> <a href="enums_8h_source.html#l00635">enums.h:635</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_afab7b1d1461657e5220100fa75ab456b"><div class="ttname"><a href="namespacecdocx.html#afab7b1d1461657e5220100fa75ab456b">cdocx::LoadFormat</a></div><div class="ttdeci">LoadFormat</div><div class="ttdef"><b>Definition</b> <a href="enums_8h_source.html#l00619">enums.h:619</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_afab7b1d1461657e5220100fa75ab456ba88183b946cc5f0e8c96b2e66e1c74a7e"><div class="ttname"><a href="namespacecdocx.html#afab7b1d1461657e5220100fa75ab456ba88183b946cc5f0e8c96b2e66e1c74a7e">cdocx::LoadFormat::Unknown</a></div><div class="ttdeci">@ Unknown</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_45cf22061f640deb443c5da4ff0b00bd.html">cdocx</a></li><li class="navelem"><a class="el" href="file__format__util_8h.html">file_format_util.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: cdocx.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('cdocx_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">cdocx.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="cdocx_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">// Version information</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="cdocx_8h.html#a3457b576274b471b7ea48ad540c406ff">   27</a></span><span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="cdocx_8h.html#a3457b576274b471b7ea48ad540c406ff">kVersionMajor</a> = 0;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="cdocx_8h.html#abc363f18d548e481f362e109bf1362b8">   28</a></span><span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="cdocx_8h.html#abc363f18d548e481f362e109bf1362b8">kVersionMinor</a> = 8;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="cdocx_8h.html#a1a3e015abbd0a80688cf7605e3144a83">   29</a></span><span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="cdocx_8h.html#a1a3e015abbd0a80688cf7605e3144a83">kVersionPatch</a> = 0;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="cdocx_8h.html#a00aeed1a4a16f913df5565ccb4c0d046">   30</a></span><span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">char</span> <a class="code hl_variable" href="cdocx_8h.html#a00aeed1a4a16f913df5565ccb4c0d046">kVersion</a>[] = <span class="stringliteral">&quot;0.8.0&quot;</span>;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">// Backward-compatible macros</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="cdocx_8h.html#a3614120a878518e1bcf575c17b8ae393">   33</a></span><span class="preprocessor">#define CDOCX_VERSION_MAJOR kVersionMajor</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="cdocx_8h.html#ad90343dde2380b692ec80d91b0069e81">   34</a></span><span class="preprocessor">#define CDOCX_VERSION_MINOR kVersionMinor</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="cdocx_8h.html#a42befff9d6af7f74de101cf86d17537e">   35</a></span><span class="preprocessor">#define CDOCX_VERSION_PATCH kVersionPatch</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="cdocx_8h.html#a0c11b2a5c3bb0b12845d994ea3f09516">   36</a></span><span class="preprocessor">#define CDOCX_VERSION kVersion</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment">// Core Headers</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &quot;<a class="code" href="advanced_8h.html">cdocx/advanced.h</a>&quot;</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#include &quot;<a class="code" href="base_8h.html">cdocx/base.h</a>&quot;</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#include &quot;<a class="code" href="body_8h.html">cdocx/body.h</a>&quot;</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#include &quot;<a class="code" href="bookmark_8h.html">cdocx/bookmark.h</a>&quot;</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#include &quot;<a class="code" href="bookmark__inserter_8h.html">cdocx/bookmark_inserter.h</a>&quot;</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#include &quot;<a class="code" href="bookmark__replacer_8h.html">cdocx/bookmark_replacer.h</a>&quot;</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#include &quot;<a class="code" href="caption__generator_8h.html">cdocx/caption_generator.h</a>&quot;</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#include &quot;<a class="code" href="comment_8h.html">cdocx/comment.h</a>&quot;</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#include &quot;<a class="code" href="control__char_8h.html">cdocx/control_char.h</a>&quot;</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#include &quot;<a class="code" href="convert__util_8h.html">cdocx/convert_util.h</a>&quot;</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#include &quot;<a class="code" href="document_8h.html">cdocx/document.h</a>&quot;</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">#include &quot;<a class="code" href="document__builder_8h.html">cdocx/document_builder.h</a>&quot;</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#include &quot;<a class="code" href="document__search_8h.html">cdocx/document_search.h</a>&quot;</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#include &quot;<a class="code" href="enums_8h.html">cdocx/enums.h</a>&quot;</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#include &quot;<a class="code" href="file__format__util_8h.html">cdocx/file_format_util.h</a>&quot;</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#include &quot;<a class="code" href="footnote_8h.html">cdocx/footnote.h</a>&quot;</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#include &quot;<a class="code" href="format_8h.html">cdocx/format.h</a>&quot;</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#include &quot;<a class="code" href="formfield_8h.html">cdocx/formfield.h</a>&quot;</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#include &quot;<a class="code" href="inserter_8h.html">cdocx/inserter.h</a>&quot;</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#include &quot;<a class="code" href="iterator_8h.html">cdocx/iterator.h</a>&quot;</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#include &quot;<a class="code" href="mail__merge_8h.html">cdocx/mail_merge.h</a>&quot;</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#include &quot;<a class="code" href="node_8h.html">cdocx/node.h</a>&quot;</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#include &quot;<a class="code" href="paragraph_8h.html">cdocx/paragraph.h</a>&quot;</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#include &quot;<a class="code" href="paragraph__builder_8h.html">cdocx/paragraph_builder.h</a>&quot;</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">#include &quot;<a class="code" href="properties_8h.html">cdocx/properties.h</a>&quot;</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">#include &quot;<a class="code" href="range_8h.html">cdocx/range.h</a>&quot;</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="preprocessor">#include &quot;<a class="code" href="section_8h.html">cdocx/section.h</a>&quot;</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#include &quot;<a class="code" href="style_8h.html">cdocx/style.h</a>&quot;</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#include &quot;<a class="code" href="table_8h.html">cdocx/table.h</a>&quot;</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">#include &quot;<a class="code" href="table__builder_8h.html">cdocx/table_builder.h</a>&quot;</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#include &quot;<a class="code" href="template_8h.html">cdocx/template.h</a>&quot;</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#include &quot;<a class="code" href="template__engine_8h.html">cdocx/template_engine.h</a>&quot;</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="preprocessor">#include &quot;<a class="code" href="watermark_8h.html">cdocx/watermark.h</a>&quot;</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="comment">// Convenience / Aggregated Header</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="foldopen" id="foldopen00080" data-start="{" data-end="}">
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="namespacecdocx.html">   80</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="foldopen" id="foldopen00087" data-start="{" data-end="};">
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classcdocx_1_1CDocx.html">   87</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1CDocx.html">CDocx</a> {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="comment">// Document Factory Methods</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keyword">static</span> std::shared_ptr&lt;Document&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#aafc031431fb8d3004da8ecbff9975e85">create_document</a>();</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keyword">static</span> std::shared_ptr&lt;Document&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#ac8a64cf17b685f40af45c4c6cc504599">load_document</a>(<span class="keyword">const</span> std::string&amp; path);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1CDocx.html#afcd821b02313cd94e1431d46da50250c">save_document</a>(<span class="keyword">const</span> std::shared_ptr&lt;Document&gt;&amp; doc, <span class="keyword">const</span> std::string&amp; path);</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="comment">// Builder Factory Methods (Fluent API)</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">static</span> std::shared_ptr&lt;DocumentBuilder&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#a08a2a6a719cb958ece6008b87c31004a">document</a>();</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keyword">static</span> std::shared_ptr&lt;ParagraphBuilder&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#adc600582481c892bc6377e42dbec6124">paragraph</a>();</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="keyword">static</span> std::shared_ptr&lt;ParagraphBuilder&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#adc600582481c892bc6377e42dbec6124">paragraph</a>(<span class="keyword">const</span> std::string&amp; text);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="keyword">static</span> std::shared_ptr&lt;TableBuilder&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#a8e4e54eae07aa821e3fed0b551a17bb3">table</a>();</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keyword">static</span> std::shared_ptr&lt;TableBuilder&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#a8e4e54eae07aa821e3fed0b551a17bb3">table</a>(<span class="keywordtype">size_t</span> rows, <span class="keywordtype">size_t</span> columns);</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="comment">// Version Information</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keyword">static</span> std::string <a class="code hl_function" href="classcdocx_1_1CDocx.html#af009ee51a69063548b802e9e01cc45d9">version</a>();</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="keyword">static</span> std::string <a class="code hl_function" href="classcdocx_1_1CDocx.html#a7c60e9013ce9208b5db99dc8e375a6c6">version_string</a>();</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>};</div>
+</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>}  <span class="comment">// namespace cdocx</span></div>
+</div>
+<div class="ttc" id="aadvanced_8h_html"><div class="ttname"><a href="advanced_8h.html">advanced.h</a></div><div class="ttdoc">Advanced features for CDocx (aggregate header)</div></div>
+<div class="ttc" id="abase_8h_html"><div class="ttname"><a href="base_8h.html">base.h</a></div><div class="ttdoc">Base content classes for CDocx document model - DOM Style</div></div>
+<div class="ttc" id="abody_8h_html"><div class="ttname"><a href="body_8h.html">body.h</a></div><div class="ttdoc">Body class for CDocx</div></div>
+<div class="ttc" id="abookmark_8h_html"><div class="ttname"><a href="bookmark_8h.html">bookmark.h</a></div><div class="ttdoc">Bookmark management for CDocx</div></div>
+<div class="ttc" id="abookmark__inserter_8h_html"><div class="ttname"><a href="bookmark__inserter_8h.html">bookmark_inserter.h</a></div></div>
+<div class="ttc" id="abookmark__replacer_8h_html"><div class="ttname"><a href="bookmark__replacer_8h.html">bookmark_replacer.h</a></div><div class="ttdoc">High-level bookmark replacement API</div></div>
+<div class="ttc" id="acaption__generator_8h_html"><div class="ttname"><a href="caption__generator_8h.html">caption_generator.h</a></div><div class="ttdoc">Figure caption generation for CDocx</div></div>
+<div class="ttc" id="acdocx_8h_html_a00aeed1a4a16f913df5565ccb4c0d046"><div class="ttname"><a href="cdocx_8h.html#a00aeed1a4a16f913df5565ccb4c0d046">kVersion</a></div><div class="ttdeci">constexpr char kVersion[]</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00030">cdocx.h:30</a></div></div>
+<div class="ttc" id="acdocx_8h_html_a1a3e015abbd0a80688cf7605e3144a83"><div class="ttname"><a href="cdocx_8h.html#a1a3e015abbd0a80688cf7605e3144a83">kVersionPatch</a></div><div class="ttdeci">constexpr int kVersionPatch</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00029">cdocx.h:29</a></div></div>
+<div class="ttc" id="acdocx_8h_html_a3457b576274b471b7ea48ad540c406ff"><div class="ttname"><a href="cdocx_8h.html#a3457b576274b471b7ea48ad540c406ff">kVersionMajor</a></div><div class="ttdeci">constexpr int kVersionMajor</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00027">cdocx.h:27</a></div></div>
+<div class="ttc" id="acdocx_8h_html_abc363f18d548e481f362e109bf1362b8"><div class="ttname"><a href="cdocx_8h.html#abc363f18d548e481f362e109bf1362b8">kVersionMinor</a></div><div class="ttdeci">constexpr int kVersionMinor</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00028">cdocx.h:28</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html"><div class="ttname"><a href="classcdocx_1_1CDocx.html">cdocx::CDocx</a></div><div class="ttdoc">Main CDocx API entry point</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00087">cdocx.h:87</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_a08a2a6a719cb958ece6008b87c31004a"><div class="ttname"><a href="classcdocx_1_1CDocx.html#a08a2a6a719cb958ece6008b87c31004a">cdocx::CDocx::document</a></div><div class="ttdeci">static std::shared_ptr&lt; DocumentBuilder &gt; document()</div><div class="ttdoc">Create a new document builder</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00041">cdocx.cpp:41</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_a7c60e9013ce9208b5db99dc8e375a6c6"><div class="ttname"><a href="classcdocx_1_1CDocx.html#a7c60e9013ce9208b5db99dc8e375a6c6">cdocx::CDocx::version_string</a></div><div class="ttdeci">static std::string version_string()</div><div class="ttdoc">Get the full library version string</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00066">cdocx.cpp:66</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_a8e4e54eae07aa821e3fed0b551a17bb3"><div class="ttname"><a href="classcdocx_1_1CDocx.html#a8e4e54eae07aa821e3fed0b551a17bb3">cdocx::CDocx::table</a></div><div class="ttdeci">static std::shared_ptr&lt; TableBuilder &gt; table()</div><div class="ttdoc">Create a new table builder</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00054">cdocx.cpp:54</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_aafc031431fb8d3004da8ecbff9975e85"><div class="ttname"><a href="classcdocx_1_1CDocx.html#aafc031431fb8d3004da8ecbff9975e85">cdocx::CDocx::create_document</a></div><div class="ttdeci">static std::shared_ptr&lt; Document &gt; create_document()</div><div class="ttdoc">Create a new empty document</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00017">cdocx.cpp:17</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_ac8a64cf17b685f40af45c4c6cc504599"><div class="ttname"><a href="classcdocx_1_1CDocx.html#ac8a64cf17b685f40af45c4c6cc504599">cdocx::CDocx::load_document</a></div><div class="ttdeci">static std::shared_ptr&lt; Document &gt; load_document(const std::string &amp;path)</div><div class="ttdoc">Load a document from file</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00023">cdocx.cpp:23</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_adc600582481c892bc6377e42dbec6124"><div class="ttname"><a href="classcdocx_1_1CDocx.html#adc600582481c892bc6377e42dbec6124">cdocx::CDocx::paragraph</a></div><div class="ttdeci">static std::shared_ptr&lt; ParagraphBuilder &gt; paragraph()</div><div class="ttdoc">Create a new paragraph builder</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00046">cdocx.cpp:46</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_af009ee51a69063548b802e9e01cc45d9"><div class="ttname"><a href="classcdocx_1_1CDocx.html#af009ee51a69063548b802e9e01cc45d9">cdocx::CDocx::version</a></div><div class="ttdeci">static std::string version()</div><div class="ttdoc">Get the library version string</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00062">cdocx.cpp:62</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_afcd821b02313cd94e1431d46da50250c"><div class="ttname"><a href="classcdocx_1_1CDocx.html#afcd821b02313cd94e1431d46da50250c">cdocx::CDocx::save_document</a></div><div class="ttdeci">static bool save_document(const std::shared_ptr&lt; Document &gt; &amp;doc, const std::string &amp;path)</div><div class="ttdoc">Save a document to file</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00032">cdocx.cpp:32</a></div></div>
+<div class="ttc" id="acomment_8h_html"><div class="ttname"><a href="comment_8h.html">comment.h</a></div><div class="ttdoc">Comment support for CDocx</div></div>
+<div class="ttc" id="acontrol__char_8h_html"><div class="ttname"><a href="control__char_8h.html">control_char.h</a></div><div class="ttdoc">Control characters often encountered in documents</div></div>
+<div class="ttc" id="aconvert__util_8h_html"><div class="ttname"><a href="convert__util_8h.html">convert_util.h</a></div><div class="ttdoc">Measurement unit conversion utilities</div></div>
+<div class="ttc" id="adocument_8h_html"><div class="ttname"><a href="document_8h.html">document.h</a></div><div class="ttdoc">Document class for working with DOCX files - DOM Style</div></div>
+<div class="ttc" id="adocument__builder_8h_html"><div class="ttname"><a href="document__builder_8h.html">document_builder.h</a></div><div class="ttdoc">Fluent document construction API for CDocx</div></div>
+<div class="ttc" id="adocument__search_8h_html"><div class="ttname"><a href="document__search_8h.html">document_search.h</a></div><div class="ttdoc">Document search and replace for CDocx</div></div>
+<div class="ttc" id="aenums_8h_html"><div class="ttname"><a href="enums_8h.html">enums.h</a></div><div class="ttdoc">Enumerations for CDocx library</div></div>
+<div class="ttc" id="afile__format__util_8h_html"><div class="ttname"><a href="file__format__util_8h.html">file_format_util.h</a></div><div class="ttdoc">File format detection and conversion utilities</div></div>
+<div class="ttc" id="afootnote_8h_html"><div class="ttname"><a href="footnote_8h.html">footnote.h</a></div><div class="ttdoc">Footnote/Endnote support for CDocx</div></div>
+<div class="ttc" id="aformat_8h_html"><div class="ttname"><a href="format_8h.html">format.h</a></div><div class="ttdoc">Formatting properties for CDocx</div></div>
+<div class="ttc" id="aformfield_8h_html"><div class="ttname"><a href="formfield_8h.html">formfield.h</a></div><div class="ttdoc">Form field support for CDocx</div></div>
+<div class="ttc" id="ainserter_8h_html"><div class="ttname"><a href="inserter_8h.html">inserter.h</a></div><div class="ttdoc">Document insertion functionality for merging DOCX files</div></div>
+<div class="ttc" id="aiterator_8h_html"><div class="ttname"><a href="iterator_8h.html">iterator.h</a></div><div class="ttdoc">Iterator classes for CDocx document traversal</div></div>
+<div class="ttc" id="amail__merge_8h_html"><div class="ttname"><a href="mail__merge_8h.html">mail_merge.h</a></div><div class="ttdoc">Mail merge functionality for CDocx</div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+<div class="ttc" id="anode_8h_html"><div class="ttname"><a href="node_8h.html">node.h</a></div><div class="ttdoc">Node base classes for CDocx document model - DOM Style</div></div>
+<div class="ttc" id="aparagraph_8h_html"><div class="ttname"><a href="paragraph_8h.html">paragraph.h</a></div><div class="ttdoc">Paragraph class for CDocx - DOM Style</div></div>
+<div class="ttc" id="aparagraph__builder_8h_html"><div class="ttname"><a href="paragraph__builder_8h.html">paragraph_builder.h</a></div><div class="ttdoc">Paragraph builder for creating formatted paragraphs</div></div>
+<div class="ttc" id="aproperties_8h_html"><div class="ttname"><a href="properties_8h.html">properties.h</a></div><div class="ttdoc">Text and paragraph properties structures (inspired by minidocx)</div></div>
+<div class="ttc" id="arange_8h_html"><div class="ttname"><a href="range_8h.html">range.h</a></div><div class="ttdoc">Document range operations for CDocx</div></div>
+<div class="ttc" id="asection_8h_html"><div class="ttname"><a href="section_8h.html">section.h</a></div><div class="ttdoc">Section support for CDocx - DOM Style</div></div>
+<div class="ttc" id="astyle_8h_html"><div class="ttname"><a href="style_8h.html">style.h</a></div><div class="ttdoc">Style and StyleCollection classes for CDocx</div></div>
+<div class="ttc" id="atable_8h_html"><div class="ttname"><a href="table_8h.html">table.h</a></div><div class="ttdoc">Table classes for CDocx - DOM Style</div></div>
+<div class="ttc" id="atable__builder_8h_html"><div class="ttname"><a href="table__builder_8h.html">table_builder.h</a></div><div class="ttdoc">Table builder for creating and inserting tables</div></div>
+<div class="ttc" id="atemplate_8h_html"><div class="ttname"><a href="template_8h.html">template.h</a></div><div class="ttdoc">Template-based placeholder replacement for DOCX documents</div></div>
+<div class="ttc" id="atemplate__engine_8h_html"><div class="ttname"><a href="template__engine_8h.html">template_engine.h</a></div><div class="ttdoc">Unified template engine for DOCX documents</div></div>
+<div class="ttc" id="awatermark_8h_html"><div class="ttname"><a href="watermark_8h.html">watermark.h</a></div><div class="ttdoc">Document watermark support for CDocx</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="cdocx_8h.html">cdocx.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

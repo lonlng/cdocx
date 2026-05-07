@@ -1,0 +1,852 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: cdocx::NodeCollection类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classcdocx_1_1NodeCollection.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public 类型</a> &#124;
+<a href="#pub-methods">Public 成员函数</a> &#124;
+<a href="classcdocx_1_1NodeCollection-members.html">所有成员列表</a>  </div>
+  <div class="headertitle"><div class="title">cdocx::NodeCollection类 参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="node_8h_source.html">node.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public 类型</h2></td></tr>
+<tr class="memitem:a11868004bf9fbd4ca56e83883632a924" id="r_a11868004bf9fbd4ca56e83883632a924"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a11868004bf9fbd4ca56e83883632a924">NodeList</a> = std::vector&lt; std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; &gt;</td></tr>
+<tr class="separator:a11868004bf9fbd4ca56e83883632a924"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22b089bdc8121132ce8671e6086fbb91" id="r_a22b089bdc8121132ce8671e6086fbb91"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a22b089bdc8121132ce8671e6086fbb91">iterator</a> = NodeList::iterator</td></tr>
+<tr class="separator:a22b089bdc8121132ce8671e6086fbb91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80d14e8ba48106ca6d16e0bf841d6714" id="r_a80d14e8ba48106ca6d16e0bf841d6714"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a80d14e8ba48106ca6d16e0bf841d6714">const_iterator</a> = NodeList::const_iterator</td></tr>
+<tr class="separator:a80d14e8ba48106ca6d16e0bf841d6714"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public 成员函数</h2></td></tr>
+<tr class="memitem:a557f2dc756edae35be649e2979cd394d" id="r_a557f2dc756edae35be649e2979cd394d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a557f2dc756edae35be649e2979cd394d">NodeCollection</a> ()=default</td></tr>
+<tr class="separator:a557f2dc756edae35be649e2979cd394d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa28260c90048742885432518dc9078c0" id="r_aa28260c90048742885432518dc9078c0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#aa28260c90048742885432518dc9078c0">NodeCollection</a> (const <a class="el" href="classcdocx_1_1NodeCollection.html#a11868004bf9fbd4ca56e83883632a924">NodeList</a> &amp;nodes)</td></tr>
+<tr class="separator:aa28260c90048742885432518dc9078c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f4897025281963333b0c3430f4eedab" id="r_a9f4897025281963333b0c3430f4eedab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a9f4897025281963333b0c3430f4eedab">NodeCollection</a> (<a class="el" href="classcdocx_1_1NodeCollection.html#a11868004bf9fbd4ca56e83883632a924">NodeList</a> &amp;&amp;nodes)</td></tr>
+<tr class="separator:a9f4897025281963333b0c3430f4eedab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad79d14513cebe7477246790bdeb62869" id="r_ad79d14513cebe7477246790bdeb62869"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#ad79d14513cebe7477246790bdeb62869">get_count</a> () const</td></tr>
+<tr class="separator:ad79d14513cebe7477246790bdeb62869"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a578822f9668485dc558bfc37386d5392" id="r_a578822f9668485dc558bfc37386d5392"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a578822f9668485dc558bfc37386d5392">is_empty</a> () const</td></tr>
+<tr class="separator:a578822f9668485dc558bfc37386d5392"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acba92f51c19070b09e5ee9a6b5460b89" id="r_acba92f51c19070b09e5ee9a6b5460b89"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#acba92f51c19070b09e5ee9a6b5460b89">get_item</a> (size_t index) const</td></tr>
+<tr class="separator:acba92f51c19070b09e5ee9a6b5460b89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a360ac01b784be447cc502c0ed583fd08" id="r_a360ac01b784be447cc502c0ed583fd08"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a360ac01b784be447cc502c0ed583fd08">operator[]</a> (size_t index) const</td></tr>
+<tr class="separator:a360ac01b784be447cc502c0ed583fd08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab72918e3d6c1ed1a33172d8d55fe93d5" id="r_ab72918e3d6c1ed1a33172d8d55fe93d5"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#ab72918e3d6c1ed1a33172d8d55fe93d5">first</a> () const</td></tr>
+<tr class="separator:ab72918e3d6c1ed1a33172d8d55fe93d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0a857187ddd9d0ae0be883dd8183245" id="r_ad0a857187ddd9d0ae0be883dd8183245"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#ad0a857187ddd9d0ae0be883dd8183245">last</a> () const</td></tr>
+<tr class="separator:ad0a857187ddd9d0ae0be883dd8183245"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78c04c3d8e6600d15d1507b7b51ed9ee" id="r_a78c04c3d8e6600d15d1507b7b51ed9ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1NodeCollection.html#a22b089bdc8121132ce8671e6086fbb91">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a78c04c3d8e6600d15d1507b7b51ed9ee">begin</a> ()</td></tr>
+<tr class="separator:a78c04c3d8e6600d15d1507b7b51ed9ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a521b650f4088fde29c48c932400de6ac" id="r_a521b650f4088fde29c48c932400de6ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1NodeCollection.html#a22b089bdc8121132ce8671e6086fbb91">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a521b650f4088fde29c48c932400de6ac">end</a> ()</td></tr>
+<tr class="separator:a521b650f4088fde29c48c932400de6ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a279108538fd21903e78b46e9e88474ca" id="r_a279108538fd21903e78b46e9e88474ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1NodeCollection.html#a80d14e8ba48106ca6d16e0bf841d6714">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a279108538fd21903e78b46e9e88474ca">begin</a> () const</td></tr>
+<tr class="separator:a279108538fd21903e78b46e9e88474ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56f5c8f954bdf3e7553b8823d4824708" id="r_a56f5c8f954bdf3e7553b8823d4824708"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1NodeCollection.html#a80d14e8ba48106ca6d16e0bf841d6714">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a56f5c8f954bdf3e7553b8823d4824708">end</a> () const</td></tr>
+<tr class="separator:a56f5c8f954bdf3e7553b8823d4824708"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af76464de3ad1beda73fc7c41d4648aaa" id="r_af76464de3ad1beda73fc7c41d4648aaa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1NodeCollection.html">NodeCollection</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#af76464de3ad1beda73fc7c41d4648aaa">of_type</a> (<a class="el" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4">NodeType</a> <a class="el" href="base__content_8cpp.html#a6bd37bc7b340338d4765e62079730289">type</a>) const</td></tr>
+<tr class="separator:af76464de3ad1beda73fc7c41d4648aaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af38d0041a1b132796081c95673090636" id="r_af38d0041a1b132796081c95673090636"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:af38d0041a1b132796081c95673090636"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#af38d0041a1b132796081c95673090636">of_type</a> () const</td></tr>
+<tr class="separator:af38d0041a1b132796081c95673090636"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8649652ba7b8c8816ea2b49b9d942c3d" id="r_a8649652ba7b8c8816ea2b49b9d942c3d"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a8649652ba7b8c8816ea2b49b9d942c3d">find</a> (const std::string &amp;text) const</td></tr>
+<tr class="separator:a8649652ba7b8c8816ea2b49b9d942c3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabedb57e2095f6e4a46adcb4d5d2f894" id="r_aabedb57e2095f6e4a46adcb4d5d2f894"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#aabedb57e2095f6e4a46adcb4d5d2f894">find_all</a> (const std::string &amp;text) const</td></tr>
+<tr class="separator:aabedb57e2095f6e4a46adcb4d5d2f894"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acff9a45aa1cd83ebbe983b3f3e5afb5b" id="r_acff9a45aa1cd83ebbe983b3f3e5afb5b"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#acff9a45aa1cd83ebbe983b3f3e5afb5b">find_if</a> (const std::function&lt; bool(const <a class="el" href="classcdocx_1_1Node.html">Node</a> &amp;)&gt; &amp;predicate) const</td></tr>
+<tr class="separator:acff9a45aa1cd83ebbe983b3f3e5afb5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad70eda1d8798777fa6225891ceeb3940" id="r_ad70eda1d8798777fa6225891ceeb3940"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcdocx_1_1NodeCollection.html">NodeCollection</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#ad70eda1d8798777fa6225891ceeb3940">find_all_if</a> (const std::function&lt; bool(const <a class="el" href="classcdocx_1_1Node.html">Node</a> &amp;)&gt; &amp;predicate) const</td></tr>
+<tr class="separator:ad70eda1d8798777fa6225891ceeb3940"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0377b982e9301c1dc40f0905dc7aadc" id="r_af0377b982e9301c1dc40f0905dc7aadc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#af0377b982e9301c1dc40f0905dc7aadc">add</a> (const std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; &amp;node)</td></tr>
+<tr class="separator:af0377b982e9301c1dc40f0905dc7aadc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0248245998ff8b4b4c45fea01e4169f" id="r_ab0248245998ff8b4b4c45fea01e4169f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#ab0248245998ff8b4b4c45fea01e4169f">remove</a> (const std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; &amp;node)</td></tr>
+<tr class="separator:ab0248245998ff8b4b4c45fea01e4169f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a47d637b1d84ae6afd985d7732b90ad" id="r_a6a47d637b1d84ae6afd985d7732b90ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a6a47d637b1d84ae6afd985d7732b90ad">remove_at</a> (size_t index)</td></tr>
+<tr class="separator:a6a47d637b1d84ae6afd985d7732b90ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ad634954de0b89062e699792e50e3c6" id="r_a2ad634954de0b89062e699792e50e3c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a2ad634954de0b89062e699792e50e3c6">clear</a> ()</td></tr>
+<tr class="separator:a2ad634954de0b89062e699792e50e3c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14899ac56749ed431e84bcd82114d612" id="r_a14899ac56749ed431e84bcd82114d612"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a14899ac56749ed431e84bcd82114d612">insert</a> (size_t index, std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; node)</td></tr>
+<tr class="separator:a14899ac56749ed431e84bcd82114d612"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a371fff2f2b9bf6ee6ceb2cfe2ddd76d4" id="r_a371fff2f2b9bf6ee6ceb2cfe2ddd76d4"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1NodeCollection.html#a371fff2f2b9bf6ee6ceb2cfe2ddd76d4">get_text</a> () const</td></tr>
+<tr class="separator:a371fff2f2b9bf6ee6ceb2cfe2ddd76d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock">
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00214">214</a> 行定义.</p>
+</div><h2 class="groupheader">成员类型定义说明</h2>
+<a id="a80d14e8ba48106ca6d16e0bf841d6714" name="a80d14e8ba48106ca6d16e0bf841d6714"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80d14e8ba48106ca6d16e0bf841d6714">&#9670;&#160;</a></span>const_iterator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classcdocx_1_1NodeCollection.html#a80d14e8ba48106ca6d16e0bf841d6714">cdocx::NodeCollection::const_iterator</a> =  NodeList::const_iterator</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00218">218</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a22b089bdc8121132ce8671e6086fbb91" name="a22b089bdc8121132ce8671e6086fbb91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22b089bdc8121132ce8671e6086fbb91">&#9670;&#160;</a></span>iterator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classcdocx_1_1NodeCollection.html#a22b089bdc8121132ce8671e6086fbb91">cdocx::NodeCollection::iterator</a> =  NodeList::iterator</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00217">217</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a11868004bf9fbd4ca56e83883632a924" name="a11868004bf9fbd4ca56e83883632a924"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11868004bf9fbd4ca56e83883632a924">&#9670;&#160;</a></span>NodeList</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classcdocx_1_1NodeCollection.html#a11868004bf9fbd4ca56e83883632a924">cdocx::NodeCollection::NodeList</a> =  std::vector&lt;std::shared_ptr&lt;<a class="el" href="classcdocx_1_1Node.html">Node</a>&gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00216">216</a> 行定义.</p>
+
+</div>
+</div>
+<h2 class="groupheader">构造及析构函数说明</h2>
+<a id="a557f2dc756edae35be649e2979cd394d" name="a557f2dc756edae35be649e2979cd394d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a557f2dc756edae35be649e2979cd394d">&#9670;&#160;</a></span>NodeCollection() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::NodeCollection::NodeCollection </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">被这些函数引用 <a class="el" href="node_8cpp_source.html#l00328">find_all_if()</a> , 以及 <a class="el" href="node_8cpp_source.html#l00289">of_type()</a>.</p>
+
+</div>
+</div>
+<a id="aa28260c90048742885432518dc9078c0" name="aa28260c90048742885432518dc9078c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa28260c90048742885432518dc9078c0">&#9670;&#160;</a></span>NodeCollection() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::NodeCollection::NodeCollection </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcdocx_1_1NodeCollection.html#a11868004bf9fbd4ca56e83883632a924">NodeList</a> &amp;&#160;</td>
+          <td class="paramname"><em>nodes</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00226">226</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a9f4897025281963333b0c3430f4eedab" name="a9f4897025281963333b0c3430f4eedab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f4897025281963333b0c3430f4eedab">&#9670;&#160;</a></span>NodeCollection() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cdocx::NodeCollection::NodeCollection </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcdocx_1_1NodeCollection.html#a11868004bf9fbd4ca56e83883632a924">NodeList</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>nodes</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00227">227</a> 行定义.</p>
+
+</div>
+</div>
+<h2 class="groupheader">成员函数说明</h2>
+<a id="af0377b982e9301c1dc40f0905dc7aadc" name="af0377b982e9301c1dc40f0905dc7aadc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0377b982e9301c1dc40f0905dc7aadc">&#9670;&#160;</a></span>add()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cdocx::NodeCollection::add </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8cpp_source.html">node.cpp</a> 第 <a class="el" href="node_8cpp_source.html#l00339">339</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a78c04c3d8e6600d15d1507b7b51ed9ee" name="a78c04c3d8e6600d15d1507b7b51ed9ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78c04c3d8e6600d15d1507b7b51ed9ee">&#9670;&#160;</a></span>begin() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1NodeCollection.html#a22b089bdc8121132ce8671e6086fbb91">iterator</a> cdocx::NodeCollection::begin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00245">245</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a279108538fd21903e78b46e9e88474ca" name="a279108538fd21903e78b46e9e88474ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a279108538fd21903e78b46e9e88474ca">&#9670;&#160;</a></span>begin() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1NodeCollection.html#a80d14e8ba48106ca6d16e0bf841d6714">const_iterator</a> cdocx::NodeCollection::begin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00247">247</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a2ad634954de0b89062e699792e50e3c6" name="a2ad634954de0b89062e699792e50e3c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ad634954de0b89062e699792e50e3c6">&#9670;&#160;</a></span>clear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cdocx::NodeCollection::clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8cpp_source.html">node.cpp</a> 第 <a class="el" href="node_8cpp_source.html#l00357">357</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a521b650f4088fde29c48c932400de6ac" name="a521b650f4088fde29c48c932400de6ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a521b650f4088fde29c48c932400de6ac">&#9670;&#160;</a></span>end() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1NodeCollection.html#a22b089bdc8121132ce8671e6086fbb91">iterator</a> cdocx::NodeCollection::end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00246">246</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a56f5c8f954bdf3e7553b8823d4824708" name="a56f5c8f954bdf3e7553b8823d4824708"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56f5c8f954bdf3e7553b8823d4824708">&#9670;&#160;</a></span>end() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1NodeCollection.html#a80d14e8ba48106ca6d16e0bf841d6714">const_iterator</a> cdocx::NodeCollection::end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00248">248</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a8649652ba7b8c8816ea2b49b9d942c3d" name="a8649652ba7b8c8816ea2b49b9d942c3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8649652ba7b8c8816ea2b49b9d942c3d">&#9670;&#160;</a></span>find()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; cdocx::NodeCollection::find </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8cpp_source.html">node.cpp</a> 第 <a class="el" href="node_8cpp_source.html#l00299">299</a> 行定义.</p>
+
+</div>
+</div>
+<a id="aabedb57e2095f6e4a46adcb4d5d2f894" name="aabedb57e2095f6e4a46adcb4d5d2f894"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabedb57e2095f6e4a46adcb4d5d2f894">&#9670;&#160;</a></span>find_all()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; &gt; cdocx::NodeCollection::find_all </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>text</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8cpp_source.html">node.cpp</a> 第 <a class="el" href="node_8cpp_source.html#l00308">308</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document__builder_8cpp_source.html#l00693">result</a>.</p>
+
+</div>
+</div>
+<a id="ad70eda1d8798777fa6225891ceeb3940" name="ad70eda1d8798777fa6225891ceeb3940"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad70eda1d8798777fa6225891ceeb3940">&#9670;&#160;</a></span>find_all_if()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1NodeCollection.html">NodeCollection</a> cdocx::NodeCollection::find_all_if </td>
+          <td>(</td>
+          <td class="paramtype">const std::function&lt; bool(const <a class="el" href="classcdocx_1_1Node.html">Node</a> &amp;)&gt; &amp;&#160;</td>
+          <td class="paramname"><em>predicate</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8cpp_source.html">node.cpp</a> 第 <a class="el" href="node_8cpp_source.html#l00328">328</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="classcdocx_1_1NodeCollection.html#a557f2dc756edae35be649e2979cd394d">NodeCollection()</a> , 以及 <a class="el" href="document__builder_8cpp_source.html#l00693">result</a>.</p>
+
+</div>
+</div>
+<a id="acff9a45aa1cd83ebbe983b3f3e5afb5b" name="acff9a45aa1cd83ebbe983b3f3e5afb5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acff9a45aa1cd83ebbe983b3f3e5afb5b">&#9670;&#160;</a></span>find_if()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; cdocx::NodeCollection::find_if </td>
+          <td>(</td>
+          <td class="paramtype">const std::function&lt; bool(const <a class="el" href="classcdocx_1_1Node.html">Node</a> &amp;)&gt; &amp;&#160;</td>
+          <td class="paramname"><em>predicate</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8cpp_source.html">node.cpp</a> 第 <a class="el" href="node_8cpp_source.html#l00318">318</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ab72918e3d6c1ed1a33172d8d55fe93d5" name="ab72918e3d6c1ed1a33172d8d55fe93d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab72918e3d6c1ed1a33172d8d55fe93d5">&#9670;&#160;</a></span>first()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; cdocx::NodeCollection::first </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00241">241</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ad79d14513cebe7477246790bdeb62869" name="ad79d14513cebe7477246790bdeb62869"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad79d14513cebe7477246790bdeb62869">&#9670;&#160;</a></span>get_count()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t cdocx::NodeCollection::get_count </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00230">230</a> 行定义.</p>
+
+</div>
+</div>
+<a id="acba92f51c19070b09e5ee9a6b5460b89" name="acba92f51c19070b09e5ee9a6b5460b89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acba92f51c19070b09e5ee9a6b5460b89">&#9670;&#160;</a></span>get_item()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; cdocx::NodeCollection::get_item </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00234">234</a> 行定义.</p>
+
+<p class="reference">被这些函数引用 <a class="el" href="node_8h_source.html#l00240">operator[]()</a>.</p>
+
+</div>
+</div>
+<a id="a371fff2f2b9bf6ee6ceb2cfe2ddd76d4" name="a371fff2f2b9bf6ee6ceb2cfe2ddd76d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a371fff2f2b9bf6ee6ceb2cfe2ddd76d4">&#9670;&#160;</a></span>get_text()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string cdocx::NodeCollection::get_text </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a14899ac56749ed431e84bcd82114d612" name="a14899ac56749ed431e84bcd82114d612"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14899ac56749ed431e84bcd82114d612">&#9670;&#160;</a></span>insert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cdocx::NodeCollection::insert </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt;&#160;</td>
+          <td class="paramname"><em>node</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a578822f9668485dc558bfc37386d5392" name="a578822f9668485dc558bfc37386d5392"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a578822f9668485dc558bfc37386d5392">&#9670;&#160;</a></span>is_empty()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cdocx::NodeCollection::is_empty </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00231">231</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ad0a857187ddd9d0ae0be883dd8183245" name="ad0a857187ddd9d0ae0be883dd8183245"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0a857187ddd9d0ae0be883dd8183245">&#9670;&#160;</a></span>last()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; cdocx::NodeCollection::last </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00242">242</a> 行定义.</p>
+
+</div>
+</div>
+<a id="af38d0041a1b132796081c95673090636" name="af38d0041a1b132796081c95673090636"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af38d0041a1b132796081c95673090636">&#9670;&#160;</a></span>of_type() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::shared_ptr&lt; T &gt; &gt; cdocx::NodeCollection::of_type </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00254">254</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="document__builder_8cpp_source.html#l00693">result</a>.</p>
+
+</div>
+</div>
+<a id="af76464de3ad1beda73fc7c41d4648aaa" name="af76464de3ad1beda73fc7c41d4648aaa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af76464de3ad1beda73fc7c41d4648aaa">&#9670;&#160;</a></span>of_type() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcdocx_1_1NodeCollection.html">NodeCollection</a> cdocx::NodeCollection::of_type </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4">NodeType</a>&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8cpp_source.html">node.cpp</a> 第 <a class="el" href="node_8cpp_source.html#l00289">289</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="classcdocx_1_1NodeCollection.html#a557f2dc756edae35be649e2979cd394d">NodeCollection()</a> , 以及 <a class="el" href="base__content_8cpp_source.html#l00099">type</a>.</p>
+
+</div>
+</div>
+<a id="a360ac01b784be447cc502c0ed583fd08" name="a360ac01b784be447cc502c0ed583fd08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a360ac01b784be447cc502c0ed583fd08">&#9670;&#160;</a></span>operator[]()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; cdocx::NodeCollection::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8h_source.html">node.h</a> 第 <a class="el" href="node_8h_source.html#l00240">240</a> 行定义.</p>
+
+<p class="reference">引用了 <a class="el" href="node_8h_source.html#l00234">get_item()</a>.</p>
+
+</div>
+</div>
+<a id="ab0248245998ff8b4b4c45fea01e4169f" name="ab0248245998ff8b4b4c45fea01e4169f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0248245998ff8b4b4c45fea01e4169f">&#9670;&#160;</a></span>remove()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cdocx::NodeCollection::remove </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classcdocx_1_1Node.html">Node</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="node_8cpp_source.html">node.cpp</a> 第 <a class="el" href="node_8cpp_source.html#l00345">345</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a6a47d637b1d84ae6afd985d7732b90ad" name="a6a47d637b1d84ae6afd985d7732b90ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a47d637b1d84ae6afd985d7732b90ad">&#9670;&#160;</a></span>remove_at()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cdocx::NodeCollection::remove_at </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li><a class="el" href="node_8h_source.html">node.h</a></li>
+<li><a class="el" href="node_8cpp_source.html">node.cpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespacecdocx.html">cdocx</a></li><li class="navelem"><a class="el" href="classcdocx_1_1NodeCollection.html">NodeCollection</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

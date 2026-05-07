@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: cdocx.cpp 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('cdocx_8cpp_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">cdocx.cpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="cdocx_8cpp.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;<a class="code" href="cdocx_8h.html">cdocx.h</a>&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="advanced_8h.html">cdocx/advanced.h</a>&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="document_8h.html">cdocx/document.h</a>&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="paragraph__builder_8h.html">cdocx/paragraph_builder.h</a>&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="table__builder_8h.html">cdocx/table_builder.h</a>&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="foldopen" id="foldopen00017" data-start="{" data-end="}">
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classcdocx_1_1CDocx.html#aafc031431fb8d3004da8ecbff9975e85">   17</a></span>std::shared_ptr&lt;Document&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#aafc031431fb8d3004da8ecbff9975e85">CDocx::create_document</a>() {</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keyword">auto</span> doc = std::make_shared&lt;Document&gt;(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    doc-&gt;create_empty();</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keywordflow">return</span> doc;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>}</div>
+</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="foldopen" id="foldopen00023" data-start="{" data-end="}">
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classcdocx_1_1CDocx.html#ac8a64cf17b685f40af45c4c6cc504599">   23</a></span>std::shared_ptr&lt;Document&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#ac8a64cf17b685f40af45c4c6cc504599">CDocx::load_document</a>(<span class="keyword">const</span> std::string&amp; path) {</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">auto</span> doc = std::make_shared&lt;Document&gt;(path);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    doc-&gt;open(path);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keywordflow">if</span> (!doc-&gt;is_open()) {</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    }</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordflow">return</span> doc;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>}</div>
+</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="foldopen" id="foldopen00032" data-start="{" data-end="}">
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classcdocx_1_1CDocx.html#afcd821b02313cd94e1431d46da50250c">   32</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1CDocx.html#afcd821b02313cd94e1431d46da50250c">CDocx::save_document</a>(<span class="keyword">const</span> std::shared_ptr&lt;Document&gt;&amp; doc, <span class="keyword">const</span> std::string&amp; path) {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordflow">if</span> (!doc || !doc-&gt;is_open()) {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    }</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    doc-&gt;save(path);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">namespace </span>fs = std::filesystem;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordflow">return</span> fs::exists(path);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>}</div>
+</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="foldopen" id="foldopen00041" data-start="{" data-end="}">
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classcdocx_1_1CDocx.html#a08a2a6a719cb958ece6008b87c31004a">   41</a></span>std::shared_ptr&lt;DocumentBuilder&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#a08a2a6a719cb958ece6008b87c31004a">CDocx::document</a>() {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">auto</span> doc = <a class="code hl_function" href="classcdocx_1_1CDocx.html#aafc031431fb8d3004da8ecbff9975e85">create_document</a>();</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordflow">return</span> std::make_shared&lt;DocumentBuilder&gt;(doc);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>}</div>
+</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classcdocx_1_1CDocx.html#adc600582481c892bc6377e42dbec6124">   46</a></span>std::shared_ptr&lt;ParagraphBuilder&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#adc600582481c892bc6377e42dbec6124">CDocx::paragraph</a>() {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordflow">return</span> std::make_shared&lt;ParagraphBuilder&gt;();</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>}</div>
+</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="foldopen" id="foldopen00050" data-start="{" data-end="}">
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classcdocx_1_1CDocx.html#ad4b7ddd03adb89576be0c20a9217b380">   50</a></span>std::shared_ptr&lt;ParagraphBuilder&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#adc600582481c892bc6377e42dbec6124">CDocx::paragraph</a>(<span class="keyword">const</span> std::string&amp; text) {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">return</span> std::make_shared&lt;ParagraphBuilder&gt;(text);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>}</div>
+</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="foldopen" id="foldopen00054" data-start="{" data-end="}">
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classcdocx_1_1CDocx.html#a8e4e54eae07aa821e3fed0b551a17bb3">   54</a></span>std::shared_ptr&lt;TableBuilder&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#a8e4e54eae07aa821e3fed0b551a17bb3">CDocx::table</a>() {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordflow">return</span> std::make_shared&lt;TableBuilder&gt;(0, 0);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
+</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="foldopen" id="foldopen00058" data-start="{" data-end="}">
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classcdocx_1_1CDocx.html#af48dc8fe6e6bfa96dc34ecbb99e289db">   58</a></span>std::shared_ptr&lt;TableBuilder&gt; <a class="code hl_function" href="classcdocx_1_1CDocx.html#a8e4e54eae07aa821e3fed0b551a17bb3">CDocx::table</a>(<span class="keywordtype">size_t</span> rows, <span class="keywordtype">size_t</span> columns) {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordflow">return</span> std::make_shared&lt;TableBuilder&gt;(<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(rows), <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(columns));</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>}</div>
+</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="foldopen" id="foldopen00062" data-start="{" data-end="}">
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classcdocx_1_1CDocx.html#af009ee51a69063548b802e9e01cc45d9">   62</a></span>std::string <a class="code hl_function" href="classcdocx_1_1CDocx.html#af009ee51a69063548b802e9e01cc45d9">CDocx::version</a>() {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">return</span> <a class="code hl_define" href="cdocx_8h.html#a0c11b2a5c3bb0b12845d994ea3f09516">CDOCX_VERSION</a>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
+</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="foldopen" id="foldopen00066" data-start="{" data-end="}">
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classcdocx_1_1CDocx.html#a7c60e9013ce9208b5db99dc8e375a6c6">   66</a></span>std::string <a class="code hl_function" href="classcdocx_1_1CDocx.html#a7c60e9013ce9208b5db99dc8e375a6c6">CDocx::version_string</a>() {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;CDocx v&quot;</span> + std::string(<a class="code hl_define" href="cdocx_8h.html#a0c11b2a5c3bb0b12845d994ea3f09516">CDOCX_VERSION</a>);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>}</div>
+</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="aadvanced_8h_html"><div class="ttname"><a href="advanced_8h.html">advanced.h</a></div><div class="ttdoc">Advanced features for CDocx (aggregate header)</div></div>
+<div class="ttc" id="acdocx_8h_html"><div class="ttname"><a href="cdocx_8h.html">cdocx.h</a></div><div class="ttdoc">CDocx v2.0 - Main aggregated header</div></div>
+<div class="ttc" id="acdocx_8h_html_a0c11b2a5c3bb0b12845d994ea3f09516"><div class="ttname"><a href="cdocx_8h.html#a0c11b2a5c3bb0b12845d994ea3f09516">CDOCX_VERSION</a></div><div class="ttdeci">#define CDOCX_VERSION</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00036">cdocx.h:36</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_a08a2a6a719cb958ece6008b87c31004a"><div class="ttname"><a href="classcdocx_1_1CDocx.html#a08a2a6a719cb958ece6008b87c31004a">cdocx::CDocx::document</a></div><div class="ttdeci">static std::shared_ptr&lt; DocumentBuilder &gt; document()</div><div class="ttdoc">Create a new document builder</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00041">cdocx.cpp:41</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_a7c60e9013ce9208b5db99dc8e375a6c6"><div class="ttname"><a href="classcdocx_1_1CDocx.html#a7c60e9013ce9208b5db99dc8e375a6c6">cdocx::CDocx::version_string</a></div><div class="ttdeci">static std::string version_string()</div><div class="ttdoc">Get the full library version string</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00066">cdocx.cpp:66</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_a8e4e54eae07aa821e3fed0b551a17bb3"><div class="ttname"><a href="classcdocx_1_1CDocx.html#a8e4e54eae07aa821e3fed0b551a17bb3">cdocx::CDocx::table</a></div><div class="ttdeci">static std::shared_ptr&lt; TableBuilder &gt; table()</div><div class="ttdoc">Create a new table builder</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00054">cdocx.cpp:54</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_aafc031431fb8d3004da8ecbff9975e85"><div class="ttname"><a href="classcdocx_1_1CDocx.html#aafc031431fb8d3004da8ecbff9975e85">cdocx::CDocx::create_document</a></div><div class="ttdeci">static std::shared_ptr&lt; Document &gt; create_document()</div><div class="ttdoc">Create a new empty document</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00017">cdocx.cpp:17</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_ac8a64cf17b685f40af45c4c6cc504599"><div class="ttname"><a href="classcdocx_1_1CDocx.html#ac8a64cf17b685f40af45c4c6cc504599">cdocx::CDocx::load_document</a></div><div class="ttdeci">static std::shared_ptr&lt; Document &gt; load_document(const std::string &amp;path)</div><div class="ttdoc">Load a document from file</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00023">cdocx.cpp:23</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_adc600582481c892bc6377e42dbec6124"><div class="ttname"><a href="classcdocx_1_1CDocx.html#adc600582481c892bc6377e42dbec6124">cdocx::CDocx::paragraph</a></div><div class="ttdeci">static std::shared_ptr&lt; ParagraphBuilder &gt; paragraph()</div><div class="ttdoc">Create a new paragraph builder</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00046">cdocx.cpp:46</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_af009ee51a69063548b802e9e01cc45d9"><div class="ttname"><a href="classcdocx_1_1CDocx.html#af009ee51a69063548b802e9e01cc45d9">cdocx::CDocx::version</a></div><div class="ttdeci">static std::string version()</div><div class="ttdoc">Get the library version string</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00062">cdocx.cpp:62</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CDocx_html_afcd821b02313cd94e1431d46da50250c"><div class="ttname"><a href="classcdocx_1_1CDocx.html#afcd821b02313cd94e1431d46da50250c">cdocx::CDocx::save_document</a></div><div class="ttdeci">static bool save_document(const std::shared_ptr&lt; Document &gt; &amp;doc, const std::string &amp;path)</div><div class="ttdoc">Save a document to file</div><div class="ttdef"><b>Definition</b> <a href="cdocx_8cpp_source.html#l00032">cdocx.cpp:32</a></div></div>
+<div class="ttc" id="adocument_8h_html"><div class="ttname"><a href="document_8h.html">document.h</a></div><div class="ttdoc">Document class for working with DOCX files - DOM Style</div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+<div class="ttc" id="aparagraph__builder_8h_html"><div class="ttname"><a href="paragraph__builder_8h.html">paragraph_builder.h</a></div><div class="ttdoc">Paragraph builder for creating formatted paragraphs</div></div>
+<div class="ttc" id="atable__builder_8h_html"><div class="ttname"><a href="table__builder_8h.html">table_builder.h</a></div><div class="ttdoc">Table builder for creating and inserting tables</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="cdocx_8cpp.html">cdocx.cpp</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

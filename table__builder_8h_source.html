@@ -1,0 +1,309 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: table_builder.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('table__builder_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">table_builder.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="table__builder_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;<a class="code" href="fwd_8h.html">cdocx/fwd.h</a>&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;pugixml.hpp&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">// Forward declaration</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">class </span><a class="code hl_enumvalue" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4a0945359809dad1fbf3dea1c95a0da951">Document</a>;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">class </span><a class="code hl_enumvalue" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4afeaf0a320c3d678ad30dd179b7d21584">Paragraph</a>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="foldopen" id="foldopen00031" data-start="{" data-end="};">
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structcdocx_1_1TableBorders.html">   31</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structcdocx_1_1TableBorders.html">TableBorders</a> {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="structcdocx_1_1TableBorders.html#a2ecfaf4dac7155e7182dea7a364f2657">   32</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structcdocx_1_1TableBorders.html#a2ecfaf4dac7155e7182dea7a364f2657">top</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="structcdocx_1_1TableBorders.html#a16c3693c27690a09ffc3c41faf61dc70">   33</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structcdocx_1_1TableBorders.html#a16c3693c27690a09ffc3c41faf61dc70">left</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="structcdocx_1_1TableBorders.html#ad4f10ea32e7679de73873b799cd3464e">   34</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structcdocx_1_1TableBorders.html#ad4f10ea32e7679de73873b799cd3464e">bottom</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="structcdocx_1_1TableBorders.html#ab46e410d706a58e596dd2e5bf931bd59">   35</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structcdocx_1_1TableBorders.html#ab46e410d706a58e596dd2e5bf931bd59">right</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="structcdocx_1_1TableBorders.html#a73dc0ae085674cd0b43abdaef685c208">   36</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structcdocx_1_1TableBorders.html#a73dc0ae085674cd0b43abdaef685c208">inside_h</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="structcdocx_1_1TableBorders.html#a655569d8e87ca9bbdebf33fe598fc2aa">   37</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structcdocx_1_1TableBorders.html#a655569d8e87ca9bbdebf33fe598fc2aa">inside_v</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="structcdocx_1_1TableBorders.html#a91b3ef82068109e37efbf793f2f11f9c">   38</a></span>    std::string <a class="code hl_variable" href="structcdocx_1_1TableBorders.html#a91b3ef82068109e37efbf793f2f11f9c">color</a> = <span class="stringliteral">&quot;auto&quot;</span>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="structcdocx_1_1TableBorders.html#acb77a58aafd0753e854f9a6f398e4b2b">   39</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structcdocx_1_1TableBorders.html#acb77a58aafd0753e854f9a6f398e4b2b">size</a> = 4;  <span class="comment">// In eighths of a point</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="structcdocx_1_1TableBorders.html#af6e693bfa58905105d113616f17c625e">   44</a></span>    <span class="keyword">static</span> <a class="code hl_struct" href="structcdocx_1_1TableBorders.html">TableBorders</a> <a class="code hl_function" href="structcdocx_1_1TableBorders.html#af6e693bfa58905105d113616f17c625e">none</a>() {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <a class="code hl_struct" href="structcdocx_1_1TableBorders.html">TableBorders</a> b;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        b.<a class="code hl_variable" href="structcdocx_1_1TableBorders.html#a2ecfaf4dac7155e7182dea7a364f2657">top</a> = b.<a class="code hl_variable" href="structcdocx_1_1TableBorders.html#a16c3693c27690a09ffc3c41faf61dc70">left</a> = b.<a class="code hl_variable" href="structcdocx_1_1TableBorders.html#ad4f10ea32e7679de73873b799cd3464e">bottom</a> = b.<a class="code hl_variable" href="structcdocx_1_1TableBorders.html#ab46e410d706a58e596dd2e5bf931bd59">right</a> = b.<a class="code hl_variable" href="structcdocx_1_1TableBorders.html#a73dc0ae085674cd0b43abdaef685c208">inside_h</a> = b.<a class="code hl_variable" href="structcdocx_1_1TableBorders.html#a655569d8e87ca9bbdebf33fe598fc2aa">inside_v</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordflow">return</span> b;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    }</div>
+</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="structcdocx_1_1TableBorders.html#a91a859ce1e445318c5212a6a733bcafc">   53</a></span>    <span class="keyword">static</span> <a class="code hl_struct" href="structcdocx_1_1TableBorders.html">TableBorders</a> <a class="code hl_function" href="structcdocx_1_1TableBorders.html#a91a859ce1e445318c5212a6a733bcafc">all</a>() { <span class="keywordflow">return</span> {}; }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="foldopen" id="foldopen00058" data-start="{" data-end="}">
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="structcdocx_1_1TableBorders.html#aee3fa441611f0d5a993255abc853e424">   58</a></span>    <span class="keyword">static</span> <a class="code hl_struct" href="structcdocx_1_1TableBorders.html">TableBorders</a> <a class="code hl_function" href="structcdocx_1_1TableBorders.html#aee3fa441611f0d5a993255abc853e424">outside_only</a>() {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <a class="code hl_struct" href="structcdocx_1_1TableBorders.html">TableBorders</a> b;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        b.<a class="code hl_variable" href="structcdocx_1_1TableBorders.html#a73dc0ae085674cd0b43abdaef685c208">inside_h</a> = b.<a class="code hl_variable" href="structcdocx_1_1TableBorders.html#a655569d8e87ca9bbdebf33fe598fc2aa">inside_v</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keywordflow">return</span> b;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
+</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>};</div>
+</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="foldopen" id="foldopen00069" data-start="{" data-end="};">
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="structcdocx_1_1CellMerge.html">   69</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structcdocx_1_1CellMerge.html">CellMerge</a> {</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="structcdocx_1_1CellMerge.html#a4d26778a73a05b66e8c3796cec8464a4">   70</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structcdocx_1_1CellMerge.html#a4d26778a73a05b66e8c3796cec8464a4">row_span</a> = 1;        </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="structcdocx_1_1CellMerge.html#a8aecc9d68e828d7c40e5998a3944f1f1">   71</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structcdocx_1_1CellMerge.html#a8aecc9d68e828d7c40e5998a3944f1f1">col_span</a> = 1;        </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="structcdocx_1_1CellMerge.html#a48c668d26c02e602417108e81a4a8746">   72</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structcdocx_1_1CellMerge.html#a48c668d26c02e602417108e81a4a8746">is_restart</a> = <span class="keyword">true</span>;  </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>};</div>
+</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="foldopen" id="foldopen00092" data-start="{" data-end="};">
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableBuilder.html">   92</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a> {</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>(<span class="keywordtype">int</span> rows, <span class="keywordtype">int</span> cols);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableBuilder.html#aad8e5dfed0e37257fb1c7210608f6df1">  104</a></span>    <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#aad8e5dfed0e37257fb1c7210608f6df1">~TableBuilder</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="comment">// Disable copy, enable move</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableBuilder.html#a397f48af8505688a215d808897a66d38">  107</a></span>    <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#a397f48af8505688a215d808897a66d38">TableBuilder</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableBuilder.html#a7a83fbd4420f67dcabc139e76f724b82">  108</a></span>    <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#a7a83fbd4420f67dcabc139e76f724b82">operator=</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableBuilder.html#aa7e592ae8b063bb6a7c1be945ddc2b03">  109</a></span>    <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#aa7e592ae8b063bb6a7c1be945ddc2b03">TableBuilder</a>(<a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="classcdocx_1_1TableBuilder.html#a1781816584eae494492524e48181e4f2">  110</a></span>    <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#a1781816584eae494492524e48181e4f2">operator=</a>(<a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="comment">// Table Properties</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#ad12b8ae8025b16d099c6813e92234c5f">set_borders</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structcdocx_1_1TableBorders.html">TableBorders</a>&amp; borders);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#aca5bf2206f58bd7cec3cbe59772d3fd7">set_width</a>(<span class="keywordtype">int</span> width, <span class="keywordtype">bool</span> auto_width = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#aa5096d7227b6cf1766ca018a747972f0">set_cell_margins</a>(<span class="keywordtype">int</span> top, <span class="keywordtype">int</span> left, <span class="keywordtype">int</span> bottom, <span class="keywordtype">int</span> right);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="comment">// Cell Content</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#a096f5ba420c799aea82d1752a69e5430">set_cell_text</a>(<span class="keywordtype">int</span> row, <span class="keywordtype">int</span> col, <span class="keyword">const</span> std::string&amp; text);</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#a12f6eaab4c4cc0985c5e6f0530f8280c">set_cell_text_formatted</a>(</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        <span class="keywordtype">int</span> row, <span class="keywordtype">int</span> col, <span class="keyword">const</span> std::string&amp; text, <span class="keywordtype">bool</span> bold, <span class="keywordtype">bool</span> italic, <span class="keywordtype">int</span> font_size);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#af71adb38a17f6485c7bb2b4b80a96e33">set_cell_vertical_align</a>(<span class="keywordtype">int</span> row, <span class="keywordtype">int</span> col, <span class="keyword">const</span> std::string&amp; <a class="code hl_variable" href="properties_8cpp.html#a9bd1379a71b955886d4eb552d47d4fba">align</a>);</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="comment">// Cell Merging</span></div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#a13a2ea80180921f256ce76bc11b8e1a1">merge_cells_horizontal</a>(<span class="keywordtype">int</span> start_row, <span class="keywordtype">int</span> start_col, <span class="keywordtype">int</span> col_span);</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#a47fa84a9ed570a4df101cf843c649d01">merge_cells_vertical</a>(<span class="keywordtype">int</span> start_col, <span class="keywordtype">int</span> start_row, <span class="keywordtype">int</span> row_span);</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <a class="code hl_class" href="classcdocx_1_1TableBuilder.html">TableBuilder</a>&amp; <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#a232c50fe7e53b7e2c9bfd8a594b56326">merge_cells</a>(<span class="keywordtype">int</span> start_row, <span class="keywordtype">int</span> start_col, <span class="keywordtype">int</span> row_span, <span class="keywordtype">int</span> col_span);</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="comment">// Insertion</span></div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="comment">// ========================================================================</span></div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#a4ea19446acb090e24541f697550ad727">insert_at_bookmark</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>&amp; doc, <span class="keyword">const</span> std::string&amp; bookmark_name) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#ae5e83a30a1f9ba62ae50a0fe5cafb63e">insert_after_paragraph</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>&amp; doc, <a class="code hl_class" href="classcdocx_1_1Paragraph.html">Paragraph</a>&amp; para);</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    pugi::xml_node <a class="code hl_function" href="classcdocx_1_1TableBuilder.html#acfddeba81b15f14b13f6d251b75a7736">build</a>(pugi::xml_document&amp; doc_xml) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    <span class="keywordtype">int</span> rows_;</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="keywordtype">int</span> cols_;</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    <a class="code hl_struct" href="structcdocx_1_1TableBorders.html">TableBorders</a> borders_;</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    <span class="keywordtype">int</span> width_ = 0;</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    <span class="keywordtype">bool</span> auto_width_ = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    <span class="keywordtype">int</span> cell_margin_top_ = 0;</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    <span class="keywordtype">int</span> cell_margin_left_ = 108;</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="keywordtype">int</span> cell_margin_bottom_ = 0;</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="keywordtype">int</span> cell_margin_right_ = 108;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="comment">// Cell data storage</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    <span class="keyword">struct </span>CellData {</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        std::string text;</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        <span class="keywordtype">bool</span> bold = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="keywordtype">bool</span> italic = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        <span class="keywordtype">int</span> font_size = 0;  <span class="comment">// 0 = use default</span></div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        std::string v_align;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        <span class="keywordtype">int</span> row_span = 1;</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        <span class="keywordtype">int</span> col_span = 1;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        <span class="keywordtype">bool</span> is_vmerge_restart = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    };</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    std::vector&lt;std::vector&lt;CellData&gt;&gt; cells_;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keywordtype">void</span> create_table_structure(pugi::xml_node tbl) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    <span class="keywordtype">void</span> create_cell(pugi::xml_node tr, <span class="keywordtype">int</span> row, <span class="keywordtype">int</span> col) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>};</div>
+</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span><span class="comment">// Table Caption Functions</span></div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span> </div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span><span class="keywordtype">int</span> <a class="code hl_function" href="namespacecdocx.html#ab7d2731129c3961aaf90248f3fcdccdf">get_next_table_number</a>(Document* doc);</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="keywordtype">int</span> <a class="code hl_function" href="namespacecdocx.html#af480599fd565a1d29e2b1c498af9b0a3">count_existing_tables</a>(Document* doc);</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span><span class="keywordtype">bool</span> <a class="code hl_function" href="namespacecdocx.html#a564c353fa4e730848a211c803b7139ba">is_table_caption</a>(pugi::xml_node para);</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span> </div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>pugi::xml_node <a class="code hl_function" href="namespacecdocx.html#a4762cd17d1bdbc6456095ec301c6cfa4">insert_table_caption</a>(Document* doc,</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>                                    pugi::xml_node after_node,</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>                                    <span class="keyword">const</span> std::string&amp; description,</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>                                    <span class="keywordtype">int</span> table_number = 0);</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span> </div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html"><div class="ttname"><a href="classcdocx_1_1Document.html">cdocx::Document</a></div><div class="ttdef"><b>Definition</b> <a href="document_8h_source.html#l00285">document.h:285</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Paragraph_html"><div class="ttname"><a href="classcdocx_1_1Paragraph.html">cdocx::Paragraph</a></div><div class="ttdef"><b>Definition</b> <a href="paragraph_8h_source.html#l00043">paragraph.h:43</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html">cdocx::TableBuilder</a></div><div class="ttdoc">Builder class for creating tables</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00092">table_builder.h:92</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_a096f5ba420c799aea82d1752a69e5430"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#a096f5ba420c799aea82d1752a69e5430">cdocx::TableBuilder::set_cell_text</a></div><div class="ttdeci">TableBuilder &amp; set_cell_text(int row, int col, const std::string &amp;text)</div><div class="ttdoc">Set cell text</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00044">table_builder.cpp:44</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_a12f6eaab4c4cc0985c5e6f0530f8280c"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#a12f6eaab4c4cc0985c5e6f0530f8280c">cdocx::TableBuilder::set_cell_text_formatted</a></div><div class="ttdeci">TableBuilder &amp; set_cell_text_formatted(int row, int col, const std::string &amp;text, bool bold, bool italic, int font_size)</div><div class="ttdoc">Set cell text with format</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00051">table_builder.cpp:51</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_a13a2ea80180921f256ce76bc11b8e1a1"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#a13a2ea80180921f256ce76bc11b8e1a1">cdocx::TableBuilder::merge_cells_horizontal</a></div><div class="ttdeci">TableBuilder &amp; merge_cells_horizontal(int start_row, int start_col, int col_span)</div><div class="ttdoc">Merge cells horizontally</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00069">table_builder.cpp:69</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_a1781816584eae494492524e48181e4f2"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#a1781816584eae494492524e48181e4f2">cdocx::TableBuilder::operator=</a></div><div class="ttdeci">TableBuilder &amp; operator=(TableBuilder &amp;&amp;)=default</div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_a232c50fe7e53b7e2c9bfd8a594b56326"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#a232c50fe7e53b7e2c9bfd8a594b56326">cdocx::TableBuilder::merge_cells</a></div><div class="ttdeci">TableBuilder &amp; merge_cells(int start_row, int start_col, int row_span, int col_span)</div><div class="ttdoc">Merge cells in a rectangle</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00090">table_builder.cpp:90</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_a397f48af8505688a215d808897a66d38"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#a397f48af8505688a215d808897a66d38">cdocx::TableBuilder::TableBuilder</a></div><div class="ttdeci">TableBuilder(const TableBuilder &amp;)=delete</div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_a47fa84a9ed570a4df101cf843c649d01"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#a47fa84a9ed570a4df101cf843c649d01">cdocx::TableBuilder::merge_cells_vertical</a></div><div class="ttdeci">TableBuilder &amp; merge_cells_vertical(int start_col, int start_row, int row_span)</div><div class="ttdoc">Merge cells vertically</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00079">table_builder.cpp:79</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_a4ea19446acb090e24541f697550ad727"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#a4ea19446acb090e24541f697550ad727">cdocx::TableBuilder::insert_at_bookmark</a></div><div class="ttdeci">bool insert_at_bookmark(Document &amp;doc, const std::string &amp;bookmark_name) const</div><div class="ttdoc">Insert table at bookmark location</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00249">table_builder.cpp:249</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_a7a83fbd4420f67dcabc139e76f724b82"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#a7a83fbd4420f67dcabc139e76f724b82">cdocx::TableBuilder::operator=</a></div><div class="ttdeci">TableBuilder &amp; operator=(const TableBuilder &amp;)=delete</div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_aa5096d7227b6cf1766ca018a747972f0"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#aa5096d7227b6cf1766ca018a747972f0">cdocx::TableBuilder::set_cell_margins</a></div><div class="ttdeci">TableBuilder &amp; set_cell_margins(int top, int left, int bottom, int right)</div><div class="ttdoc">Set cell margins</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00036">table_builder.cpp:36</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_aa7e592ae8b063bb6a7c1be945ddc2b03"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#aa7e592ae8b063bb6a7c1be945ddc2b03">cdocx::TableBuilder::TableBuilder</a></div><div class="ttdeci">TableBuilder(TableBuilder &amp;&amp;)=default</div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_aad8e5dfed0e37257fb1c7210608f6df1"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#aad8e5dfed0e37257fb1c7210608f6df1">cdocx::TableBuilder::~TableBuilder</a></div><div class="ttdeci">~TableBuilder()=default</div><div class="ttdoc">Destructor</div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_aca5bf2206f58bd7cec3cbe59772d3fd7"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#aca5bf2206f58bd7cec3cbe59772d3fd7">cdocx::TableBuilder::set_width</a></div><div class="ttdeci">TableBuilder &amp; set_width(int width, bool auto_width=false)</div><div class="ttdoc">Set table width</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00030">table_builder.cpp:30</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_acfddeba81b15f14b13f6d251b75a7736"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#acfddeba81b15f14b13f6d251b75a7736">cdocx::TableBuilder::build</a></div><div class="ttdeci">pugi::xml_node build(pugi::xml_document &amp;doc_xml) const</div><div class="ttdoc">Build the table XML node</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00232">table_builder.cpp:232</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_ad12b8ae8025b16d099c6813e92234c5f"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#ad12b8ae8025b16d099c6813e92234c5f">cdocx::TableBuilder::set_borders</a></div><div class="ttdeci">TableBuilder &amp; set_borders(const TableBorders &amp;borders)</div><div class="ttdoc">Set table borders</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00025">table_builder.cpp:25</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_ae5e83a30a1f9ba62ae50a0fe5cafb63e"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#ae5e83a30a1f9ba62ae50a0fe5cafb63e">cdocx::TableBuilder::insert_after_paragraph</a></div><div class="ttdeci">bool insert_after_paragraph(Document &amp;doc, Paragraph &amp;para)</div><div class="ttdoc">Insert table after a paragraph</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00283">table_builder.cpp:283</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1TableBuilder_html_af71adb38a17f6485c7bb2b4b80a96e33"><div class="ttname"><a href="classcdocx_1_1TableBuilder.html#af71adb38a17f6485c7bb2b4b80a96e33">cdocx::TableBuilder::set_cell_vertical_align</a></div><div class="ttdeci">TableBuilder &amp; set_cell_vertical_align(int row, int col, const std::string &amp;align)</div><div class="ttdoc">Set cell vertical alignment</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00062">table_builder.cpp:62</a></div></div>
+<div class="ttc" id="afwd_8h_html"><div class="ttname"><a href="fwd_8h.html">fwd.h</a></div><div class="ttdoc">Forward declarations for CDocx library</div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a4762cd17d1bdbc6456095ec301c6cfa4"><div class="ttname"><a href="namespacecdocx.html#a4762cd17d1bdbc6456095ec301c6cfa4">cdocx::insert_table_caption</a></div><div class="ttdeci">pugi::xml_node insert_table_caption(Document *doc, pugi::xml_node after_node, const std::string &amp;description, int table_number=0)</div><div class="ttdoc">Insert a table caption after specified node</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00371">table_builder.cpp:371</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a564c353fa4e730848a211c803b7139ba"><div class="ttname"><a href="namespacecdocx.html#a564c353fa4e730848a211c803b7139ba">cdocx::is_table_caption</a></div><div class="ttdeci">bool is_table_caption(pugi::xml_node para)</div><div class="ttdoc">Check if paragraph is a table caption</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00324">table_builder.cpp:324</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a94dc995fea51760307c32fde48a651e4a0945359809dad1fbf3dea1c95a0da951"><div class="ttname"><a href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4a0945359809dad1fbf3dea1c95a0da951">cdocx::NodeType::Document</a></div><div class="ttdeci">@ Document</div></div>
+<div class="ttc" id="anamespacecdocx_html_a94dc995fea51760307c32fde48a651e4afeaf0a320c3d678ad30dd179b7d21584"><div class="ttname"><a href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4afeaf0a320c3d678ad30dd179b7d21584">cdocx::NodeType::Paragraph</a></div><div class="ttdeci">@ Paragraph</div></div>
+<div class="ttc" id="anamespacecdocx_html_ab7d2731129c3961aaf90248f3fcdccdf"><div class="ttname"><a href="namespacecdocx.html#ab7d2731129c3961aaf90248f3fcdccdf">cdocx::get_next_table_number</a></div><div class="ttdeci">int get_next_table_number(Document *doc)</div><div class="ttdoc">Get the next table number for caption</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00295">table_builder.cpp:295</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_af480599fd565a1d29e2b1c498af9b0a3"><div class="ttname"><a href="namespacecdocx.html#af480599fd565a1d29e2b1c498af9b0a3">cdocx::count_existing_tables</a></div><div class="ttdeci">int count_existing_tables(Document *doc)</div><div class="ttdoc">Count existing tables with captions in document</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8cpp_source.html#l00299">table_builder.cpp:299</a></div></div>
+<div class="ttc" id="aproperties_8cpp_html_a9bd1379a71b955886d4eb552d47d4fba"><div class="ttname"><a href="properties_8cpp.html#a9bd1379a71b955886d4eb552d47d4fba">align</a></div><div class="ttdeci">TextProperties::VertAlign align</div><div class="ttdef"><b>Definition</b> <a href="properties_8cpp_source.html#l00121">properties.cpp:121</a></div></div>
+<div class="ttc" id="astructcdocx_1_1CellMerge_html"><div class="ttname"><a href="structcdocx_1_1CellMerge.html">cdocx::CellMerge</a></div><div class="ttdoc">Cell merge configuration</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00069">table_builder.h:69</a></div></div>
+<div class="ttc" id="astructcdocx_1_1CellMerge_html_a48c668d26c02e602417108e81a4a8746"><div class="ttname"><a href="structcdocx_1_1CellMerge.html#a48c668d26c02e602417108e81a4a8746">cdocx::CellMerge::is_restart</a></div><div class="ttdeci">bool is_restart</div><div class="ttdoc">true for merge start, false for continue</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00072">table_builder.h:72</a></div></div>
+<div class="ttc" id="astructcdocx_1_1CellMerge_html_a4d26778a73a05b66e8c3796cec8464a4"><div class="ttname"><a href="structcdocx_1_1CellMerge.html#a4d26778a73a05b66e8c3796cec8464a4">cdocx::CellMerge::row_span</a></div><div class="ttdeci">int row_span</div><div class="ttdoc">Number of rows to span</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00070">table_builder.h:70</a></div></div>
+<div class="ttc" id="astructcdocx_1_1CellMerge_html_a8aecc9d68e828d7c40e5998a3944f1f1"><div class="ttname"><a href="structcdocx_1_1CellMerge.html#a8aecc9d68e828d7c40e5998a3944f1f1">cdocx::CellMerge::col_span</a></div><div class="ttdeci">int col_span</div><div class="ttdoc">Number of columns to span</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00071">table_builder.h:71</a></div></div>
+<div class="ttc" id="astructcdocx_1_1TableBorders_html"><div class="ttname"><a href="structcdocx_1_1TableBorders.html">cdocx::TableBorders</a></div><div class="ttdoc">Table border configuration</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00031">table_builder.h:31</a></div></div>
+<div class="ttc" id="astructcdocx_1_1TableBorders_html_a16c3693c27690a09ffc3c41faf61dc70"><div class="ttname"><a href="structcdocx_1_1TableBorders.html#a16c3693c27690a09ffc3c41faf61dc70">cdocx::TableBorders::left</a></div><div class="ttdeci">bool left</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00033">table_builder.h:33</a></div></div>
+<div class="ttc" id="astructcdocx_1_1TableBorders_html_a2ecfaf4dac7155e7182dea7a364f2657"><div class="ttname"><a href="structcdocx_1_1TableBorders.html#a2ecfaf4dac7155e7182dea7a364f2657">cdocx::TableBorders::top</a></div><div class="ttdeci">bool top</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00032">table_builder.h:32</a></div></div>
+<div class="ttc" id="astructcdocx_1_1TableBorders_html_a655569d8e87ca9bbdebf33fe598fc2aa"><div class="ttname"><a href="structcdocx_1_1TableBorders.html#a655569d8e87ca9bbdebf33fe598fc2aa">cdocx::TableBorders::inside_v</a></div><div class="ttdeci">bool inside_v</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00037">table_builder.h:37</a></div></div>
+<div class="ttc" id="astructcdocx_1_1TableBorders_html_a73dc0ae085674cd0b43abdaef685c208"><div class="ttname"><a href="structcdocx_1_1TableBorders.html#a73dc0ae085674cd0b43abdaef685c208">cdocx::TableBorders::inside_h</a></div><div class="ttdeci">bool inside_h</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00036">table_builder.h:36</a></div></div>
+<div class="ttc" id="astructcdocx_1_1TableBorders_html_a91a859ce1e445318c5212a6a733bcafc"><div class="ttname"><a href="structcdocx_1_1TableBorders.html#a91a859ce1e445318c5212a6a733bcafc">cdocx::TableBorders::all</a></div><div class="ttdeci">static TableBorders all()</div><div class="ttdoc">All borders preset (default)</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00053">table_builder.h:53</a></div></div>
+<div class="ttc" id="astructcdocx_1_1TableBorders_html_a91b3ef82068109e37efbf793f2f11f9c"><div class="ttname"><a href="structcdocx_1_1TableBorders.html#a91b3ef82068109e37efbf793f2f11f9c">cdocx::TableBorders::color</a></div><div class="ttdeci">std::string color</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00038">table_builder.h:38</a></div></div>
+<div class="ttc" id="astructcdocx_1_1TableBorders_html_ab46e410d706a58e596dd2e5bf931bd59"><div class="ttname"><a href="structcdocx_1_1TableBorders.html#ab46e410d706a58e596dd2e5bf931bd59">cdocx::TableBorders::right</a></div><div class="ttdeci">bool right</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00035">table_builder.h:35</a></div></div>
+<div class="ttc" id="astructcdocx_1_1TableBorders_html_acb77a58aafd0753e854f9a6f398e4b2b"><div class="ttname"><a href="structcdocx_1_1TableBorders.html#acb77a58aafd0753e854f9a6f398e4b2b">cdocx::TableBorders::size</a></div><div class="ttdeci">int size</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00039">table_builder.h:39</a></div></div>
+<div class="ttc" id="astructcdocx_1_1TableBorders_html_ad4f10ea32e7679de73873b799cd3464e"><div class="ttname"><a href="structcdocx_1_1TableBorders.html#ad4f10ea32e7679de73873b799cd3464e">cdocx::TableBorders::bottom</a></div><div class="ttdeci">bool bottom</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00034">table_builder.h:34</a></div></div>
+<div class="ttc" id="astructcdocx_1_1TableBorders_html_aee3fa441611f0d5a993255abc853e424"><div class="ttname"><a href="structcdocx_1_1TableBorders.html#aee3fa441611f0d5a993255abc853e424">cdocx::TableBorders::outside_only</a></div><div class="ttdeci">static TableBorders outside_only()</div><div class="ttdoc">Outside borders only preset</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00058">table_builder.h:58</a></div></div>
+<div class="ttc" id="astructcdocx_1_1TableBorders_html_af6e693bfa58905105d113616f17c625e"><div class="ttname"><a href="structcdocx_1_1TableBorders.html#af6e693bfa58905105d113616f17c625e">cdocx::TableBorders::none</a></div><div class="ttdeci">static TableBorders none()</div><div class="ttdoc">No borders preset</div><div class="ttdef"><b>Definition</b> <a href="table__builder_8h_source.html#l00044">table_builder.h:44</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_45cf22061f640deb443c5da4ff0b00bd.html">cdocx</a></li><li class="navelem"><a class="el" href="table__builder_8h.html">table_builder.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

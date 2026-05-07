@@ -1,0 +1,321 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: comment.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('comment_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">comment.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="comment_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;<a class="code" href="enums_8h.html">cdocx/enums.h</a>&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;<a class="code" href="node_8h.html">cdocx/node.h</a>&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;chrono&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecdocx.html">cdocx</a> {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">// CommentRangeStart - Marks the beginning of a commented region</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="};">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeStart.html">   24</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1CommentRangeStart.html">CommentRangeStart</a> : <span class="keyword">public</span> <a class="code hl_class" href="classcdocx_1_1Node.html">Node</a> {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeStart.html#a65f5964c907260b32519d7f31e10d63d">   26</a></span>    <a class="code hl_function" href="classcdocx_1_1CommentRangeStart.html#a65f5964c907260b32519d7f31e10d63d">CommentRangeStart</a>();</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classcdocx_1_1CommentRangeStart.html#a65f5964c907260b32519d7f31e10d63d">CommentRangeStart</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classcdocx_1_1CommentRangeStart.html#a65f5964c907260b32519d7f31e10d63d">CommentRangeStart</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeStart.html#aad32a4817c89445d4c44208405a60f9b">   29</a></span>    <a class="code hl_function" href="classcdocx_1_1CommentRangeStart.html#aad32a4817c89445d4c44208405a60f9b">CommentRangeStart</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc, <span class="keywordtype">int</span> <span class="keywordtype">id</span>) : id_(id) { <a class="code hl_function" href="classcdocx_1_1Node.html#af15ae8f02dd2c4712dc49571225ab2b0">set_document</a>(doc); }</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeStart.html#a784851ee6dce13cc317594f9e1e9dcb3">   31</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classcdocx_1_1CommentRangeStart.html#a784851ee6dce13cc317594f9e1e9dcb3">get_id</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> id_; }</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeStart.html#a3bd40c31b3124dab337fa327aa4bef9e">   32</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1CommentRangeStart.html#a3bd40c31b3124dab337fa327aa4bef9e">set_id</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>) { id_ = id; }</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeStart.html#a248a66a97e54fba5f3618704feeb64e1">   34</a></span>    <a class="code hl_enumeration" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4">NodeType</a> <a class="code hl_function" href="classcdocx_1_1CommentRangeStart.html#a248a66a97e54fba5f3618704feeb64e1">node_type</a>()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4a40b58c0ad22195d3fdb17716ff22c403">NodeType::CommentRangeStart</a>; }</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeStart.html#a93a0b6a4c7c22275754770bb5ae662e9">   35</a></span>    std::string <a class="code hl_function" href="classcdocx_1_1CommentRangeStart.html#a93a0b6a4c7c22275754770bb5ae662e9">get_text</a>()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>; }</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1CommentRangeStart.html#a71256709eec782e3706cc8f9b30de199">accept</a>(<a class="code hl_class" href="classcdocx_1_1DocumentVisitor.html">DocumentVisitor</a>* visitor) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    std::shared_ptr&lt;Node&gt; <a class="code hl_function" href="classcdocx_1_1CommentRangeStart.html#af2e7b5b6a1e2a518c3d4f4a98615aeec">clone</a>(<span class="keywordtype">bool</span> deep) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">int</span> id_ = 0;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>};</div>
+</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">// CommentRangeEnd - Marks the end of a commented region</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="foldopen" id="foldopen00047" data-start="{" data-end="};">
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeEnd.html">   47</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1CommentRangeEnd.html">CommentRangeEnd</a> : <span class="keyword">public</span> <a class="code hl_class" href="classcdocx_1_1Node.html">Node</a> {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeEnd.html#aa974d8179e6c8d70d0c66ee97088344e">   49</a></span>    <a class="code hl_function" href="classcdocx_1_1CommentRangeEnd.html#aa974d8179e6c8d70d0c66ee97088344e">CommentRangeEnd</a>();</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classcdocx_1_1CommentRangeEnd.html#aa974d8179e6c8d70d0c66ee97088344e">CommentRangeEnd</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classcdocx_1_1CommentRangeEnd.html#aa974d8179e6c8d70d0c66ee97088344e">CommentRangeEnd</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeEnd.html#a614f986885cc173bb66c546274b0cdd5">   52</a></span>    <a class="code hl_function" href="classcdocx_1_1CommentRangeEnd.html#a614f986885cc173bb66c546274b0cdd5">CommentRangeEnd</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc, <span class="keywordtype">int</span> <span class="keywordtype">id</span>) : id_(id) { <a class="code hl_function" href="classcdocx_1_1Node.html#af15ae8f02dd2c4712dc49571225ab2b0">set_document</a>(doc); }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeEnd.html#a2ab947d2d17c7a7b8088c57325208a42">   54</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classcdocx_1_1CommentRangeEnd.html#a2ab947d2d17c7a7b8088c57325208a42">get_id</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> id_; }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeEnd.html#a44ce67522ff8d5080e355c05393df300">   55</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1CommentRangeEnd.html#a44ce67522ff8d5080e355c05393df300">set_id</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>) { id_ = id; }</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeEnd.html#a447cbf263b0094a77ff186e0937a0d51">   57</a></span>    <a class="code hl_enumeration" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4">NodeType</a> <a class="code hl_function" href="classcdocx_1_1CommentRangeEnd.html#a447cbf263b0094a77ff186e0937a0d51">node_type</a>()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4aeb7b89c92409d9e835f080e5312ae643">NodeType::CommentRangeEnd</a>; }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentRangeEnd.html#a122bbaa3c53037d800dbe06f1bb04e9d">   58</a></span>    std::string <a class="code hl_function" href="classcdocx_1_1CommentRangeEnd.html#a122bbaa3c53037d800dbe06f1bb04e9d">get_text</a>()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>; }</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1CommentRangeEnd.html#afe9c8eca03c7729182b96ccaa461c849">accept</a>(<a class="code hl_class" href="classcdocx_1_1DocumentVisitor.html">DocumentVisitor</a>* visitor) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    std::shared_ptr&lt;Node&gt; <a class="code hl_function" href="classcdocx_1_1CommentRangeEnd.html#ad55c585e4f0d5bf3a0314f5aa6272e4a">clone</a>(<span class="keywordtype">bool</span> deep) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">int</span> id_ = 0;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>};</div>
+</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">// Comment - Container for comment text</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="foldopen" id="foldopen00070" data-start="{" data-end="};">
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html">   70</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1Comment.html">Comment</a> : <span class="keyword">public</span> <a class="code hl_class" href="classcdocx_1_1CompositeNode.html">CompositeNode</a> {</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#a42287e944d2afc04955b36047e358019">   72</a></span>    <a class="code hl_function" href="classcdocx_1_1Comment.html#a42287e944d2afc04955b36047e358019">Comment</a>();</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classcdocx_1_1Comment.html#a42287e944d2afc04955b36047e358019">Comment</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <a class="code hl_function" href="classcdocx_1_1Comment.html#a42287e944d2afc04955b36047e358019">Comment</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc, std::string author, <span class="keyword">const</span> std::string&amp; text);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#a43a514b8b10e6e63ce97aff679ced3fd">   76</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classcdocx_1_1Comment.html#a43a514b8b10e6e63ce97aff679ced3fd">get_id</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> id_; }</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#ac8c53315c5c1ba18d015c3814c4d844e">   77</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Comment.html#ac8c53315c5c1ba18d015c3814c4d844e">set_id</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>) { id_ = id; }</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#a10f6a1a4a0df0a3df25ee4b9b82d911f">   79</a></span>    std::string <a class="code hl_function" href="classcdocx_1_1Comment.html#a10f6a1a4a0df0a3df25ee4b9b82d911f">get_author</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> author_; }</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#ae32cdd2474d353c1176af30c0ce11767">   80</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Comment.html#ae32cdd2474d353c1176af30c0ce11767">set_author</a>(<span class="keyword">const</span> std::string&amp; author) { author_ = author; }</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#a2f1008427fbb40a5b37480fd7c5ed781">   82</a></span>    std::string <a class="code hl_function" href="classcdocx_1_1Comment.html#a2f1008427fbb40a5b37480fd7c5ed781">get_initial</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> initial_; }</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#ab168358f71d3fa22c96468230d604a40">   83</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Comment.html#ab168358f71d3fa22c96468230d604a40">set_initial</a>(<span class="keyword">const</span> std::string&amp; initial) { initial_ = initial; }</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    std::string <a class="code hl_function" href="classcdocx_1_1Comment.html#aa4a838fd7baba2e84b1162f52c09dfaa">get_text</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Comment.html#abd1a86f535808c96567a5aebf706d204">set_text</a>(<span class="keyword">const</span> std::string&amp; text);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#a80a34993c125339fb9fd2d3e3ec891d2">   88</a></span>    std::chrono::system_clock::time_point <a class="code hl_function" href="classcdocx_1_1Comment.html#a80a34993c125339fb9fd2d3e3ec891d2">get_date_time</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> date_time_; }</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#a323b336cc6558a55a2f057b8296a61b7">   89</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Comment.html#a323b336cc6558a55a2f057b8296a61b7">set_date_time</a>(std::chrono::system_clock::time_point dt) { date_time_ = dt; }</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#a0ec6f954b6b05bbfe9ab70794fe1c5ae">   91</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1Comment.html#a0ec6f954b6b05bbfe9ab70794fe1c5ae">is_done</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> done_; }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#a21f032bdf7fd20cfaf7bcfc4db5f1594">   92</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Comment.html#a21f032bdf7fd20cfaf7bcfc4db5f1594">set_done</a>(<span class="keywordtype">bool</span> done) { done_ = done; }</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#afc400522eaf2afb149b40412a90655fb">   94</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classcdocx_1_1Comment.html#afc400522eaf2afb149b40412a90655fb">get_parent_comment_id</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> parent_comment_id_; }</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#af318615367457031bcd6870ea1420083">   95</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Comment.html#af318615367457031bcd6870ea1420083">set_parent_comment_id</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>) { parent_comment_id_ = id; }</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="classcdocx_1_1Comment.html#a0708599f091c6f192f7a6f0b8e9b201d">   97</a></span>    <a class="code hl_enumeration" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4">NodeType</a> <a class="code hl_function" href="classcdocx_1_1Comment.html#a0708599f091c6f192f7a6f0b8e9b201d">node_type</a>()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4a0be8406951cdfda82f00f79328cf4efc">NodeType::Comment</a>; }</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1Comment.html#a037ccc9ce91e93787b0f8dd05b5fa0cb">accept</a>(<a class="code hl_class" href="classcdocx_1_1DocumentVisitor.html">DocumentVisitor</a>* visitor) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    std::shared_ptr&lt;Node&gt; <a class="code hl_function" href="classcdocx_1_1Comment.html#aae363d8621108bec8fc66e74352dca4a">clone</a>(<span class="keywordtype">bool</span> deep) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="comment">// Convenience: append paragraph with text</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    std::shared_ptr&lt;Paragraph&gt; <a class="code hl_function" href="classcdocx_1_1Comment.html#a6f0bde7e45b497845107be97730c69ec">append_paragraph</a>(<span class="keyword">const</span> std::string&amp; text = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordtype">int</span> id_ = 0;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    std::string author_;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    std::string initial_;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    std::chrono::system_clock::time_point date_time_;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordtype">bool</span> done_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keywordtype">int</span> parent_comment_id_ = -1;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>};</div>
+</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="comment">// CommentCollection - Typed access to document comments</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="comment">// ============================================================================</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="foldopen" id="foldopen00117" data-start="{" data-end="};">
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentCollection.html">  117</a></span><span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1CommentCollection.html">CommentCollection</a> {</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentCollection.html#a883538034e58fc5c0de7d4e4cab3cef7">  119</a></span>    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc_;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">mutable</span> std::vector&lt;std::shared_ptr&lt;Comment&gt;&gt; comments_;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">mutable</span> <span class="keywordtype">bool</span> collected_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordtype">void</span> collect_comments() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno"><a class="line" href="classcdocx_1_1CommentCollection.html#af1416de80ff37bab84b5bd560ee2b6b4">  128</a></span>    <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#af1416de80ff37bab84b5bd560ee2b6b4">CommentCollection</a>() : doc_(nullptr), collected_(true) {}</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#af1416de80ff37bab84b5bd560ee2b6b4">CommentCollection</a>(<a class="code hl_class" href="classcdocx_1_1Document.html">Document</a>* doc);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="keywordtype">size_t</span> <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#a5b35b688ca9db72001dbfa1100993f32">count</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    std::shared_ptr&lt;Comment&gt; <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#a7e7bb4721c0c238fd7da0a635a30ad1c">get</a>(<span class="keywordtype">size_t</span> index) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    std::shared_ptr&lt;Comment&gt; <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#a2fcbbdc196b9159e3ef4c2bdde0d69a4">get_by_id</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#a8ff5ec9e10c5d845a4ba42ae0df55ab5">contains</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    std::shared_ptr&lt;Comment&gt; <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#aa6a870e83097a0243b517512c7498ecb">add</a>(<span class="keyword">const</span> std::string&amp; author, <span class="keyword">const</span> std::string&amp; text);</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#a5880128b01ea105560b5b0101d5919b7">remove_at</a>(<span class="keywordtype">size_t</span> index);</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#a40c65122238c98938787cfe6d51aba2e">remove</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#ad57d1918ba7aeaf840dd467f79396bef">clear</a>();</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    std::vector&lt;std::shared_ptr&lt;Comment&gt;&gt;::iterator <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#a4a810481b39aa5f5aa749afb8dd15da0">begin</a>();</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    std::vector&lt;std::shared_ptr&lt;Comment&gt;&gt;::iterator <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#aa4de191891cca027783d22811e960724">end</a>();</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    std::vector&lt;std::shared_ptr&lt;Comment&gt;&gt;::const_iterator <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#a4a810481b39aa5f5aa749afb8dd15da0">begin</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    std::vector&lt;std::shared_ptr&lt;Comment&gt;&gt;::const_iterator <a class="code hl_function" href="classcdocx_1_1CommentCollection.html#aa4de191891cca027783d22811e960724">end</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>};</div>
+</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>}  <span class="comment">// namespace cdocx</span></div>
+<div class="ttc" id="aclasscdocx_1_1CommentCollection_html"><div class="ttname"><a href="classcdocx_1_1CommentCollection.html">cdocx::CommentCollection</a></div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00117">comment.h:117</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentCollection_html_a2fcbbdc196b9159e3ef4c2bdde0d69a4"><div class="ttname"><a href="classcdocx_1_1CommentCollection.html#a2fcbbdc196b9159e3ef4c2bdde0d69a4">cdocx::CommentCollection::get_by_id</a></div><div class="ttdeci">std::shared_ptr&lt; Comment &gt; get_by_id(int id) const</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00186">comment.cpp:186</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentCollection_html_a40c65122238c98938787cfe6d51aba2e"><div class="ttname"><a href="classcdocx_1_1CommentCollection.html#a40c65122238c98938787cfe6d51aba2e">cdocx::CommentCollection::remove</a></div><div class="ttdeci">bool remove(int id)</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00226">comment.cpp:226</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentCollection_html_a4a810481b39aa5f5aa749afb8dd15da0"><div class="ttname"><a href="classcdocx_1_1CommentCollection.html#a4a810481b39aa5f5aa749afb8dd15da0">cdocx::CommentCollection::begin</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; Comment &gt; &gt;::iterator begin()</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00242">comment.cpp:242</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentCollection_html_a5880128b01ea105560b5b0101d5919b7"><div class="ttname"><a href="classcdocx_1_1CommentCollection.html#a5880128b01ea105560b5b0101d5919b7">cdocx::CommentCollection::remove_at</a></div><div class="ttdeci">bool remove_at(size_t index)</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00213">comment.cpp:213</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentCollection_html_a5b35b688ca9db72001dbfa1100993f32"><div class="ttname"><a href="classcdocx_1_1CommentCollection.html#a5b35b688ca9db72001dbfa1100993f32">cdocx::CommentCollection::count</a></div><div class="ttdeci">size_t count() const</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00173">comment.cpp:173</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentCollection_html_a7e7bb4721c0c238fd7da0a635a30ad1c"><div class="ttname"><a href="classcdocx_1_1CommentCollection.html#a7e7bb4721c0c238fd7da0a635a30ad1c">cdocx::CommentCollection::get</a></div><div class="ttdeci">std::shared_ptr&lt; Comment &gt; get(size_t index) const</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00178">comment.cpp:178</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentCollection_html_a8ff5ec9e10c5d845a4ba42ae0df55ab5"><div class="ttname"><a href="classcdocx_1_1CommentCollection.html#a8ff5ec9e10c5d845a4ba42ae0df55ab5">cdocx::CommentCollection::contains</a></div><div class="ttdeci">bool contains(int id) const</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00196">comment.cpp:196</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentCollection_html_aa4de191891cca027783d22811e960724"><div class="ttname"><a href="classcdocx_1_1CommentCollection.html#aa4de191891cca027783d22811e960724">cdocx::CommentCollection::end</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; Comment &gt; &gt;::iterator end()</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00247">comment.cpp:247</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentCollection_html_aa6a870e83097a0243b517512c7498ecb"><div class="ttname"><a href="classcdocx_1_1CommentCollection.html#aa6a870e83097a0243b517512c7498ecb">cdocx::CommentCollection::add</a></div><div class="ttdeci">std::shared_ptr&lt; Comment &gt; add(const std::string &amp;author, const std::string &amp;text)</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00200">comment.cpp:200</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentCollection_html_ad57d1918ba7aeaf840dd467f79396bef"><div class="ttname"><a href="classcdocx_1_1CommentCollection.html#ad57d1918ba7aeaf840dd467f79396bef">cdocx::CommentCollection::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00234">comment.cpp:234</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentCollection_html_af1416de80ff37bab84b5bd560ee2b6b4"><div class="ttname"><a href="classcdocx_1_1CommentCollection.html#af1416de80ff37bab84b5bd560ee2b6b4">cdocx::CommentCollection::CommentCollection</a></div><div class="ttdeci">CommentCollection()</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00128">comment.h:128</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeEnd_html"><div class="ttname"><a href="classcdocx_1_1CommentRangeEnd.html">cdocx::CommentRangeEnd</a></div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00047">comment.h:47</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeEnd_html_a122bbaa3c53037d800dbe06f1bb04e9d"><div class="ttname"><a href="classcdocx_1_1CommentRangeEnd.html#a122bbaa3c53037d800dbe06f1bb04e9d">cdocx::CommentRangeEnd::get_text</a></div><div class="ttdeci">std::string get_text() const override</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00058">comment.h:58</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeEnd_html_a2ab947d2d17c7a7b8088c57325208a42"><div class="ttname"><a href="classcdocx_1_1CommentRangeEnd.html#a2ab947d2d17c7a7b8088c57325208a42">cdocx::CommentRangeEnd::get_id</a></div><div class="ttdeci">int get_id() const</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00054">comment.h:54</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeEnd_html_a447cbf263b0094a77ff186e0937a0d51"><div class="ttname"><a href="classcdocx_1_1CommentRangeEnd.html#a447cbf263b0094a77ff186e0937a0d51">cdocx::CommentRangeEnd::node_type</a></div><div class="ttdeci">NodeType node_type() const override</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00057">comment.h:57</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeEnd_html_a44ce67522ff8d5080e355c05393df300"><div class="ttname"><a href="classcdocx_1_1CommentRangeEnd.html#a44ce67522ff8d5080e355c05393df300">cdocx::CommentRangeEnd::set_id</a></div><div class="ttdeci">void set_id(int id)</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00055">comment.h:55</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeEnd_html_a614f986885cc173bb66c546274b0cdd5"><div class="ttname"><a href="classcdocx_1_1CommentRangeEnd.html#a614f986885cc173bb66c546274b0cdd5">cdocx::CommentRangeEnd::CommentRangeEnd</a></div><div class="ttdeci">CommentRangeEnd(Document *doc, int id)</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00052">comment.h:52</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeEnd_html_aa974d8179e6c8d70d0c66ee97088344e"><div class="ttname"><a href="classcdocx_1_1CommentRangeEnd.html#aa974d8179e6c8d70d0c66ee97088344e">cdocx::CommentRangeEnd::CommentRangeEnd</a></div><div class="ttdeci">CommentRangeEnd()</div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeEnd_html_ad55c585e4f0d5bf3a0314f5aa6272e4a"><div class="ttname"><a href="classcdocx_1_1CommentRangeEnd.html#ad55c585e4f0d5bf3a0314f5aa6272e4a">cdocx::CommentRangeEnd::clone</a></div><div class="ttdeci">std::shared_ptr&lt; Node &gt; clone(bool deep) const override</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00059">comment.cpp:59</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeEnd_html_afe9c8eca03c7729182b96ccaa461c849"><div class="ttname"><a href="classcdocx_1_1CommentRangeEnd.html#afe9c8eca03c7729182b96ccaa461c849">cdocx::CommentRangeEnd::accept</a></div><div class="ttdeci">void accept(DocumentVisitor *visitor) override</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00053">comment.cpp:53</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeStart_html"><div class="ttname"><a href="classcdocx_1_1CommentRangeStart.html">cdocx::CommentRangeStart</a></div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00024">comment.h:24</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeStart_html_a248a66a97e54fba5f3618704feeb64e1"><div class="ttname"><a href="classcdocx_1_1CommentRangeStart.html#a248a66a97e54fba5f3618704feeb64e1">cdocx::CommentRangeStart::node_type</a></div><div class="ttdeci">NodeType node_type() const override</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00034">comment.h:34</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeStart_html_a3bd40c31b3124dab337fa327aa4bef9e"><div class="ttname"><a href="classcdocx_1_1CommentRangeStart.html#a3bd40c31b3124dab337fa327aa4bef9e">cdocx::CommentRangeStart::set_id</a></div><div class="ttdeci">void set_id(int id)</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00032">comment.h:32</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeStart_html_a65f5964c907260b32519d7f31e10d63d"><div class="ttname"><a href="classcdocx_1_1CommentRangeStart.html#a65f5964c907260b32519d7f31e10d63d">cdocx::CommentRangeStart::CommentRangeStart</a></div><div class="ttdeci">CommentRangeStart()</div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeStart_html_a71256709eec782e3706cc8f9b30de199"><div class="ttname"><a href="classcdocx_1_1CommentRangeStart.html#a71256709eec782e3706cc8f9b30de199">cdocx::CommentRangeStart::accept</a></div><div class="ttdeci">void accept(DocumentVisitor *visitor) override</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00028">comment.cpp:28</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeStart_html_a784851ee6dce13cc317594f9e1e9dcb3"><div class="ttname"><a href="classcdocx_1_1CommentRangeStart.html#a784851ee6dce13cc317594f9e1e9dcb3">cdocx::CommentRangeStart::get_id</a></div><div class="ttdeci">int get_id() const</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00031">comment.h:31</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeStart_html_a93a0b6a4c7c22275754770bb5ae662e9"><div class="ttname"><a href="classcdocx_1_1CommentRangeStart.html#a93a0b6a4c7c22275754770bb5ae662e9">cdocx::CommentRangeStart::get_text</a></div><div class="ttdeci">std::string get_text() const override</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00035">comment.h:35</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeStart_html_aad32a4817c89445d4c44208405a60f9b"><div class="ttname"><a href="classcdocx_1_1CommentRangeStart.html#aad32a4817c89445d4c44208405a60f9b">cdocx::CommentRangeStart::CommentRangeStart</a></div><div class="ttdeci">CommentRangeStart(Document *doc, int id)</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00029">comment.h:29</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CommentRangeStart_html_af2e7b5b6a1e2a518c3d4f4a98615aeec"><div class="ttname"><a href="classcdocx_1_1CommentRangeStart.html#af2e7b5b6a1e2a518c3d4f4a98615aeec">cdocx::CommentRangeStart::clone</a></div><div class="ttdeci">std::shared_ptr&lt; Node &gt; clone(bool deep) const override</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00034">comment.cpp:34</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html"><div class="ttname"><a href="classcdocx_1_1Comment.html">cdocx::Comment</a></div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00070">comment.h:70</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_a037ccc9ce91e93787b0f8dd05b5fa0cb"><div class="ttname"><a href="classcdocx_1_1Comment.html#a037ccc9ce91e93787b0f8dd05b5fa0cb">cdocx::Comment::accept</a></div><div class="ttdeci">void accept(DocumentVisitor *visitor) override</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00118">comment.cpp:118</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_a0708599f091c6f192f7a6f0b8e9b201d"><div class="ttname"><a href="classcdocx_1_1Comment.html#a0708599f091c6f192f7a6f0b8e9b201d">cdocx::Comment::node_type</a></div><div class="ttdeci">NodeType node_type() const override</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00097">comment.h:97</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_a0ec6f954b6b05bbfe9ab70794fe1c5ae"><div class="ttname"><a href="classcdocx_1_1Comment.html#a0ec6f954b6b05bbfe9ab70794fe1c5ae">cdocx::Comment::is_done</a></div><div class="ttdeci">bool is_done() const</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00091">comment.h:91</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_a10f6a1a4a0df0a3df25ee4b9b82d911f"><div class="ttname"><a href="classcdocx_1_1Comment.html#a10f6a1a4a0df0a3df25ee4b9b82d911f">cdocx::Comment::get_author</a></div><div class="ttdeci">std::string get_author() const</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00079">comment.h:79</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_a21f032bdf7fd20cfaf7bcfc4db5f1594"><div class="ttname"><a href="classcdocx_1_1Comment.html#a21f032bdf7fd20cfaf7bcfc4db5f1594">cdocx::Comment::set_done</a></div><div class="ttdeci">void set_done(bool done)</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00092">comment.h:92</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_a2f1008427fbb40a5b37480fd7c5ed781"><div class="ttname"><a href="classcdocx_1_1Comment.html#a2f1008427fbb40a5b37480fd7c5ed781">cdocx::Comment::get_initial</a></div><div class="ttdeci">std::string get_initial() const</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00082">comment.h:82</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_a323b336cc6558a55a2f057b8296a61b7"><div class="ttname"><a href="classcdocx_1_1Comment.html#a323b336cc6558a55a2f057b8296a61b7">cdocx::Comment::set_date_time</a></div><div class="ttdeci">void set_date_time(std::chrono::system_clock::time_point dt)</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00089">comment.h:89</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_a42287e944d2afc04955b36047e358019"><div class="ttname"><a href="classcdocx_1_1Comment.html#a42287e944d2afc04955b36047e358019">cdocx::Comment::Comment</a></div><div class="ttdeci">Comment()</div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_a43a514b8b10e6e63ce97aff679ced3fd"><div class="ttname"><a href="classcdocx_1_1Comment.html#a43a514b8b10e6e63ce97aff679ced3fd">cdocx::Comment::get_id</a></div><div class="ttdeci">int get_id() const</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00076">comment.h:76</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_a6f0bde7e45b497845107be97730c69ec"><div class="ttname"><a href="classcdocx_1_1Comment.html#a6f0bde7e45b497845107be97730c69ec">cdocx::Comment::append_paragraph</a></div><div class="ttdeci">std::shared_ptr&lt; Paragraph &gt; append_paragraph(const std::string &amp;text=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00146">comment.cpp:146</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_a80a34993c125339fb9fd2d3e3ec891d2"><div class="ttname"><a href="classcdocx_1_1Comment.html#a80a34993c125339fb9fd2d3e3ec891d2">cdocx::Comment::get_date_time</a></div><div class="ttdeci">std::chrono::system_clock::time_point get_date_time() const</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00088">comment.h:88</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_aa4a838fd7baba2e84b1162f52c09dfaa"><div class="ttname"><a href="classcdocx_1_1Comment.html#aa4a838fd7baba2e84b1162f52c09dfaa">cdocx::Comment::get_text</a></div><div class="ttdeci">std::string get_text() const override</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00085">comment.cpp:85</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_aae363d8621108bec8fc66e74352dca4a"><div class="ttname"><a href="classcdocx_1_1Comment.html#aae363d8621108bec8fc66e74352dca4a">cdocx::Comment::clone</a></div><div class="ttdeci">std::shared_ptr&lt; Node &gt; clone(bool deep) const override</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00129">comment.cpp:129</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_ab168358f71d3fa22c96468230d604a40"><div class="ttname"><a href="classcdocx_1_1Comment.html#ab168358f71d3fa22c96468230d604a40">cdocx::Comment::set_initial</a></div><div class="ttdeci">void set_initial(const std::string &amp;initial)</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00083">comment.h:83</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_abd1a86f535808c96567a5aebf706d204"><div class="ttname"><a href="classcdocx_1_1Comment.html#abd1a86f535808c96567a5aebf706d204">cdocx::Comment::set_text</a></div><div class="ttdeci">void set_text(const std::string &amp;text)</div><div class="ttdef"><b>Definition</b> <a href="comment_8cpp_source.html#l00098">comment.cpp:98</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_ac8c53315c5c1ba18d015c3814c4d844e"><div class="ttname"><a href="classcdocx_1_1Comment.html#ac8c53315c5c1ba18d015c3814c4d844e">cdocx::Comment::set_id</a></div><div class="ttdeci">void set_id(int id)</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00077">comment.h:77</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_ae32cdd2474d353c1176af30c0ce11767"><div class="ttname"><a href="classcdocx_1_1Comment.html#ae32cdd2474d353c1176af30c0ce11767">cdocx::Comment::set_author</a></div><div class="ttdeci">void set_author(const std::string &amp;author)</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00080">comment.h:80</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_af318615367457031bcd6870ea1420083"><div class="ttname"><a href="classcdocx_1_1Comment.html#af318615367457031bcd6870ea1420083">cdocx::Comment::set_parent_comment_id</a></div><div class="ttdeci">void set_parent_comment_id(int id)</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00095">comment.h:95</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Comment_html_afc400522eaf2afb149b40412a90655fb"><div class="ttname"><a href="classcdocx_1_1Comment.html#afc400522eaf2afb149b40412a90655fb">cdocx::Comment::get_parent_comment_id</a></div><div class="ttdeci">int get_parent_comment_id() const</div><div class="ttdef"><b>Definition</b> <a href="comment_8h_source.html#l00094">comment.h:94</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1CompositeNode_html"><div class="ttname"><a href="classcdocx_1_1CompositeNode.html">cdocx::CompositeNode</a></div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00123">node.h:123</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1DocumentVisitor_html"><div class="ttname"><a href="classcdocx_1_1DocumentVisitor.html">cdocx::DocumentVisitor</a></div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00298">node.h:298</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Document_html"><div class="ttname"><a href="classcdocx_1_1Document.html">cdocx::Document</a></div><div class="ttdef"><b>Definition</b> <a href="document_8h_source.html#l00285">document.h:285</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Node_html"><div class="ttname"><a href="classcdocx_1_1Node.html">cdocx::Node</a></div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00053">node.h:53</a></div></div>
+<div class="ttc" id="aclasscdocx_1_1Node_html_af15ae8f02dd2c4712dc49571225ab2b0"><div class="ttname"><a href="classcdocx_1_1Node.html#af15ae8f02dd2c4712dc49571225ab2b0">cdocx::Node::set_document</a></div><div class="ttdeci">void set_document(Document *doc)</div><div class="ttdef"><b>Definition</b> <a href="node_8h_source.html#l00074">node.h:74</a></div></div>
+<div class="ttc" id="aenums_8h_html"><div class="ttname"><a href="enums_8h.html">enums.h</a></div><div class="ttdoc">Enumerations for CDocx library</div></div>
+<div class="ttc" id="anamespacecdocx_html"><div class="ttname"><a href="namespacecdocx.html">cdocx</a></div><div class="ttdef"><b>Definition</b> <a href="cdocx_8h_source.html#l00080">cdocx.h:80</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a94dc995fea51760307c32fde48a651e4"><div class="ttname"><a href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4">cdocx::NodeType</a></div><div class="ttdeci">NodeType</div><div class="ttdef"><b>Definition</b> <a href="enums_8h_source.html#l00017">enums.h:17</a></div></div>
+<div class="ttc" id="anamespacecdocx_html_a94dc995fea51760307c32fde48a651e4a0be8406951cdfda82f00f79328cf4efc"><div class="ttname"><a href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4a0be8406951cdfda82f00f79328cf4efc">cdocx::NodeType::Comment</a></div><div class="ttdeci">@ Comment</div></div>
+<div class="ttc" id="anamespacecdocx_html_a94dc995fea51760307c32fde48a651e4a40b58c0ad22195d3fdb17716ff22c403"><div class="ttname"><a href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4a40b58c0ad22195d3fdb17716ff22c403">cdocx::NodeType::CommentRangeStart</a></div><div class="ttdeci">@ CommentRangeStart</div></div>
+<div class="ttc" id="anamespacecdocx_html_a94dc995fea51760307c32fde48a651e4aeb7b89c92409d9e835f080e5312ae643"><div class="ttname"><a href="namespacecdocx.html#a94dc995fea51760307c32fde48a651e4aeb7b89c92409d9e835f080e5312ae643">cdocx::NodeType::CommentRangeEnd</a></div><div class="ttdeci">@ CommentRangeEnd</div></div>
+<div class="ttc" id="anode_8h_html"><div class="ttname"><a href="node_8h.html">node.h</a></div><div class="ttdoc">Node base classes for CDocx document model - DOM Style</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_45cf22061f640deb443c5da4ff0b00bd.html">cdocx</a></li><li class="navelem"><a class="el" href="comment_8h.html">comment.h</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

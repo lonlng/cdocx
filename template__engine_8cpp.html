@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CDocx: template_engine.cpp 文件参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">CDocx<span id="projectnumber">&#160;0.2.0</span>
+   </div>
+   <div id="projectbrief">C++ DOCX Library</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('template__engine_8cpp.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">类</a> &#124;
+<a href="#namespaces">命名空间</a> &#124;
+<a href="#func-members">函数</a>  </div>
+  <div class="headertitle"><div class="title">template_engine.cpp 文件参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>TemplateEngine implementation  
+<a href="#details">更多...</a></p>
+<div class="textblock"><code>#include &lt;<a class="el" href="bookmark__replacer_8h_source.html">cdocx/bookmark_replacer.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="document_8h_source.html">cdocx/document.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="template_8h_source.html">cdocx/template.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="template__engine_8h_source.html">cdocx/template_engine.h</a>&gt;</code><br />
+<code>#include &quot;<a class="el" href="sync__common_8h_source.html">sync_common.h</a>&quot;</code><br />
+<code>#include &lt;filesystem&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;unordered_set&gt;</code><br />
+</div>
+<p><a href="template__engine_8cpp_source.html">浏览源代码.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+类</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcdocx_1_1BookmarkNameCache.html">cdocx::BookmarkNameCache</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cached bookmark name lookup for batch template operations.  <a href="classcdocx_1_1BookmarkNameCache.html#details">更多...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+命名空间</h2></td></tr>
+<tr class="memitem:namespacecdocx" id="r_namespacecdocx"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html">cdocx</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+函数</h2></td></tr>
+<tr class="memitem:ad031613f4f283e47396e2406e48f00d7" id="r_ad031613f4f283e47396e2406e48f00d7"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacecdocx.html#a7bd33f1e7ba21e2b4e17a3bcbeeee46c">TemplateTarget</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#ad031613f4f283e47396e2406e48f00d7">cdocx::resolve_target</a> (const <a class="el" href="classcdocx_1_1BookmarkNameCache.html">BookmarkNameCache</a> *cache, const std::string &amp;key, <a class="el" href="namespacecdocx.html#a7bd33f1e7ba21e2b4e17a3bcbeeee46c">TemplateTarget</a> preferred)</td></tr>
+<tr class="separator:ad031613f4f283e47396e2406e48f00d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b79f9c2704a825669caee785d8be6d4" id="r_a3b79f9c2704a825669caee785d8be6d4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacecdocx.html#a7bd33f1e7ba21e2b4e17a3bcbeeee46c">TemplateTarget</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a3b79f9c2704a825669caee785d8be6d4">cdocx::resolve_target</a> (<a class="el" href="classcdocx_1_1Document.html">Document</a> *doc, const std::string &amp;key, <a class="el" href="namespacecdocx.html#a7bd33f1e7ba21e2b4e17a3bcbeeee46c">TemplateTarget</a> preferred, const std::string &amp;, const std::string &amp;)</td></tr>
+<tr class="separator:a3b79f9c2704a825669caee785d8be6d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b66794671a8ffad057f711b8804c335" id="r_a2b66794671a8ffad057f711b8804c335"><td class="memItemLeft" align="right" valign="top">static pugi::xml_node&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a2b66794671a8ffad057f711b8804c335">cdocx::find_bookmark_start</a> (pugi::xml_node para)</td></tr>
+<tr class="separator:a2b66794671a8ffad057f711b8804c335"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0f95856d7dfe285e4511ff1bf3609ef" id="r_ae0f95856d7dfe285e4511ff1bf3609ef"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#ae0f95856d7dfe285e4511ff1bf3609ef">cdocx::insert_formatted_run_after</a> (pugi::xml_node para, pugi::xml_node after_node, const std::string &amp;text, const <a class="el" href="structcdocx_1_1BookmarkFormat.html">BookmarkFormat</a> &amp;format)</td></tr>
+<tr class="separator:ae0f95856d7dfe285e4511ff1bf3609ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30d05d41e4ae38e3c63446419c308f46" id="r_a30d05d41e4ae38e3c63446419c308f46"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecdocx.html#a30d05d41e4ae38e3c63446419c308f46">cdocx::insert_image_run_after</a> (pugi::xml_node para, pugi::xml_node after_node, const <a class="el" href="structcdocx_1_1ImageSize.html">ImageSize</a> &amp;size, <a class="el" href="namespacecdocx.html#a301533a88970bc6b789cb50d3d32eee2">ImageAlignment</a> <a class="el" href="properties_8cpp.html#a9bd1379a71b955886d4eb552d47d4fba">align</a>, const std::string &amp;rel_id, int image_id)</td></tr>
+<tr class="separator:a30d05d41e4ae38e3c63446419c308f46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>TemplateEngine implementation </p>
+<dl class="section author"><dt>作者</dt><dd>lonlng </dd></dl>
+<dl class="section copyright"><dt>版权所有</dt><dd>MIT License </dd></dl>
+<dl class="section date"><dt>日期</dt><dd>2026 </dd></dl>
+<dl class="section version"><dt>版本</dt><dd>0.8.0 </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="template__engine_8cpp_source.html">template_engine.cpp</a> 中定义.</p>
+</div></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="template__engine_8cpp.html">template_engine.cpp</a></li>
+    <li class="footer">制作者 <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>
