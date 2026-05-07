@@ -53,11 +53,6 @@ jobs:
           cmake --build build_shared --config Release --parallel
           cmake --install build_shared --config Release --prefix "$staging" --component cdocx
 
-          # Copy dependency headers required by cdocx public headers
-          Copy-Item -Path "build_static/_deps/zip-src/src/zip.h" -Destination "$staging/include/zip.h"
-          Copy-Item -Path "build_static/_deps/pugixml-src/src/pugixml.hpp" -Destination "$staging/include/pugixml.hpp"
-          Copy-Item -Path "build_static/_deps/pugixml-src/src/pugiconfig.hpp" -Destination "$staging/include/pugiconfig.hpp"
-
       - name: Build and install Debug
         run: |
           $staging = "cdocx-${{ needs.extract-version.outputs.version }}-windows-msvc-x64"
@@ -128,11 +123,6 @@ jobs:
             -DBUILD_EXAMPLES=OFF
           cmake --build build_rel_shared --parallel
           cmake --install build_rel_shared --prefix "$staging" --component cdocx
-
-          # Copy dependency headers required by cdocx public headers
-          cp "build_rel_static/_deps/zip-src/src/zip.h" "$staging/include/zip.h"
-          cp "build_rel_static/_deps/pugixml-src/src/pugixml.hpp" "$staging/include/pugixml.hpp"
-          cp "build_rel_static/_deps/pugixml-src/src/pugiconfig.hpp" "$staging/include/pugiconfig.hpp"
 
       - name: Build and install Debug
         run: |

@@ -381,6 +381,18 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cdocx-config-version.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cdocx COMPONENT cdocx
 )
 
+# Install dependency headers required by cdocx public headers
+# These are consumed by users who include cdocx headers directly
+if(DEFINED zip_SOURCE_DIR AND DEFINED pugixml_SOURCE_DIR)
+    install(FILES
+        "${zip_SOURCE_DIR}/src/zip.h"
+        "${pugixml_SOURCE_DIR}/src/pugixml.hpp"
+        "${pugixml_SOURCE_DIR}/src/pugiconfig.hpp"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        COMPONENT cdocx
+    )
+endif()
+
 # ----------------------------------------------------------------------------
 # Custom Targets
 # ----------------------------------------------------------------------------
@@ -497,3 +509,27 @@ message(STATUS "║ Testing:          ${BUILD_TESTING}                          
 message(STATUS "║ Documentation:    ${BUILD_DOCS}                                   ║")
 message(STATUS "╚════════════════════════════════════════════════════════════╝")
 message(STATUS "")
+
+# ----------------------------------------------------------------------------
+# Packaging (CPack)
+# ----------------------------------------------------------------------------
+set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
+set(CPACK_PACKAGE_VENDOR "cdocx")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+
+# vcpkg-style install layout: package everything cmake --install produced
+set(CPACK_INSTALL_CMAKE_PROJECTS
+    "${CMAKE_BINARY_DIR};${PROJECT_NAME};cdocx;/")
+
+# Platform-specific naming
+if(WIN32)
+    set(CPACK_GENERATOR ZIP)
+    set(CPACK_SYSTEM_NAME "windows-msvc-x64")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(CPACK_GENERATOR TGZ)
+    set(CPACK_SYSTEM_NAME "linux-gcc-x64")
+endif()
+
+include(CPack)
