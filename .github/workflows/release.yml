@@ -18,17 +18,17 @@ jobs:
         id: version
         run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
-    build-windows:
-      needs: extract-version
-      runs-on: windows-2022
-      strategy:
-        matrix:
-          config: [Release, Debug]
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-          with:
-            submodules: recursive
+  build-windows:
+    needs: extract-version
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        config: [Release, Debug]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
         - name: Setup MSVC
           uses: microsoft/setup-msbuild@v2
