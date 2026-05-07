@@ -42,7 +42,7 @@ jobs:
             -DBUILD_TESTING=OFF `
             -DBUILD_EXAMPLES=OFF
           cmake --build build_static --config Release --parallel
-          cmake --install build_static --config Release --prefix "$staging"
+          cmake --install build_static --config Release --prefix "$staging" --component cdocx
 
           cmake -B build_shared `
             -G "Visual Studio 17 2022" `
@@ -51,7 +51,12 @@ jobs:
             -DBUILD_TESTING=OFF `
             -DBUILD_EXAMPLES=OFF
           cmake --build build_shared --config Release --parallel
-          cmake --install build_shared --config Release --prefix "$staging"
+          cmake --install build_shared --config Release --prefix "$staging" --component cdocx
+
+          # Copy dependency headers required by cdocx public headers
+          Copy-Item -Path "build_static/_deps/zip-src/src/zip.h" -Destination "$staging/include/zip.h"
+          Copy-Item -Path "build_static/_deps/pugixml-src/src/pugixml.hpp" -Destination "$staging/include/pugixml.hpp"
+          Copy-Item -Path "build_static/_deps/pugixml-src/src/pugiconfig.hpp" -Destination "$staging/include/pugiconfig.hpp"
 
       - name: Build and install Debug
         run: |
@@ -64,7 +69,7 @@ jobs:
             -DBUILD_TESTING=OFF `
             -DBUILD_EXAMPLES=OFF
           cmake --build build_dbg_static --config Debug --parallel
-          cmake --install build_dbg_static --config Debug --prefix "$staging/debug"
+          cmake --install build_dbg_static --config Debug --prefix "$staging/debug" --component cdocx
 
           cmake -B build_dbg_shared `
             -G "Visual Studio 17 2022" `
@@ -73,18 +78,12 @@ jobs:
             -DBUILD_TESTING=OFF `
             -DBUILD_EXAMPLES=OFF
           cmake --build build_dbg_shared --config Debug --parallel
-          cmake --install build_dbg_shared --config Debug --prefix "$staging/debug"
+          cmake --install build_dbg_shared --config Debug --prefix "$staging/debug" --component cdocx
 
       - name: Package artifacts
         shell: pwsh
         run: |
           $staging = "cdocx-${{ needs.extract-version.outputs.version }}-windows-msvc-x64"
-
-          # Remove duplicate debug headers (shared with Release)
-          if (Test-Path "$staging/debug/include") {
-              Remove-Item -Recurse -Force "$staging/debug/include"
-          }
-
           Compress-Archive -Path "$staging" -DestinationPath "$staging.zip"
 
       - name: Upload artifact
@@ -119,7 +118,7 @@ jobs:
             -DBUILD_TESTING=OFF \
             -DBUILD_EXAMPLES=OFF
           cmake --build build_rel_static --parallel
-          cmake --install build_rel_static --prefix "$staging"
+          cmake --install build_rel_static --prefix "$staging" --component cdocx
 
           cmake -B build_rel_shared \
             -G Ninja \
@@ -128,7 +127,12 @@ jobs:
             -DBUILD_TESTING=OFF \
             -DBUILD_EXAMPLES=OFF
           cmake --build build_rel_shared --parallel
-          cmake --install build_rel_shared --prefix "$staging"
+          cmake --install build_rel_shared --prefix "$staging" --component cdocx
+
+          # Copy dependency headers required by cdocx public headers
+          cp "build_rel_static/_deps/zip-src/src/zip.h" "$staging/include/zip.h"
+          cp "build_rel_static/_deps/pugixml-src/src/pugixml.hpp" "$staging/include/pugixml.hpp"
+          cp "build_rel_static/_deps/pugixml-src/src/pugiconfig.hpp" "$staging/include/pugiconfig.hpp"
 
       - name: Build and install Debug
         run: |
@@ -141,7 +145,7 @@ jobs:
             -DBUILD_TESTING=OFF \
             -DBUILD_EXAMPLES=OFF
           cmake --build build_dbg_static --parallel
-          cmake --install build_dbg_static --prefix "$staging/debug"
+          cmake --install build_dbg_static --prefix "$staging/debug" --component cdocx
 
           cmake -B build_dbg_shared \
             -G Ninja \
@@ -150,15 +154,11 @@ jobs:
             -DBUILD_TESTING=OFF \
             -DBUILD_EXAMPLES=OFF
           cmake --build build_dbg_shared --parallel
-          cmake --install build_dbg_shared --prefix "$staging/debug"
+          cmake --install build_dbg_shared --prefix "$staging/debug" --component cdocx
 
       - name: Package artifacts
         run: |
           staging="cdocx-${{ needs.extract-version.outputs.version }}-linux-gcc-x64"
-
-          # Remove duplicate debug headers (shared with Release)
-          rm -rf "$staging/debug/include"
-
           tar czf "${staging}.tar.gz" "$staging"
 
       - name: Upload artifact
