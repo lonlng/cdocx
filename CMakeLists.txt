@@ -153,10 +153,12 @@ endif()
 
 # Also set as cache variable so FetchContent dependencies can see it
 if(MSVC)
+    # Ensure FetchContent dependencies (pugixml, zip) inherit the same runtime.
+    # CMAKE_MSVC_RUNTIME_LIBRARY (CMake 3.15+) controls both C and C++ targets.
+    # Do NOT set CMAKE_C_FLAGS_RELEASE/DEBUG here — hardcoding /MT would
+    # override the generator expression for C libraries, causing LNK2038
+    # runtime mismatch when BUILD_SHARED_LIBS=ON (/MD).
     set(CMAKE_MSVC_RUNTIME_LIBRARY "${CMAKE_MSVC_RUNTIME_LIBRARY}" CACHE STRING "MSVC Runtime Library" FORCE)
-    # Set C runtime for C dependencies (like zip)
-    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT" CACHE STRING "" FORCE)
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /MTd" CACHE STRING "" FORCE)
 endif()
 
 # ----------------------------------------------------------------------------
@@ -173,7 +175,7 @@ file(GLOB_RECURSE CDOCX_PUBLIC_HEADERS CONFIGURE_DEPENDS
 # Library Target
 # ----------------------------------------------------------------------------
 # Windows: auto-export all symbols from DLL so import library (.lib) is generated
-if(WIN32)
+if(WIN32 AND BUILD_SHARED_LIBS)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
@@ -220,6 +222,7 @@ FetchContent_Declare(
     GIT_TAG v1.15
     GIT_SHALLOW TRUE
     GIT_PROGRESS TRUE
+    GIT_CONFIG "http.lowSpeedLimit=1000;http.lowSpeedTime=60"
 )
 
 # ----------------------------------------------------------------------------
@@ -231,6 +234,7 @@ FetchContent_Declare(
     GIT_TAG v0.3.6
     GIT_SHALLOW TRUE
     GIT_PROGRESS TRUE
+    GIT_CONFIG "http.lowSpeedLimit=1000;http.lowSpeedTime=60"
 )
 
 # Make dependencies available
@@ -296,11 +300,11 @@ if(BUILD_TESTING AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         
         FetchContent_Declare(
             googletest
-            # GIT_REPOSITORY https://github.com/google/googletest.git
             GIT_REPOSITORY https://gitee.com/lonlng/googletest.git
             GIT_TAG v1.17.0
             GIT_SHALLOW TRUE
             GIT_PROGRESS TRUE
+            GIT_CONFIG "http.lowSpeedLimit=1000;http.lowSpeedTime=60"
         )
         
         # For Windows: Prevent overriding the parent project's compiler/linker settings
