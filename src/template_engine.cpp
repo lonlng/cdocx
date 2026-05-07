@@ -578,11 +578,13 @@ TemplateEngine::Result TemplateEngine::apply_if(
             doc_->sync_to_physical_tree();
         }
         auto collection = doc_->get_bookmarks();
+        std::unordered_set<std::string> failed_bookmark_keys;
 
         for (const auto& [key, value] : bookmarks) {
             auto bm_opt = collection.get(key);
             if (!bm_opt) {
                 last_result_.failed++;
+                failed_bookmark_keys.insert(key);
                 continue;
             }
             if (value.is_text()) {
@@ -592,6 +594,7 @@ TemplateEngine::Result TemplateEngine::apply_if(
                     last_result_.success++;
                 } else {
                     last_result_.failed++;
+                    failed_bookmark_keys.insert(key);
                 }
             } else if (value.is_image()) {
                 const bool ok = apply_image_to_bookmark(*bm_opt, value);
@@ -599,6 +602,7 @@ TemplateEngine::Result TemplateEngine::apply_if(
                     last_result_.success++;
                 } else {
                     last_result_.failed++;
+                    failed_bookmark_keys.insert(key);
                 }
             }
         }
@@ -606,12 +610,14 @@ TemplateEngine::Result TemplateEngine::apply_if(
 
         // In Auto mode, a key may exist both as a bookmark and as a placeholder.
         // After bookmark replacement, also try placeholder replacement for any
-        // non-bookmarked instances.
-        if (default_target_ == TemplateTarget::Auto) {
+        // keys whose bookmark was not found or whose bookmark replacement failed.
+        if (default_target_ == TemplateTarget::Auto && !failed_bookmark_keys.empty()) {
             for (const auto& [key, value] : bookmarks) {
-                auto r = apply_placeholder(key, value);
-                last_result_.success += r.success;
-                last_result_.failed += r.failed;
+                if (failed_bookmark_keys.count(key)) {
+                    auto r = apply_placeholder(key, value);
+                    last_result_.success += r.success;
+                    last_result_.failed += r.failed;
+                }
             }
             doc_->sync_to_physical_tree();
         }
