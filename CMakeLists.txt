@@ -339,19 +339,21 @@ include(GNUInstallDirs)
 
 install(TARGETS cdocx
     EXPORT cdocxConfig
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT cdocx
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT cdocx
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT cdocx
 )
 
-install(FILES ${CDOCX_PUBLIC_HEADERS}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cdocx
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    COMPONENT cdocx
+    FILES_MATCHING PATTERN "*.h"
 )
 
 install(EXPORT cdocxConfig
     FILE cdocx-config.cmake
     NAMESPACE cdocx::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cdocx
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cdocx COMPONENT cdocx
 )
 
 include(CMakePackageConfigHelpers)
@@ -361,7 +363,7 @@ write_basic_package_version_file(
     COMPATIBILITY SameMajorVersion
 )
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cdocx-config-version.cmake"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cdocx
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cdocx COMPONENT cdocx
 )
 
 # ----------------------------------------------------------------------------

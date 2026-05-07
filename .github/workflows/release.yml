@@ -42,7 +42,7 @@ jobs:
             -DBUILD_TESTING=OFF `
             -DBUILD_EXAMPLES=OFF
           cmake --build build_static --config ${{ matrix.config }} --parallel
-          Get-ChildItem -Recurse -Path build_static -Include *.lib,*.dll
+          cmake --install build_static --config ${{ matrix.config }} --prefix "temp/static" --component cdocx
 
       - name: Build shared library
         run: |
@@ -53,7 +53,7 @@ jobs:
             -DBUILD_TESTING=OFF `
             -DBUILD_EXAMPLES=OFF
           cmake --build build_shared --config ${{ matrix.config }} --parallel
-          Get-ChildItem -Recurse -Path build_shared -Include *.lib,*.dll
+          cmake --install build_shared --config ${{ matrix.config }} --prefix "temp/shared" --component cdocx
 
       - name: Package artifacts
         shell: pwsh
@@ -64,34 +64,19 @@ jobs:
           New-Item -ItemType Directory -Path "$staging/include/cdocx" -Force
           New-Item -ItemType Directory -Path "$staging/lib" -Force
 
-          # Copy headers from source
-          Copy-Item -Path "include/cdocx.h" -Destination "$staging/include/"
-          Copy-Item -Path "include/cdocx/*.h" -Destination "$staging/include/cdocx/"
+          # Install static library (rename to avoid conflict)
+          Copy-Item -Path "temp/static/lib/cdocx.lib" -Destination "$staging/lib/cdocx_static.lib"
 
-          # Find static library
-          $staticLib = Get-ChildItem -Recurse -Path build_static -Filter "cdocx.lib" | Select-Object -First 1
-          if (-not $staticLib) {
-            Write-Error "Static library cdocx.lib not found in build_static"
-            exit 1
-          }
-          Copy-Item -Path $staticLib.FullName -Destination "$staging/lib/cdocx_static.lib"
+          # Install shared library files
+          Copy-Item -Path "temp/shared/lib/cdocx.lib" -Destination "$staging/lib/cdocx.lib"
+          Copy-Item -Path "temp/shared/bin/cdocx.dll" -Destination "$staging/lib/cdocx.dll"
 
-          # Find shared library files
-          $sharedLib = Get-ChildItem -Recurse -Path build_shared -Filter "cdocx.lib" | Select-Object -First 1
-          $sharedDll = Get-ChildItem -Recurse -Path build_shared -Filter "cdocx.dll" | Select-Object -First 1
-          if (-not $sharedLib) {
-            Write-Error "Shared import library cdocx.lib not found in build_shared"
-            exit 1
-          }
-          if (-not $sharedDll) {
-            Write-Error "Shared DLL cdocx.dll not found in build_shared"
-            exit 1
-          }
-          Copy-Item -Path $sharedLib.FullName -Destination "$staging/lib/cdocx.lib"
-          Copy-Item -Path $sharedDll.FullName -Destination "$staging/lib/cdocx.dll"
+          # Install headers
+          Copy-Item -Path "temp/static/include/cdocx.h" -Destination "$staging/include/"
+          Copy-Item -Path "temp/static/include/cdocx/*.h" -Destination "$staging/include/cdocx/"
 
           # Create zip
-          Compress-Archive -Path "$staging/*" -DestinationPath "$staging.zip"
+          Compress-Archive -Path "$staging" -DestinationPath "$staging.zip"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -125,6 +110,7 @@ jobs:
             -DBUILD_TESTING=OFF \
             -DBUILD_EXAMPLES=OFF
           cmake --build build_static --parallel
+          cmake --install build_static --prefix "temp/static" --component cdocx
 
       - name: Build shared library
         run: |
@@ -135,24 +121,23 @@ jobs:
             -DBUILD_TESTING=OFF \
             -DBUILD_EXAMPLES=OFF
           cmake --build build_shared --parallel
+          cmake --install build_shared --prefix "temp/shared" --component cdocx
 
       - name: Package artifacts
         run: |
           version="${{ needs.extract-version.outputs.version }}"
           config=$(echo "${{ matrix.config }}" | tr '[:upper:]' '[:lower:]')
           staging="cdocx-${version}-linux-gcc-x64-${config}"
-          mkdir -p "${staging}/include/cdocx"
           mkdir -p "${staging}/lib"
 
-          # Copy headers from source
-          cp include/cdocx.h "${staging}/include/"
-          cp include/cdocx/*.h "${staging}/include/cdocx/"
+          # Install static library
+          cp "temp/static/lib/libcdocx.a" "${staging}/lib/"
 
-          # Copy static library
-          cp build_static/libcdocx.a "${staging}/lib/"
+          # Install shared library
+          cp "temp/shared/lib/libcdocx.so" "${staging}/lib/"
 
-          # Copy shared library
-          cp build_shared/libcdocx.so "${staging}/lib/"
+          # Install headers
+          cp -r "temp/static/include/"* "${staging}/"
 
           # Create tar.gz
           tar czf "${staging}.tar.gz" "${staging}"
