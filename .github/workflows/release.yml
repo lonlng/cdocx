@@ -35,45 +35,25 @@ jobs:
           $staging = "cdocx-${{ needs.extract-version.outputs.version }}-windows-msvc-x64"
           if (Test-Path $staging) { Remove-Item -Recurse -Force $staging }
 
-          cmake -B build_static `
-            -G "Visual Studio 17 2022" `
-            -A x64 `
-            -DBUILD_SHARED_LIBS=OFF `
-            -DBUILD_TESTING=OFF `
-            -DBUILD_EXAMPLES=OFF
-          cmake --build build_static --config Release --parallel
-          cmake --install build_static --config Release --prefix "$staging" --component cdocx
+          cmake --preset ci-windows-release-static
+          cmake --build --preset ci-windows-release-static --parallel
+          cmake --install build/ci-windows-release-static --config Release --prefix "$staging" --component cdocx
 
-          cmake -B build_shared `
-            -G "Visual Studio 17 2022" `
-            -A x64 `
-            -DBUILD_SHARED_LIBS=ON `
-            -DBUILD_TESTING=OFF `
-            -DBUILD_EXAMPLES=OFF
-          cmake --build build_shared --config Release --parallel
-          cmake --install build_shared --config Release --prefix "$staging" --component cdocx
+          cmake --preset ci-windows-release-shared
+          cmake --build --preset ci-windows-release-shared --parallel
+          cmake --install build/ci-windows-release-shared --config Release --prefix "$staging" --component cdocx
 
       - name: Build and install Debug
         run: |
           $staging = "cdocx-${{ needs.extract-version.outputs.version }}-windows-msvc-x64"
 
-          cmake -B build_dbg_static `
-            -G "Visual Studio 17 2022" `
-            -A x64 `
-            -DBUILD_SHARED_LIBS=OFF `
-            -DBUILD_TESTING=OFF `
-            -DBUILD_EXAMPLES=OFF
-          cmake --build build_dbg_static --config Debug --parallel
-          cmake --install build_dbg_static --config Debug --prefix "$staging/debug" --component cdocx
+          cmake --preset ci-windows-debug-static
+          cmake --build --preset ci-windows-debug-static --parallel
+          cmake --install build/ci-windows-debug-static --config Debug --prefix "$staging/debug" --component cdocx
 
-          cmake -B build_dbg_shared `
-            -G "Visual Studio 17 2022" `
-            -A x64 `
-            -DBUILD_SHARED_LIBS=ON `
-            -DBUILD_TESTING=OFF `
-            -DBUILD_EXAMPLES=OFF
-          cmake --build build_dbg_shared --config Debug --parallel
-          cmake --install build_dbg_shared --config Debug --prefix "$staging/debug" --component cdocx
+          cmake --preset ci-windows-debug-shared
+          cmake --build --preset ci-windows-debug-shared --parallel
+          cmake --install build/ci-windows-debug-shared --config Debug --prefix "$staging/debug" --component cdocx
 
       - name: Package artifacts
         shell: pwsh
@@ -106,45 +86,25 @@ jobs:
           staging="cdocx-${{ needs.extract-version.outputs.version }}-linux-gcc-x64"
           rm -rf "$staging"
 
-          cmake -B build_rel_static \
-            -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DBUILD_SHARED_LIBS=OFF \
-            -DBUILD_TESTING=OFF \
-            -DBUILD_EXAMPLES=OFF
-          cmake --build build_rel_static --parallel
-          cmake --install build_rel_static --prefix "$staging" --component cdocx
+          cmake --preset ci-linux-release-static
+          cmake --build --preset ci-linux-release-static --parallel
+          cmake --install build/ci-linux-release-static --prefix "$staging" --component cdocx
 
-          cmake -B build_rel_shared \
-            -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DBUILD_SHARED_LIBS=ON \
-            -DBUILD_TESTING=OFF \
-            -DBUILD_EXAMPLES=OFF
-          cmake --build build_rel_shared --parallel
-          cmake --install build_rel_shared --prefix "$staging" --component cdocx
+          cmake --preset ci-linux-release-shared
+          cmake --build --preset ci-linux-release-shared --parallel
+          cmake --install build/ci-linux-release-shared --prefix "$staging" --component cdocx
 
       - name: Build and install Debug
         run: |
           staging="cdocx-${{ needs.extract-version.outputs.version }}-linux-gcc-x64"
 
-          cmake -B build_dbg_static \
-            -G Ninja \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DBUILD_SHARED_LIBS=OFF \
-            -DBUILD_TESTING=OFF \
-            -DBUILD_EXAMPLES=OFF
-          cmake --build build_dbg_static --parallel
-          cmake --install build_dbg_static --prefix "$staging/debug" --component cdocx
+          cmake --preset ci-linux-debug-static
+          cmake --build --preset ci-linux-debug-static --parallel
+          cmake --install build/ci-linux-debug-static --prefix "$staging/debug" --component cdocx
 
-          cmake -B build_dbg_shared \
-            -G Ninja \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DBUILD_SHARED_LIBS=ON \
-            -DBUILD_TESTING=OFF \
-            -DBUILD_EXAMPLES=OFF
-          cmake --build build_dbg_shared --parallel
-          cmake --install build_dbg_shared --prefix "$staging/debug" --component cdocx
+          cmake --preset ci-linux-debug-shared
+          cmake --build --preset ci-linux-debug-shared --parallel
+          cmake --install build/ci-linux-debug-shared --prefix "$staging/debug" --component cdocx
 
       - name: Package artifacts
         run: |

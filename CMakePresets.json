@@ -1,0 +1,155 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "ci-base-windows",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "cacheVariables": {
+                "BUILD_TESTING": "OFF",
+                "BUILD_EXAMPLES": "OFF"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "ci-base-linux",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "BUILD_TESTING": "OFF",
+                "BUILD_EXAMPLES": "OFF"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
+            "name": "ci-windows-release-static",
+            "inherits": "ci-base-windows",
+            "displayName": "Windows Release Static",
+            "description": "Release static library build for Windows CI",
+            "cacheVariables": {
+                "BUILD_SHARED_LIBS": "OFF"
+            }
+        },
+        {
+            "name": "ci-windows-release-shared",
+            "inherits": "ci-base-windows",
+            "displayName": "Windows Release Shared",
+            "description": "Release shared library build for Windows CI",
+            "cacheVariables": {
+                "BUILD_SHARED_LIBS": "ON"
+            }
+        },
+        {
+            "name": "ci-windows-debug-static",
+            "inherits": "ci-base-windows",
+            "displayName": "Windows Debug Static",
+            "description": "Debug static library build for Windows CI",
+            "cacheVariables": {
+                "BUILD_SHARED_LIBS": "OFF"
+            }
+        },
+        {
+            "name": "ci-windows-debug-shared",
+            "inherits": "ci-base-windows",
+            "displayName": "Windows Debug Shared",
+            "description": "Debug shared library build for Windows CI",
+            "cacheVariables": {
+                "BUILD_SHARED_LIBS": "ON"
+            }
+        },
+        {
+            "name": "ci-linux-release-static",
+            "inherits": "ci-base-linux",
+            "displayName": "Linux Release Static",
+            "description": "Release static library build for Linux CI",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_SHARED_LIBS": "OFF"
+            }
+        },
+        {
+            "name": "ci-linux-release-shared",
+            "inherits": "ci-base-linux",
+            "displayName": "Linux Release Shared",
+            "description": "Release shared library build for Linux CI",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_SHARED_LIBS": "ON"
+            }
+        },
+        {
+            "name": "ci-linux-debug-static",
+            "inherits": "ci-base-linux",
+            "displayName": "Linux Debug Static",
+            "description": "Debug static library build for Linux CI",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_SHARED_LIBS": "OFF"
+            }
+        },
+        {
+            "name": "ci-linux-debug-shared",
+            "inherits": "ci-base-linux",
+            "displayName": "Linux Debug Shared",
+            "description": "Debug shared library build for Linux CI",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_SHARED_LIBS": "ON"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "ci-windows-release-static",
+            "configurePreset": "ci-windows-release-static",
+            "configuration": "Release"
+        },
+        {
+            "name": "ci-windows-release-shared",
+            "configurePreset": "ci-windows-release-shared",
+            "configuration": "Release"
+        },
+        {
+            "name": "ci-windows-debug-static",
+            "configurePreset": "ci-windows-debug-static",
+            "configuration": "Debug"
+        },
+        {
+            "name": "ci-windows-debug-shared",
+            "configurePreset": "ci-windows-debug-shared",
+            "configuration": "Debug"
+        },
+        {
+            "name": "ci-linux-release-static",
+            "configurePreset": "ci-linux-release-static"
+        },
+        {
+            "name": "ci-linux-release-shared",
+            "configurePreset": "ci-linux-release-shared"
+        },
+        {
+            "name": "ci-linux-debug-static",
+            "configurePreset": "ci-linux-debug-static"
+        },
+        {
+            "name": "ci-linux-debug-shared",
+            "configurePreset": "ci-linux-debug-shared"
+        }
+    ]
+}
