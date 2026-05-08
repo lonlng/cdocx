@@ -17,15 +17,27 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        build_type: [Debug, Release]
-        compiler: [gcc, clang]
         include:
-          - compiler: gcc
+          - build_type: Debug
+            compiler: gcc
             cc: gcc
             cxx: g++
-          - compiler: clang
+            preset: ci-linux-debug-static
+          - build_type: Release
+            compiler: gcc
+            cc: gcc
+            cxx: g++
+            preset: ci-linux-release-static
+          - build_type: Debug
+            compiler: clang
             cc: clang
             cxx: clang++
+            preset: ci-linux-debug-static
+          - build_type: Release
+            compiler: clang
+            cc: clang
+            cxx: clang++
+            preset: ci-linux-release-static
 
     steps:
     - uses: actions/checkout@v4
@@ -39,26 +51,29 @@ jobs:
 
     - name: Configure CMake
       run: |
-        cmake -B build \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -DCMAKE_C_COMPILER=${{ matrix.cc }} \
-          -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
-          -DBUILD_TESTING=ON \
-          -DBUILD_EXAMPLES=ON
+        cmake --preset ${{ matrix.preset }} \
+          -D BUILD_TESTING=ON \
+          -D BUILD_EXAMPLES=ON \
+          -D CMAKE_C_COMPILER=${{ matrix.cc }} \
+          -D CMAKE_CXX_COMPILER=${{ matrix.cxx }}
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }} --parallel
+      run: cmake --build --preset ${{ matrix.preset }} --parallel
 
     - name: Test
-      working-directory: build
-      run: ctest -C ${{ matrix.build_type }} --output-on-failure
+      run: ctest --test-dir build/${{ matrix.preset }} --output-on-failure
 
   build-windows:
     runs-on: windows-latest
     strategy:
       matrix:
-        build_type: [Debug, Release]
-        arch: [x64]
+        include:
+          - build_type: Debug
+            arch: x64
+            preset: ci-windows-debug-static
+          - build_type: Release
+            arch: x64
+            preset: ci-windows-release-static
 
     steps:
     - uses: actions/checkout@v4
@@ -70,15 +85,12 @@ jobs:
 
     - name: Configure CMake
       run: |
-        cmake -B build `
-          -G "Visual Studio 17 2022" `
-          -A ${{ matrix.arch }} `
-          -DBUILD_TESTING=ON `
-          -DBUILD_EXAMPLES=ON
+        cmake --preset ${{ matrix.preset }} `
+          -D BUILD_TESTING=ON `
+          -D BUILD_EXAMPLES=ON
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }} --parallel
+      run: cmake --build --preset ${{ matrix.preset }} --parallel
 
     - name: Test
-      working-directory: build
-      run: ctest -C ${{ matrix.build_type }} --output-on-failure
+      run: ctest --test-dir build/${{ matrix.preset }} -C ${{ matrix.build_type }} --output-on-failure
