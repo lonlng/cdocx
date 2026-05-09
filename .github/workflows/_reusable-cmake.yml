@@ -58,7 +58,7 @@ jobs:
 
       # ── Cache (ccache) ─────────────────────────────────────────────────────
       - name: ccache
-        uses: hendrikmuhs/ccache-action@a1209f81c8f7726c92eef2860ec73b38f2ea1915  # v1.2.17
+        uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03  # v1.2.23
         with:
           key: ${{ inputs.os }}-${{ inputs.preset }}-${{ hashFiles('**/CMakeLists.txt', '**/CMakePresets.json', '**/cmake/*.cmake') }}
           restore-keys: |
