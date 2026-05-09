@@ -14,7 +14,8 @@
             "architecture": "x64",
             "cacheVariables": {
                 "BUILD_TESTING": "ON",
-                "BUILD_EXAMPLES": "ON"
+                "BUILD_EXAMPLES": "ON",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
             },
             "condition": {
                 "type": "equals",
@@ -29,7 +30,8 @@
             "generator": "Ninja",
             "cacheVariables": {
                 "BUILD_TESTING": "ON",
-                "BUILD_EXAMPLES": "ON"
+                "BUILD_EXAMPLES": "ON",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
             },
             "condition": {
                 "type": "equals",

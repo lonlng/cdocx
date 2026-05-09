@@ -1,0 +1,30 @@
+name: Dependency Review
+
+on:
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependency-review:
+    name: Review Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@ce3cf9537a52e8119d91fd4841e23017b2989b57  # v4.6.0
+        with:
+          # Fail on moderate or higher severity vulnerabilities
+          fail-on-severity: moderate
+          # Show open source license information
+          show-openssf-scorecard: true
+          # Comment on PR with summary
+          comment-summary-in-pr: on-failure

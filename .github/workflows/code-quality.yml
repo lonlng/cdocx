@@ -22,6 +22,7 @@ concurrency:
 jobs:
   # ── Format Check (via CMake target) ──────────────────────────────────────
   format-check:
+    name: Format Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -40,8 +41,32 @@ jobs:
       - name: Check formatting
         run: cmake --build --preset ci-linux-release-static --target format-check
 
+  # ── Static Analysis (clang-tidy) ─────────────────────────────────────────
+  clang-tidy:
+    name: Clang-Tidy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          submodules: recursive
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build clang-tidy
+
+      - name: Configure with compile commands
+        run: |
+          cmake --preset ci-linux-debug-static \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Run clang-tidy
+        run: cmake --build --preset ci-linux-debug-static --target tidy
+
   # ── Static Analysis (cppcheck) ───────────────────────────────────────────
-  static-analysis:
+  cppcheck:
+    name: Cppcheck
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -54,15 +79,65 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake cppcheck
 
+      - name: Configure (for include paths)
+        run: cmake --preset ci-linux-debug-static
+
       - name: Run cppcheck
         run: |
           cppcheck \
+            --project=build/ci-linux-debug-static/compile_commands.json \
             --enable=all \
             --error-exitcode=1 \
             --inline-suppr \
             --suppress=missingIncludeSystem \
             --suppress=unusedFunction \
-            -I include \
-            -I include/detail \
-            src/ \
-            2>&1 | head -100
+            --suppress=unmatchedSuppression \
+            --quiet \
+            2>&1 | head -200
+
+  # ── Code Coverage ────────────────────────────────────────────────────────
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          submodules: recursive
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build gcovr
+
+      - name: Configure with coverage
+        run: |
+          cmake --preset ci-linux-debug-static \
+            -DENABLE_COVERAGE=ON \
+            -DCMAKE_CXX_COMPILER=g++
+
+      - name: Build
+        run: cmake --build --preset ci-linux-debug-static --parallel
+
+      - name: Test
+        run: ctest --preset ci-linux-debug-static --output-on-failure
+
+      - name: Generate coverage report
+        run: |
+          gcovr \
+            --root . \
+            --filter src/ \
+            --exclude src/test_main.cpp \
+            --xml-pretty \
+            --output coverage.xml \
+            --html-details coverage.html \
+            build/ci-linux-debug-static/
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1  # v4.6.1
+        with:
+          name: coverage-report
+          path: |
+            coverage.xml
+            coverage.html
+          if-no-files-found: error
