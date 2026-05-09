@@ -66,7 +66,7 @@ jobs:
 
       # ── Setup CMake (minimum 3.25 for presets v6) ──────────────────────────
       - name: Setup CMake
-        uses: lukka/get-cmake@fe1dcd0bbb7c8583a9a70a6d40ba01beb78751b6  # v4.0.0
+        uses: lukka/get-cmake@f57d5c55bca331a49bdc52a6069f211f1363a275  # v4.3.2
         with:
           cmakeVersion: '~3.30.0'
 
