@@ -352,26 +352,6 @@ endif()
 # ----------------------------------------------------------------------------
 include(GNUInstallDirs)
 
-# Install bundled dependencies into the same export set so
-# install(EXPORT cdocxConfig) does not fail with "target zip is not
-# in any export set".  These are linked PRIVATEly, so consumers do
-# not need to link them explicitly, but CMake still requires them in
-# the export set.
-if(TARGET zip)
-    install(TARGETS zip EXPORT cdocxConfig
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT cdocx
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT cdocx
-        RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT cdocx
-    )
-endif()
-if(TARGET pugixml)
-    install(TARGETS pugixml EXPORT cdocxConfig
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT cdocx
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT cdocx
-        RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT cdocx
-    )
-endif()
-
 install(TARGETS cdocx
     EXPORT cdocxConfig
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT cdocx
@@ -468,12 +448,6 @@ install(EXPORT cdocxConfig
     FILE cdocx-targets.cmake
     NAMESPACE cdocx::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cdocx COMPONENT cdocx
-)
-
-# Build-tree export (for add_subdirectory consumers)
-export(EXPORT cdocxConfig
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/cdocx-targets.cmake"
-    NAMESPACE cdocx::
 )
 
 # Generate package configuration file from template
