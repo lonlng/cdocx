@@ -42,7 +42,7 @@ on:
 
 jobs:
   cmake:
-    name: '${{ inputs.build_type }} ${{ inputs.shared == \"ON\" && \"shared\" || \"static\" }} on ${{ inputs.os }}'
+    name: '${{ inputs.os }} ${{ inputs.build_type }} ${{ inputs.shared }}'
     runs-on: ${{ inputs.os }}
     timeout-minutes: 45
 
