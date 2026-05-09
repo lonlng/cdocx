@@ -3,14 +3,18 @@ name: Reusable CMake Workflow
 on:
   workflow_call:
     inputs:
-      preset:
-        required: true
-        type: string
-        description: 'CMake preset name (configure/build/test/package must share this name)'
       os:
         required: true
         type: string
-        description: 'Runner OS (ubuntu-latest, windows-latest, macos-latest)'
+        description: 'Runner OS (ubuntu-latest, windows-latest)'
+      build_type:
+        required: true
+        type: string
+        description: 'CMake build type (Debug, Release)'
+      shared:
+        required: true
+        type: string
+        description: 'BUILD_SHARED_LIBS value (ON, OFF)'
       run_tests:
         type: boolean
         default: true
@@ -30,20 +34,21 @@ on:
       cc:
         type: string
         default: ''
-        description: 'C compiler override (Linux/macOS only)'
+        description: 'C compiler override (Linux only)'
       cxx:
         type: string
         default: ''
-        description: 'C++ compiler override (Linux/macOS only)'
+        description: 'C++ compiler override (Linux only)'
 
 jobs:
   cmake:
-    name: '${{ inputs.preset }} on ${{ inputs.os }}'
+    name: '${{ inputs.build_type }} ${{ inputs.shared == \"ON\" && \"shared\" || \"static\" }} on ${{ inputs.os }}'
     runs-on: ${{ inputs.os }}
     timeout-minutes: 45
 
     env:
-      CDOCX_INSTALL_PREFIX: '${{ github.workspace }}/install/${{ inputs.preset }}'
+      CDOCX_INSTALL_PREFIX: '${{ github.workspace }}/install/${{ inputs.os }}-${{ inputs.build_type }}-${{ inputs.shared }}'
+      BUILD_CONFIG: '${{ inputs.build_type }}'
 
     defaults:
       run:
@@ -60,17 +65,9 @@ jobs:
       - name: ccache
         uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03  # v1.2.23
         with:
-          key: ${{ inputs.os }}-${{ inputs.preset }}-${{ hashFiles('**/CMakeLists.txt', '**/CMakePresets.json', '**/cmake/*.cmake') }}
+          key: ${{ inputs.os }}-${{ inputs.build_type }}-${{ inputs.shared }}-${{ hashFiles('**/CMakeLists.txt', '**/cmake/*.cmake') }}
           restore-keys: |
-            ${{ inputs.os }}-${{ inputs.preset }}-
-
-      # ── Setup CMake (minimum 3.25 for presets v6) ──────────────────────────
-      - name: Install CMake
-        shell: bash
-        run: |
-          pip install "cmake>=3.30"
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-          "$HOME/.local/bin/cmake" --version
+            ${{ inputs.os }}-${{ inputs.build_type }}-${{ inputs.shared }}-
 
       # ── Setup Toolchain (Linux) ────────────────────────────────────────────
       - name: Install dependencies (Linux)
@@ -87,30 +84,47 @@ jobs:
       # ── Configure ──────────────────────────────────────────────────────────
       - name: Configure CMake
         run: |
-          CONFIGURE_ARGS=""
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            GENERATOR="Visual Studio 17 2022"
+            ARCH="-A x64"
+          else
+            GENERATOR="Ninja"
+            ARCH=""
+          fi
+
+          CONFIG_ARGS=""
           if [ -n "${{ inputs.cc }}" ]; then
-            CONFIGURE_ARGS="${CONFIGURE_ARGS} -D CMAKE_C_COMPILER=${{ inputs.cc }}"
+            CONFIG_ARGS="${CONFIG_ARGS} -DCMAKE_C_COMPILER=${{ inputs.cc }}"
           fi
           if [ -n "${{ inputs.cxx }}" ]; then
-            CONFIGURE_ARGS="${CONFIGURE_ARGS} -D CMAKE_CXX_COMPILER=${{ inputs.cxx }}"
+            CONFIG_ARGS="${CONFIG_ARGS} -DCMAKE_CXX_COMPILER=${{ inputs.cxx }}"
           fi
+
           # shellcheck disable=SC2086
-          cmake --preset ${{ inputs.preset }} ${CONFIGURE_ARGS}
+          cmake -S . -B build \
+            -G "${GENERATOR}" ${ARCH} \
+            -DCMAKE_BUILD_TYPE="${{ inputs.build_type }}" \
+            -DBUILD_SHARED_LIBS="${{ inputs.shared }}" \
+            -DBUILD_TESTING=ON \
+            -DBUILD_EXAMPLES=ON \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            ${CONFIG_ARGS}
 
       # ── Build ──────────────────────────────────────────────────────────────
       - name: Build
-        run: cmake --build --preset ${{ inputs.preset }} --parallel
+        run: cmake --build build --config "${{ inputs.build_type }}" --parallel
 
       # ── Test ───────────────────────────────────────────────────────────────
       - name: Test
         if: inputs.run_tests
-        run: ctest --preset ${{ inputs.preset }} --output-on-failure --verbose
+        run: ctest --test-dir build --build-config "${{ inputs.build_type }}" --output-on-failure --parallel
 
       # ── Install ────────────────────────────────────────────────────────────
       - name: Install
         if: inputs.run_install
         run: |
-          cmake --install build/${{ inputs.preset }} \
+          cmake --install build \
+                --config "${{ inputs.build_type }}" \
                 --prefix "${{ env.CDOCX_INSTALL_PREFIX }}" \
                 --strip
 
@@ -127,16 +141,16 @@ jobs:
       # ── Package ────────────────────────────────────────────────────────────
       - name: Package
         if: inputs.run_package
-        run: cpack --preset ${{ inputs.preset }}
+        run: cpack --config build/CPackConfig.cmake -C "${{ inputs.build_type }}"
 
       # ── Upload Artifacts ───────────────────────────────────────────────────
       - name: Upload Build Artifacts
         if: inputs.upload_artifacts
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1  # v4.6.1
         with:
-          name: ${{ inputs.preset }}-${{ inputs.os }}
+          name: ${{ inputs.os }}-${{ inputs.build_type }}-${{ inputs.shared }}
           path: |
-            build/${{ inputs.preset }}/*.zip
-            build/${{ inputs.preset }}/*.tar.gz
+            build/*.zip
+            build/*.tar.gz
             ${{ env.CDOCX_INSTALL_PREFIX }}/
           if-no-files-found: ignore

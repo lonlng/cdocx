@@ -28,12 +28,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - preset: ci-windows-release-static
-          - preset: ci-windows-debug-static
+          - build_type: Release
+            shared: OFF
+          - build_type: Debug
+            shared: OFF
     uses: ./.github/workflows/_reusable-cmake.yml
     with:
-      preset: ${{ matrix.preset }}
       os: windows-latest
+      build_type: ${{ matrix.build_type }}
+      shared: ${{ matrix.shared }}
       run_tests: true
       run_install: true
       run_package: true
@@ -45,12 +48,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - preset: ci-windows-release-shared
-          - preset: ci-windows-debug-shared
+          - build_type: Release
+            shared: ON
+          - build_type: Debug
+            shared: ON
     uses: ./.github/workflows/_reusable-cmake.yml
     with:
-      preset: ${{ matrix.preset }}
       os: windows-latest
+      build_type: ${{ matrix.build_type }}
+      shared: ${{ matrix.shared }}
       run_tests: true
       run_install: true
       run_package: true
@@ -63,12 +69,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - preset: ci-linux-release-static
-          - preset: ci-linux-debug-static
+          - build_type: Release
+            shared: OFF
+          - build_type: Debug
+            shared: OFF
     uses: ./.github/workflows/_reusable-cmake.yml
     with:
-      preset: ${{ matrix.preset }}
       os: ubuntu-latest
+      build_type: ${{ matrix.build_type }}
+      shared: ${{ matrix.shared }}
       run_tests: true
       run_install: true
       run_package: true
@@ -80,12 +89,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - preset: ci-linux-release-shared
-          - preset: ci-linux-debug-shared
+          - build_type: Release
+            shared: ON
+          - build_type: Debug
+            shared: ON
     uses: ./.github/workflows/_reusable-cmake.yml
     with:
-      preset: ${{ matrix.preset }}
       os: ubuntu-latest
+      build_type: ${{ matrix.build_type }}
+      shared: ${{ matrix.shared }}
       run_tests: true
       run_install: true
       run_package: true
@@ -102,7 +114,6 @@ jobs:
         uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e  # v4.2.1
         with:
           path: artifacts
-          pattern: "ci-*-*"
           merge-multiple: false
 
       - name: List artifacts

@@ -26,29 +26,36 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - preset: ci-linux-debug-static
+          - build_type: Debug
+            shared: OFF
             cc: gcc
             cxx: g++
-          - preset: ci-linux-debug-static
+          - build_type: Debug
+            shared: OFF
             cc: clang
             cxx: clang++
-          - preset: ci-linux-release-static
+          - build_type: Release
+            shared: OFF
             cc: gcc
             cxx: g++
-          - preset: ci-linux-release-static
+          - build_type: Release
+            shared: OFF
             cc: clang
             cxx: clang++
-          - preset: ci-linux-debug-shared
+          - build_type: Debug
+            shared: ON
             cc: gcc
             cxx: g++
-          - preset: ci-linux-release-shared
+          - build_type: Release
+            shared: ON
             cc: gcc
             cxx: g++
 
     uses: ./.github/workflows/_reusable-cmake.yml
     with:
-      preset: ${{ matrix.preset }}
       os: ubuntu-latest
+      build_type: ${{ matrix.build_type }}
+      shared: ${{ matrix.shared }}
       cc: ${{ matrix.cc }}
       cxx: ${{ matrix.cxx }}
       run_tests: true
@@ -60,14 +67,19 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - preset: ci-windows-debug-static
-          - preset: ci-windows-debug-shared
-          - preset: ci-windows-release-static
-          - preset: ci-windows-release-shared
+          - build_type: Debug
+            shared: OFF
+          - build_type: Debug
+            shared: ON
+          - build_type: Release
+            shared: OFF
+          - build_type: Release
+            shared: ON
 
     uses: ./.github/workflows/_reusable-cmake.yml
     with:
-      preset: ${{ matrix.preset }}
       os: windows-latest
+      build_type: ${{ matrix.build_type }}
+      shared: ${{ matrix.shared }}
       run_tests: true
       run_install: true

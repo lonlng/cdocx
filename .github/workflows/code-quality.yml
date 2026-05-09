@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ── Format Check (via CMake target) ──────────────────────────────────────
+  # ── Format Check ─────────────────────────────────────────────────────────
   format-check:
     name: Format Check
     runs-on: ubuntu-latest
@@ -30,22 +30,16 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install CMake
-        run: |
-          pip install "cmake>=3.30"
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-          "$HOME/.local/bin/cmake" --version
-
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build clang-format
+          sudo apt-get install -y cmake ninja-build clang-format
 
       - name: Configure
-        run: cmake --preset ci-linux-release-static
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 
       - name: Check formatting
-        run: cmake --build --preset ci-linux-release-static --target format-check
+        run: cmake --build build --target format-check
 
   # ── Static Analysis (clang-tidy) ─────────────────────────────────────────
   clang-tidy:
@@ -57,24 +51,18 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install CMake
-        run: |
-          pip install "cmake>=3.30"
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-          "$HOME/.local/bin/cmake" --version
-
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build clang-tidy
+          sudo apt-get install -y cmake ninja-build clang-tidy
 
       - name: Configure with compile commands
         run: |
-          cmake --preset ci-linux-debug-static \
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Run clang-tidy
-        run: cmake --build --preset ci-linux-debug-static --target tidy
+        run: cmake --build build --target tidy
 
   # ── Static Analysis (cppcheck) ───────────────────────────────────────────
   cppcheck:
@@ -86,24 +74,18 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install CMake
-        run: |
-          pip install "cmake>=3.30"
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-          "$HOME/.local/bin/cmake" --version
-
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y cppcheck
+          sudo apt-get install -y cmake cppcheck
 
       - name: Configure (for include paths)
-        run: cmake --preset ci-linux-debug-static
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
 
       - name: Run cppcheck
         run: |
           cppcheck \
-            --project=build/ci-linux-debug-static/compile_commands.json \
+            --project=build/compile_commands.json \
             --enable=all \
             --error-exitcode=1 \
             --inline-suppr \
@@ -123,28 +105,22 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install CMake
-        run: |
-          pip install "cmake>=3.30"
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-          "$HOME/.local/bin/cmake" --version
-
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build gcovr
+          sudo apt-get install -y cmake ninja-build gcovr
 
       - name: Configure with coverage
         run: |
-          cmake --preset ci-linux-debug-static \
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug \
             -DENABLE_COVERAGE=ON \
             -DCMAKE_CXX_COMPILER=g++
 
       - name: Build
-        run: cmake --build --preset ci-linux-debug-static --parallel
+        run: cmake --build build --parallel
 
       - name: Test
-        run: ctest --preset ci-linux-debug-static --output-on-failure
+        run: ctest --test-dir build --output-on-failure
 
       - name: Generate coverage report
         run: |
@@ -155,7 +131,7 @@ jobs:
             --xml-pretty \
             --output coverage.xml \
             --html-details coverage.html \
-            build/ci-linux-debug-static/
+            build/
 
       - name: Upload coverage report
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1  # v4.6.1
