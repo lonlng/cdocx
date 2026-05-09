@@ -41,7 +41,7 @@ jobs:
 
       # ── Initialize CodeQL ──────────────────────────────────────────────────
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@0fa1882f994fbd81a47ab0804f93354f5ea40147  # v3.28.17
+        uses: github/codeql-action/init@60168efe1c415ce0f5521ea06d5c2062adbeed1b  # v3.28.17
         with:
           languages: cpp
           queries: security-extended,security-and-quality
