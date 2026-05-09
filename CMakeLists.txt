@@ -253,15 +253,16 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU" AND CMAKE_C_COMPILER_VERSION VERSION_GREAT
     endif()
 endif()
 
-target_link_libraries(cdocx 
-    PUBLIC pugixml
-    PUBLIC zip::zip
+target_link_libraries(cdocx
+    PUBLIC
+        $<BUILD_INTERFACE:pugixml>
+        $<BUILD_INTERFACE:zip::zip>
+    PRIVATE
+        $<$<BOOL:${WIN32}>:bcrypt>
 )
 
-# Platform-specific libraries
+# Platform-specific settings
 if(WIN32)
-    target_link_libraries(cdocx PRIVATE bcrypt)
-    # Windows-specific defines
     target_compile_definitions(cdocx PRIVATE
         NOMINMAX            # Prevent min/max macro conflicts
         WIN32_LEAN_AND_MEAN # Reduce Windows.h bloat
@@ -365,19 +366,112 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
     FILES_MATCHING PATTERN "*.h"
 )
 
+# Determine bundled dependency library paths for installation.
+# pugixml exposes an INTERFACE target 'pugixml' that forwards to
+# 'pugixml::static'; zip exposes 'zip::zip'.  We locate the actual
+# library file so we can install it alongside cdocx.
+# Locate bundled dependency libraries in the build tree so they can be
+# installed alongside cdocx.  IMPORTED targets record install-relative
+# paths, so we fall back to the FetchContent binary directories.
+set(CDOCX_PUGIXML_LIB "")
+set(CDOCX_ZIP_LIB "")
+
+if(DEFINED pugixml_BINARY_DIR)
+    foreach(_path
+        "${pugixml_BINARY_DIR}/Release/pugixml.lib"
+        "${pugixml_BINARY_DIR}/Debug/pugixml.lib"
+        "${pugixml_BINARY_DIR}/libpugixml.a"
+        "${pugixml_BINARY_DIR}/libpugixml.so"
+    )
+        if(EXISTS "${_path}")
+            set(CDOCX_PUGIXML_LIB "${_path}")
+            break()
+        endif()
+    endforeach()
+endif()
+
+if(DEFINED zip_BINARY_DIR)
+    foreach(_path
+        "${zip_BINARY_DIR}/Release/zip.lib"
+        "${zip_BINARY_DIR}/Debug/zip.lib"
+        "${zip_BINARY_DIR}/libzip.a"
+        "${zip_BINARY_DIR}/libzip.so"
+    )
+        if(EXISTS "${_path}")
+            set(CDOCX_ZIP_LIB "${_path}")
+            break()
+        endif()
+    endforeach()
+endif()
+
+# Install bundled dependency libraries so consumers can link them.
+# install(CODE ...) is used because the library files do not exist at
+# configure time (they are built later), so install(FILES ...) would fail.
+if(DEFINED pugixml_BINARY_DIR)
+    install(CODE "
+        set(_src)
+        if(EXISTS \"${pugixml_BINARY_DIR}/Release/pugixml.lib\")
+            set(_src \"${pugixml_BINARY_DIR}/Release/pugixml.lib\")
+        elseif(EXISTS \"${pugixml_BINARY_DIR}/Debug/pugixml.lib\")
+            set(_src \"${pugixml_BINARY_DIR}/Debug/pugixml.lib\")
+        elseif(EXISTS \"${pugixml_BINARY_DIR}/libpugixml.a\")
+            set(_src \"${pugixml_BINARY_DIR}/libpugixml.a\")
+        elseif(EXISTS \"${pugixml_BINARY_DIR}/libpugixml.so\")
+            set(_src \"${pugixml_BINARY_DIR}/libpugixml.so\")
+        endif()
+        if(_src)
+            file(INSTALL DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}\" TYPE FILE FILES \${_src})
+        endif()
+    " COMPONENT cdocx)
+endif()
+
+if(DEFINED zip_BINARY_DIR)
+    install(CODE "
+        set(_src)
+        if(EXISTS \"${zip_BINARY_DIR}/Release/zip.lib\")
+            set(_src \"${zip_BINARY_DIR}/Release/zip.lib\")
+        elseif(EXISTS \"${zip_BINARY_DIR}/Debug/zip.lib\")
+            set(_src \"${zip_BINARY_DIR}/Debug/zip.lib\")
+        elseif(EXISTS \"${zip_BINARY_DIR}/libzip.a\")
+            set(_src \"${zip_BINARY_DIR}/libzip.a\")
+        elseif(EXISTS \"${zip_BINARY_DIR}/libzip.so\")
+            set(_src \"${zip_BINARY_DIR}/libzip.so\")
+        endif()
+        if(_src)
+            file(INSTALL DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}\" TYPE FILE FILES \${_src})
+        endif()
+    " COMPONENT cdocx)
+endif()
+
+# Export targets file (imported target definitions)
 install(EXPORT cdocxConfig
-    FILE cdocx-config.cmake
+    FILE cdocx-targets.cmake
     NAMESPACE cdocx::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cdocx COMPONENT cdocx
 )
 
+# Build-tree export (for add_subdirectory consumers)
+export(EXPORT cdocxConfig
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/cdocx-targets.cmake"
+    NAMESPACE cdocx::
+)
+
+# Generate package configuration file from template
 include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cdocx-config.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cdocx-config.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cdocx
+    NO_SET_AND_CHECK_MACRO
+)
 write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/cdocx-config-version.cmake"
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion
 )
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cdocx-config-version.cmake"
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/cdocx-config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/cdocx-config-version.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cdocx COMPONENT cdocx
 )
 
@@ -521,15 +615,12 @@ set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 
 # vcpkg-style install layout: package everything cmake --install produced
 set(CPACK_INSTALL_CMAKE_PROJECTS
-    "${CMAKE_BINARY_DIR};${PROJECT_NAME};cdocx;/")
+    "${CMAKE_BINARY_DIR};cdocx;cdocx;/")
 
-# Platform-specific naming
-if(WIN32)
-    set(CPACK_GENERATOR ZIP)
-    set(CPACK_SYSTEM_NAME "windows-msvc-x64")
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(CPACK_GENERATOR TGZ)
-    set(CPACK_SYSTEM_NAME "linux-gcc-x64")
+# Default generators (overridden by cmake --preset packagePresets)
+set(CPACK_GENERATOR "ZIP")
+if(NOT WIN32)
+    list(APPEND CPACK_GENERATOR "TGZ")
 endif()
 
 include(CPack)

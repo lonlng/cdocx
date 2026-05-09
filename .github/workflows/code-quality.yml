@@ -2,50 +2,67 @@ name: Code Quality
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [main, master, develop]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  clang-format:
+  # ── Format Check (via CMake target) ──────────────────────────────────────
+  format-check:
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: recursive
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          submodules: recursive
 
-    - name: Install clang-format
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y clang-format
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake clang-format
 
-    - name: Check formatting
-      run: |
-        find include src -type f \( -name "*.h" -o -name "*.cpp" \) -exec clang-format --dry-run --Werror {} \;
+      - name: Configure
+        run: cmake --preset ci-linux-release-static
 
+      - name: Check formatting
+        run: cmake --build --preset ci-linux-release-static --target format-check
+
+  # ── Static Analysis (cppcheck) ───────────────────────────────────────────
   static-analysis:
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: recursive
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          submodules: recursive
 
-    - name: Install tools
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake cppcheck
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake cppcheck
 
-    - name: Run cppcheck
-      run: |
-        cppcheck \
-          --enable=all \
-          --error-exitcode=1 \
-          --inline-suppr \
-          --suppress=missingIncludeSystem \
-          --suppress=unusedFunction \
-          -I include \
-          -I include/detail \
-          src/ \
-          2>&1 | head -100
+      - name: Run cppcheck
+        run: |
+          cppcheck \
+            --enable=all \
+            --error-exitcode=1 \
+            --inline-suppr \
+            --suppress=missingIncludeSystem \
+            --suppress=unusedFunction \
+            -I include \
+            -I include/detail \
+            src/ \
+            2>&1 | head -100

@@ -1,5 +1,5 @@
 {
-    "version": 6,
+    "version": 8,
     "cmakeMinimumRequired": {
         "major": 3,
         "minor": 25,
@@ -13,8 +13,8 @@
             "generator": "Visual Studio 17 2022",
             "architecture": "x64",
             "cacheVariables": {
-                "BUILD_TESTING": "OFF",
-                "BUILD_EXAMPLES": "OFF"
+                "BUILD_TESTING": "ON",
+                "BUILD_EXAMPLES": "ON"
             },
             "condition": {
                 "type": "equals",
@@ -28,8 +28,8 @@
             "binaryDir": "${sourceDir}/build/${presetName}",
             "generator": "Ninja",
             "cacheVariables": {
-                "BUILD_TESTING": "OFF",
-                "BUILD_EXAMPLES": "OFF"
+                "BUILD_TESTING": "ON",
+                "BUILD_EXAMPLES": "ON"
             },
             "condition": {
                 "type": "equals",
@@ -150,6 +150,128 @@
         {
             "name": "ci-linux-debug-shared",
             "configurePreset": "ci-linux-debug-shared"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "ci-windows-release-static",
+            "configurePreset": "ci-windows-release-static",
+            "configuration": "Release",
+            "output": { "outputOnFailure": true }
+        },
+        {
+            "name": "ci-windows-release-shared",
+            "configurePreset": "ci-windows-release-shared",
+            "configuration": "Release",
+            "output": { "outputOnFailure": true }
+        },
+        {
+            "name": "ci-windows-debug-static",
+            "configurePreset": "ci-windows-debug-static",
+            "configuration": "Debug",
+            "output": { "outputOnFailure": true }
+        },
+        {
+            "name": "ci-windows-debug-shared",
+            "configurePreset": "ci-windows-debug-shared",
+            "configuration": "Debug",
+            "output": { "outputOnFailure": true }
+        },
+        {
+            "name": "ci-linux-release-static",
+            "configurePreset": "ci-linux-release-static",
+            "output": { "outputOnFailure": true }
+        },
+        {
+            "name": "ci-linux-release-shared",
+            "configurePreset": "ci-linux-release-shared",
+            "output": { "outputOnFailure": true }
+        },
+        {
+            "name": "ci-linux-debug-static",
+            "configurePreset": "ci-linux-debug-static",
+            "output": { "outputOnFailure": true }
+        },
+        {
+            "name": "ci-linux-debug-shared",
+            "configurePreset": "ci-linux-debug-shared",
+            "output": { "outputOnFailure": true }
+        }
+    ],
+    "packagePresets": [
+        {
+            "name": "ci-windows-release-static",
+            "configurePreset": "ci-windows-release-static",
+            "generators": [ "ZIP" ]
+        },
+        {
+            "name": "ci-windows-release-shared",
+            "configurePreset": "ci-windows-release-shared",
+            "generators": [ "ZIP" ]
+        },
+        {
+            "name": "ci-linux-release-static",
+            "configurePreset": "ci-linux-release-static",
+            "generators": [ "TGZ" ]
+        },
+        {
+            "name": "ci-linux-release-shared",
+            "configurePreset": "ci-linux-release-shared",
+            "generators": [ "TGZ" ]
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "ci-windows-release-static",
+            "steps": [
+                { "type": "configure", "name": "ci-windows-release-static" },
+                { "type": "build", "name": "ci-windows-release-static" },
+                { "type": "test", "name": "ci-windows-release-static" },
+                { "type": "package", "name": "ci-windows-release-static" }
+            ]
+        },
+        {
+            "name": "ci-windows-release-shared",
+            "steps": [
+                { "type": "configure", "name": "ci-windows-release-shared" },
+                { "type": "build", "name": "ci-windows-release-shared" },
+                { "type": "test", "name": "ci-windows-release-shared" },
+                { "type": "package", "name": "ci-windows-release-shared" }
+            ]
+        },
+        {
+            "name": "ci-linux-release-static",
+            "steps": [
+                { "type": "configure", "name": "ci-linux-release-static" },
+                { "type": "build", "name": "ci-linux-release-static" },
+                { "type": "test", "name": "ci-linux-release-static" },
+                { "type": "package", "name": "ci-linux-release-static" }
+            ]
+        },
+        {
+            "name": "ci-linux-release-shared",
+            "steps": [
+                { "type": "configure", "name": "ci-linux-release-shared" },
+                { "type": "build", "name": "ci-linux-release-shared" },
+                { "type": "test", "name": "ci-linux-release-shared" },
+                { "type": "package", "name": "ci-linux-release-shared" }
+            ]
+        },
+        {
+            "name": "ci-windows-debug-static",
+            "steps": [
+                { "type": "configure", "name": "ci-windows-debug-static" },
+                { "type": "build", "name": "ci-windows-debug-static" },
+                { "type": "test", "name": "ci-windows-debug-static" }
+            ]
+        },
+        {
+            "name": "ci-linux-debug-static",
+            "steps": [
+                { "type": "configure", "name": "ci-linux-debug-static" },
+                { "type": "build", "name": "ci-linux-debug-static" },
+                { "type": "test", "name": "ci-linux-debug-static" }
+            ]
         }
     ]
 }

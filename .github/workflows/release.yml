@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*.*.*'
 
+permissions:
+  contents: read
+
 env:
   PACKAGE_NAME: cdocx
 
@@ -18,126 +21,98 @@ jobs:
         id: version
         run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
-  build-windows:
+  # ── Windows Builds ───────────────────────────────────────────────────────
+  windows-static:
     needs: extract-version
-    runs-on: windows-2022
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - preset: ci-windows-release-static
+          - preset: ci-windows-debug-static
+    uses: ./.github/workflows/_reusable-cmake.yml
+    with:
+      preset: ${{ matrix.preset }}
+      os: windows-latest
+      run_tests: true
+      run_install: true
+      run_package: true
+      upload_artifacts: true
 
-      - name: Setup MSVC
-        uses: microsoft/setup-msbuild@v2
-
-      - name: Build and install Release
-        run: |
-          $staging = "cdocx-${{ needs.extract-version.outputs.version }}-windows-msvc-x64"
-          if (Test-Path $staging) { Remove-Item -Recurse -Force $staging }
-
-          cmake --preset ci-windows-release-static
-          cmake --build --preset ci-windows-release-static --parallel
-          cmake --install build/ci-windows-release-static --config Release --prefix "$staging" --component cdocx
-
-          cmake --preset ci-windows-release-shared
-          cmake --build --preset ci-windows-release-shared --parallel
-          cmake --install build/ci-windows-release-shared --config Release --prefix "$staging" --component cdocx
-
-      - name: Build and install Debug
-        run: |
-          $staging = "cdocx-${{ needs.extract-version.outputs.version }}-windows-msvc-x64"
-
-          cmake --preset ci-windows-debug-static
-          cmake --build --preset ci-windows-debug-static --parallel
-          cmake --install build/ci-windows-debug-static --config Debug --prefix "$staging/debug" --component cdocx
-
-          cmake --preset ci-windows-debug-shared
-          cmake --build --preset ci-windows-debug-shared --parallel
-          cmake --install build/ci-windows-debug-shared --config Debug --prefix "$staging/debug" --component cdocx
-
-      - name: Package artifacts
-        shell: pwsh
-        run: |
-          $staging = "cdocx-${{ needs.extract-version.outputs.version }}-windows-msvc-x64"
-          Compress-Archive -Path "$staging" -DestinationPath "$staging.zip"
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows
-          path: cdocx-*-windows-msvc-x64.zip
-
-  build-linux:
+  windows-shared:
     needs: extract-version
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - preset: ci-windows-release-shared
+          - preset: ci-windows-debug-shared
+    uses: ./.github/workflows/_reusable-cmake.yml
+    with:
+      preset: ${{ matrix.preset }}
+      os: windows-latest
+      run_tests: true
+      run_install: true
+      run_package: true
+      upload_artifacts: true
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake ninja-build
+  # ── Linux Builds ─────────────────────────────────────────────────────────
+  linux-static:
+    needs: extract-version
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - preset: ci-linux-release-static
+          - preset: ci-linux-debug-static
+    uses: ./.github/workflows/_reusable-cmake.yml
+    with:
+      preset: ${{ matrix.preset }}
+      os: ubuntu-latest
+      run_tests: true
+      run_install: true
+      run_package: true
+      upload_artifacts: true
 
-      - name: Build and install Release
-        run: |
-          staging="cdocx-${{ needs.extract-version.outputs.version }}-linux-gcc-x64"
-          rm -rf "$staging"
+  linux-shared:
+    needs: extract-version
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - preset: ci-linux-release-shared
+          - preset: ci-linux-debug-shared
+    uses: ./.github/workflows/_reusable-cmake.yml
+    with:
+      preset: ${{ matrix.preset }}
+      os: ubuntu-latest
+      run_tests: true
+      run_install: true
+      run_package: true
+      upload_artifacts: true
 
-          cmake --preset ci-linux-release-static
-          cmake --build --preset ci-linux-release-static --parallel
-          cmake --install build/ci-linux-release-static --prefix "$staging" --component cdocx
-
-          cmake --preset ci-linux-release-shared
-          cmake --build --preset ci-linux-release-shared --parallel
-          cmake --install build/ci-linux-release-shared --prefix "$staging" --component cdocx
-
-      - name: Build and install Debug
-        run: |
-          staging="cdocx-${{ needs.extract-version.outputs.version }}-linux-gcc-x64"
-
-          cmake --preset ci-linux-debug-static
-          cmake --build --preset ci-linux-debug-static --parallel
-          cmake --install build/ci-linux-debug-static --prefix "$staging/debug" --component cdocx
-
-          cmake --preset ci-linux-debug-shared
-          cmake --build --preset ci-linux-debug-shared --parallel
-          cmake --install build/ci-linux-debug-shared --prefix "$staging/debug" --component cdocx
-
-      - name: Package artifacts
-        run: |
-          staging="cdocx-${{ needs.extract-version.outputs.version }}-linux-gcc-x64"
-          tar czf "${staging}.tar.gz" "$staging"
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux
-          path: cdocx-*-linux-gcc-x64.tar.gz
-
+  # ── Create Release ───────────────────────────────────────────────────────
   release:
-    needs: [extract-version, build-windows, build-linux]
+    needs: [extract-version, windows-static, windows-shared, linux-static, linux-shared]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e  # v4.2.1
         with:
           path: artifacts
-          pattern: "*"
-          merge-multiple: true
+          pattern: "ci-*-*"
+          merge-multiple: false
 
       - name: List artifacts
-        run: ls -la artifacts/
+        run: find artifacts/ -type f | sort
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@c95fe14e6d4d2ab0f725bee52c124d42e5e01984  # v2.2.1
         with:
           name: ${{ github.ref_name }}
-          files: artifacts/*
+          files: artifacts/**/*
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

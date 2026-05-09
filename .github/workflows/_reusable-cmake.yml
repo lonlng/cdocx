@@ -1,0 +1,134 @@
+name: Reusable CMake Workflow
+
+on:
+  workflow_call:
+    inputs:
+      preset:
+        required: true
+        type: string
+        description: 'CMake preset name (configure/build/test/package must share this name)'
+      os:
+        required: true
+        type: string
+        description: 'Runner OS (ubuntu-latest, windows-latest, macos-latest)'
+      run_tests:
+        type: boolean
+        default: true
+        description: 'Run ctest after build'
+      run_install:
+        type: boolean
+        default: true
+        description: 'Run cmake --install and verify with install_test'
+      run_package:
+        type: boolean
+        default: false
+        description: 'Run cpack after build'
+      upload_artifacts:
+        type: boolean
+        default: false
+        description: 'Upload build artifacts'
+      cc:
+        type: string
+        default: ''
+        description: 'C compiler override (Linux/macOS only)'
+      cxx:
+        type: string
+        default: ''
+        description: 'C++ compiler override (Linux/macOS only)'
+
+env:
+  CDOCX_INSTALL_PREFIX: '${{ github.workspace }}/install/${{ inputs.preset }}'
+
+jobs:
+  cmake:
+    name: '${{ inputs.preset }} on ${{ inputs.os }}'
+    runs-on: ${{ inputs.os }}
+    timeout-minutes: 45
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      # ── Checkout ───────────────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          submodules: recursive
+
+      # ── Cache (ccache) ─────────────────────────────────────────────────────
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@a1209f81c8f7726c92eef2860ec73b38f2ea1915  # v1.2.17
+        with:
+          key: ${{ inputs.os }}-${{ inputs.preset }}-${{ hashFiles('**/CMakeLists.txt', '**/CMakePresets.json', '**/cmake/*.cmake') }}
+          restore-keys: |
+            ${{ inputs.os }}-${{ inputs.preset }}-
+
+      # ── Setup Toolchain (Linux) ────────────────────────────────────────────
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build
+
+      # ── Setup Toolchain (Windows) ──────────────────────────────────────────
+      - name: Setup MSVC (Windows)
+        if: runner.os == 'Windows'
+        uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce  # v2
+
+      # ── Configure ──────────────────────────────────────────────────────────
+      - name: Configure CMake
+        run: |
+          CONFIGURE_ARGS=""
+          if [ -n "${{ inputs.cc }}" ]; then
+            CONFIGURE_ARGS="${CONFIGURE_ARGS} -D CMAKE_C_COMPILER=${{ inputs.cc }}"
+          fi
+          if [ -n "${{ inputs.cxx }}" ]; then
+            CONFIGURE_ARGS="${CONFIGURE_ARGS} -D CMAKE_CXX_COMPILER=${{ inputs.cxx }}"
+          fi
+          # shellcheck disable=SC2086
+          cmake --preset ${{ inputs.preset }} ${CONFIGURE_ARGS}
+
+      # ── Build ──────────────────────────────────────────────────────────────
+      - name: Build
+        run: cmake --build --preset ${{ inputs.preset }} --parallel
+
+      # ── Test ───────────────────────────────────────────────────────────────
+      - name: Test
+        if: inputs.run_tests
+        run: ctest --preset ${{ inputs.preset }} --output-on-failure
+
+      # ── Install ────────────────────────────────────────────────────────────
+      - name: Install
+        if: inputs.run_install
+        run: |
+          cmake --install build/${{ inputs.preset }} \
+                --prefix "${{ env.CDOCX_INSTALL_PREFIX }}" \
+                --strip
+
+      # ── Verify Install ─────────────────────────────────────────────────────
+      - name: Verify Install
+        if: inputs.run_install
+        run: |
+          mkdir -p install_test_build
+          cmake -S test/install_test \
+                -B install_test_build \
+                -D CMAKE_PREFIX_PATH="${{ env.CDOCX_INSTALL_PREFIX }}"
+          cmake --build install_test_build
+
+      # ── Package ────────────────────────────────────────────────────────────
+      - name: Package
+        if: inputs.run_package
+        run: cpack --preset ${{ inputs.preset }}
+
+      # ── Upload Artifacts ───────────────────────────────────────────────────
+      - name: Upload Build Artifacts
+        if: inputs.upload_artifacts
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1  # v4.6.1
+        with:
+          name: ${{ inputs.preset }}-${{ inputs.os }}
+          path: |
+            build/${{ inputs.preset }}/*.zip
+            build/${{ inputs.preset }}/*.tar.gz
+            ${{ env.CDOCX_INSTALL_PREFIX }}/
+          if-no-files-found: ignore

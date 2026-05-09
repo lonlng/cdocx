@@ -2,95 +2,72 @@ name: CMake Build and Test
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [main, master, develop]
     paths-ignore:
       - '**.md'
       - 'docs/**'
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
     paths-ignore:
       - '**.md'
       - 'docs/**'
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build-linux:
-    runs-on: ubuntu-latest
+  # ── Linux Matrix ─────────────────────────────────────────────────────────
+  linux:
     strategy:
+      fail-fast: false
       matrix:
         include:
-          - build_type: Debug
-            compiler: gcc
+          - preset: ci-linux-debug-static
             cc: gcc
             cxx: g++
-            preset: ci-linux-debug-static
-          - build_type: Release
-            compiler: gcc
+          - preset: ci-linux-debug-static
+            cc: clang
+            cxx: clang++
+          - preset: ci-linux-release-static
             cc: gcc
             cxx: g++
-            preset: ci-linux-release-static
-          - build_type: Debug
-            compiler: clang
+          - preset: ci-linux-release-static
             cc: clang
             cxx: clang++
-            preset: ci-linux-debug-static
-          - build_type: Release
-            compiler: clang
-            cc: clang
-            cxx: clang++
-            preset: ci-linux-release-static
+          - preset: ci-linux-debug-shared
+            cc: gcc
+            cxx: g++
+          - preset: ci-linux-release-shared
+            cc: gcc
+            cxx: g++
 
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: recursive
+    uses: ./.github/workflows/_reusable-cmake.yml
+    with:
+      preset: ${{ matrix.preset }}
+      os: ubuntu-latest
+      cc: ${{ matrix.cc }}
+      cxx: ${{ matrix.cxx }}
+      run_tests: true
+      run_install: true
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake ninja-build
-
-    - name: Configure CMake
-      run: |
-        cmake --preset ${{ matrix.preset }} \
-          -D BUILD_TESTING=ON \
-          -D BUILD_EXAMPLES=ON \
-          -D CMAKE_C_COMPILER=${{ matrix.cc }} \
-          -D CMAKE_CXX_COMPILER=${{ matrix.cxx }}
-
-    - name: Build
-      run: cmake --build --preset ${{ matrix.preset }} --parallel
-
-    - name: Test
-      run: ctest --test-dir build/${{ matrix.preset }} --output-on-failure
-
-  build-windows:
-    runs-on: windows-latest
+  # ── Windows Matrix ───────────────────────────────────────────────────────
+  windows:
     strategy:
+      fail-fast: false
       matrix:
         include:
-          - build_type: Debug
-            arch: x64
-            preset: ci-windows-debug-static
-          - build_type: Release
-            arch: x64
-            preset: ci-windows-release-static
+          - preset: ci-windows-debug-static
+          - preset: ci-windows-debug-shared
+          - preset: ci-windows-release-static
+          - preset: ci-windows-release-shared
 
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: recursive
-
-    - name: Setup MSVC
-      uses: microsoft/setup-msbuild@v2
-
-    - name: Configure CMake
-      run: |
-        cmake --preset ${{ matrix.preset }} `
-          -D BUILD_TESTING=ON `
-          -D BUILD_EXAMPLES=ON
-
-    - name: Build
-      run: cmake --build --preset ${{ matrix.preset }} --parallel
-
-    - name: Test
-      run: ctest --test-dir build/${{ matrix.preset }} -C ${{ matrix.build_type }} --output-on-failure
+    uses: ./.github/workflows/_reusable-cmake.yml
+    with:
+      preset: ${{ matrix.preset }}
+      os: windows-latest
+      run_tests: true
+      run_install: true
