@@ -32,7 +32,7 @@ jobs:
 
       - name: Install CMake
         run: |
-          pip install cmake>=3.30
+          pip install "cmake>=3.30"
           cmake --version
 
       - name: Install tools
@@ -58,7 +58,7 @@ jobs:
 
       - name: Install CMake
         run: |
-          pip install cmake>=3.30
+          pip install "cmake>=3.30"
           cmake --version
 
       - name: Install tools
@@ -86,7 +86,7 @@ jobs:
 
       - name: Install CMake
         run: |
-          pip install cmake>=3.30
+          pip install "cmake>=3.30"
           cmake --version
 
       - name: Install tools
@@ -122,7 +122,7 @@ jobs:
 
       - name: Install CMake
         run: |
-          pip install cmake>=3.30
+          pip install "cmake>=3.30"
           cmake --version
 
       - name: Install tools

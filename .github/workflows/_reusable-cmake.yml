@@ -68,7 +68,7 @@ jobs:
       - name: Install CMake
         shell: bash
         run: |
-          pip install cmake>=3.30
+          pip install "cmake>=3.30"
           cmake --version
 
       # ── Setup Toolchain (Linux) ────────────────────────────────────────────
