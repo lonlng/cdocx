@@ -30,10 +30,15 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup CMake
+        uses: lukka/get-cmake@fe1dcd0bbb7c8583a9a70a6d40ba01beb78751b6  # v4.0.0
+        with:
+          cmakeVersion: '~3.30.0'
+
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build clang-format
+          sudo apt-get install -y ninja-build clang-format
 
       - name: Configure
         run: cmake --preset ci-linux-release-static
@@ -51,10 +56,15 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup CMake
+        uses: lukka/get-cmake@fe1dcd0bbb7c8583a9a70a6d40ba01beb78751b6  # v4.0.0
+        with:
+          cmakeVersion: '~3.30.0'
+
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build clang-tidy
+          sudo apt-get install -y ninja-build clang-tidy
 
       - name: Configure with compile commands
         run: |
@@ -74,10 +84,15 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup CMake
+        uses: lukka/get-cmake@fe1dcd0bbb7c8583a9a70a6d40ba01beb78751b6  # v4.0.0
+        with:
+          cmakeVersion: '~3.30.0'
+
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake cppcheck
+          sudo apt-get install -y cppcheck
 
       - name: Configure (for include paths)
         run: cmake --preset ci-linux-debug-static
@@ -105,10 +120,15 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup CMake
+        uses: lukka/get-cmake@fe1dcd0bbb7c8583a9a70a6d40ba01beb78751b6  # v4.0.0
+        with:
+          cmakeVersion: '~3.30.0'
+
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build gcovr
+          sudo apt-get install -y ninja-build gcovr
 
       - name: Configure with coverage
         run: |

@@ -49,10 +49,15 @@ jobs:
           # config-file: ./.github/codeql/codeql-config.yml
 
       # ── Install Build Tools ────────────────────────────────────────────────
+      - name: Setup CMake
+        uses: lukka/get-cmake@fe1dcd0bbb7c8583a9a70a6d40ba01beb78751b6  # v4.0.0
+        with:
+          cmakeVersion: '~3.30.0'
+
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build
+          sudo apt-get install -y ninja-build
 
       # ── Build (CodeQL traces compilation) ──────────────────────────────────
       - name: Build

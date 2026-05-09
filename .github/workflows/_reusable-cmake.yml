@@ -64,12 +64,18 @@ jobs:
           restore-keys: |
             ${{ inputs.os }}-${{ inputs.preset }}-
 
+      # ── Setup CMake (minimum 3.25 for presets v6) ──────────────────────────
+      - name: Setup CMake
+        uses: lukka/get-cmake@fe1dcd0bbb7c8583a9a70a6d40ba01beb78751b6  # v4.0.0
+        with:
+          cmakeVersion: '~3.30.0'
+
       # ── Setup Toolchain (Linux) ────────────────────────────────────────────
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build
+          sudo apt-get install -y ninja-build
 
       # ── Setup Toolchain (Windows) ──────────────────────────────────────────
       - name: Setup MSVC (Windows)
