@@ -52,7 +52,8 @@ jobs:
       - name: Install CMake
         run: |
           pip install "cmake>=3.30"
-          cmake --version
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          "$HOME/.local/bin/cmake" --version
 
       - name: Install dependencies
         run: |
