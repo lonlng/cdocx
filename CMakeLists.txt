@@ -254,9 +254,10 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU" AND CMAKE_C_COMPILER_VERSION VERSION_GREAT
 endif()
 
 target_link_libraries(cdocx
+    PUBLIC
+        $<BUILD_INTERFACE:pugixml>
+        $<BUILD_INTERFACE:zip::zip>
     PRIVATE
-        pugixml
-        zip::zip
         $<$<BOOL:${WIN32}>:bcrypt>
 )
 
