@@ -36,14 +36,14 @@ on:
         default: ''
         description: 'C++ compiler override (Linux/macOS only)'
 
-env:
-  CDOCX_INSTALL_PREFIX: '${{ github.workspace }}/install/${{ inputs.preset }}'
-
 jobs:
   cmake:
     name: '${{ inputs.preset }} on ${{ inputs.os }}'
     runs-on: ${{ inputs.os }}
     timeout-minutes: 45
+
+    env:
+      CDOCX_INSTALL_PREFIX: '${{ github.workspace }}/install/${{ inputs.preset }}'
 
     defaults:
       run:
