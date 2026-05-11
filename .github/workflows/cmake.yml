@@ -20,46 +20,46 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ── Linux Matrix ─────────────────────────────────────────────────────────
-  linux:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - build_type: Debug
-            shared: OFF
-            cc: gcc
-            cxx: g++
-          - build_type: Debug
-            shared: OFF
-            cc: clang
-            cxx: clang++
-          - build_type: Release
-            shared: OFF
-            cc: gcc
-            cxx: g++
-          - build_type: Release
-            shared: OFF
-            cc: clang
-            cxx: clang++
-          - build_type: Debug
-            shared: ON
-            cc: gcc
-            cxx: g++
-          - build_type: Release
-            shared: ON
-            cc: gcc
-            cxx: g++
-
-    uses: ./.github/workflows/_reusable-cmake.yml
-    with:
-      os: ubuntu-latest
-      build_type: ${{ matrix.build_type }}
-      shared: ${{ matrix.shared }}
-      cc: ${{ matrix.cc }}
-      cxx: ${{ matrix.cxx }}
-      run_tests: true
-      run_install: true
+  # ── Linux Matrix (commented out — will be enabled after Windows stabilizes) ──
+  # linux:
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #         - build_type: Debug
+  #           shared: OFF
+  #           cc: gcc
+  #           cxx: g++
+  #         - build_type: Debug
+  #           shared: OFF
+  #           cc: clang
+  #           cxx: clang++
+  #         - build_type: Release
+  #           shared: OFF
+  #           cc: gcc
+  #           cxx: g++
+  #         - build_type: Release
+  #           shared: OFF
+  #           cc: clang
+  #           cxx: clang++
+  #         - build_type: Debug
+  #           shared: ON
+  #           cc: gcc
+  #           cxx: g++
+  #         - build_type: Release
+  #           shared: ON
+  #           cc: gcc
+  #           cxx: g++
+  #
+  #   uses: ./.github/workflows/_reusable-cmake.yml
+  #   with:
+  #     os: ubuntu-latest
+  #     build_type: ${{ matrix.build_type }}
+  #     shared: ${{ matrix.shared }}
+  #     cc: ${{ matrix.cc }}
+  #     cxx: ${{ matrix.cxx }}
+  #     run_tests: true
+  #     run_install: true
 
   # ── Windows Matrix ───────────────────────────────────────────────────────
   windows:

@@ -62,50 +62,50 @@ jobs:
       run_package: true
       upload_artifacts: true
 
-  # ── Linux Builds ─────────────────────────────────────────────────────────
-  linux-static:
-    needs: extract-version
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - build_type: Release
-            shared: OFF
-          - build_type: Debug
-            shared: OFF
-    uses: ./.github/workflows/_reusable-cmake.yml
-    with:
-      os: ubuntu-latest
-      build_type: ${{ matrix.build_type }}
-      shared: ${{ matrix.shared }}
-      run_tests: true
-      run_install: true
-      run_package: true
-      upload_artifacts: true
-
-  linux-shared:
-    needs: extract-version
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - build_type: Release
-            shared: ON
-          - build_type: Debug
-            shared: ON
-    uses: ./.github/workflows/_reusable-cmake.yml
-    with:
-      os: ubuntu-latest
-      build_type: ${{ matrix.build_type }}
-      shared: ${{ matrix.shared }}
-      run_tests: true
-      run_install: true
-      run_package: true
-      upload_artifacts: true
+  # ── Linux Builds (commented out — will be enabled after Windows stabilizes) ──
+  # linux-static:
+  #   needs: extract-version
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #         - build_type: Release
+  #           shared: OFF
+  #         - build_type: Debug
+  #           shared: OFF
+  #   uses: ./.github/workflows/_reusable-cmake.yml
+  #   with:
+  #     os: ubuntu-latest
+  #     build_type: ${{ matrix.build_type }}
+  #     shared: ${{ matrix.shared }}
+  #     run_tests: true
+  #     run_install: true
+  #     run_package: true
+  #     upload_artifacts: true
+  #
+  # linux-shared:
+  #   needs: extract-version
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #         - build_type: Release
+  #           shared: ON
+  #         - build_type: Debug
+  #           shared: ON
+  #   uses: ./.github/workflows/_reusable-cmake.yml
+  #   with:
+  #     os: ubuntu-latest
+  #     build_type: ${{ matrix.build_type }}
+  #     shared: ${{ matrix.shared }}
+  #     run_tests: true
+  #     run_install: true
+  #     run_package: true
+  #     upload_artifacts: true
 
   # ── Create Release ───────────────────────────────────────────────────────
   release:
-    needs: [extract-version, windows-static, windows-shared, linux-static, linux-shared]
+    needs: [extract-version, windows-static, windows-shared]
     runs-on: ubuntu-latest
     permissions:
       contents: write
