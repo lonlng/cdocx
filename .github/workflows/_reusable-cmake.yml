@@ -117,7 +117,12 @@ jobs:
       # ── Test ───────────────────────────────────────────────────────────────
       - name: Test
         if: inputs.run_tests
-        run: ctest --test-dir build --build-config "${{ inputs.build_type }}" --output-on-failure --parallel
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            export PATH="${{ github.workspace }}/build/${{ inputs.build_type }}:$PATH"
+          fi
+          ctest --test-dir build --build-config "${{ inputs.build_type }}" --output-on-failure --parallel
 
       # ── Install ────────────────────────────────────────────────────────────
       - name: Install
