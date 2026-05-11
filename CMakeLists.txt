@@ -134,6 +134,17 @@ elseif(CDOCX_COMPILER_GCC OR CDOCX_COMPILER_CLANG)
 endif()
 
 # ----------------------------------------------------------------------------
+# Output Directories (unified so tests can find DLLs on Windows)
+# ----------------------------------------------------------------------------
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+foreach(_cfg IN ITEMS Debug Release MinSizeRel RelWithDebInfo)
+    string(TOUPPER ${_cfg} _CFG_UPPER)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${_CFG_UPPER} ${CMAKE_BINARY_DIR}/bin)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${_CFG_UPPER} ${CMAKE_BINARY_DIR}/bin)
+endforeach()
+
+# ----------------------------------------------------------------------------
 # Position Independent Code (required for shared libraries)
 # ----------------------------------------------------------------------------
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)

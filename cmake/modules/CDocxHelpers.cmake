@@ -48,9 +48,6 @@ function(add_cdocx_executable target_name)
         CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON
         CXX_EXTENSIONS OFF
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_BINARY_DIR}
-        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_BINARY_DIR}
     )
 
     target_link_libraries(${target_name} PRIVATE cdocx)
@@ -164,12 +161,6 @@ function(add_cdocx_test test_name test_file)
         set_tests_properties(${test_name} PROPERTIES TIMEOUT ${ARG_TIMEOUT})
     endif()
     
-    # Windows: Add DLL path for shared library builds
-    if(WIN32 AND BUILD_SHARED_LIBS)
-        set_tests_properties(${test_name} PROPERTIES
-            ENVIRONMENT "PATH=${CMAKE_BINARY_DIR};$ENV{PATH}"
-        )
-    endif()
 endfunction()
 
 # ----------------------------------------------------------------------------
