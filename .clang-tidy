@@ -260,7 +260,8 @@ CheckOptions:
 # File patterns
 # ============================================================================
 HeaderFilterRegex: 'include/.*|src/.*'
-ExcludeHeaderFilterRegex: 'thirdparty/.*|build/.*|_deps/.*'
+# Note: ExcludeHeaderFilterRegex requires clang-tidy >= 19; not yet available in CI
+# ExcludeHeaderFilterRegex: 'thirdparty/.*|build/.*|_deps/.*'
 
 # ============================================================================
 # Analysis settings

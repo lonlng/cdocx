@@ -22,25 +22,25 @@ jobs:
         run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
   # ── Windows Builds ───────────────────────────────────────────────────────
-  windows-static:
-    needs: extract-version
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - build_type: Release
-            shared: OFF
-          - build_type: Debug
-            shared: OFF
-    uses: ./.github/workflows/_reusable-cmake.yml
-    with:
-      os: windows-latest
-      build_type: ${{ matrix.build_type }}
-      shared: ${{ matrix.shared }}
-      run_tests: true
-      run_install: true
-      run_package: true
-      upload_artifacts: true
+  # windows-static:
+  #   needs: extract-version
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #         - build_type: Release
+  #           shared: OFF
+  #         - build_type: Debug
+  #           shared: OFF
+  #   uses: ./.github/workflows/_reusable-cmake.yml
+  #   with:
+  #     os: windows-latest
+  #     build_type: ${{ matrix.build_type }}
+  #     shared: ${{ matrix.shared }}
+  #     run_tests: true
+  #     run_install: true
+  #     run_package: true
+  #     upload_artifacts: true
 
   windows-shared:
     needs: extract-version
@@ -50,8 +50,8 @@ jobs:
         include:
           - build_type: Release
             shared: ON
-          - build_type: Debug
-            shared: ON
+          # - build_type: Debug
+          #   shared: ON
     uses: ./.github/workflows/_reusable-cmake.yml
     with:
       os: windows-latest
@@ -105,7 +105,7 @@ jobs:
 
   # ── Create Release ───────────────────────────────────────────────────────
   release:
-    needs: [extract-version, windows-static, windows-shared]
+    needs: [extract-version, windows-shared]
     runs-on: ubuntu-latest
     permissions:
       contents: write

@@ -197,7 +197,7 @@ LambdaBodyIndentation: Signature
 LineEnding: DeriveLF
 MacroBlockBegin: ''
 MacroBlockEnd: ''
-MainIncludeChar: Quote
+# MainIncludeChar: Quote  # requires clang-format >= 19
 PackConstructorInitializers: NextLine
 RequiresClausePosition: OwnLine
 RequiresExpressionIndentation: OuterScope

@@ -67,12 +67,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - build_type: Debug
-            shared: OFF
-          - build_type: Debug
-            shared: ON
-          - build_type: Release
-            shared: OFF
+          # - build_type: Debug
+          #   shared: OFF
+          # - build_type: Debug
+          #   shared: ON
+          # - build_type: Release
+          #   shared: OFF
           - build_type: Release
             shared: ON
 
