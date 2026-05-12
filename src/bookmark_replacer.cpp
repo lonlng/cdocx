@@ -12,10 +12,10 @@
 #include <cdocx/caption_generator.h>
 #include <cdocx/document.h>
 
-#include "sync_common.h"
-
 #include <algorithm>
 #include <fstream>
+
+#include "sync_common.h"
 
 namespace cdocx {
 
@@ -512,8 +512,9 @@ std::vector<std::tuple<std::string, bool, std::string>> BookmarkReplacer::previe
 }
 
 bool BookmarkReplacer::BatchResult::did_succeed(const std::string& bookmark_name) const {
-    return std::none_of(failures.begin(), failures.end(),
-                        [&](const auto& failure) { return failure.first == bookmark_name; });
+    return std::none_of(failures.begin(), failures.end(), [&](const auto& failure) {
+        return failure.first == bookmark_name;
+    });
 }
 
 std::string BookmarkReplacer::BatchResult::get_error(const std::string& bookmark_name) const {

@@ -3,13 +3,13 @@
  * @brief Comment sync
  */
 
-#include "sync_common.h"
-
 #include <cdocx/comment.h>
 #include <cdocx/document.h>
 
 #include <chrono>
 #include <cstring>
+
+#include "sync_common.h"
 
 namespace cdocx {
 
@@ -22,7 +22,7 @@ void Document::sync_comments_to_physical() {
         return;
     }
 
-    auto *comments_xml = get_xml_part("word/comments.xml");
+    auto* comments_xml = get_xml_part("word/comments.xml");
     if (!comments_xml) {
         comments_xml = &create_xml_part("word/comments.xml");
     }
@@ -68,7 +68,7 @@ void Document::sync_comments_to_physical() {
 }
 
 void Document::sync_comments_from_physical() {
-    auto *comments_xml = get_xml_part("word/comments.xml");
+    auto* comments_xml = get_xml_part("word/comments.xml");
     if (!comments_xml) {
         return;
     }

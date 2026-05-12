@@ -3,11 +3,11 @@
  * @brief Style serialization and sync
  */
 
-#include "sync_common.h"
-
 #include <cdocx/document.h>
 
 #include <cstring>
+
+#include "sync_common.h"
 
 namespace cdocx {
 
@@ -44,7 +44,8 @@ static StyleType string_to_style_type(const char* str) {
     return StyleType::Paragraph;
 }
 
-static void serialize_style_paragraph_format_to_xml(pugi::xml_node p_pr, const ParagraphFormat& format) {
+static void serialize_style_paragraph_format_to_xml(pugi::xml_node p_pr,
+                                                    const ParagraphFormat& format) {
     serialize_paragraph_format_children_to_xml(p_pr, format);
 }
 
@@ -61,7 +62,7 @@ void parse_font_from_xml(pugi::xml_node r_pr, Font& font) {
 
     struct FontBoolFlagMapping {
         const char* child_name;
-        bool Font::*flag;
+        bool Font::* flag;
     };
     static const FontBoolFlagMapping kFontBoolFlagMappings[] = {
         {"w:b", &Font::bold},

@@ -50,13 +50,19 @@ class ControlChar {
     static std::string crlf() { return "\r\n"; }
 
     /// @brief Column break character
-    static std::string column_break() { return std::string(1, '\x0e'); }  // NOLINT(modernize-return-braced-init-list)
+    static std::string column_break() {
+        return std::string(1, '\x0e');
+    }  // NOLINT(modernize-return-braced-init-list)
 
     /// @brief Non-breaking space character
-    static std::string non_breaking_space() { return std::string(1, '\xa0'); }  // NOLINT(modernize-return-braced-init-list)
+    static std::string non_breaking_space() {
+        return std::string(1, '\xa0');
+    }  // NOLINT(modernize-return-braced-init-list)
 
     /// @brief End of a table cell or table row marker
-    static std::string cell() { return std::string(1, '\x07'); }  // NOLINT(modernize-return-braced-init-list)
+    static std::string cell() {
+        return std::string(1, '\x07');
+    }  // NOLINT(modernize-return-braced-init-list)
 
     // Character code constants
     static constexpr char kTabChar = '\t';

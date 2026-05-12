@@ -351,10 +351,9 @@ class Font {
                size == other.size && color == other.color && bold == other.bold &&
                italic == other.italic && underline == other.underline &&
                underline_color == other.underline_color && strike == other.strike &&
-               double_strike == other.double_strike &&
-               strikethrough == other.strikethrough && script_type == other.script_type &&
-               highlight == other.highlight && spacing == other.spacing &&
-               scale == other.scale && kerning == other.kerning &&
+               double_strike == other.double_strike && strikethrough == other.strikethrough &&
+               script_type == other.script_type && highlight == other.highlight &&
+               spacing == other.spacing && scale == other.scale && kerning == other.kerning &&
                small_caps == other.small_caps && all_caps == other.all_caps &&
                shading == other.shading;
     }

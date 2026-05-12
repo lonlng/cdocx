@@ -87,8 +87,7 @@ class Paragraph : public CompositeNode {
     std::shared_ptr<SpecialChar> append_tab();
 
     // Convenience: append hyperlink
-    std::shared_ptr<Hyperlink> append_hyperlink(const std::string& text,
-                                                const std::string& url);
+    std::shared_ptr<Hyperlink> append_hyperlink(const std::string& text, const std::string& url);
     std::shared_ptr<Hyperlink> append_hyperlink(const std::string& text,
                                                 const std::string& bookmark_name,
                                                 bool is_bookmark);

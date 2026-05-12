@@ -16,11 +16,11 @@
 #include <cdocx/table.h>
 #include <cdocx/template.h>
 
-#include "sync_common.h"
-
 #include <filesystem>
 #include <pugixml.hpp>
 #include <utility>
+
+#include "sync_common.h"
 
 namespace cdocx {
 
@@ -95,8 +95,7 @@ bool Template::try_replace_single_run(Run& r, bool first_only) {
         for (const auto& [key, value] : placeholders_) {
             const std::string pattern = pattern_prefix_ + key + pattern_suffix_;
             const size_t pos = text.find(pattern);
-            if (pos != std::string::npos &&
-                (best_pos == std::string::npos || pos < best_pos)) {
+            if (pos != std::string::npos && (best_pos == std::string::npos || pos < best_pos)) {
                 best_pos = pos;
                 best_value = value;
                 best_pattern = pattern;
@@ -157,12 +156,10 @@ bool Template::try_replace_placeholder(const PlaceholderContext& ctx, Paragraph&
     // actual key text (between prefix and suffix) to the first run.
     // =========================================================================
     const size_t key_start_in_collected = best_pos + pattern_prefix_.length();
-    const size_t key_end_in_collected =
-        best_pos + best_pattern.length() - pattern_suffix_.length();
+    const size_t key_end_in_collected = best_pos + best_pattern.length() - pattern_suffix_.length();
 
     if (key_start_in_collected < key_end_in_collected) {
-        const size_t first_portion_len =
-            ctx.first_run->get_text().length() - ctx.prefix_pos;
+        const size_t first_portion_len = ctx.first_run->get_text().length() - ctx.prefix_pos;
 
         if (key_start_in_collected >= first_portion_len) {
             // Key text starts in collected runs; find the first overlapping run
@@ -170,8 +167,7 @@ bool Template::try_replace_placeholder(const PlaceholderContext& ctx, Paragraph&
             size_t offset = first_portion_len;
             for (Run* run : ctx.runs_to_delete) {
                 const size_t run_len = run->get_text().length();
-                if (offset + run_len > key_start_in_collected &&
-                    offset < key_end_in_collected) {
+                if (offset + run_len > key_start_in_collected && offset < key_end_in_collected) {
                     ctx.first_run->get_font() = run->get_font();
                     if (run->has_preserved_r_pr()) {
                         ctx.first_run->preserve_r_pr(run->get_preserved_r_pr());
@@ -310,8 +306,7 @@ bool Template::replace_image_in_run(const std::shared_ptr<Run>& run) {
 
         pugi::xml_document drawing_doc;
         auto drawing = append_image_drawing(
-            drawing_doc, rel_id, size, ImageAlignment::Center,
-            image_id_counter_++, image_path);
+            drawing_doc, rel_id, size, ImageAlignment::Center, image_id_counter_++, image_path);
 
         run->preserve_child(drawing);
         return true;

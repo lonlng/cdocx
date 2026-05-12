@@ -3,11 +3,9 @@
  * @brief Physical XML to DOM deserialization
  */
 
-#include "sync_common.h"
-
 #include <cdocx/body.h>
-#include <cdocx/convert_util.h>
 #include <cdocx/comment.h>
+#include <cdocx/convert_util.h>
 #include <cdocx/document.h>
 #include <cdocx/footnote.h>
 #include <cdocx/formfield.h>
@@ -16,12 +14,14 @@
 
 #include <cstring>
 
+#include "sync_common.h"
+
 namespace cdocx {
 
 static void parse_content_children(Document* doc,
-                                 pugi::xml_node start,
-                                 pugi::xml_node end,
-                                 CompositeNode* container);
+                                   pugi::xml_node start,
+                                   pugi::xml_node end,
+                                   CompositeNode* container);
 static void parse_header_footer_content(Document* doc, HeaderFooter* hf);
 
 // Helper: create a DOM node that only needs an ID set from XML
@@ -129,7 +129,7 @@ static std::shared_ptr<FormField> parse_form_field_from_xml(Document* doc,
 // ============================================================================
 
 void Document::sync_sections_from_physical() {
-    auto *doc_xml = get_document_xml();
+    auto* doc_xml = get_document_xml();
     if (!doc_xml) {
         return;
     }
@@ -274,7 +274,8 @@ void parse_paragraph_format_children_from_xml(pugi::xml_node p_pr, ParagraphForm
     auto drop_cap = p_pr.child("w:dropCap");
     if (drop_cap) {
         format.lines_to_drop = drop_cap.attribute("w:lines").as_int(1);
-        format.drop_cap_position = string_to_drop_cap_position(drop_cap.attribute("w:type").value());
+        format.drop_cap_position =
+            string_to_drop_cap_position(drop_cap.attribute("w:type").value());
     }
 
     auto jc = p_pr.child("w:jc");
@@ -286,7 +287,8 @@ void parse_paragraph_format_children_from_xml(pugi::xml_node p_pr, ParagraphForm
     if (ind) {
         format.left_indent = ConvertUtil::twips_to_point(ind.attribute("w:left").as_int());
         format.right_indent = ConvertUtil::twips_to_point(ind.attribute("w:right").as_int());
-        format.first_line_indent = ConvertUtil::twips_to_point(ind.attribute("w:firstLine").as_int());
+        format.first_line_indent =
+            ConvertUtil::twips_to_point(ind.attribute("w:firstLine").as_int());
     }
 
     auto spacing = p_pr.child("w:spacing");
@@ -308,7 +310,7 @@ void parse_paragraph_format_children_from_xml(pugi::xml_node p_pr, ParagraphForm
 
     struct ParagraphBoolFlagMapping {
         const char* child_name;
-        bool ParagraphFormat::*flag;
+        bool ParagraphFormat::* flag;
     };
     static const ParagraphBoolFlagMapping kParagraphBoolFlagMappings[] = {
         {"w:keepNext", &ParagraphFormat::keep_with_next},
@@ -338,8 +340,8 @@ void parse_paragraph_format_children_from_xml(pugi::xml_node p_pr, ParagraphForm
 // Walks a field sequence starting from the given run (which should be the begin run).
 // Returns the node containing w:fld_char[end], or empty node if not found.
 pugi::xml_node walk_field_sequence(pugi::xml_node start_run,
-                                       std::string* out_instr_text,
-                                       std::string* out_resulttext) {
+                                   std::string* out_instr_text,
+                                   std::string* out_resulttext) {
     bool in_result = false;
     for (auto node = start_run; node; node = node.next_sibling()) {
         if (!is_run_node(node.name())) {
@@ -453,7 +455,7 @@ static void parse_hyperlink_from_xml(Document* doc,
 }
 
 static void parse_header_footer_content(Document* doc, HeaderFooter* hf) {
-    auto *xml_doc = doc->get_xml_part(hf->get_part_path());
+    auto* xml_doc = doc->get_xml_part(hf->get_part_path());
     if (!xml_doc) {
         return;
     }
@@ -466,9 +468,9 @@ static void parse_header_footer_content(Document* doc, HeaderFooter* hf) {
 }
 
 static void parse_content_children(Document* doc,
-                                 pugi::xml_node start,
-                                 pugi::xml_node end,
-                                 CompositeNode* container) {
+                                   pugi::xml_node start,
+                                   pugi::xml_node end,
+                                   CompositeNode* container) {
     for (auto node = start; node && node != end; node = node.next_sibling()) {
         const char* name = node.name();
         if (is_para_node(name)) {
@@ -614,7 +616,8 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
         }
         auto tbl_ind = tbl_pr.child("w:tblInd");
         if (tbl_ind) {
-            table->get_table_format().left_indent = ConvertUtil::twips_to_point(tbl_ind.attribute("w:w").as_int());
+            table->get_table_format().left_indent =
+                ConvertUtil::twips_to_point(tbl_ind.attribute("w:w").as_int());
         }
         auto tbl_style = tbl_pr.child("w:tblStyle");
         if (tbl_style) {
@@ -662,13 +665,14 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
         if (tr_pr) {
             auto tr_height = tr_pr.child("w:trHeight");
             if (tr_height) {
-                row->get_row_format().height = ConvertUtil::twips_to_point(tr_height.attribute("w:val").as_int());
+                row->get_row_format().height =
+                    ConvertUtil::twips_to_point(tr_height.attribute("w:val").as_int());
                 const char* rule = tr_height.attribute("w:hRule").value();
                 row->get_row_format().height_rule_exact = (std::strcmp(rule, "exact") == 0);
             }
             struct RowBoolFlagMapping {
                 const char* child_name;
-                bool RowFormat::*flag;
+                bool RowFormat::* flag;
                 bool value;
             };
             static const RowBoolFlagMapping kRowBoolFlagMappings[] = {
@@ -690,7 +694,8 @@ std::shared_ptr<Table> Document::parse_table_from_xml(pugi::xml_node table_node)
             if (tc_pr) {
                 auto tc_w = tc_pr.child("w:tcW");
                 if (tc_w) {
-                    cell->get_cell_format().width = ConvertUtil::twips_to_point(tc_w.attribute("w:w").as_int());
+                    cell->get_cell_format().width =
+                        ConvertUtil::twips_to_point(tc_w.attribute("w:w").as_int());
                     const char* typeval = tc_w.attribute("w:type").value();
                     cell->get_cell_format().preferred_width = (std::strcmp(typeval, "pct") == 0);
                 }

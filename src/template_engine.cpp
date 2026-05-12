@@ -12,11 +12,11 @@
 #include <cdocx/template.h>
 #include <cdocx/template_engine.h>
 
-#include "sync_common.h"
-
 #include <filesystem>
 #include <memory>
 #include <unordered_set>
+
+#include "sync_common.h"
 
 namespace {
 
@@ -116,25 +116,48 @@ TemplateFormat& TemplateFormat::space_after(int twips) {
 
 BookmarkFormat TemplateFormat::to_bookmark_format() const {
     BookmarkFormat fmt;
-    if (font_ascii_) fmt.font_ascii = *font_ascii_;
-    if (font_far_east_) fmt.font_far_east = *font_far_east_;
-    if (size_) fmt.font_size = *size_;
-    if (color_) fmt.color = *color_;
-    if (bold_) fmt.bold = *bold_;
-    if (italic_) fmt.italic = *italic_;
-    if (underline_) fmt.underline = *underline_;
-    if (strikethrough_) fmt.strikethrough = *strikethrough_;
-    if (alignment_) fmt.alignment = *alignment_;
-    if (line_spacing_) fmt.line_spacing = *line_spacing_;
-    if (space_before_) fmt.space_before = *space_before_;
-    if (space_after_) fmt.space_after = *space_after_;
+    if (font_ascii_)
+        fmt.font_ascii = *font_ascii_;
+    if (font_far_east_)
+        fmt.font_far_east = *font_far_east_;
+    if (size_)
+        fmt.font_size = *size_;
+    if (color_)
+        fmt.color = *color_;
+    if (bold_)
+        fmt.bold = *bold_;
+    if (italic_)
+        fmt.italic = *italic_;
+    if (underline_)
+        fmt.underline = *underline_;
+    if (strikethrough_)
+        fmt.strikethrough = *strikethrough_;
+    if (alignment_)
+        fmt.alignment = *alignment_;
+    if (line_spacing_)
+        fmt.line_spacing = *line_spacing_;
+    if (space_before_)
+        fmt.space_before = *space_before_;
+    if (space_after_)
+        fmt.space_after = *space_after_;
     return fmt;
 }
 
 bool TemplateFormat::is_empty() const {
     const auto has = [](const auto&... opts) { return (!opts.has_value() && ...); };
-    return has(bold_, italic_, underline_, strikethrough_, size_, font_, font_ascii_,
-               font_far_east_, color_, alignment_, line_spacing_, space_before_, space_after_);
+    return has(bold_,
+               italic_,
+               underline_,
+               strikethrough_,
+               size_,
+               font_,
+               font_ascii_,
+               font_far_east_,
+               color_,
+               alignment_,
+               line_spacing_,
+               space_before_,
+               space_after_);
 }
 
 // ============================================================================
@@ -142,10 +165,12 @@ bool TemplateFormat::is_empty() const {
 // ============================================================================
 
 TemplateValue::TemplateValue(TextData data)
-    : type_(TemplateValueType::Text), data_(std::move(data)) {}
+    : type_(TemplateValueType::Text), data_(std::move(data)) {
+}
 
 TemplateValue::TemplateValue(ImageData data)
-    : type_(TemplateValueType::Image), data_(std::move(data)) {}
+    : type_(TemplateValueType::Image), data_(std::move(data)) {
+}
 
 TemplateValue TemplateValue::text(const std::string& content) {
     return TemplateValue(TextData{content, TemplateFormat()});
@@ -248,7 +273,8 @@ ImageAlignment TemplateValue::image_alignment() const {
 // ============================================================================
 
 TemplateEngine::Setter::Setter(TemplateEngine* engine, std::string key)
-    : engine_(engine), key_(std::move(key)) {}
+    : engine_(engine), key_(std::move(key)) {
+}
 
 TemplateEngine::Setter& TemplateEngine::Setter::operator=(const TemplateValue& value) {
     engine_->set(key_, value);
@@ -274,7 +300,8 @@ TemplateEngine::Setter& TemplateEngine::Setter::operator=(const char* text) {
 // TemplateEngine
 // ============================================================================
 
-TemplateEngine::TemplateEngine(Document* doc) : doc_(doc) {}
+TemplateEngine::TemplateEngine(Document* doc) : doc_(doc) {
+}
 
 TemplateEngine::Setter TemplateEngine::operator[](const std::string& key) {
     return {this, key};
@@ -340,7 +367,7 @@ TemplateEngine& TemplateEngine::with_default_format(const TemplateFormat& format
 }
 
 TemplateEngine& TemplateEngine::with_delimiters(const std::string& prefix,
-                                               const std::string& suffix) {
+                                                const std::string& suffix) {
     delimiter_prefix_ = prefix;
     delimiter_suffix_ = suffix;
     return *this;
@@ -384,17 +411,15 @@ class BookmarkNameCache {
         }
     }
 
-    bool contains(const std::string& name) const {
-        return names_.find(name) != names_.end();
-    }
+    bool contains(const std::string& name) const { return names_.find(name) != names_.end(); }
 
   private:
     std::unordered_set<std::string> names_;
 };
 
 static TemplateTarget resolve_target(const BookmarkNameCache* cache,
-                                    const std::string& key,
-                                    TemplateTarget preferred) {
+                                     const std::string& key,
+                                     TemplateTarget preferred) {
     if (preferred == TemplateTarget::Auto) {
         return (cache && cache->contains(key)) ? TemplateTarget::BookmarkTarget
                                                : TemplateTarget::Placeholder;
@@ -403,10 +428,10 @@ static TemplateTarget resolve_target(const BookmarkNameCache* cache,
 }
 
 static TemplateTarget resolve_target(Document* doc,
-                                    const std::string& key,
-                                    TemplateTarget preferred,
-                                    const std::string& /*prefix*/,
-                                    const std::string& /*suffix*/) {
+                                     const std::string& key,
+                                     TemplateTarget preferred,
+                                     const std::string& /*prefix*/,
+                                     const std::string& /*suffix*/) {
     if (preferred == TemplateTarget::Auto) {
         const BookmarkReplacer replacer(doc);
         return replacer.has_bookmark(key) ? TemplateTarget::BookmarkTarget
@@ -429,17 +454,16 @@ static pugi::xml_node find_bookmark_start(pugi::xml_node para) {
 }
 
 static bool insert_formatted_run_after(pugi::xml_node para,
-                                        pugi::xml_node after_node,
-                                        const std::string& text,
-                                        const BookmarkFormat& format) {
+                                       pugi::xml_node after_node,
+                                       const std::string& text,
+                                       const BookmarkFormat& format) {
     pugi::xml_node run = para.insert_child_after("w:r", after_node);
     if (!run) {
         return false;
     }
 
     const bool has_run_props = format.is_valid() || format.bold || format.italic ||
-                               format.underline || format.strikethrough ||
-                               !format.color.empty();
+                               format.underline || format.strikethrough || !format.color.empty();
     if (has_run_props) {
         pugi::xml_node run_props = run.append_child("w:rPr");
 
@@ -481,11 +505,11 @@ static bool insert_formatted_run_after(pugi::xml_node para,
 }
 
 static bool insert_image_run_after(pugi::xml_node para,
-                                    pugi::xml_node after_node,
-                                    const ImageSize& size,
-                                    ImageAlignment align,
-                                    const std::string& rel_id,
-                                    int image_id) {
+                                   pugi::xml_node after_node,
+                                   const ImageSize& size,
+                                   ImageAlignment align,
+                                   const std::string& rel_id,
+                                   int image_id) {
     pugi::xml_node run = para.insert_child_after("w:r", after_node);
     if (!run) {
         return false;
@@ -520,8 +544,7 @@ TemplateEngine::Result TemplateEngine::apply(const std::string& key) {
         return last_result_;
     }
 
-    auto actual = resolve_target(doc_, key, default_target_,
-                                 delimiter_prefix_, delimiter_suffix_);
+    auto actual = resolve_target(doc_, key, default_target_, delimiter_prefix_, delimiter_suffix_);
     if (actual == TemplateTarget::Placeholder) {
         last_result_ = apply_placeholder(key, value);
     } else {
@@ -631,7 +654,7 @@ TemplateEngine::Result TemplateEngine::apply_if(
 // ============================================================================
 
 TemplateEngine::Result TemplateEngine::apply_bookmark(const std::string& key,
-                                                     const TemplateValue& value) {
+                                                      const TemplateValue& value) {
     Result r;
     const BookmarkReplacer replacer(doc_);
 
@@ -660,7 +683,7 @@ TemplateEngine::Result TemplateEngine::apply_bookmark(const std::string& key,
 }
 
 TemplateEngine::Result TemplateEngine::apply_bookmark(Bookmark& bookmark,
-                                                     const TemplateValue& value) {
+                                                      const TemplateValue& value) {
     Result r;
 
     if (value.is_text()) {
@@ -684,7 +707,7 @@ TemplateEngine::Result TemplateEngine::apply_bookmark(Bookmark& bookmark,
 }
 
 TemplateEngine::Result TemplateEngine::apply_placeholder(const std::string& key,
-                                                        const TemplateValue& value) {
+                                                         const TemplateValue& value) {
     Result r;
     const Template tmpl(doc_, delimiter_prefix_, delimiter_suffix_);
 
@@ -708,9 +731,9 @@ TemplateEngine::Result TemplateEngine::apply_placeholder(const std::string& key,
 }
 
 bool TemplateEngine::apply_text_to_bookmark(const std::string& name,
-                                           const std::string& text,
-                                           const TemplateFormat& format,
-                                           FormatPolicy policy) {
+                                            const std::string& text,
+                                            const TemplateFormat& format,
+                                            FormatPolicy policy) {
     auto collection = doc_->get_bookmarks();
     auto bm_opt = collection.get(name);
     if (!bm_opt) {
@@ -720,9 +743,9 @@ bool TemplateEngine::apply_text_to_bookmark(const std::string& name,
 }
 
 bool TemplateEngine::apply_text_to_bookmark(Bookmark& bookmark,
-                                           const std::string& text,
-                                           const TemplateFormat& format,
-                                           FormatPolicy policy) {
+                                            const std::string& text,
+                                            const TemplateFormat& format,
+                                            FormatPolicy policy) {
     if (default_action_ == TemplateAction::Insert) {
         if (!bookmark.is_valid()) {
             return false;
@@ -775,15 +798,14 @@ bool TemplateEngine::apply_text_to_bookmark(Bookmark& bookmark,
             if (effective.is_empty()) {
                 return replacer.replace_text(bookmark, text);
             }
-            return replacer.replace_text_with_format(bookmark, text,
-                                                     effective.to_bookmark_format());
+            return replacer.replace_text_with_format(
+                bookmark, text, effective.to_bookmark_format());
         }
     }
     return false;
 }
 
-bool TemplateEngine::apply_image_to_bookmark(const std::string& name,
-                                            const TemplateValue& value) {
+bool TemplateEngine::apply_image_to_bookmark(const std::string& name, const TemplateValue& value) {
     auto collection = doc_->get_bookmarks();
     auto bm_opt = collection.get(name);
     if (!bm_opt) {
@@ -792,8 +814,7 @@ bool TemplateEngine::apply_image_to_bookmark(const std::string& name,
     return apply_image_to_bookmark(*bm_opt, value);
 }
 
-bool TemplateEngine::apply_image_to_bookmark(Bookmark& bookmark,
-                                            const TemplateValue& value) {
+bool TemplateEngine::apply_image_to_bookmark(Bookmark& bookmark, const TemplateValue& value) {
     if (default_action_ == TemplateAction::Insert) {
         if (!bookmark.is_valid()) {
             return false;
@@ -829,8 +850,8 @@ bool TemplateEngine::apply_image_to_bookmark(Bookmark& bookmark,
             return false;
         }
 
-        return insert_image_run_after(paras[0], bookmark_start, actual_size, align, rel_id,
-                                      image_counter_++);
+        return insert_image_run_after(
+            paras[0], bookmark_start, actual_size, align, rel_id, image_counter_++);
     }
 
     // Replace mode
@@ -851,8 +872,7 @@ bool TemplateEngine::apply_image_to_bookmark(Bookmark& bookmark,
     }
 }
 
-bool TemplateEngine::apply_text_to_placeholder(const std::string& key,
-                                              const std::string& text) {
+bool TemplateEngine::apply_text_to_placeholder(const std::string& key, const std::string& text) {
     Template tmpl(doc_, delimiter_prefix_, delimiter_suffix_);
     if (default_action_ == TemplateAction::Insert) {
         const std::string pattern = delimiter_prefix_ + key + delimiter_suffix_;
@@ -873,7 +893,7 @@ bool TemplateEngine::apply_text_to_placeholder(const std::string& key,
 }
 
 bool TemplateEngine::apply_image_to_placeholder(const std::string& key,
-                                               const TemplateValue& value) {
+                                                const TemplateValue& value) {
     if (default_action_ == TemplateAction::Insert) {
         return false;
     }

@@ -13,8 +13,8 @@
 #include <cdocx/advanced.h>
 #include <cdocx/base.h>
 #include <cdocx/body.h>
-#include <cdocx/convert_util.h>
 #include <cdocx/comment.h>
+#include <cdocx/convert_util.h>
 #include <cdocx/document.h>
 #include <cdocx/footnote.h>
 #include <cdocx/paragraph.h>
@@ -36,10 +36,10 @@ namespace {
 // Default page setup constants (US Letter, 1-inch margins) in twips
 // 1 inch = 1440 twips = 72 points * 20 twips/point
 constexpr int kTwipsPerInch = 1440;
-constexpr int kDefaultPageWidthTwips = 8 * kTwipsPerInch + 720;   // 8.5"
-constexpr int kDefaultPageHeightTwips = 11 * kTwipsPerInch;       // 11"
-constexpr int kDefaultMarginTwips = kTwipsPerInch;                // 1"
-constexpr int kDefaultTabStopTwips = 720;                         // 0.5"
+constexpr int kDefaultPageWidthTwips = 8 * kTwipsPerInch + 720;  // 8.5"
+constexpr int kDefaultPageHeightTwips = 11 * kTwipsPerInch;      // 11"
+constexpr int kDefaultMarginTwips = kTwipsPerInch;               // 1"
+constexpr int kDefaultTabStopTwips = 720;                        // 0.5"
 
 pugi::xml_node get_settings_root(const Document* doc) {
     const pugi::xml_document* settings = doc->get_settings();
@@ -94,9 +94,10 @@ void create_empty_package_rels(Document* doc) {
     add_rel("rId2",
             "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties",
             "docProps/core.xml");
-    add_rel("rId3",
-            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties",
-            "docProps/app.xml");
+    add_rel(
+        "rId3",
+        "http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties",
+        "docProps/app.xml");
 }
 
 void create_empty_document_rels(Document* doc) {
@@ -254,8 +255,9 @@ void create_empty_extended_properties_xml(Document* doc) {
     root.append_child("Pages").append_child(pugi::node_pcdata).set_value("1");
     root.append_child("Words").append_child(pugi::node_pcdata).set_value("0");
     root.append_child("Characters").append_child(pugi::node_pcdata).set_value("0");
-    root.append_child("Application").append_child(pugi::node_pcdata).set_value(
-        "Microsoft Office Word");
+    root.append_child("Application")
+        .append_child(pugi::node_pcdata)
+        .set_value("Microsoft Office Word");
     root.append_child("DocSecurity").append_child(pugi::node_pcdata).set_value("0");
     root.append_child("Lines").append_child(pugi::node_pcdata).set_value("1");
     root.append_child("Paragraphs").append_child(pugi::node_pcdata).set_value("1");
@@ -296,21 +298,18 @@ void initialize_default_styles(Document* doc) {
     auto& styles = doc->styles();
     styles.clear();
 
-    auto add_builtin = [doc](StyleType type,
-                             const char* style_id,
-                             const char* name,
-                             StyleIdentifier identifier) {
-        auto style = std::make_shared<Style>(doc, type);
-        style->set_style_id(style_id);
-        style->set_name(name);
-        style->set_style_identifier(identifier);
-        style->set_is_built_in(true);
-        return style;
-    };
+    auto add_builtin =
+        [doc](StyleType type, const char* style_id, const char* name, StyleIdentifier identifier) {
+            auto style = std::make_shared<Style>(doc, type);
+            style->set_style_id(style_id);
+            style->set_name(name);
+            style->set_style_identifier(identifier);
+            style->set_is_built_in(true);
+            return style;
+        };
 
     // Normal - default paragraph style
-    auto normal =
-        add_builtin(StyleType::Paragraph, "Normal", "Normal", StyleIdentifier::Normal);
+    auto normal = add_builtin(StyleType::Paragraph, "Normal", "Normal", StyleIdentifier::Normal);
     normal->set_is_default(true);
     styles.add(normal);
 
@@ -371,8 +370,7 @@ void initialize_default_styles(Document* doc) {
     styles.add(list_para);
 
     // Strong - character style
-    auto strong =
-        add_builtin(StyleType::Character, "Strong", "Strong", StyleIdentifier::Strong);
+    auto strong = add_builtin(StyleType::Character, "Strong", "Strong", StyleIdentifier::Strong);
     strong->get_font().bold = true;
     styles.add(strong);
 
@@ -917,7 +915,7 @@ Paragraph Document::paragraphs() {
     }
 
     // Get document.xml
-    auto *doc_xml = get_document_xml();
+    auto* doc_xml = get_document_xml();
     if (!doc_xml) {
         return para;
     }
@@ -1464,7 +1462,7 @@ void Document::init_numbering_manager() {
 
 void Document::load_numbering() {
     init_numbering_manager();
-    auto *doc = get_numbering_xml();
+    auto* doc = get_numbering_xml();
     if (doc) {
         auto root = doc->child("w:numbering");
         if (root) {

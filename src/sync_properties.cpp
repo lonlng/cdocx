@@ -3,11 +3,11 @@
  * @brief Built-in and custom property sync for Document class
  */
 
-#include "sync_common.h"
-
 #include <cdocx/document.h>
 
 #include <cstdlib>
+
+#include "sync_common.h"
 
 namespace cdocx {
 

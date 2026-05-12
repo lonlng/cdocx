@@ -4,10 +4,8 @@
  * @since 0.3.0
  */
 
-#include "sync_common.h"
-
-#include <cdocx/document_builder.h>
 #include <cdocx/document.h>
+#include <cdocx/document_builder.h>
 #include <cdocx/footnote.h>
 #include <cdocx/paragraph.h>
 #include <cdocx/section.h>
@@ -17,6 +15,8 @@
 #include <fstream>
 #include <map>
 #include <vector>
+
+#include "sync_common.h"
 
 namespace cdocx {
 
@@ -51,10 +51,14 @@ static const char* break_type_to_string(BreakType type) {
 // ============================================================================
 
 DocumentBuilder::DocumentBuilder(Document* doc)
-    : doc_(doc), target_xml_doc_(doc ? doc->get_document_xml() : nullptr) {}
+    : doc_(doc), target_xml_doc_(doc ? doc->get_document_xml() : nullptr) {
+}
 
 DocumentBuilder::DocumentBuilder(const std::shared_ptr<Document>& doc)
-    : doc_sptr_(doc), doc_(doc.get()), target_xml_doc_(doc.get() ? doc->get_document_xml() : nullptr) {}
+    : doc_sptr_(doc),
+      doc_(doc.get()),
+      target_xml_doc_(doc.get() ? doc->get_document_xml() : nullptr) {
+}
 
 DocumentBuilder::~DocumentBuilder() = default;
 
@@ -150,9 +154,9 @@ DocumentBuilder& DocumentBuilder::with_page_size(double width, double height) {
 }
 
 DocumentBuilder& DocumentBuilder::with_margins(double top,
-                                                double bottom,
-                                                double left,
-                                                double right) {
+                                               double bottom,
+                                               double left,
+                                               double right) {
     if (doc_) {
         auto section = doc_->get_first_section();
         if (section) {
@@ -1061,8 +1065,7 @@ bool DocumentBuilder::insert_image(const std::string& image_path, double width, 
 
     // Create run with drawing
     pugi::xml_node run = current_paragraph_.append_child("w:r");
-    append_image_drawing(run, rel_id, size, ImageAlignment::Center,
-                         image_counter_++, image_path);
+    append_image_drawing(run, rel_id, size, ImageAlignment::Center, image_counter_++, image_path);
 
     if (doc_) {
         doc_->mark_xml_paragraph_dirty(current_paragraph_);
@@ -1254,10 +1257,9 @@ bool read_bmp_dimensions(const std::vector<uint8_t>& data, int& width, int& heig
         width = data[18] | (data[19] << 8);
         height = data[20] | (data[21] << 8);
     } else {  // BITMAPINFOHEADER or later
-        width = data[18] | (data[19] << 8) | (data[20] << 16) |
-                (data[21] << 24);
-        auto h = static_cast<int32_t>(data[22] | (data[23] << 8) | (data[24] << 16) |
-                                      (data[25] << 24));
+        width = data[18] | (data[19] << 8) | (data[20] << 16) | (data[21] << 24);
+        auto h =
+            static_cast<int32_t>(data[22] | (data[23] << 8) | (data[24] << 16) | (data[25] << 24));
         height = std::abs(h);
     }
     return width > 0 && height > 0 && width < 100000 && height < 100000;
@@ -1300,7 +1302,8 @@ bool detect_image_size(const std::string& image_path, ImageSize& size) {
 
     // Read file header
     std::vector<uint8_t> data(65536);  // Read up to 64KB
-    file.read(reinterpret_cast<char*>(data.data()),  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+    file.read(reinterpret_cast<char*>(
+                  data.data()),  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
               static_cast<std::streamsize>(data.size()));
     const size_t bytes_read = file.gcount();
     data.resize(bytes_read);
@@ -1353,7 +1356,8 @@ ImageFormatInfo validate_image_format_detailed(const std::string& image_path) {
 
     // Read header
     std::vector<uint8_t> data(65536);
-    file.read(reinterpret_cast<char*>(data.data()),  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+    file.read(reinterpret_cast<char*>(
+                  data.data()),  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
               static_cast<std::streamsize>(data.size()));
     data.resize(file.gcount());
 

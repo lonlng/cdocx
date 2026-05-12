@@ -3,13 +3,13 @@
  * @brief Footnote and endnote sync
  */
 
-#include "sync_common.h"
-
 #include <cdocx/document.h>
 #include <cdocx/footnote.h>
 #include <cdocx/paragraph.h>
 
 #include <cstring>
+
+#include "sync_common.h"
 
 namespace cdocx {
 
@@ -18,11 +18,11 @@ namespace cdocx {
 // ============================================================================
 
 static void sync_notes_to_physical_impl(Document* doc,
-                                    const char* xml_part,
-                                    const char* root_name,
-                                    const char* child_name,
-                                    const std::vector<std::shared_ptr<Footnote>>& cache) {
-    auto *notes_xml = doc->get_xml_part(xml_part);
+                                        const char* xml_part,
+                                        const char* root_name,
+                                        const char* child_name,
+                                        const std::vector<std::shared_ptr<Footnote>>& cache) {
+    auto* notes_xml = doc->get_xml_part(xml_part);
     if (!notes_xml) {
         if (cache.empty()) {
             return;
@@ -83,8 +83,7 @@ static void sync_notes_to_physical_impl(Document* doc,
             if (child->node_type() == NodeType::Paragraph) {
                 auto para = dynamic_cast<Paragraph*>(child.get());
                 std::shared_ptr<Run> temp_ref_run;
-                if (first_para && !note->is_auto() &&
-                    !note->get_reference_mark().empty()) {
+                if (first_para && !note->is_auto() && !note->get_reference_mark().empty()) {
                     temp_ref_run = std::make_shared<Run>();
                     temp_ref_run->set_text(note->get_reference_mark());
                     para->insert_child(0, temp_ref_run);
@@ -102,13 +101,13 @@ static void sync_notes_to_physical_impl(Document* doc,
 }
 
 static void sync_notes_from_physical_impl(Document* doc,
-                                      const char* xml_part,
-                                      const char* root_name,
-                                      const char* child_name,
-                                      std::vector<std::shared_ptr<Footnote>>& cache,
-                                      int& next_id,
-                                      FootnoteType type) {
-    auto *notes_xml = doc->get_xml_part(xml_part);
+                                          const char* xml_part,
+                                          const char* root_name,
+                                          const char* child_name,
+                                          std::vector<std::shared_ptr<Footnote>>& cache,
+                                          int& next_id,
+                                          FootnoteType type) {
+    auto* notes_xml = doc->get_xml_part(xml_part);
     if (!notes_xml) {
         return;
     }
@@ -139,8 +138,7 @@ static void sync_notes_from_physical_impl(Document* doc,
             if (first_para) {
                 auto first_run = first_para.child("w:r");
                 if (first_run) {
-                    for (auto t = first_run.child("w:t"); t;
-                         t = t.next_sibling("w:t")) {
+                    for (auto t = first_run.child("w:t"); t; t = t.next_sibling("w:t")) {
                         reference_mark += t.text().get();
                     }
                 }

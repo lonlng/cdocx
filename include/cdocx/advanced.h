@@ -16,13 +16,12 @@
 
 #pragma once
 
+#include <cdocx/base.h>
 #include <cdocx/bookmark.h>
 #include <cdocx/document_builder.h>
 #include <cdocx/document_search.h>
-#include <cdocx/range.h>
-
-#include <cdocx/base.h>
 #include <cdocx/formfield.h>
+#include <cdocx/range.h>
 
 #include <algorithm>
 #include <cctype>
@@ -100,8 +99,9 @@ inline bool contains_ci(const std::string& str, const std::string& substr) {
 
 inline std::string to_lower(const std::string& str) {
     std::string result = str;
-    std::transform(result.begin(), result.end(), result.begin(),
-                   [](char c) { return static_cast<char>(std::tolower(static_cast<unsigned char>(c))); });
+    std::transform(result.begin(), result.end(), result.begin(), [](char c) {
+        return static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    });
     return result;
 }
 

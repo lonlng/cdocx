@@ -6,12 +6,12 @@
 
 #include <cdocx/document.h>
 
-#include "sync_common.h"
-
 #include <filesystem>
 #include <fstream>
 #include <map>
 #include <vector>
+
+#include "sync_common.h"
 
 namespace cdocx {
 

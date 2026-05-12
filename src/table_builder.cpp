@@ -98,8 +98,6 @@ TableBuilder& TableBuilder::merge_cells(int start_row, int start_col, int row_sp
 }
 
 void TableBuilder::create_table_structure(pugi::xml_node tbl) const {
-
-
     // Create tbl_pr (table properties)
     pugi::xml_node tbl_pr = tbl.append_child("w:tblPr");
 
@@ -162,8 +160,6 @@ void TableBuilder::create_table_structure(pugi::xml_node tbl) const {
 }
 
 void TableBuilder::create_cell(pugi::xml_node tr, int row, int col) const {
-
-
     const CellData& cell = cells_[row][col];
 
     // Skip cells that are part of a merge but not the start
@@ -369,9 +365,9 @@ bool is_table_caption(pugi::xml_node para) {
 }
 
 pugi::xml_node insert_table_caption(Document* doc,
-                                        pugi::xml_node after_node,
-                                        const std::string& description,
-                                        int table_number) {
+                                    pugi::xml_node after_node,
+                                    const std::string& description,
+                                    int table_number) {
     if (!doc) {
         return pugi::xml_node{};
     }

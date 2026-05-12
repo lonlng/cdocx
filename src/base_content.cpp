@@ -9,10 +9,10 @@
 #include <cdocx/document.h>
 #include <cdocx/paragraph.h>
 
-#include "sync_common.h"
-
 #include <cstring>
 #include <utility>
+
+#include "sync_common.h"
 
 namespace cdocx {
 
@@ -325,7 +325,8 @@ bool Run::has_preserved_children() const {
 // Run Legacy Implementation (XML-based)
 // ============================================================================
 
-Run::Run(pugi::xml_node parent, pugi::xml_node current) : parent_xml_(parent), current_xml_(current) {
+Run::Run(pugi::xml_node parent, pugi::xml_node current)
+    : parent_xml_(parent), current_xml_(current) {
 }
 
 void Run::set_parent_xml(pugi::xml_node node) {

@@ -123,9 +123,9 @@ enum class TemplateScope : std::uint8_t {
  * @since 0.8.0
  */
 enum class TemplateTarget : std::uint8_t {
-    Placeholder,  ///< Search for {{key}} style placeholders
-    BookmarkTarget,     ///< Search for Word bookmarks by name
-    Auto,         ///< Try bookmark first, fallback to placeholder (default)
+    Placeholder,     ///< Search for {{key}} style placeholders
+    BookmarkTarget,  ///< Search for Word bookmarks by name
+    Auto,            ///< Try bookmark first, fallback to placeholder (default)
 };
 
 // ============================================================================
@@ -207,11 +207,11 @@ class TemplateFormat {
     std::optional<bool> italic_;
     std::optional<bool> underline_;
     std::optional<bool> strikethrough_;
-    std::optional<int> size_;            ///< Font size in half-points
-    std::optional<std::string> font_;    ///< Font name (applies to all scripts)
+    std::optional<int> size_;          ///< Font size in half-points
+    std::optional<std::string> font_;  ///< Font name (applies to all scripts)
     std::optional<std::string> font_ascii_;
     std::optional<std::string> font_far_east_;
-    std::optional<std::string> color_;   ///< Hex color (e.g. "FF0000")
+    std::optional<std::string> color_;  ///< Hex color (e.g. "FF0000")
     std::optional<std::string> alignment_;
     std::optional<int> line_spacing_;
     std::optional<int> space_before_;
@@ -323,7 +323,9 @@ class TemplateValue {
     bool is_image() const { return type_ == TemplateValueType::Image; }
 
     /** @brief True if this value has no meaningful content (empty text or no image path) */
-    bool is_empty() const { return (is_text() && text_content().empty()) || (is_image() && image_path().empty()); }
+    bool is_empty() const {
+        return (is_text() && text_content().empty()) || (is_image() && image_path().empty());
+    }
 
     const std::string& text_content() const;
     const TemplateFormat& text_format() const;
@@ -534,8 +536,7 @@ class TemplateEngine {
     TemplateEngine& with_default_format(const TemplateFormat& format);
 
     /** @brief Set placeholder delimiters (default: {{ }}) */
-    TemplateEngine& with_delimiters(const std::string& prefix,
-                                    const std::string& suffix);
+    TemplateEngine& with_delimiters(const std::string& prefix, const std::string& suffix);
 
     // ===================================================================
     // Execution
@@ -607,21 +608,17 @@ class TemplateEngine {
                                 const std::string& text,
                                 const TemplateFormat& format,
                                 FormatPolicy policy);
-    bool apply_image_to_bookmark(const std::string& name,
-                                 const TemplateValue& value);
+    bool apply_image_to_bookmark(const std::string& name, const TemplateValue& value);
 
     // Helpers (Bookmark& — use pre-resolved bookmark to avoid sync issues)
     bool apply_text_to_bookmark(Bookmark& bookmark,
                                 const std::string& text,
                                 const TemplateFormat& format,
                                 FormatPolicy policy);
-    bool apply_image_to_bookmark(Bookmark& bookmark,
-                                 const TemplateValue& value);
+    bool apply_image_to_bookmark(Bookmark& bookmark, const TemplateValue& value);
 
-    bool apply_text_to_placeholder(const std::string& key,
-                                   const std::string& text);
-    bool apply_image_to_placeholder(const std::string& key,
-                                    const TemplateValue& value);
+    bool apply_text_to_placeholder(const std::string& key, const std::string& text);
+    bool apply_image_to_placeholder(const std::string& key, const TemplateValue& value);
 };
 
 }  // namespace cdocx

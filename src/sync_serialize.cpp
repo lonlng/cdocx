@@ -3,11 +3,9 @@
  * @brief DOM to Physical XML serialization
  */
 
-#include "sync_common.h"
-
 #include <cdocx/body.h>
-#include <cdocx/convert_util.h>
 #include <cdocx/comment.h>
+#include <cdocx/convert_util.h>
 #include <cdocx/document.h>
 #include <cdocx/footnote.h>
 #include <cdocx/formfield.h>
@@ -16,6 +14,8 @@
 
 #include <cctype>
 #include <cstring>
+
+#include "sync_common.h"
 
 namespace cdocx {
 
@@ -27,7 +27,7 @@ static void serialize_table_to_xml(pugi::xml_node parent, const Table* table);
 // ============================================================================
 
 void Document::merge_sections_from_physical() {
-    auto *doc_xml = get_document_xml();
+    auto* doc_xml = get_document_xml();
     if (!doc_xml) {
         return;
     }
@@ -122,7 +122,7 @@ void Document::merge_sections_from_physical() {
 }
 
 void Document::sync_sections_to_physical() {
-    auto *doc_xml = get_document_xml();
+    auto* doc_xml = get_document_xml();
     if (!doc_xml) {
         return;
     }
@@ -192,8 +192,7 @@ void Document::sync_sections_to_physical() {
     // the XML child count has INCREASED since the last sync — that indicates
     // new content was added to physical XML outside the DOM. If the count is
     // unchanged, the DOM intentionally deleted content and we must trust it.
-    if (xml_child_count > dom_child_count &&
-        xml_child_count > last_synced_xml_child_count_) {
+    if (xml_child_count > dom_child_count && xml_child_count > last_synced_xml_child_count_) {
         if (!dirty_xml_paragraphs_.empty()) {
             merge_sections_from_physical();
         } else {
@@ -298,8 +297,8 @@ void serialize_font_to_r_pr(pugi::xml_node r_pr, const Font& font, bool add_sz_c
 }
 
 static void serialize_run_formatting_to_xml(pugi::xml_node run_xml,
-                                        const Font& font,
-                                        pugi::xml_node preserved_r_pr) {
+                                            const Font& font,
+                                            pugi::xml_node preserved_r_pr) {
     const bool has_formatting = font.bold || font.italic || font.strikethrough ||
                                 font.underline != UnderlineType::None || font.size != 12.0 ||
                                 font.name != "Times New Roman" || font.color != Color::black() ||
@@ -488,7 +487,7 @@ static void serialize_special_char_to_xml(pugi::xml_node parent, SpecialChar* sc
 }
 
 void serialize_paragraph_format_children_to_xml(pugi::xml_node p_pr,
-                                                  const ParagraphFormat& format) {
+                                                const ParagraphFormat& format) {
     serialize_shading_to_xml(p_pr, format.shading);
 
     if (format.drop_cap_position != DropCapPosition::None) {
@@ -506,10 +505,12 @@ void serialize_paragraph_format_children_to_xml(pugi::xml_node p_pr,
     if (format.left_indent != 0 || format.right_indent != 0 || format.first_line_indent != 0) {
         auto ind = p_pr.append_child("w:ind");
         if (format.left_indent != 0) {
-            ind.append_attribute("w:left").set_value(ConvertUtil::point_to_twips(format.left_indent));
+            ind.append_attribute("w:left").set_value(
+                ConvertUtil::point_to_twips(format.left_indent));
         }
         if (format.right_indent != 0) {
-            ind.append_attribute("w:right").set_value(ConvertUtil::point_to_twips(format.right_indent));
+            ind.append_attribute("w:right").set_value(
+                ConvertUtil::point_to_twips(format.right_indent));
         }
         if (format.first_line_indent != 0) {
             ind.append_attribute("w:firstLine")
@@ -558,7 +559,8 @@ void serialize_paragraph_format_children_to_xml(pugi::xml_node p_pr,
     }
 }
 
-static void serialize_paragraph_format_to_xml(pugi::xml_node para_xml, const ParagraphFormat& format) {
+static void serialize_paragraph_format_to_xml(pugi::xml_node para_xml,
+                                              const ParagraphFormat& format) {
     const bool has_format =
         format.alignment != ParagraphAlignment::Left || format.left_indent != 0 ||
         format.right_indent != 0 || format.first_line_indent != 0 || format.space_before != 0 ||
@@ -619,7 +621,8 @@ static void serialize_bookmark_end_to_xml(pugi::xml_node parent, BookmarkEnd* bo
     serialize_id_node_to_xml(parent, "w:bookmarkEnd", bookmark);
 }
 
-static void serialize_comment_range_start_to_xml(pugi::xml_node parent, CommentRangeStart* comment) {
+static void serialize_comment_range_start_to_xml(pugi::xml_node parent,
+                                                 CommentRangeStart* comment) {
     serialize_id_node_to_xml(parent, "w:commentRangeStart", comment);
 }
 
@@ -926,7 +929,7 @@ static void serialize_header_footer_to_xml(HeaderFooter* hf, Document* doc) {
     if (!hf || !doc) {
         return;
     }
-    auto *xml_doc = doc->get_xml_part(hf->get_part_path());
+    auto* xml_doc = doc->get_xml_part(hf->get_part_path());
     if (!xml_doc) {
         return;
     }

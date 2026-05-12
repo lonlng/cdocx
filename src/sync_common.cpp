@@ -22,8 +22,7 @@ namespace cdocx {
 
 void remove_managed_children(pugi::xml_node parent, std::initializer_list<const char*> names) {
     for (const char* name : names) {
-        for (pugi::xml_node child = parent.child(name); child;
-             child = parent.child(name)) {
+        for (pugi::xml_node child = parent.child(name); child; child = parent.child(name)) {
             parent.remove_child(child);
         }
     }
@@ -530,8 +529,8 @@ void parse_border_from_xml(pugi::xml_node border_node, Border& border) {
 
 struct BorderParseMapping {
     const char* child_name;
-    bool Borders::*defined_flag;
-    Border Borders::*border_member;
+    bool Borders::* defined_flag;
+    Border Borders::* border_member;
 };
 
 static const BorderParseMapping kBorderParseMappings[] = {
@@ -557,9 +556,9 @@ void parse_borders_from_xml(pugi::xml_node borders_node, Borders& borders) {
 }
 
 static void serialize_border_to_xml(pugi::xml_node parent,
-                                 const char* name,
-                                 const Border& border,
-                                 bool include_nil = false) {
+                                    const char* name,
+                                    const Border& border,
+                                    bool include_nil = false) {
     if (!border.is_visible()) {
         if (!include_nil || border.type != BorderType::None) {
             return;
@@ -581,8 +580,8 @@ static void serialize_border_to_xml(pugi::xml_node parent,
 
 struct BorderSerializeMapping {
     const char* child_name;
-    const Border Borders::*border_member;
-    bool Borders::*defined_flag;
+    const Border Borders::* border_member;
+    bool Borders::* defined_flag;
 };
 
 static const BorderSerializeMapping kBorderSerializeMappings[] = {
@@ -595,15 +594,17 @@ static const BorderSerializeMapping kBorderSerializeMappings[] = {
 };
 
 void serialize_borders_to_xml(pugi::xml_node parent,
-                                  const char* container_name,
-                                  const Borders& borders) {
+                              const char* container_name,
+                              const Borders& borders) {
     if (!borders.has_visible() && !borders.explicitly_defined) {
         return;
     }
     auto container = parent.append_child(container_name);
     for (const auto& mapping : kBorderSerializeMappings) {
-        serialize_border_to_xml(
-            container, mapping.child_name, borders.*mapping.border_member, borders.*mapping.defined_flag);
+        serialize_border_to_xml(container,
+                                mapping.child_name,
+                                borders.*mapping.border_member,
+                                borders.*mapping.defined_flag);
     }
 }
 
@@ -789,12 +790,12 @@ pugi::xml_node append_image_drawing(pugi::xml_node parent,
     // Build the picture subtree (shared between inline and anchor)
     auto build_pic = [&](pugi::xml_node container) {
         pugi::xml_node graphic = container.append_child("a:graphic");
-        graphic.append_attribute("xmlns:a")
-            .set_value("http://schemas.openxmlformats.org/drawingml/2006/main");
+        graphic.append_attribute("xmlns:a").set_value(
+            "http://schemas.openxmlformats.org/drawingml/2006/main");
 
         pugi::xml_node graphic_data = graphic.append_child("a:graphicData");
-        graphic_data.append_attribute("uri")
-            .set_value("http://schemas.openxmlformats.org/drawingml/2006/picture");
+        graphic_data.append_attribute("uri").set_value(
+            "http://schemas.openxmlformats.org/drawingml/2006/picture");
 
         pugi::xml_node pic = graphic_data.append_child("pic:pic");
         pic.append_attribute("xmlns:pic")
@@ -957,8 +958,9 @@ void serialize_ffdata_to_fld_char(pugi::xml_node fld_char, const FormField* fiel
         case FormFieldType::ComboBox: {
             auto dd_list = ff_data.append_child("w:ddList");
             for (const auto& item : field->get_drop_down_items()) {
-                dd_list.append_child("w:listEntry").append_attribute("w:val").set_value(
-                    item.c_str());
+                dd_list.append_child("w:listEntry")
+                    .append_attribute("w:val")
+                    .set_value(item.c_str());
             }
             if (field->get_drop_down_selected_index() >= 0) {
                 dd_list.append_child("w:default")

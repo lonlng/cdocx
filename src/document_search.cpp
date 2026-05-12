@@ -4,8 +4,8 @@
  * @since 0.3.0
  */
 
-#include <cdocx/document_search.h>
 #include <cdocx/document.h>
+#include <cdocx/document_search.h>
 #include <cdocx/paragraph.h>
 
 #include <functional>
@@ -32,8 +32,8 @@ static int count_occurrences(const std::string& text, const std::string& pattern
 }
 
 static std::string replace_all_in_string(std::string text,
-                                      const std::string& old_text,
-                                      const std::string& new_text) {
+                                         const std::string& old_text,
+                                         const std::string& new_text) {
     if (old_text.empty()) {
         return text;
     }

@@ -118,8 +118,8 @@ enum class NumberingType : std::uint8_t {
 constexpr const char* kBulletSolidCircle = "\u2022";   ///< •
 constexpr const char* kBulletHollowCircle = "\u25CB";  ///< ○
 constexpr const char* kBulletSolidSquare = "\u25A0";   ///< ■
-constexpr const char* kBulletArrow = "\u2192";          ///< →
-constexpr const char* kBulletDash = "\u2013";           ///< –
+constexpr const char* kBulletArrow = "\u2192";         ///< →
+constexpr const char* kBulletDash = "\u2013";          ///< –
 
 // ============================================================================
 // Level Definition
@@ -217,7 +217,7 @@ struct AbstractNumberingDefinition {
  *          specific level properties.
  */
 struct NumberingDefinition {
-    NumberingId id = 0;                  ///< Unique instance ID
+    NumberingId id = 0;                   ///< Unique instance ID
     AbstractNumberingId abstract_id = 0;  ///< Reference to abstract definition
 
     // Level overrides

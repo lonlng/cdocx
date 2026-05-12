@@ -55,10 +55,10 @@ struct TextProperties {
      * @brief Font family settings for different character sets
      */
     struct Font {
-        std::string ascii = "Times New Roman";  ///< Western font
+        std::string ascii = "Times New Roman";   ///< Western font
         std::string east_asia = "SimSun";        ///< CJK font (中文)
         std::string h_ansi = "Times New Roman";  ///< High ANSI font
-        std::string cs = "Times New Roman";     ///< Complex script font
+        std::string cs = "Times New Roman";      ///< Complex script font
 
         /**
          * @enum Hint
@@ -436,8 +436,8 @@ struct ParagraphProperties {
     // Page Break Control
     // ------------------------------------------------------------------------
 
-    bool keep_next = false;         ///< Keep with next paragraph (与下段同页)
-    bool keep_lines = false;        ///< Keep lines together (段中不分页)
+    bool keep_next = false;          ///< Keep with next paragraph (与下段同页)
+    bool keep_lines = false;         ///< Keep lines together (段中不分页)
     bool page_break_before = false;  ///< Page break before (段前分页)
     bool page_break_after = false;   ///< Page break after (段后分页)
 

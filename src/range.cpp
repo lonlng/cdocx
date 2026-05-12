@@ -4,16 +4,16 @@
  * @since 0.3.0
  */
 
-#include "sync_common.h"
-
 #include <cdocx/advanced.h>
-#include <cdocx/range.h>
 #include <cdocx/document.h>
 #include <cdocx/paragraph.h>
+#include <cdocx/range.h>
 #include <cdocx/table.h>
 
 #include <string>
 #include <vector>
+
+#include "sync_common.h"
 
 namespace cdocx {
 

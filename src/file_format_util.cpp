@@ -7,11 +7,11 @@
 #include <cdocx/file_format_util.h>
 #include <zip.h>
 
-#include "sync_common.h"
-
 #include <cstring>
 #include <fstream>
 #include <sstream>
+
+#include "sync_common.h"
 
 namespace cdocx {
 
@@ -186,7 +186,8 @@ std::shared_ptr<FileFormatInfo> FileFormatUtil::detect_file_format(std::istream&
 
     // Read first 8KB for sniffing
     std::vector<uint8_t> buffer(8192);
-    stream.read(reinterpret_cast<char*>(buffer.data()),  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+    stream.read(reinterpret_cast<char*>(
+                    buffer.data()),  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
                 static_cast<std::streamsize>(buffer.size()));
     const std::streamsize bytes_read = stream.gcount();
     buffer.resize(static_cast<size_t>(bytes_read));
@@ -200,9 +201,12 @@ std::shared_ptr<FileFormatInfo> FileFormatUtil::detect_file_format(std::istream&
 
     // ZIP-based formats (DOCX, DOTX, DOCM, DOTM, ODT)
     if (starts_with(buffer, "PK\x03\x04", 4) || starts_with(buffer, "PK\x05\x06", 4)) {
-        zip_t* za =
-            zip_stream_open(reinterpret_cast<const char*>(buffer.data()),  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-                            buffer.size(), 0, 'r');
+        zip_t* za = zip_stream_open(
+            reinterpret_cast<const char*>(
+                buffer.data()),  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+            buffer.size(),
+            0,
+            'r');
         if (za) {
             info = detect_from_zip(za);
             zip_stream_close(za);
@@ -218,8 +222,8 @@ std::shared_ptr<FileFormatInfo> FileFormatUtil::detect_file_format(std::istream&
 
     // HTML
     {
-        auto count = std::min(static_cast<std::ptrdiff_t>(buffer.size()),
-                              static_cast<std::ptrdiff_t>(256));
+        auto count =
+            std::min(static_cast<std::ptrdiff_t>(buffer.size()), static_cast<std::ptrdiff_t>(256));
         const std::string head(buffer.begin(), buffer.begin() + count);
         std::string lower = to_lower(head);
         if (starts_with_string(buffer, "<!doctype html") || contains(lower, "<html") ||
@@ -254,8 +258,8 @@ std::shared_ptr<FileFormatInfo> FileFormatUtil::detect_file_format(std::istream&
 
     // Markdown - look for common markers in first few lines
     {
-        auto count = std::min(static_cast<std::ptrdiff_t>(buffer.size()),
-                              static_cast<std::ptrdiff_t>(512));
+        auto count =
+            std::min(static_cast<std::ptrdiff_t>(buffer.size()), static_cast<std::ptrdiff_t>(512));
         const std::string head(buffer.begin(), buffer.begin() + count);
         const std::string lower = to_lower(head);
         if (contains(lower, "# ") || contains(lower, "## ") || contains(lower, "**") ||
@@ -287,7 +291,8 @@ std::shared_ptr<FileFormatInfo> FileFormatUtil::detect_file_format(std::istream&
     return info;
 }
 
-std::shared_ptr<FileFormatInfo> FileFormatUtil::detect_file_format(const std::vector<uint8_t>& data) {
+std::shared_ptr<FileFormatInfo> FileFormatUtil::detect_file_format(
+    const std::vector<uint8_t>& data) {
     std::stringstream ss(std::string(data.begin(), data.end()));
     return detect_file_format(ss);
 }

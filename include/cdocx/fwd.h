@@ -22,8 +22,8 @@
 #pragma once
 
 namespace pugi {
-class xml_node;       // NOLINT(readability-identifier-naming): pugixml external API
-class xml_document;   // NOLINT(readability-identifier-naming): pugixml external API
+class xml_node;      // NOLINT(readability-identifier-naming): pugixml external API
+class xml_document;  // NOLINT(readability-identifier-naming): pugixml external API
 }  // namespace pugi
 
 namespace cdocx {

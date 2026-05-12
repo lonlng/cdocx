@@ -47,13 +47,12 @@
 #include <cdocx/properties.h>
 #include <zip.h>
 
-#include <pugixml.hpp>
-
 #include <chrono>
 #include <cstdint>
 #include <functional>
 #include <map>
 #include <memory>
+#include <pugixml.hpp>
 #include <set>
 #include <shared_mutex>
 #include <string>
@@ -98,12 +97,12 @@ struct DocxTreeNode : public std::enable_shared_from_this<DocxTreeNode> {
     std::string full_path;  ///< Full path in ZIP
     DocxNodeType type;      ///< Node type
 
-    DocxTreeNode* parent;                          ///< Parent node
+    DocxTreeNode* parent;                                 ///< Parent node
     std::vector<std::shared_ptr<DocxTreeNode>> children;  ///< Child nodes
 
-    std::shared_ptr<pugi::xml_document> xml_doc;   ///< For XmlFile type
-    std::vector<uint8_t> binary_data;              ///< Binary data storage
-    std::string content_type;                      ///< MIME type
+    std::shared_ptr<pugi::xml_document> xml_doc;  ///< For XmlFile type
+    std::vector<uint8_t> binary_data;             ///< Binary data storage
+    std::string content_type;                     ///< MIME type
 
     bool is_modified = false;  ///< Modified since load
     bool is_new = false;       ///< Newly created
@@ -171,11 +170,10 @@ struct Relationship {
     std::string target_mode;
 
     Relationship() = default;
-    Relationship(std::string i,
-                 std::string t,
-                 std::string tgt,
-                 std::string tm = "")
-        : id(std::move(i)), type(std::move(t)), target(std::move(tgt)),
+    Relationship(std::string i, std::string t, std::string tgt, std::string tm = "")
+        : id(std::move(i)),
+          type(std::move(t)),
+          target(std::move(tgt)),
           target_mode(std::move(tm)) {}
     // Pass-by-value + std::move is the canonical modern C++ idiom for
     // constructors that unconditionally capture their arguments.

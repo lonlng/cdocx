@@ -3,8 +3,6 @@
  * @brief Section class implementation
  */
 
-#include "sync_common.h"
-
 #include <cdocx/document.h>
 #include <cdocx/paragraph.h>
 #include <cdocx/section.h>
@@ -13,6 +11,8 @@
 #include <algorithm>
 #include <cstring>
 #include <sstream>
+
+#include "sync_common.h"
 
 namespace cdocx {
 
@@ -56,11 +56,10 @@ static void remove_ref_from_node(pugi::xml_node sect_pr, HeaderFooterType type, 
 }
 
 static bool has_header_footer(const std::vector<std::shared_ptr<HeaderFooter>>& collection,
-                            HeaderFooterType type) {
-    return std::any_of(collection.begin(), collection.end(),
-                       [type](const auto& hf) {
-                           return hf && hf->get_header_footer_type() == type;
-                       });
+                              HeaderFooterType type) {
+    return std::any_of(collection.begin(), collection.end(), [type](const auto& hf) {
+        return hf && hf->get_header_footer_type() == type;
+    });
 }
 
 static std::shared_ptr<HeaderFooter> get_header_footer(
@@ -85,10 +84,10 @@ static std::vector<std::shared_ptr<HeaderFooter>> get_all_header_footer(
 }
 
 static void remove_header_footer(HeaderFooterType type,
-                               std::vector<std::shared_ptr<HeaderFooter>>& collection,
-                               std::vector<HeaderFooterRef>& refs,
-                               pugi::xml_node sect_pr,
-                               bool is_header) {
+                                 std::vector<std::shared_ptr<HeaderFooter>>& collection,
+                                 std::vector<HeaderFooterRef>& refs,
+                                 pugi::xml_node sect_pr,
+                                 bool is_header) {
     collection.erase(std::remove_if(collection.begin(),
                                     collection.end(),
                                     [type](const std::shared_ptr<HeaderFooter>& hf) {
@@ -115,9 +114,8 @@ static void link_hf_to_previous(Document* doc,
     const char* part_prefix = is_header ? "word/header" : "word/footer";
     const char* root_tag = is_header ? "w:hdr" : "w:ftr";
     const char* rel_type =
-        is_header
-            ? "http://schemas.openxmlformats.org/officeDocument/2006/relationships/header"
-            : "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer";
+        is_header ? "http://schemas.openxmlformats.org/officeDocument/2006/relationships/header"
+                  : "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer";
 
     auto add_ref = [&](const HeaderFooterRef& ref) {
         auto node = sect_pr.append_child(ref_tag);
@@ -146,18 +144,16 @@ static void link_hf_to_previous(Document* doc,
     } else if (prev_ref) {
         const bool need_copy = (!curr_ref) || (curr_ref->part_path == prev_ref->part_path);
         if (need_copy) {
-            const std::string new_part =
-                part_prefix +
-                std::to_string(is_header ? doc->get_next_header_number()
-                                         : doc->get_next_footer_number()) +
-                ".xml";
+            const std::string new_part = part_prefix +
+                                         std::to_string(is_header ? doc->get_next_header_number()
+                                                                  : doc->get_next_footer_number()) +
+                                         ".xml";
 
             auto* prev_xml = doc->get_xml_part(prev_ref->part_path);
             if (prev_xml) {
                 auto& new_xml = doc->create_xml_part(new_part);
                 new_xml.reset();
-                for (auto child = prev_xml->first_child(); child;
-                     child = child.next_sibling()) {
+                for (auto child = prev_xml->first_child(); child; child = child.next_sibling()) {
                     new_xml.append_copy(child);
                 }
             } else {
@@ -170,8 +166,7 @@ static void link_hf_to_previous(Document* doc,
             }
 
             const std::string new_rel_id =
-                doc->add_relationship("word/_rels/document.xml.rels", rel_type,
-                                      new_part.substr(5));
+                doc->add_relationship("word/_rels/document.xml.rels", rel_type, new_part.substr(5));
 
             remove_header_footer(type, collection, refs, sect_pr, is_header);
 
@@ -208,9 +203,8 @@ static std::shared_ptr<HeaderFooter> add_header_footer_impl(
     const char* root_tag = is_header ? "w:hdr" : "w:ftr";
     const char* ref_tag = is_header ? "w:header_reference" : "w:footer_reference";
     const char* rel_type =
-        is_header
-            ? "http://schemas.openxmlformats.org/officeDocument/2006/relationships/header"
-            : "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer";
+        is_header ? "http://schemas.openxmlformats.org/officeDocument/2006/relationships/header"
+                  : "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer";
 
     const std::string part_name =
         part_prefix +
@@ -232,8 +226,8 @@ static std::shared_ptr<HeaderFooter> add_header_footer_impl(
     t.text().set("");
 
     // Add relationship
-    const std::string rel_id = doc->add_relationship(
-        "word/_rels/document.xml.rels", rel_type, part_name.substr(5));
+    const std::string rel_id =
+        doc->add_relationship("word/_rels/document.xml.rels", rel_type, part_name.substr(5));
 
     // Add reference to section properties
     if (sect_pr) {
@@ -480,16 +474,14 @@ std::shared_ptr<HeaderFooter> Section::add_header(HeaderFooterType type) {
     if (!document_) {
         return nullptr;
     }
-    return add_header_footer_impl(
-        document_, type, true, headers_, header_refs_, sect_pr_node_);
+    return add_header_footer_impl(document_, type, true, headers_, header_refs_, sect_pr_node_);
 }
 
 std::shared_ptr<HeaderFooter> Section::add_footer(HeaderFooterType type) {
     if (!document_) {
         return nullptr;
     }
-    return add_header_footer_impl(
-        document_, type, false, footers_, footer_refs_, sect_pr_node_);
+    return add_header_footer_impl(document_, type, false, footers_, footer_refs_, sect_pr_node_);
 }
 
 std::shared_ptr<HeaderFooter> Section::get_header(HeaderFooterType type) const {
@@ -592,7 +584,7 @@ void Section::add_footer_ref(const HeaderFooterRef& ref) {
 }
 
 static const HeaderFooterRef* find_ref(const std::vector<HeaderFooterRef>& refs,
-                                      HeaderFooterType type) {
+                                       HeaderFooterType type) {
     for (const auto& ref : refs) {
         if (ref.type == type) {
             return &ref;

@@ -452,8 +452,7 @@ std::shared_ptr<Row> Table::append_row(const std::vector<std::string>& cell_text
     return row;
 }
 
-std::shared_ptr<Row> Table::insert_row(int index,
-                                         const std::vector<std::string>& cell_texts) {
+std::shared_ptr<Row> Table::insert_row(int index, const std::vector<std::string>& cell_texts) {
     auto row = insert_row(index);
     for (const auto& text : cell_texts) {
         auto cell = row->append_cell();
@@ -699,18 +698,18 @@ std::shared_ptr<Cell> Table::merge_cells(int start_row,
             if (current_col <= start_col && start_col < current_col + span) {
                 first_cell_in_row = cell;
                 // Collect cells within the horizontal merge range
-                    int inner_col = current_col + span;
-                    for (size_t i = static_cast<size_t>(cell->get_column_index()) + 1;
-                         i < cells.get_count();
-                         ++i) {
-                        auto next_cell = cells[static_cast<int>(i)];
-                        if (inner_col > end_col) {
-                            break;
-                        }
-                        cells_to_remove.push_back(next_cell);
-                        inner_col += next_cell->get_horizontal_merge_span();
+                int inner_col = current_col + span;
+                for (size_t i = static_cast<size_t>(cell->get_column_index()) + 1;
+                     i < cells.get_count();
+                     ++i) {
+                    auto next_cell = cells[static_cast<int>(i)];
+                    if (inner_col > end_col) {
+                        break;
                     }
-                    break;
+                    cells_to_remove.push_back(next_cell);
+                    inner_col += next_cell->get_horizontal_merge_span();
+                }
+                break;
             }
             current_col += span;
         }

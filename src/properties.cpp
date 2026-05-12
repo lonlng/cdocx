@@ -4,8 +4,6 @@
  * @since 0.4.0
  */
 
-#include "sync_common.h"
-
 #include <cdocx/base.h>
 #include <cdocx/convert_util.h>
 #include <cdocx/format_context.h>
@@ -15,6 +13,8 @@
 
 #include <algorithm>
 #include <cstring>
+
+#include "sync_common.h"
 
 namespace cdocx {
 
@@ -656,8 +656,7 @@ void TabStopCollection::apply_to(pugi::xml_node para_node) const {
     for (const auto& ts : tab_stops_) {
         pugi::xml_node tab = tabs.append_child("w:tab");
         tab.append_attribute("w:val").set_value(tab_alignment_to_string(ts.alignment));
-        tab.append_attribute("w:pos").set_value(
-            ConvertUtil::point_to_twips(ts.position));
+        tab.append_attribute("w:pos").set_value(ConvertUtil::point_to_twips(ts.position));
         if (ts.leader != TabLeader::None) {
             tab.append_attribute("w:leader").set_value(tab_leader_to_string(ts.leader));
         }

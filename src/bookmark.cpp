@@ -8,14 +8,14 @@
 #include <cdocx/document.h>
 #include <cdocx/paragraph.h>
 
-#include "sync_common.h"
-
 #include <algorithm>
 #include <cstring>
 #include <map>
 #include <string>
 #include <utility>
 #include <vector>
+
+#include "sync_common.h"
 
 namespace cdocx {
 

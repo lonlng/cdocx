@@ -3,13 +3,13 @@
  * @brief Numbering (List) system implementation
  */
 
-#include "sync_common.h"
-
 #include <cdocx/document.h>
 #include <cdocx/numbering.h>
 
 #include <cstring>
 #include <sstream>
+
+#include "sync_common.h"
 
 namespace cdocx {
 
@@ -362,7 +362,8 @@ void NumberingManager::save_to_xml(pugi::xml_node numbering_root) {
 
             // Start number
             auto start = lvl.append_child("w:start");
-            start.append_attribute("w:val").set_value(static_cast<unsigned int>(level.start_number));
+            start.append_attribute("w:val").set_value(
+                static_cast<unsigned int>(level.start_number));
 
             // Number format
             auto num_fmt = lvl.append_child("w:numFmt");
@@ -374,7 +375,8 @@ void NumberingManager::save_to_xml(pugi::xml_node numbering_root) {
 
             // Level justification
             auto lvl_jc = lvl.append_child("w:lvlJc");
-            lvl_jc.append_attribute("w:val").set_value(pp_alignment_to_string(level.number_alignment));
+            lvl_jc.append_attribute("w:val").set_value(
+                pp_alignment_to_string(level.number_alignment));
         }
     }
 

@@ -193,11 +193,12 @@ class DocumentBuilder {
     DocumentBuilder& end_bookmark(const std::string& name);
 
     // Form Fields
-    std::shared_ptr<FormField> insert_text_input(const std::string& name,
-                                                  TextFormFieldType type = TextFormFieldType::Regular,
-                                                  const std::string& format = "",
-                                                  const std::string& field_value = "",
-                                                  int max_length = 0);
+    std::shared_ptr<FormField> insert_text_input(
+        const std::string& name,
+        TextFormFieldType type = TextFormFieldType::Regular,
+        const std::string& format = "",
+        const std::string& field_value = "",
+        int max_length = 0);
     std::shared_ptr<FormField> insert_check_box(const std::string& name,
                                                 bool checked_value,
                                                 int size = 0);

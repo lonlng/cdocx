@@ -8,10 +8,10 @@
 #include <cdocx/node.h>
 #include <cdocx/paragraph.h>
 
-#include "sync_common.h"
-
 #include <algorithm>
 #include <sstream>
+
+#include "sync_common.h"
 
 namespace cdocx {
 

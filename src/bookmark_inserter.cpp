@@ -9,10 +9,10 @@
 
 #include <cdocx/bookmark_inserter.h>
 
-#include "sync_common.h"
-
 #include <algorithm>
 #include <vector>
+
+#include "sync_common.h"
 
 namespace cdocx {
 

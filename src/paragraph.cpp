@@ -446,7 +446,7 @@ Run& Paragraph::add_run(const char* text, FormattingFlag f) {
 
     // Preserve spaces if text starts or ends with whitespace
     if (*text != 0 && (std::isspace(static_cast<unsigned char>(text[0])) ||
-                           std::isspace(static_cast<unsigned char>(text[std::strlen(text) - 1])))) {
+                       std::isspace(static_cast<unsigned char>(text[std::strlen(text) - 1])))) {
         new_run_text.append_attribute("xml:space").set_value("preserve");
     }
 
@@ -493,7 +493,7 @@ Run& Paragraph::add_run_with_bookmark(Document& doc,
 
     // Preserve spaces if text starts or ends with whitespace
     if (*text != 0 && (std::isspace(static_cast<unsigned char>(text[0])) ||
-                           std::isspace(static_cast<unsigned char>(text[std::strlen(text) - 1])))) {
+                       std::isspace(static_cast<unsigned char>(text[std::strlen(text) - 1])))) {
         new_run_text.append_attribute("xml:space").set_value("preserve");
     }
 
