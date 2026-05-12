@@ -141,7 +141,26 @@ jobs:
       # ── Package ────────────────────────────────────────────────────────────
       - name: Package
         if: inputs.run_package
-        run: cpack --config build/CPackConfig.cmake -C "${{ inputs.build_type }}"
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            PLATFORM="win64"
+          else
+            PLATFORM="linux64"
+          fi
+          SHARED_LABEL="${{ inputs.shared }}"
+          SHARED_LABEL=$(echo "${SHARED_LABEL}" | tr '[:upper:]' '[:lower:]')
+          if [ "${SHARED_LABEL}" = "on" ]; then
+            SHARED_TYPE="shared"
+          else
+            SHARED_TYPE="static"
+          fi
+          ARCHIVE_NAME="cdocx-${PLATFORM}-${{ inputs.build_type }}-${SHARED_TYPE}"
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            powershell Compress-Archive -Path "${{ env.CDOCX_INSTALL_PREFIX }}/*" -DestinationPath "${ARCHIVE_NAME}.zip"
+          else
+            zip -r "${ARCHIVE_NAME}.zip" "${{ env.CDOCX_INSTALL_PREFIX }}"/*
+          fi
+          echo "PACKAGE_FILE=${ARCHIVE_NAME}.zip" >> "$GITHUB_ENV"
 
       # ── Upload Artifacts ───────────────────────────────────────────────────
       - name: Upload Build Artifacts
@@ -149,8 +168,5 @@ jobs:
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1  # v4.6.1
         with:
           name: ${{ inputs.os }}-${{ inputs.build_type }}-${{ inputs.shared }}
-          path: |
-            build/*.zip
-            build/*.tar.gz
-            ${{ env.CDOCX_INSTALL_PREFIX }}/
-          if-no-files-found: ignore
+          path: ${{ env.PACKAGE_FILE }}
+          if-no-files-found: error
