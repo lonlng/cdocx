@@ -136,7 +136,7 @@ jobs:
           cmake -S test/install_test \
                 -B install_test_build \
                 -D CMAKE_PREFIX_PATH="${{ env.CDOCX_INSTALL_PREFIX }}"
-          cmake --build install_test_build
+          cmake --build install_test_build --config "${{ inputs.build_type }}"
 
       # ── Package ────────────────────────────────────────────────────────────
       - name: Package
